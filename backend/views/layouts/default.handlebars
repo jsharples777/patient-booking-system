@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+{{> headers/header-main }}
+<body>
+{{> navigation/navigation }}
+{{#if error}}
+    <div class="alert alert-danger">{{error}}</div>
+{{/if}}
+{{{body}}}
+{{> sidebars/exercise-types-sb }}
+{{> sidebars/user-search-sb }}
+{{> sidebars/chat-sb }}
+{{> sidebars/workout-summary-sb }}
+{{> sidebars/current-workout-sb }}
+{{> modals/alert }}
+{{> modals/context-menu }}
+<div id="root" class="root">
+    <section class="pt-5 pb-5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <h3 class="mb-3 text-white">Workouts </h3>
+                </div>
+                <div class="col-6 text-right">
+                    <a class="btn btn-primary mb-3 mr-1" href="#workoutsContainer" role="button" data-slide="prev">
+                        <i class="fa fa-arrow-left"></i>
+                    </a>
+                    <a class="btn btn-primary mb-3 " href="#workoutsContainer" role="button" data-slide="next">
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="col-12">
+                    <div id="workoutsContainer" class="carousel slide" data-ride="carousel" data-interval="false">
+                        <div id="workouts" class="carousel-inner">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+<div><canvas id="test" ></canvas></div>
+{{> footers/footer-main }}
+</body>
+{{#if user}}
+    <script>
+        const loggedInUser = {
+            _id: '{{user._id}}',
+            username: '{{user.username}}'
+        };
+    </script>
+{{/if}}
+{{> jsincludes/js-vendors}}
+{{> jsincludes/js-popovers-tooltips}}
+{{> jsincludes/js-app}}
+</html>

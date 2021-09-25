@@ -1,0 +1,39 @@
+type ExerciseType {
+    _id:String,
+    name:String,
+    type:String,
+    duration:String,
+    sets:Int,
+    reps:Int,
+    weight:Float,
+    distance:Float,
+    createdOn:String,
+    createdBy:String,
+    modifiedOn:String,
+    modifiedBy:String
+}
+
+input ExerciseTypeInput {
+    _id:String,
+    name:String,
+    type:String,
+    duration:String,
+    sets:Int,
+    reps:Int,
+    weight:Float,
+    distance:Float,
+    createdOn:String,
+    createdBy:String,
+    modifiedOn:String,
+    modifiedBy:String
+}
+
+type Query {
+    getExerciseTypes:[ExerciseType]
+}
+
+type Mutation {
+    addExerciseType(exercise:ExerciseTypeInput):ExerciseType
+    updateExerciseType(exercise:ExerciseTypeInput):Boolean
+    deleteExerciseType(id:String):Boolean
+}

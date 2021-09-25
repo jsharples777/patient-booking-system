@@ -1,0 +1,38 @@
+type Appointment {
+    _id:String,
+    _patient:String,
+    start:Int,
+    time:String,
+    duration:Int,
+    createdBy:String,
+    cancelled:Boolean,
+    dna:Boolean,
+    provider:String,
+    note:String
+}
+
+input AppointmentInput {
+    _id:String,
+    _patient:String,
+    start:Int,
+    time:String,
+    duration:Int,
+    createdBy:String,
+    provider:String,
+    note:String
+}
+
+
+##### top level declarations
+type Query {
+
+
+    # Appointments #
+    getAppointments:[Appointment]
+
+}
+
+type Mutation {
+    # Appointment #
+    addAppointment(appt:AppointmentInput):Int
+}
