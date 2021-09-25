@@ -335,7 +335,7 @@ export class WorkoutsViewUsingContext extends AbstractStatefulCollectionView imp
         // @ts-ignore
         if (actionName === WorkoutsViewUsingContext.DOMConfig.collectionConfig.extraActions[1].name) {
             // continue the current workout
-            App.getInstance().showCurrentWorkout();
+            //App.getInstance().showCurrentWorkout();
 
 
         }

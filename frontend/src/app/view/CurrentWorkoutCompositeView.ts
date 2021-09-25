@@ -101,7 +101,7 @@ export class CurrentWorkoutCompositeView implements StateChangeListener, DataObj
                     }
                     this.saveWorkout();
                     this.createWorkout();
-                    App.getInstance().hideAllSideBars();
+                    //App.getInstance().hideAllSideBars();
                 });
 
             }

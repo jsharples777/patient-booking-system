@@ -8,7 +8,6 @@ import {
     ContextualInformationHelper,
     SecurityManager,
     SidebarViewContainer,
-    SidebarLocation,
     UnreadMessageCountListener,
     UserSearchSidebar
 } from 'ui-framework-jps';
@@ -28,6 +27,8 @@ import {ExerciseTypesCompositeView} from "./app/view/ExerciseTypesCompositeView"
 import {WorkoutSummaryView} from "./app/view/WorkoutSummaryView";
 import {CurrentWorkoutCompositeView} from "./app/view/CurrentWorkoutCompositeView";
 import {WorkoutsViewUsingContext} from "./app/view/WorkoutsViewUsingContext";
+import React, {ReactNode} from "react";
+import ReactDOM from "react-dom";
 
 
 
@@ -39,9 +40,8 @@ debug.log = console.info.bind(console);
 
 const logger = debug('app');
 
-export default class App implements UnreadMessageCountListener {
+export default class App extends React.Component implements UnreadMessageCountListener {
 
-    private static _instance: App;
     // @ts-ignore
     private exerciseTypesSidebar: ExerciseTypesSidebar;
     // @ts-ignore
@@ -61,7 +61,9 @@ export default class App implements UnreadMessageCountListener {
     // @ts-ignore
     private chatNavigationItem: HTMLAnchorElement | null;
 
-    private constructor() {
+    public constructor() {
+        // @ts-ignore
+        super();
         // event handlers
         this.handleShowUserSearch = this.handleShowUserSearch.bind(this);
         this.handleShowExerciseTypes = this.handleShowExerciseTypes.bind(this);
@@ -72,18 +74,16 @@ export default class App implements UnreadMessageCountListener {
         Controller.getInstance().connectToApplication(this, window.localStorage);
     }
 
-    public static getInstance(): App {
-        if (!(App._instance)) {
-            App._instance = new App();
-        }
-        return App._instance;
+    render(): ReactNode {
+        logger("Rendering App");
+        return (
+            <div></div>
+        )
     }
 
-    getCurrentUser() {
-        return Controller.getInstance().getLoggedInUserId();
-    }
 
-    onDocumentLoad() {
+    componentDidMount(): void {
+        logger('component Did Mount');
         logger('document loaded');
         // @ts-ignore
         this.thisEl = document.getElementById('root');
@@ -116,7 +116,10 @@ export default class App implements UnreadMessageCountListener {
         console.log(text);
         console.log(cipher);
         console.log(decipher);
+    }
 
+    getCurrentUser() {
+        return Controller.getInstance().getLoggedInUserId();
     }
 
     hideAllSideBars() {
@@ -245,5 +248,26 @@ export default class App implements UnreadMessageCountListener {
 
 
 $(function () {
-    App.getInstance().onDocumentLoad();
+    // @ts-ignore
+    const element = <App className="container-fluid justify-content-around"/>;
+
+    ReactDOM.render(element, document.getElementById('root'));
+
+    $(function(){
+        $('#datepicker').datepicker({
+            //nextText: '&rarr;',
+            //prevText: '&larr;',
+            showOtherMonths: true,
+            weekHeader:'WEEK',
+            showWeek:true,
+            firstDay:1,
+            // numberOfMonths:1,
+            showButtonPanel:false,
+            dateFormat: 'dd/MM/yyyy',
+            dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            //showOn: "button",
+            //buttonImage: "img/calendar-blue.png",
+            //buttonImageOnly: true,
+        });
+    });
 });

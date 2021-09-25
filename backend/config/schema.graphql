@@ -1,3 +1,33 @@
+type ExerciseType {
+    _id:String,
+    name:String,
+    type:String,
+    duration:String,
+    sets:Int,
+    reps:Int,
+    weight:Float,
+    distance:Float,
+    createdOn:String,
+    createdBy:String,
+    modifiedOn:String,
+    modifiedBy:String
+}
+
+input ExerciseTypeInput {
+    _id:String,
+    name:String,
+    type:String,
+    duration:String,
+    sets:Int,
+    reps:Int,
+    weight:Float,
+    distance:Float,
+    createdOn:String,
+    createdBy:String,
+    modifiedOn:String,
+    modifiedBy:String
+}
+
 type Appointment {
     _id:String,
     _patient:String,
@@ -5,10 +35,11 @@ type Appointment {
     time:String,
     duration:Int,
     createdBy:String,
-    cancelled:Boolean,
-    dna:Boolean,
+    isCancelled:Boolean,
+    isDNA:Boolean,
     provider:String,
-    note:String
+    note:String,
+    type:String
 }
 
 input AppointmentInput {
@@ -18,21 +49,46 @@ input AppointmentInput {
     time:String,
     duration:Int,
     createdBy:String,
+    isCancelled:Boolean,
+    isDNA:Boolean,
     provider:String,
-    note:String
+    note:String,
+    type:String
+}
+
+type identifiers {
+    legacyId:String
+}
+
+type name {
+    firstname:String,
+    surname:String
+}
+
+type flags {
+    isInactive:Boolean,
+    hasWarnings: Boolean
+}
+
+type PatientSearchItem {
+    _id:String,
+    identifiers: identifiers,
+    name: name,
+    flags: flags
 }
 
 
-##### top level declarations
 type Query {
-
-
-    # Appointments #
+    getExerciseTypes:[ExerciseType]
     getAppointments:[Appointment]
-
+    getPatientSearchDetails:[PatientSearchItem]
 }
 
 type Mutation {
-    # Appointment #
-    addAppointment(appt:AppointmentInput):Int
+    addExerciseType(exercise:ExerciseTypeInput):ExerciseType
+    updateExerciseType(exercise:ExerciseTypeInput):Boolean
+    deleteExerciseType(id:String):Boolean
+    addAppointment(appt:AppointmentInput):Appointment
+    updateAppointment(appt:AppointmentInput):Boolean
+    deleteAppointment(id:String):Boolean
 }

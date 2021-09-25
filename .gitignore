@@ -10,3 +10,4 @@
 /backend/dist/js/*.ts
 /backend/db/queue.json
 /backend/keytmp.pem
+/frontend/dist/

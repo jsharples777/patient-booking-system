@@ -4,13 +4,10 @@
   "description": "Template for front-end with React and Babel compiler",
   "main": "index.js",
   "scripts": {
-    "compile.dev": "tsc",
-    "compile.dev.watch": "tsc-watch",
-    "build.prod": "webpack --mode production",
-    "build.dev": "webpack --mode development",
-    "watch.dev": "webpack --mode development --watch",
-    "compile.dev.babel": "babel src --out-dir ../backend/public/js  --verbose --extensions '.jsx,.js,.ts,.tsx'",
-    "watch.dev.babel": "babel src --out-dir ../backend/public/js --watch --verbose  --extensions '.jsx,.js,.ts,.tsx'",
+    "compile": "tsc",
+    "watch": "tsc-watch",
+    "build": "webpack --mode production",
+    "build.dev": "webpack --mode development --watch",
     "lint": "eslint --ext js,jsx,tsx,ts --fix ."
   },
   "dependencies": {

@@ -295,7 +295,7 @@ export class WorkoutsView extends AbstractStatefulCollectionView implements Coll
         // @ts-ignore
         if (actionName === WorkoutsView.DOMConfig.collectionConfig.extraActions[1].name) {
             // continue the current workout
-            App.getInstance().showCurrentWorkout();
+            //App.getInstance().showCurrentWorkout();
 
 
         }

@@ -12,7 +12,10 @@ export const STATE_NAMES = {
     chatLogs: 'chatLog',
     exerciseTypes: 'exerciseType',
     workouts: 'workout',
-    recentUserSearches: 'recentUserSearch'
+    recentUserSearches: 'recentUserSearch',
+    patientSearch: 'fastSearchNames',
+    recentPatientSearches: 'recentPatientSearches',
+    appointments: 'appointment',
 }
 
 export const API_Config = {

@@ -4,6 +4,8 @@ import fs from 'fs';
 import {ApolloServer} from 'apollo-server-express';
 import {Express} from 'express';
 import ExampleQLDelegate from "./ExampleQLDelegate";
+import AppointmentsQLDelegate from "./AppointmentsQLDelegate";
+import PatientsQLDelegate from "./PatientsQLDelegate";
 
 const dsLogger = debug('data-source');
 
@@ -17,12 +19,17 @@ export default class DataSource {
 
         let resolvers = {
             Query: {
-                getExerciseTypes:ExampleQLDelegate.getExerciseTypes
+                getExerciseTypes:ExampleQLDelegate.getExerciseTypes,
+                getAppointments:AppointmentsQLDelegate.getAppointments,
+                getPatientSearchDetails:PatientsQLDelegate.getPatientSearchDetails
             },
             Mutation: {
                 addExerciseType:ExampleQLDelegate.addExerciseType,
                 updateExerciseType:ExampleQLDelegate.updateExerciseType,
-                deleteExerciseType:ExampleQLDelegate.deleteExerciseType
+                deleteExerciseType:ExampleQLDelegate.deleteExerciseType,
+                addAppointment:AppointmentsQLDelegate.addAppointment,
+                updateAppointment:AppointmentsQLDelegate.updateAppointment,
+                deleteAppointment:AppointmentsQLDelegate.deleteAppointment
             }
         };
 

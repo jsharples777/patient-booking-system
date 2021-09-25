@@ -50,7 +50,7 @@ export default class ExampleQLDelegate {
             const collection = process.env.DB_COLLECTION_EXERCISE_TYPES || 'exercise-types';
             MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.exercise).then((value) => {
                 logger(value);
-                const message:DataMessage = {type:"create",stateName: "exerciseType",data:data.exercise, user:data.createdBy,}
+                const message:DataMessage = {type:"create",stateName: "exerciseType",data:data.exercise, user:data.exercise.createdBy,}
                 socketManager.sendDataMessage(message);
 
                 resolve(data);
@@ -69,7 +69,7 @@ export default class ExampleQLDelegate {
             const collection = process.env.DB_COLLECTION_EXERCISE_TYPES || 'exercise-types';
             MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:data.exercise._id},data.exercise).then((value) => {
                 logger(value);
-                const message:DataMessage = {type:"update",stateName: "exerciseType",data:data.exercise, user:data.createdBy,}
+                const message:DataMessage = {type:"update",stateName: "exerciseType",data:data.exercise, user:data.exercise.createdBy,}
                 socketManager.sendDataMessage(message);
 
                 resolve(true);

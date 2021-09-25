@@ -1,240 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/App.ts":
-/*!********************!*\
-  !*** ./src/App.ts ***!
-  \********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ App)
-/* harmony export */ });
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _app_Controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app/Controller */ "./src/app/Controller.ts");
-/* harmony import */ var _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app/AppTypes */ "./src/app/AppTypes.ts");
-/* harmony import */ var _app_view_ExerciseTypesCompositeView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app/view/ExerciseTypesCompositeView */ "./src/app/view/ExerciseTypesCompositeView.ts");
-/* harmony import */ var _app_view_WorkoutSummaryView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app/view/WorkoutSummaryView */ "./src/app/view/WorkoutSummaryView.ts");
-/* harmony import */ var _app_view_CurrentWorkoutCompositeView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./app/view/CurrentWorkoutCompositeView */ "./src/app/view/CurrentWorkoutCompositeView.ts");
-/* harmony import */ var _app_view_WorkoutsViewUsingContext__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./app/view/WorkoutsViewUsingContext */ "./src/app/view/WorkoutsViewUsingContext.ts");
-//localStorage.debug = 'linked-controller api-ts exercise-types-view app controller-ts controller-ts-detail api-ts socket-ts user-search user-search-detail list-view-renderer';
-//localStorage.debug = 'collection-view-ts collection-view-ts-detail form-detail-view-renderer linked-controller linked-controller-detail exercise-types-view app validation-manager-rule-failure validation-manager';
-//localStorage.debug = 'validation-manager validation-manager-rule-failure abstract-form-detail-validation';
-
-
-
-
-
-
-
-
-localStorage.debug = 'state-manager-graphql api-ts';
-localStorage.plugin = 'chat';
-(debug__WEBPACK_IMPORTED_MODULE_1___default().log) = console.info.bind(console);
-const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('app');
-class App {
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  constructor() {
-    // event handlers
-    this.handleShowUserSearch = this.handleShowUserSearch.bind(this);
-    this.handleShowExerciseTypes = this.handleShowExerciseTypes.bind(this);
-    this.handleShowChat = this.handleShowChat.bind(this);
-    this.handleShowWorkoutSummary = this.handleShowWorkoutSummary.bind(this);
-    this.handleShowCurrentWorkout = this.handleShowCurrentWorkout.bind(this);
-    _app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().connectToApplication(this, window.localStorage);
-  }
-
-  static getInstance() {
-    if (!App._instance) {
-      App._instance = new App();
-    }
-
-    return App._instance;
-  }
-
-  getCurrentUser() {
-    return _app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getLoggedInUserId();
-  }
-
-  onDocumentLoad() {
-    logger('document loaded'); // @ts-ignore
-
-    this.thisEl = document.getElementById('root');
-    this.setupUserSearchViews();
-    this.setupChatViews();
-    this.setupNavigationItemHandling();
-    this.exerciseTypesSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarViewContainer(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.ExerciseTypesSidebarPrefs);
-    new _app_view_ExerciseTypesCompositeView__WEBPACK_IMPORTED_MODULE_4__.ExerciseTypesCompositeView(this.exerciseTypesSidebar).onDocumentLoaded(); //new WorkoutsView().onDocumentLoaded(); // carousel view
-
-    new _app_view_WorkoutsViewUsingContext__WEBPACK_IMPORTED_MODULE_7__.WorkoutsViewUsingContext().onDocumentLoaded();
-    this.workoutSummarySidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarViewContainer(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.WorkoutSummarySidebarPrefs);
-    this.workoutSummarySidebar.addView(new _app_view_WorkoutSummaryView__WEBPACK_IMPORTED_MODULE_5__.WorkoutSummaryView(), {
-      containerId: _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.WorkoutSummarySidebarContainers.container
-    });
-    this.workoutSummarySidebar.onDocumentLoaded();
-    this.currentWorkoutSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarViewContainer(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.CurrentWorkoutSidebarPrefs);
-    this.currentWorkoutView = new _app_view_CurrentWorkoutCompositeView__WEBPACK_IMPORTED_MODULE_6__.CurrentWorkoutCompositeView(this.currentWorkoutSidebar);
-    this.currentWorkoutView.onDocumentLoaded();
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ContextualInformationHelper.getInstance().onDocumentLoaded();
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SecurityManager.getInstance().onDocumentLoaded(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.logout);
-    _app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().onDocumentLoaded();
-    const text = 'Fluffy';
-    const cipher = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SecurityManager.getInstance().encryptString(text);
-    const decipher = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SecurityManager.getInstance().decryptString(cipher);
-    console.log(text);
-    console.log(cipher);
-    console.log(decipher);
-  }
-
-  hideAllSideBars() {
-    this.chatSidebar.eventHide(null);
-    this.userSearchSidebar.eventHide(null);
-    this.exerciseTypesSidebar.eventHide(null);
-    this.currentWorkoutSidebar.eventHide(null);
-  }
-
-  handleShowUserSearch(event) {
-    logger('Handling Show User Search');
-    event.preventDefault(); //this.hideAllSideBars();
-    // prevent anything from happening if we are not logged in
-
-    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
-      // @ts-ignore
-      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
-      return;
-    }
-
-    this.userSearchSidebar.eventShow(event);
-  }
-
-  handleShowWorkoutSummary(event) {
-    logger('Handling Show Workout Summary');
-    event.preventDefault(); //this.hideAllSideBars();
-    // prevent anything from happening if we are not logged in
-
-    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
-      // @ts-ignore
-      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
-      return;
-    }
-
-    this.hideAllSideBars();
-    this.workoutSummarySidebar.eventShow(event);
-  }
-
-  handleShowCurrentWorkout(event) {
-    logger('Handling Show Current Workout');
-    event.preventDefault(); //this.hideAllSideBars();
-    // prevent anything from happening if we are not logged in
-
-    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
-      // @ts-ignore
-      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
-      return;
-    }
-
-    this.currentWorkoutSidebar.eventShow(event);
-  }
-
-  handleShowExerciseTypes(event) {
-    logger('Handling Show Exercise Types');
-    event.preventDefault(); //this.hideAllSideBars();
-    // prevent anything from happening if we are not logged in
-
-    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
-      // @ts-ignore
-      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
-      return;
-    }
-
-    this.exerciseTypesSidebar.eventShow(event);
-  }
-
-  handleShowChat(roomName) {
-    logger('Handling Show Chat'); //event.preventDefault();
-    //this.hideAllSideBars();
-    // prevent anything from happening if we are not logged in
-
-    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
-      // @ts-ignore
-      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
-      return;
-    }
-
-    this.chatSidebar.eventShow(null);
-
-    if (roomName) {
-      this.chatView.selectChatRoom(roomName);
-    }
-  }
-
-  countChanged(newCount) {
-    //
-    let buffer = 'Chat <i class="fas fa-inbox"></i>';
-
-    if (newCount > 0) {
-      buffer += ` <span class="badge badge-pill badge-primary">&nbsp;${newCount}&nbsp;</span>`;
-    }
-
-    if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
-  }
-
-  addingExerciseToCurrentWorkout(exerciseType) {
-    this.exerciseTypesSidebar.eventHide(null);
-    this.currentWorkoutSidebar.eventShow(null);
-    this.currentWorkoutView.getStateManager().addNewItemToState(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes, exerciseType, false);
-  }
-
-  showCurrentWorkout() {
-    this.currentWorkoutSidebar.eventShow(null);
-  }
-
-  setupNavigationItemHandling() {
-    // @ts-ignore
-    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.userSearchId).addEventListener('click', this.handleShowUserSearch); // @ts-ignore
-
-    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.exerciseTypesId).addEventListener('click', this.handleShowExerciseTypes); // @ts-ignore
-
-    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.workoutSummary).addEventListener('click', this.handleShowWorkoutSummary); // @ts-ignore
-
-    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.currentWorkout).addEventListener('click', this.handleShowCurrentWorkout); // @ts-ignore
-
-    this.chatNavigationItem = document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.chatId); // @ts-ignore
-
-    this.chatNavigationItem.addEventListener('click', this.handleShowChat);
-  }
-
-  setupUserSearchViews() {
-    // add the subviews for the user search
-    this.userSearchSidebar = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.UserSearchSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager());
-    this.userSearchSidebar.onDocumentLoaded();
-  }
-
-  setupChatViews() {
-    // add the views to the chat side bar
-    this.chatSidebar = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ChatRoomsSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager());
-    this.chatSidebar.onDocumentLoaded();
-  }
-
-}
-$(function () {
-  App.getInstance().onDocumentLoad();
-});
-
-/***/ }),
-
 /***/ "./src/app/AppTypes.ts":
 /*!*****************************!*\
   !*** ./src/app/AppTypes.ts ***!
@@ -276,7 +42,10 @@ const STATE_NAMES = {
   chatLogs: 'chatLog',
   exerciseTypes: 'exerciseType',
   workouts: 'workout',
-  recentUserSearches: 'recentUserSearch'
+  recentUserSearches: 'recentUserSearch',
+  patientSearch: 'fastSearchNames',
+  recentPatientSearches: 'recentPatientSearches',
+  appointments: 'appointment'
 };
 const API_Config = {
   login: '/login',
@@ -433,13 +202,53 @@ class Controller {
       },
       isActive: true,
       idField: '_id'
+    }, {
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch,
+      serverURL: '',
+      apiURL: '/graphql',
+      apis: {
+        findAll: 'query {getPatientSearchDetails {_id,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}}}',
+        create: '',
+        destroy: '',
+        update: '',
+        find: ''
+      },
+      data: {
+        findAll: 'getPatientSearchDetails',
+        create: '',
+        destroy: '',
+        update: '',
+        find: ''
+      },
+      isActive: true,
+      idField: '_id'
+    }, {
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments,
+      serverURL: '',
+      apiURL: '/graphql',
+      apis: {
+        findAll: 'query {getAppointments {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type}}',
+        create: 'mutation createAppointment($data: AppointmentInput!){addAppointment(appt: $data) {_id,name,type,sets,reps,duration,weight,distance,createdOn,createdBy,modifiedOn,modifiedBy}}',
+        destroy: 'mutation deleteAppointment($identifier: String!){deleteAppointment(id: $identifier)}',
+        update: 'mutation updateAppointment($data: AppointmentInput!){updateAppointment(appt: $data)}',
+        find: ''
+      },
+      data: {
+        findAll: 'getExerciseTypes',
+        create: 'addExerciseType',
+        destroy: 'updateExerciseType',
+        update: 'deleteExerciseType',
+        find: ''
+      },
+      isActive: true,
+      idField: '_id'
     }]);
     let aggregateSM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AggregateStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
     let memorySM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.MemoryBufferStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
     let asyncREST = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AsyncStateManagerWrapper(aggregateSM, restSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
     let asyncQL = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AsyncStateManagerWrapper(aggregateSM, qlSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
     aggregateSM.addStateManager(memorySM, [], false);
-    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes], false);
+    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentPatientSearches], false);
     aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.workouts], false);
     this.stateManager = aggregateSM; // state listener
 
@@ -477,7 +286,9 @@ class Controller {
 
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users);
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes);
-      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.workouts); // apply any queued changes from being offline
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.workouts);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments); // apply any queued changes from being offline
 
       ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.DownloadManager.getInstance().processOfflineItems();
     }
@@ -1217,9 +1028,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CurrentWorkoutExercisesView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./CurrentWorkoutExercisesView */ "./src/app/view/CurrentWorkoutExercisesView.ts");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../App */ "./src/App.ts");
-/* harmony import */ var _EqualityFunctions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../EqualityFunctions */ "./src/app/EqualityFunctions.ts");
-
+/* harmony import */ var _EqualityFunctions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../EqualityFunctions */ "./src/app/EqualityFunctions.ts");
 
 
 
@@ -1236,7 +1045,7 @@ class CurrentWorkoutCompositeView {
 
   constructor(sideBar) {
     this.sideBar = sideBar;
-    this.stateManager = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.MemoryBufferStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_8__.isSameMongo);
+    this.stateManager = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.MemoryBufferStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_7__.isSameMongo);
     this.stateManager.addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.exerciseTypes, this);
     _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.workouts, this);
   }
@@ -1300,8 +1109,7 @@ class CurrentWorkoutCompositeView {
           }
 
           this.saveWorkout();
-          this.createWorkout();
-          _App__WEBPACK_IMPORTED_MODULE_7__["default"].getInstance().hideAllSideBars();
+          this.createWorkout(); //App.getInstance().hideAllSideBars();
         });
       }
 
@@ -1965,11 +1773,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var chart_js_auto__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! chart.js/auto */ "./node_modules/chart.js/auto/auto.esm.js");
-/* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../App */ "./src/App.ts");
-/* harmony import */ var _EqualityFunctions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../EqualityFunctions */ "./src/app/EqualityFunctions.ts");
-/* harmony import */ var _MiscFunctions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../MiscFunctions */ "./src/app/MiscFunctions.ts");
-/* harmony import */ var _DurationFunctions__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../DurationFunctions */ "./src/app/DurationFunctions.ts");
-
+/* harmony import */ var _EqualityFunctions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../EqualityFunctions */ "./src/app/EqualityFunctions.ts");
+/* harmony import */ var _MiscFunctions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../MiscFunctions */ "./src/app/MiscFunctions.ts");
+/* harmony import */ var _DurationFunctions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../DurationFunctions */ "./src/app/DurationFunctions.ts");
 
 
 
@@ -2128,7 +1934,7 @@ class WorkoutsViewUsingContext extends ui_framework_jps__WEBPACK_IMPORTED_MODULE
   }
 
   compareItemsForEquality(item1, item2) {
-    return (0,_EqualityFunctions__WEBPACK_IMPORTED_MODULE_7__.isSameMongo)(item1, item2);
+    return (0,_EqualityFunctions__WEBPACK_IMPORTED_MODULE_6__.isSameMongo)(item1, item2);
   }
 
   getItemId(from, item) {
@@ -2229,7 +2035,7 @@ class WorkoutsViewUsingContext extends ui_framework_jps__WEBPACK_IMPORTED_MODULE
       let bgColour = [];
       let brColour = [];
       item.exercises.forEach(exercise => {
-        labels.push((0,_MiscFunctions__WEBPACK_IMPORTED_MODULE_8__.truncateString)(exercise.name, 10));
+        labels.push((0,_MiscFunctions__WEBPACK_IMPORTED_MODULE_7__.truncateString)(exercise.name, 10));
 
         if (exercise.type === 'cardio') {
           data.push(exercise.distance);
@@ -2290,9 +2096,8 @@ class WorkoutsViewUsingContext extends ui_framework_jps__WEBPACK_IMPORTED_MODULE
     } // @ts-ignore
 
 
-    if (actionName === WorkoutsViewUsingContext.DOMConfig.collectionConfig.extraActions[1].name) {
-      // continue the current workout
-      _App__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().showCurrentWorkout();
+    if (actionName === WorkoutsViewUsingContext.DOMConfig.collectionConfig.extraActions[1].name) {// continue the current workout
+      //App.getInstance().showCurrentWorkout();
     }
   }
 
@@ -2308,7 +2113,7 @@ class WorkoutsViewUsingContext extends ui_framework_jps__WEBPACK_IMPORTED_MODULE
         const exercise = item.exercises[index];
         result.weight += exercise.weight;
         result.distance += exercise.distance;
-        result.duration = (0,_DurationFunctions__WEBPACK_IMPORTED_MODULE_9__.addDurations)(result.duration, exercise.duration);
+        result.duration = (0,_DurationFunctions__WEBPACK_IMPORTED_MODULE_8__.addDurations)(result.duration, exercise.duration);
       }
     }
 
@@ -2316,6 +2121,265 @@ class WorkoutsViewUsingContext extends ui_framework_jps__WEBPACK_IMPORTED_MODULE
   }
 
 }
+
+/***/ }),
+
+/***/ "./src/App.tsx":
+/*!*********************!*\
+  !*** ./src/App.tsx ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ App)
+/* harmony export */ });
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _app_Controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app/Controller */ "./src/app/Controller.ts");
+/* harmony import */ var _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app/AppTypes */ "./src/app/AppTypes.ts");
+/* harmony import */ var _app_view_ExerciseTypesCompositeView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app/view/ExerciseTypesCompositeView */ "./src/app/view/ExerciseTypesCompositeView.ts");
+/* harmony import */ var _app_view_WorkoutSummaryView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app/view/WorkoutSummaryView */ "./src/app/view/WorkoutSummaryView.ts");
+/* harmony import */ var _app_view_CurrentWorkoutCompositeView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./app/view/CurrentWorkoutCompositeView */ "./src/app/view/CurrentWorkoutCompositeView.ts");
+/* harmony import */ var _app_view_WorkoutsViewUsingContext__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./app/view/WorkoutsViewUsingContext */ "./src/app/view/WorkoutsViewUsingContext.ts");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+//localStorage.debug = 'linked-controller api-ts exercise-types-view app controller-ts controller-ts-detail api-ts socket-ts user-search user-search-detail list-view-renderer';
+//localStorage.debug = 'collection-view-ts collection-view-ts-detail form-detail-view-renderer linked-controller linked-controller-detail exercise-types-view app validation-manager-rule-failure validation-manager';
+//localStorage.debug = 'validation-manager validation-manager-rule-failure abstract-form-detail-validation';
+
+
+
+
+
+
+
+
+
+
+localStorage.debug = 'state-manager-graphql api-ts';
+localStorage.plugin = 'chat';
+(debug__WEBPACK_IMPORTED_MODULE_1___default().log) = console.info.bind(console);
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('app');
+class App extends react__WEBPACK_IMPORTED_MODULE_8__.Component {
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  constructor() {
+    // @ts-ignore
+    super(); // event handlers
+
+    this.handleShowUserSearch = this.handleShowUserSearch.bind(this);
+    this.handleShowExerciseTypes = this.handleShowExerciseTypes.bind(this);
+    this.handleShowChat = this.handleShowChat.bind(this);
+    this.handleShowWorkoutSummary = this.handleShowWorkoutSummary.bind(this);
+    this.handleShowCurrentWorkout = this.handleShowCurrentWorkout.bind(this);
+    _app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().connectToApplication(this, window.localStorage);
+  }
+
+  render() {
+    logger("Rendering App");
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_8__.createElement("div", null);
+  }
+
+  componentDidMount() {
+    logger('component Did Mount');
+    logger('document loaded'); // @ts-ignore
+
+    this.thisEl = document.getElementById('root');
+    this.setupUserSearchViews();
+    this.setupChatViews();
+    this.setupNavigationItemHandling();
+    this.exerciseTypesSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarViewContainer(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.ExerciseTypesSidebarPrefs);
+    new _app_view_ExerciseTypesCompositeView__WEBPACK_IMPORTED_MODULE_4__.ExerciseTypesCompositeView(this.exerciseTypesSidebar).onDocumentLoaded(); //new WorkoutsView().onDocumentLoaded(); // carousel view
+
+    new _app_view_WorkoutsViewUsingContext__WEBPACK_IMPORTED_MODULE_7__.WorkoutsViewUsingContext().onDocumentLoaded();
+    this.workoutSummarySidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarViewContainer(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.WorkoutSummarySidebarPrefs);
+    this.workoutSummarySidebar.addView(new _app_view_WorkoutSummaryView__WEBPACK_IMPORTED_MODULE_5__.WorkoutSummaryView(), {
+      containerId: _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.WorkoutSummarySidebarContainers.container
+    });
+    this.workoutSummarySidebar.onDocumentLoaded();
+    this.currentWorkoutSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarViewContainer(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.CurrentWorkoutSidebarPrefs);
+    this.currentWorkoutView = new _app_view_CurrentWorkoutCompositeView__WEBPACK_IMPORTED_MODULE_6__.CurrentWorkoutCompositeView(this.currentWorkoutSidebar);
+    this.currentWorkoutView.onDocumentLoaded();
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ContextualInformationHelper.getInstance().onDocumentLoaded();
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SecurityManager.getInstance().onDocumentLoaded(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.logout);
+    _app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().onDocumentLoaded();
+    const text = 'Fluffy';
+    const cipher = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SecurityManager.getInstance().encryptString(text);
+    const decipher = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SecurityManager.getInstance().decryptString(cipher);
+    console.log(text);
+    console.log(cipher);
+    console.log(decipher);
+  }
+
+  getCurrentUser() {
+    return _app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getLoggedInUserId();
+  }
+
+  hideAllSideBars() {
+    this.chatSidebar.eventHide(null);
+    this.userSearchSidebar.eventHide(null);
+    this.exerciseTypesSidebar.eventHide(null);
+    this.currentWorkoutSidebar.eventHide(null);
+  }
+
+  handleShowUserSearch(event) {
+    logger('Handling Show User Search');
+    event.preventDefault(); //this.hideAllSideBars();
+    // prevent anything from happening if we are not logged in
+
+    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
+      // @ts-ignore
+      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
+      return;
+    }
+
+    this.userSearchSidebar.eventShow(event);
+  }
+
+  handleShowWorkoutSummary(event) {
+    logger('Handling Show Workout Summary');
+    event.preventDefault(); //this.hideAllSideBars();
+    // prevent anything from happening if we are not logged in
+
+    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
+      // @ts-ignore
+      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
+      return;
+    }
+
+    this.hideAllSideBars();
+    this.workoutSummarySidebar.eventShow(event);
+  }
+
+  handleShowCurrentWorkout(event) {
+    logger('Handling Show Current Workout');
+    event.preventDefault(); //this.hideAllSideBars();
+    // prevent anything from happening if we are not logged in
+
+    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
+      // @ts-ignore
+      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
+      return;
+    }
+
+    this.currentWorkoutSidebar.eventShow(event);
+  }
+
+  handleShowExerciseTypes(event) {
+    logger('Handling Show Exercise Types');
+    event.preventDefault(); //this.hideAllSideBars();
+    // prevent anything from happening if we are not logged in
+
+    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
+      // @ts-ignore
+      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
+      return;
+    }
+
+    this.exerciseTypesSidebar.eventShow(event);
+  }
+
+  handleShowChat(roomName) {
+    logger('Handling Show Chat'); //event.preventDefault();
+    //this.hideAllSideBars();
+    // prevent anything from happening if we are not logged in
+
+    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
+      // @ts-ignore
+      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
+      return;
+    }
+
+    this.chatSidebar.eventShow(null);
+
+    if (roomName) {
+      this.chatView.selectChatRoom(roomName);
+    }
+  }
+
+  countChanged(newCount) {
+    //
+    let buffer = 'Chat <i class="fas fa-inbox"></i>';
+
+    if (newCount > 0) {
+      buffer += ` <span class="badge badge-pill badge-primary">&nbsp;${newCount}&nbsp;</span>`;
+    }
+
+    if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
+  }
+
+  addingExerciseToCurrentWorkout(exerciseType) {
+    this.exerciseTypesSidebar.eventHide(null);
+    this.currentWorkoutSidebar.eventShow(null);
+    this.currentWorkoutView.getStateManager().addNewItemToState(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes, exerciseType, false);
+  }
+
+  showCurrentWorkout() {
+    this.currentWorkoutSidebar.eventShow(null);
+  }
+
+  setupNavigationItemHandling() {
+    // @ts-ignore
+    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.userSearchId).addEventListener('click', this.handleShowUserSearch); // @ts-ignore
+
+    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.exerciseTypesId).addEventListener('click', this.handleShowExerciseTypes); // @ts-ignore
+
+    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.workoutSummary).addEventListener('click', this.handleShowWorkoutSummary); // @ts-ignore
+
+    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.currentWorkout).addEventListener('click', this.handleShowCurrentWorkout); // @ts-ignore
+
+    this.chatNavigationItem = document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.chatId); // @ts-ignore
+
+    this.chatNavigationItem.addEventListener('click', this.handleShowChat);
+  }
+
+  setupUserSearchViews() {
+    // add the subviews for the user search
+    this.userSearchSidebar = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.UserSearchSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager());
+    this.userSearchSidebar.onDocumentLoaded();
+  }
+
+  setupChatViews() {
+    // add the views to the chat side bar
+    this.chatSidebar = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ChatRoomsSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager());
+    this.chatSidebar.onDocumentLoaded();
+  }
+
+}
+$(function () {
+  // @ts-ignore
+  const element = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_8__.createElement(App, {
+    className: "container-fluid justify-content-around"
+  });
+  react_dom__WEBPACK_IMPORTED_MODULE_9__.render(element, document.getElementById('root'));
+  $(function () {
+    $('#datepicker').datepicker({
+      //nextText: '&rarr;',
+      //prevText: '&larr;',
+      showOtherMonths: true,
+      weekHeader: 'WEEK',
+      showWeek: true,
+      firstDay: 1,
+      // numberOfMonths:1,
+      showButtonPanel: false,
+      dateFormat: 'dd/MM/yyyy',
+      dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] //showOn: "button",
+      //buttonImage: "img/calendar-blue.png",
+      //buttonImageOnly: true,
+
+    });
+  });
+});
 
 /***/ }),
 
@@ -2792,7 +2856,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendor"], () => (__webpack_require__("./src/App.ts")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendor"], () => (__webpack_require__("./src/App.tsx")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

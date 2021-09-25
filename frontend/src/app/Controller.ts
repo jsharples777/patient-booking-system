@@ -78,27 +78,71 @@ export default class Controller implements StateChangeListener, DataObjectListen
             }
         ]);
         let qlSM = GraphQLApiStateManager.getInstance();
-        qlSM.initialise([{
-            stateName: STATE_NAMES.exerciseTypes,
-            serverURL: '',
-            apiURL: '/graphql',
-            apis: {
-                findAll: 'query {getExerciseTypes {_id,name,type,sets,reps,duration,weight,distance,createdOn,createdBy,modifiedOn,modifiedBy}}',
-                create: 'mutation createExercise($data: ExerciseTypeInput!){addExerciseType(exercise: $data) {_id,name,type,sets,reps,duration,weight,distance,createdOn,createdBy,modifiedOn,modifiedBy}}',
-                destroy: 'mutation deleteExercise($identifier: String!){deleteExerciseType(id: $identifier)}',
-                update: 'mutation updateExercise($data: ExerciseTypeInput!){updateExerciseType(exercise: $data) }',
-                find: '',
+        qlSM.initialise([
+            {
+                stateName: STATE_NAMES.exerciseTypes,
+                serverURL: '',
+                apiURL: '/graphql',
+                apis: {
+                    findAll: 'query {getExerciseTypes {_id,name,type,sets,reps,duration,weight,distance,createdOn,createdBy,modifiedOn,modifiedBy}}',
+                    create: 'mutation createExercise($data: ExerciseTypeInput!){addExerciseType(exercise: $data) {_id,name,type,sets,reps,duration,weight,distance,createdOn,createdBy,modifiedOn,modifiedBy}}',
+                    destroy: 'mutation deleteExercise($identifier: String!){deleteExerciseType(id: $identifier)}',
+                    update: 'mutation updateExercise($data: ExerciseTypeInput!){updateExerciseType(exercise: $data) }',
+                    find: '',
+                },
+                data: {
+                    findAll: 'getExerciseTypes',
+                    create: 'addExerciseType',
+                    destroy: 'updateExerciseType',
+                    update: 'deleteExerciseType',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
             },
-            data: {
-                findAll: 'getExerciseTypes',
-                create: 'addExerciseType',
-                destroy: 'updateExerciseType',
-                update: 'deleteExerciseType',
-                find: ''
+            {
+                stateName: STATE_NAMES.patientSearch,
+                serverURL: '',
+                apiURL: '/graphql',
+                apis: {
+                    findAll: 'query {getPatientSearchDetails {_id,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}}}',
+                    create: '',
+                    destroy: '',
+                    update: '',
+                    find: '',
+                },
+                data: {
+                    findAll: 'getPatientSearchDetails',
+                    create: '',
+                    destroy: '',
+                    update: '',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
             },
-            isActive: true,
-            idField: '_id'
-        }])
+            {
+                stateName: STATE_NAMES.appointments,
+                serverURL: '',
+                apiURL: '/graphql',
+                apis: {
+                    findAll: 'query {getAppointments {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type}}',
+                    create: 'mutation createAppointment($data: AppointmentInput!){addAppointment(appt: $data) {_id,name,type,sets,reps,duration,weight,distance,createdOn,createdBy,modifiedOn,modifiedBy}}',
+                    destroy: 'mutation deleteAppointment($identifier: String!){deleteAppointment(id: $identifier)}',
+                    update: 'mutation updateAppointment($data: AppointmentInput!){updateAppointment(appt: $data)}',
+                    find: '',
+                },
+                data: {
+                    findAll: 'getExerciseTypes',
+                    create: 'addExerciseType',
+                    destroy: 'updateExerciseType',
+                    update: 'deleteExerciseType',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
+            },
+        ])
 
 
         let aggregateSM = new AggregateStateManager(isSameMongo);
@@ -108,7 +152,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
         let asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
 
         aggregateSM.addStateManager(memorySM, [], false);
-        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.exerciseTypes], false);
+        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.exerciseTypes,STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches], false);
         aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users, STATE_NAMES.workouts], false);
         this.stateManager = aggregateSM;
 
@@ -152,6 +196,8 @@ export default class Controller implements StateChangeListener, DataObjectListen
             this.getStateManager().getStateByName(STATE_NAMES.users);
             this.getStateManager().getStateByName(STATE_NAMES.exerciseTypes);
             this.getStateManager().getStateByName(STATE_NAMES.workouts);
+            this.getStateManager().getStateByName(STATE_NAMES.patientSearch);
+            this.getStateManager().getStateByName(STATE_NAMES.appointments);
 
             // apply any queued changes from being offline
             DownloadManager.getInstance().processOfflineItems();
