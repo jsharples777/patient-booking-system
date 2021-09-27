@@ -29,7 +29,8 @@ export default class AppointmentsQLDelegate {
                     isDNA:1,
                     provider:1,
                     note:1,
-                    type:1
+                    type:1,
+                    name:1,
                 }
             };
 

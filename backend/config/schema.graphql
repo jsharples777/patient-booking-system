@@ -39,7 +39,8 @@ type Appointment {
     isDNA:Boolean,
     provider:String,
     note:String,
-    type:String
+    type:String,
+    name:String
 }
 
 input AppointmentInput {
@@ -53,7 +54,8 @@ input AppointmentInput {
     isDNA:Boolean,
     provider:String,
     note:String,
-    type:String
+    type:String,
+    name:String
 }
 
 type identifiers {

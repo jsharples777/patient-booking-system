@@ -24,13 +24,11 @@ import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
 import {setOptions, Datepicker, datepicker, eventcalendar, Eventcalendar} from "@mobiscroll/javascript";
 import {AppointmentController} from "./app/AppointmentController";
+import moment from 'moment';
 
 
 
-localStorage.debug = 'state-manager-graphql api-ts';
-localStorage.plugin = 'chat';
 
-debug.log = console.info.bind(console);
 
 
 const logger = debug('app');
@@ -102,7 +100,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
             dragToCreate:true,
             dragToMove:true,
             dragToResize:true,
-            min:new Date(),
+            min:moment().subtract(3,"months"),
             controls:['calendar'],
             showControls:true,
             view: {
@@ -251,8 +249,15 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 }
 
+localStorage.debug = 'state-manager-graphql api-ts app controller-ts appointment-controller';
+localStorage.plugin = 'chat';
+
+debug.log = console.info.bind(console);
 
 $(function () {
+
+
+
     setOptions( {
         theme: 'ios',
         themeVariant: 'light'

@@ -61,45 +61,10 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 serverURL: '',
                 api: API_Config.users,
                 isActive: true
-            },
-            {
-                stateName: STATE_NAMES.exerciseTypes,
-                serverURL: '',
-                api: API_Config.exerciseTypes,
-                isActive: true,
-                idField: '_id'
-            },
-            {
-                stateName: STATE_NAMES.workouts,
-                serverURL: '',
-                api: API_Config.workouts,
-                isActive: true,
-                idField: '_id'
             }
         ]);
         let qlSM = GraphQLApiStateManager.getInstance();
         qlSM.initialise([
-            {
-                stateName: STATE_NAMES.exerciseTypes,
-                serverURL: '',
-                apiURL: '/graphql',
-                apis: {
-                    findAll: 'query {getExerciseTypes {_id,name,type,sets,reps,duration,weight,distance,createdOn,createdBy,modifiedOn,modifiedBy}}',
-                    create: 'mutation createExercise($data: ExerciseTypeInput!){addExerciseType(exercise: $data) {_id,name,type,sets,reps,duration,weight,distance,createdOn,createdBy,modifiedOn,modifiedBy}}',
-                    destroy: 'mutation deleteExercise($identifier: String!){deleteExerciseType(id: $identifier)}',
-                    update: 'mutation updateExercise($data: ExerciseTypeInput!){updateExerciseType(exercise: $data) }',
-                    find: '',
-                },
-                data: {
-                    findAll: 'getExerciseTypes',
-                    create: 'addExerciseType',
-                    destroy: 'updateExerciseType',
-                    update: 'deleteExerciseType',
-                    find: ''
-                },
-                isActive: true,
-                idField: '_id'
-            },
             {
                 stateName: STATE_NAMES.patientSearch,
                 serverURL: '',
@@ -126,17 +91,17 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 serverURL: '',
                 apiURL: '/graphql',
                 apis: {
-                    findAll: 'query {getAppointments {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type}}',
-                    create: 'mutation createAppointment($data: AppointmentInput!){addAppointment(appt: $data) {_id,name,type,sets,reps,duration,weight,distance,createdOn,createdBy,modifiedOn,modifiedBy}}',
+                    findAll: 'query {getAppointments {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type,name}}',
+                    create: 'mutation createAppointment($data: AppointmentInput!){addAppointment(appt: $data) {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type,name }}',
                     destroy: 'mutation deleteAppointment($identifier: String!){deleteAppointment(id: $identifier)}',
                     update: 'mutation updateAppointment($data: AppointmentInput!){updateAppointment(appt: $data)}',
                     find: '',
                 },
                 data: {
-                    findAll: 'getExerciseTypes',
-                    create: 'addExerciseType',
-                    destroy: 'updateExerciseType',
-                    update: 'deleteExerciseType',
+                    findAll: 'getAppointments',
+                    create: 'addAppointment',
+                    destroy: 'deleteAppointment',
+                    update: 'updateAppointment',
                     find: ''
                 },
                 isActive: true,
@@ -194,8 +159,6 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
             // load the users
             this.getStateManager().getStateByName(STATE_NAMES.users);
-            this.getStateManager().getStateByName(STATE_NAMES.exerciseTypes);
-            this.getStateManager().getStateByName(STATE_NAMES.workouts);
             this.getStateManager().getStateByName(STATE_NAMES.patientSearch);
             this.getStateManager().getStateByName(STATE_NAMES.appointments);
 
