@@ -58,7 +58,9 @@ export const VIEW_NAME = {
 export const VIEW_CONTAINER = {
     exerciseTypeDetail: "exerciseTypeDetail",
     currentWorkoutDetail: 'workoutDetail',
-    exerciseDropZone: 'exerciseDropZone'
+    exerciseDropZone: 'exerciseDropZone',
+    calendarControl: 'calendarControl',
+    calendarDetail:'calendarDetail'
 }
 
 export const BUTTON = {
@@ -100,5 +102,29 @@ export const  WorkoutSummarySidebarPrefs: SidebarPrefs = {
 export const  WorkoutSummarySidebarContainers = {
     container: 'workoutSummary',
 }
+
+export enum Day {
+    Monday = 1,
+    Tuesday = 2,
+    Wednesday = 3,
+    Thursday = 4,
+    Friday = 5,
+    Saturday = 6,
+    Sunday = 7
+}
+
+export type ClinicDailyPref = {
+    day:Day,
+    startTime:string,
+    endTime:string,
+    lunchStart:string,
+    lunchEnd:string
+}
+
+export type ClinicPrefs = {
+    dailypref:ClinicDailyPref[],
+    timestep:number,
+}
+
 
 

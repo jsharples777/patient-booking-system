@@ -7,42 +7,27 @@
     <div class="alert alert-danger">{{error}}</div>
 {{/if}}
 {{{body}}}
-{{> sidebars/exercise-types-sb }}
 {{> sidebars/user-search-sb }}
 {{> sidebars/chat-sb }}
-{{> sidebars/workout-summary-sb }}
-{{> sidebars/current-workout-sb }}
 {{> modals/alert }}
 {{> modals/context-menu }}
-<div id="root"></div>
-<div id="workoutsDiv" class="root">
-    <section class="pt-5 pb-5">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-6">
-                    <h3 class="mb-3 text-white">Workouts </h3>
-                </div>
-                <div class="col-6 text-right">
-                    <a class="btn btn-primary mb-3 mr-1" href="#workoutsContainer" role="button" data-slide="prev">
-                        <i class="fa fa-arrow-left"></i>
-                    </a>
-                    <a class="btn btn-primary mb-3 " href="#workoutsContainer" role="button" data-slide="next">
-                        <i class="fa fa-arrow-right"></i>
-                    </a>
-                </div>
-                <div class="col-12">
-                    <div id="workoutsContainer" class="carousel slide" data-ride="carousel" data-interval="false">
-                        <div id="workouts" class="carousel-inner">
-                        </div>
-                    </div>
-                </div>
+<div id="appointmentBook" class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-5">
+            <!-- date picker here -->
+            <div id="calendarControl">
+
             </div>
         </div>
-    </section>
-
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <!-- scheduler here -->
+            <div id="calendarDetail"></div>
+        </div>
+    </div>
 </div>
-<div><canvas id="test" ></canvas></div>
-<div id="datepicker" style="width: 20vw"></div>
+<div id="root"></div>
 {{> footers/footer-main }}
 </body>
 {{#if user}}

@@ -10,6 +10,14 @@
 .enter-message {
     width:30vw;
 }
+.mbsc-card-content {
+    padding: 1em;
+    overflow:auto;
+}
+
+[mbsc-form]:not(.mbsc-form) {
+    visibility:visible;
+}
 
 * {
     font-family: 'Oxygen', sans-serif;

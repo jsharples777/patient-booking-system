@@ -11,11 +11,10 @@
     "lint": "eslint --ext js,jsx,tsx,ts --fix ."
   },
   "dependencies": {
-    "@types/cryptojs": "^3.1.30",
+    "@mobiscroll/javascript": "^5.10.0",
     "chart.js": "^3.5.1",
     "cryptojs": "^2.5.3",
     "debug": "^4.3.2",
-    "handsontable": "^9.0.2",
     "idb": "^6.1.2",
     "install": "^0.13.0",
     "loader-utils": "^2.0.0",
@@ -33,6 +32,7 @@
     "@babel/preset-env": "^7.14.7",
     "@babel/preset-react": "^7.14.5",
     "@babel/preset-typescript": "^7.14.5",
+    "@types/cryptojs": "^3.1.30",
     "@types/debug": "^4.1.7",
     "@types/jquery": "^3.5.6",
     "@types/jqueryui": "^1.12.16",
