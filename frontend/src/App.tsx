@@ -2,14 +2,6 @@
 //localStorage.debug = 'collection-view-ts collection-view-ts-detail form-detail-view-renderer linked-controller linked-controller-detail exercise-types-view app validation-manager-rule-failure validation-manager';
 //localStorage.debug = 'validation-manager validation-manager-rule-failure abstract-form-detail-validation';
 
-import {
-    ChatLogsView,
-    ChatRoomsSidebar,
-    ContextualInformationHelper,
-    SecurityManager,
-    UnreadMessageCountListener,
-    UserSearchSidebar
-} from 'ui-framework-jps';
 
 
 import debug from 'debug';
@@ -25,6 +17,11 @@ import ReactDOM from "react-dom";
 import {setOptions, Datepicker, datepicker, eventcalendar, Eventcalendar} from "@mobiscroll/javascript";
 import {AppointmentController} from "./app/AppointmentController";
 import moment from 'moment';
+import {UnreadMessageCountListener} from "./framework/socket/UnreadMessageCountListener";
+import {ContextualInformationHelper} from "./framework/ui/context/ContextualInformationHelper";
+import {SecurityManager} from "./framework/security/SecurityManager";
+import {UserSearchSidebar} from "./framework/ui/chat/UserSearchSidebar";
+import {ChatRoomsSidebar} from "./framework/ui/chat/ChatRoomsSidebar";
 
 
 
@@ -249,7 +246,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 }
 
-localStorage.debug = '*';
+localStorage.debug = 'api-ts-results dm-api-ts';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

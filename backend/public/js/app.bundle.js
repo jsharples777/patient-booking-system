@@ -27,7 +27,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "WorkoutSummarySidebarContainers": () => (/* binding */ WorkoutSummarySidebarContainers),
 /* harmony export */   "Day": () => (/* binding */ Day)
 /* harmony export */ });
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "../../ui-framework/dist/index.js");
+/* harmony import */ var _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../framework/ui/ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
 
 let Decorator;
 
@@ -100,7 +100,7 @@ const INPUT = {
 const CurrentWorkoutSidebarPrefs = {
   id: 'currentWorkoutSidebar',
   expandedSize: '50%',
-  location: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.right
+  location: _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.right
 };
 const CurrentWorkoutContainers = {
   list: 'exercises',
@@ -109,7 +109,7 @@ const CurrentWorkoutContainers = {
 const ExerciseTypesSidebarPrefs = {
   id: 'exerciseTypesSidebar',
   expandedSize: '50%',
-  location: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.left
+  location: _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.left
 };
 const ExerciseTypesSidebarContainers = {
   container: 'exerciseTypesContainer'
@@ -117,7 +117,7 @@ const ExerciseTypesSidebarContainers = {
 const WorkoutSummarySidebarPrefs = {
   id: 'workoutSummarySidebar',
   expandedSize: '100%',
-  location: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.bottom
+  location: _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.bottom
 };
 const WorkoutSummarySidebarContainers = {
   container: 'workoutSummary'
@@ -293,21 +293,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Controller)
 /* harmony export */ });
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "../../ui-framework/dist/index.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _SocketListenerDelegate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SocketListenerDelegate */ "./src/app/SocketListenerDelegate.ts");
-/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AppTypes */ "./src/app/AppTypes.ts");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./EqualityFunctions */ "./src/app/EqualityFunctions.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _SocketListenerDelegate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SocketListenerDelegate */ "./src/app/SocketListenerDelegate.ts");
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppTypes */ "./src/app/AppTypes.ts");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./EqualityFunctions */ "./src/app/EqualityFunctions.ts");
+/* harmony import */ var _framework_state_RESTApiStateManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../framework/state/RESTApiStateManager */ "./src/framework/state/RESTApiStateManager.ts");
+/* harmony import */ var _framework_state_GraphQLApiStateManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../framework/state/GraphQLApiStateManager */ "./src/framework/state/GraphQLApiStateManager.ts");
+/* harmony import */ var _framework_state_AggregateStateManager__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../framework/state/AggregateStateManager */ "./src/framework/state/AggregateStateManager.ts");
+/* harmony import */ var _framework_state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../framework/state/MemoryBufferStateManager */ "./src/framework/state/MemoryBufferStateManager.ts");
+/* harmony import */ var _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../framework/state/AsyncStateManagerWrapper */ "./src/framework/state/AsyncStateManagerWrapper.ts");
+/* harmony import */ var _framework_socket_SocketManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../framework/socket/SocketManager */ "./src/framework/socket/SocketManager.ts");
+/* harmony import */ var _framework_socket_ChatManager__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../framework/socket/ChatManager */ "./src/framework/socket/ChatManager.ts");
+/* harmony import */ var _framework_socket_NotificationController__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../framework/socket/NotificationController */ "./src/framework/socket/NotificationController.ts");
+/* harmony import */ var _framework_network_DownloadManager__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../framework/network/DownloadManager */ "./src/framework/network/DownloadManager.ts");
+/* harmony import */ var _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../framework/model/DataObjectTypeDefs */ "./src/framework/model/DataObjectTypeDefs.ts");
+/* harmony import */ var _framework_model_ObjectDefinitionRegistry__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../framework/model/ObjectDefinitionRegistry */ "./src/framework/model/ObjectDefinitionRegistry.ts");
+/* harmony import */ var _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../framework/model/BasicObjectDefinitionFactory */ "./src/framework/model/BasicObjectDefinitionFactory.ts");
+/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../framework/ui/helper/SimpleValueDataSource */ "./src/framework/ui/helper/SimpleValueDataSource.ts");
+/* harmony import */ var _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../framework/ui/ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
 
 
 
 
 
 
-const cLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('controller-ts');
-const cLoggerDetail = debug__WEBPACK_IMPORTED_MODULE_1___default()('controller-ts-detail');
+
+
+
+
+
+
+
+
+
+
+
+
+
+const cLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('controller-ts');
+const cLoggerDetail = debug__WEBPACK_IMPORTED_MODULE_0___default()('controller-ts-detail');
 class Controller {
   // @ts-ignore
   constructor() {}
@@ -324,23 +350,23 @@ class Controller {
     this.applicationView = applicationView;
     this.clientSideStorage = clientSideStorage; // setup the API calls
 
-    let restSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.RESTApiStateManager.getInstance();
+    let restSM = _framework_state_RESTApiStateManager__WEBPACK_IMPORTED_MODULE_4__.RESTApiStateManager.getInstance();
     restSM.initialise([{
-      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users,
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users,
       serverURL: '',
-      api: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.users,
+      api: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.users,
       isActive: true
     }, {
-      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig,
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig,
       serverURL: '',
-      api: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.clinicConfig,
+      api: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.clinicConfig,
       isActive: true
     }]);
-    let qlSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.GraphQLApiStateManager.getInstance();
+    let qlSM = _framework_state_GraphQLApiStateManager__WEBPACK_IMPORTED_MODULE_5__.GraphQLApiStateManager.getInstance();
     qlSM.initialise([{
-      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch,
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch,
       serverURL: '',
-      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.graphQL,
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
       apis: {
         findAll: 'query {getPatientSearchDetails {_id,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}}}',
         create: '',
@@ -358,9 +384,9 @@ class Controller {
       isActive: true,
       idField: '_id'
     }, {
-      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments,
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments,
       serverURL: '',
-      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.graphQL,
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
       apis: {
         findAll: 'query {getAppointments {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type,name}}',
         create: 'mutation createAppointment($data: AppointmentInput!){addAppointment(appt: $data) {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type,name }}',
@@ -378,9 +404,9 @@ class Controller {
       isActive: true,
       idField: '_id'
     }, {
-      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes,
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes,
       serverURL: '',
-      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.graphQL,
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
       apis: {
         findAll: 'query {getAppointmentTypes {_id,name,colour}}',
         create: 'mutation createAppointmentType($data: AppointmentInput!){addAppointmentType(apptType: $data) {_id,name,colour}}',
@@ -398,13 +424,13 @@ class Controller {
       isActive: true,
       idField: '_id'
     }]);
-    let aggregateSM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AggregateStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
-    let memorySM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.MemoryBufferStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
-    let asyncREST = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AsyncStateManagerWrapper(aggregateSM, restSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
-    let asyncQL = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AsyncStateManagerWrapper(aggregateSM, qlSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
+    let aggregateSM = new _framework_state_AggregateStateManager__WEBPACK_IMPORTED_MODULE_6__.AggregateStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
+    let memorySM = new _framework_state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_7__.MemoryBufferStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
+    let asyncREST = new _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_8__.AsyncStateManagerWrapper(aggregateSM, restSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
+    let asyncQL = new _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_8__.AsyncStateManagerWrapper(aggregateSM, qlSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     aggregateSM.addStateManager(memorySM, [], false);
-    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentPatientSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig], false);
-    aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig], false);
+    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig], false);
+    aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig], false);
     this.stateManager = aggregateSM; // state listener
 
     this.stateChanged = this.stateChanged.bind(this);
@@ -423,29 +449,29 @@ class Controller {
   onDocumentLoaded() {
     cLogger('Initialising data state'); // listen for socket events
 
-    let socketListerDelegate = new _SocketListenerDelegate__WEBPACK_IMPORTED_MODULE_2__["default"]();
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SocketManager.getInstance().setListener(socketListerDelegate); // now that we have all the user we can setup the chat system but only if we are logged in
+    let socketListerDelegate = new _SocketListenerDelegate__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    _framework_socket_SocketManager__WEBPACK_IMPORTED_MODULE_9__.SocketManager.getInstance().setListener(socketListerDelegate); // now that we have all the user we can setup the chat system but only if we are logged in
 
     cLogger(`Setting up chat system for user ${this.getLoggedInUserId()}: ${this.getLoggedInUsername()}`);
 
     if (this.getLoggedInUserId().trim().length > 0) {
       // setup the chat system
-      let chatManager = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ChatManager.getInstance(); // this connects the manager to the socket system
+      let chatManager = _framework_socket_ChatManager__WEBPACK_IMPORTED_MODULE_10__.ChatManager.getInstance(); // this connects the manager to the socket system
       // setup the chat notification system
 
-      ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.NotificationController.getInstance();
+      _framework_socket_NotificationController__WEBPACK_IMPORTED_MODULE_11__.NotificationController.getInstance();
       chatManager.setCurrentUser(this.getLoggedInUsername()); // let the application view know about message counts
 
       chatManager.setUnreadCountListener(this.applicationView);
       chatManager.login(); // load the users
 
-      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users);
-      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes);
-      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig);
-      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch);
-      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments); // apply any queued changes from being offline
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments); // apply any queued changes from being offline
 
-      ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.DownloadManager.getInstance().processOfflineItems();
+      _framework_network_DownloadManager__WEBPACK_IMPORTED_MODULE_12__.DownloadManager.getInstance().processOfflineItems();
     }
   }
 
@@ -522,7 +548,7 @@ class Controller {
 
   create(controller, typeName, dataObj) {
     switch (typeName) {
-      case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes:
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.exerciseTypes:
         {
           cLogger(`Handling create new exercise type`);
           cLoggerDetail(dataObj);
@@ -534,7 +560,7 @@ class Controller {
 
   delete(controller, typeName, dataObj) {
     switch (typeName) {
-      case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes:
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.exerciseTypes:
         {
           cLogger(`Handling delete exercise type - already managed by stateful collection view`);
           cLoggerDetail(dataObj);
@@ -545,7 +571,7 @@ class Controller {
 
   update(controller, typeName, dataObj) {
     switch (typeName) {
-      case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes:
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.exerciseTypes:
         {
           cLogger(`Handling update exercise type`);
           cLoggerDetail(dataObj);
@@ -558,7 +584,7 @@ class Controller {
   addExerciseToCurrentWorkout(exerciseType) {
     let copyOfExercise = { ...exerciseType
     };
-    copyOfExercise._id = (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])(); // update the id to be unique for the workout
+    copyOfExercise._id = (0,uuid__WEBPACK_IMPORTED_MODULE_18__["default"])(); // update the id to be unique for the workout
 
     this.applicationView.addingExerciseToCurrentWorkout(copyOfExercise);
   }
@@ -573,32 +599,32 @@ class Controller {
 
   setupDataObjectDefinitions() {
     // create the object definitions for the exercise type and workout
-    let exerciseTypeDefinition = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes, 'Exercise', true, true, true, '_id');
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "name", "Name", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, true, "Exercise name");
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "type", "Type", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.limitedChoice, true, "Choose cardio or strength", new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SimpleValueDataSource([{
+    let exerciseTypeDefinition = _framework_model_ObjectDefinitionRegistry__WEBPACK_IMPORTED_MODULE_14__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.exerciseTypes, 'Exercise', true, true, true, '_id');
+    _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "name", "Name", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.text, true, "Exercise name");
+    _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "type", "Type", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.limitedChoice, true, "Choose cardio or strength", new _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_16__.SimpleValueDataSource([{
       name: 'Cardio',
       value: 'cardio'
     }, {
       name: 'Strength',
       value: 'strength'
     }]));
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "duration", "Duration", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.duration, true, "Exercise time");
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "sets", "Sets", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.integer, false, "Number of sets");
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "reps", "Repetitions", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.integer, false, "Number of reps");
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "weight", "Weight", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.float, false, "Weight used");
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "distance", "Distance", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.float, false, "Distance travelled");
+    _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "duration", "Duration", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.duration, true, "Exercise time");
+    _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "sets", "Sets", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.integer, false, "Number of sets");
+    _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "reps", "Repetitions", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.integer, false, "Number of reps");
+    _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "weight", "Weight", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.float, false, "Weight used");
+    _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "distance", "Distance", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.float, false, "Distance travelled");
     cLogger(`Exercise type data object definition`);
     cLogger(exerciseTypeDefinition);
-    cLoggerDetail(ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ObjectDefinitionRegistry.getInstance().findDefinition('exerciseType'));
-    let workoutDefinition = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.workouts, 'Workout', true, true, true, '_id');
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "name", "Name", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Give the workout a name");
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "completed", "Completed", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.boolean, true, "Have completed the workout");
-    let exercisesFieldDefinition = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "exercises", "Exercises", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.collection, true, "Exercises in this workout");
-    exercisesFieldDefinition.idType = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.KeyType.collection;
+    cLoggerDetail(_framework_model_ObjectDefinitionRegistry__WEBPACK_IMPORTED_MODULE_14__.ObjectDefinitionRegistry.getInstance().findDefinition('exerciseType'));
+    let workoutDefinition = _framework_model_ObjectDefinitionRegistry__WEBPACK_IMPORTED_MODULE_14__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.workouts, 'Workout', true, true, true, '_id');
+    _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "name", "Name", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.text, false, "Give the workout a name");
+    _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "completed", "Completed", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.boolean, true, "Have completed the workout");
+    let exercisesFieldDefinition = _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_15__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "exercises", "Exercises", _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_13__.FieldType.collection, true, "Exercises in this workout");
+    exercisesFieldDefinition.idType = _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_17__.KeyType.collection;
     exercisesFieldDefinition.collectionOfDataObjectId = exerciseTypeDefinition.id;
     cLogger(`Workout data object definition`);
     cLogger(workoutDefinition);
-    cLoggerDetail(ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ObjectDefinitionRegistry.getInstance().findDefinition('workout'));
+    cLoggerDetail(_framework_model_ObjectDefinitionRegistry__WEBPACK_IMPORTED_MODULE_14__.ObjectDefinitionRegistry.getInstance().findDefinition('workout'));
   }
   /*
   *
@@ -664,22 +690,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ SocketListenerDelegate)
 /* harmony export */ });
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "../../ui-framework/dist/index.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Controller */ "./src/app/Controller.ts");
-/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AppTypes */ "./src/app/AppTypes.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Controller */ "./src/app/Controller.ts");
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppTypes */ "./src/app/AppTypes.ts");
+/* harmony import */ var _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../framework/notification/NotificationManager */ "./src/framework/notification/NotificationManager.ts");
 
 
 
 
-const slLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('socket-listener');
+const slLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('socket-listener');
 class SocketListenerDelegate {
   constructor() {}
 
   handleDataChangedByAnotherUser(message) {
     slLogger(`Handling data change ${message.type} on object type ${message.stateName} made by user ${message.user}`);
-    const changeUser = _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users, {
+    const changeUser = _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, {
       _id: message.user
     });
     let username = "unknown";
@@ -697,22 +723,22 @@ class SocketListenerDelegate {
         case "create":
           {
             switch (message.stateName) {
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users, stateObj, true);
-                  ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.NotificationManager.getInstance().show(stateObj.username, `${stateObj.username} has just registered.`, ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.NotificationType.info);
+                  _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, stateObj, true);
+                  _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_3__.NotificationManager.getInstance().show(stateObj.username, `${stateObj.username} has just registered.`, _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_3__.NotificationType.info);
                   break;
                 }
 
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, stateObj, true);
+                  _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, stateObj, true);
                   break;
                 }
 
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes, stateObj, true);
+                  _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, stateObj, true);
                   break;
                 }
             }
@@ -723,15 +749,15 @@ class SocketListenerDelegate {
         case "update":
           {
             switch (message.stateName) {
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes, stateObj, true);
+                  _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, stateObj, true);
                   break;
                 }
 
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, stateObj, true);
+                  _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, stateObj, true);
                   break;
                 }
             }
@@ -742,15 +768,15 @@ class SocketListenerDelegate {
         case "delete":
           {
             switch (message.stateName) {
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes, stateObj, true);
+                  _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, stateObj, true);
                   break;
                 }
 
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, stateObj, true);
+                  _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, stateObj, true);
                   break;
                 }
             }
@@ -768,266 +794,17 @@ class SocketListenerDelegate {
   }
 
   getCurrentUser() {
-    return _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getLoggedInUserId();
+    return _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getLoggedInUserId();
   }
 
 }
 
 /***/ }),
 
-/***/ "./src/App.tsx":
-/*!*********************!*\
-  !*** ./src/App.tsx ***!
-  \*********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ App)
-/* harmony export */ });
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "../../ui-framework/dist/index.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _app_Controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app/Controller */ "./src/app/Controller.ts");
-/* harmony import */ var _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app/AppTypes */ "./src/app/AppTypes.ts");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
-/* harmony import */ var _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./app/AppointmentController */ "./src/app/AppointmentController.ts");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_8__);
-//localStorage.debug = 'linked-controller api-ts exercise-types-view app controller-ts controller-ts-detail api-ts socket-ts user-search user-search-detail list-view-renderer';
-//localStorage.debug = 'collection-view-ts collection-view-ts-detail form-detail-view-renderer linked-controller linked-controller-detail exercise-types-view app validation-manager-rule-failure validation-manager';
-//localStorage.debug = 'validation-manager validation-manager-rule-failure abstract-form-detail-validation';
-
-
-
-
-
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('app');
-class App extends react__WEBPACK_IMPORTED_MODULE_4__.Component {
-  // @ts-ignore
-  // @ts-ignore
-  // @ts-ignore
-  thisEl = null;
-  chatNavigationItem = null;
-  datePicker = null;
-  calendar = null;
-
-  constructor() {
-    // @ts-ignore
-    super(); // event handlers
-
-    this.handleShowUserSearch = this.handleShowUserSearch.bind(this);
-    this.handleShowChat = this.handleShowChat.bind(this);
-    _app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().connectToApplication(this, window.localStorage);
-  }
-
-  render() {
-    logger("Rendering App");
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4__.createElement("div", null);
-  }
-
-  componentDidMount() {
-    logger('component Did Mount');
-    logger('document loaded'); // @ts-ignore
-
-    this.thisEl = document.getElementById('root');
-    this.setupUserSearchViews();
-    this.setupChatViews();
-    this.setupNavigationItemHandling(); // setup the scheduler
-    // @ts-ignore
-
-    this.datePicker = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_6__.datepicker)(document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.VIEW_CONTAINER.calendarControl), {
-      controls: ['calendar'],
-      display: "inline",
-      dateFormat: 'YYYYMMDD',
-      dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      showWeekNumbers: true,
-      onChange: (event, inst) => {
-        var _this$calendar;
-
-        (_this$calendar = this.calendar) === null || _this$calendar === void 0 ? void 0 : _this$calendar.navigate(event.value);
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().handleNewDatePicked(event.value, inst);
-      }
-    }); // @ts-ignore
-
-    this.calendar = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_6__.eventcalendar)(document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.VIEW_CONTAINER.calendarDetail), {
-      clickToCreate: 'double',
-      dragTimeStep: 5,
-      dragToCreate: true,
-      dragToMove: true,
-      dragToResize: true,
-      min: moment__WEBPACK_IMPORTED_MODULE_8___default()().subtract(3, "months"),
-      controls: ['calendar'],
-      showControls: true,
-      view: {
-        schedule: {
-          type: 'day',
-          startDay: 1,
-          endDay: 5,
-          startTime: '09:00',
-          endTime: '16:00',
-          timeCellStep: 10,
-          timeLabelStep: 60
-        }
-      },
-      invalidateEvent: 'strict',
-      invalid: [{
-        recurring: {
-          repeat: 'weekly',
-          weekDays: 'SA,SU'
-        }
-      }, {
-        start: '12:15',
-        end: '16:00',
-        title: 'Close Early',
-        recurring: {
-          repeat: 'weekly',
-          weekDays: 'FR'
-        }
-      }, {
-        start: '12:00',
-        end: '13:00',
-        title: 'Lunch Break',
-        recurring: {
-          repeat: 'weekly',
-          weekDays: 'MO,TU,WE,TH'
-        }
-      }],
-      onSelectedDateChange: (event, inst) => {
-        var _this$datePicker;
-
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().handleNewDatePicked(event.date, inst);
-        (_this$datePicker = this.datePicker) === null || _this$datePicker === void 0 ? void 0 : _this$datePicker.setVal(event.date);
-      },
-      onPageLoading: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().onPageLoading(event, inst);
-      },
-      onEventCreated: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().onAppointmentCreated(event, inst);
-      },
-      onEventDelete: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().onAppointmentDeleting(event, inst);
-      },
-      onEventDeleted: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().onAppointmentDeleted(event, inst);
-      },
-      onEventRightClick: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().onAppointmentContext(event, inst);
-      },
-      onEventUpdated: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().onAppointmentUpdated(event, inst);
-      },
-      onEventDoubleClick: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().onAppointmentEditRequested(event, inst);
-      }
-    });
-    if (this.calendar && this.datePicker) _app_AppointmentController__WEBPACK_IMPORTED_MODULE_7__.AppointmentController.getInstance().setViewObjects(this.datePicker, this.calendar);
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ContextualInformationHelper.getInstance().onDocumentLoaded();
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SecurityManager.getInstance().onDocumentLoaded(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.logout);
-    _app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().onDocumentLoaded();
-  }
-
-  getCurrentUser() {
-    return _app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getLoggedInUserId();
-  }
-
-  hideAllSideBars() {
-    this.chatSidebar.eventHide(null);
-    this.userSearchSidebar.eventHide(null);
-  }
-
-  handleShowUserSearch(event) {
-    logger('Handling Show User Search');
-    event.preventDefault(); //this.hideAllSideBars();
-    // prevent anything from happening if we are not logged in
-
-    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
-      // @ts-ignore
-      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
-      return;
-    }
-
-    this.userSearchSidebar.eventShow(event);
-  }
-
-  handleShowChat(roomName) {
-    logger('Handling Show Chat'); // prevent anything from happening if we are not logged in
-
-    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().isLoggedIn()) {
-      // @ts-ignore
-      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.login;
-      return;
-    }
-
-    this.chatSidebar.eventShow(null);
-
-    if (roomName) {
-      this.chatView.selectChatRoom(roomName);
-    }
-  }
-
-  countChanged(newCount) {
-    //
-    let buffer = 'Chat <i class="fas fa-inbox"></i>';
-
-    if (newCount > 0) {
-      buffer += ` <span class="badge badge-pill badge-primary">&nbsp;${newCount}&nbsp;</span>`;
-    }
-
-    if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
-  }
-
-  setupNavigationItemHandling() {
-    // @ts-ignore
-    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.userSearchId).addEventListener('click', this.handleShowUserSearch); // @ts-ignore
-
-    this.chatNavigationItem = document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_3__.NAVIGATION.chatId); // @ts-ignore
-
-    this.chatNavigationItem.addEventListener('click', this.handleShowChat);
-  }
-
-  setupUserSearchViews() {
-    // add the subviews for the user search
-    this.userSearchSidebar = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.UserSearchSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager());
-    this.userSearchSidebar.onDocumentLoaded();
-  }
-
-  setupChatViews() {
-    // add the views to the chat side bar
-    this.chatSidebar = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ChatRoomsSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager());
-    this.chatSidebar.onDocumentLoaded();
-  }
-
-}
-localStorage.debug = '*';
-localStorage.plugin = 'chat';
-(debug__WEBPACK_IMPORTED_MODULE_1___default().log) = console.info.bind(console);
-$(function () {
-  (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_6__.setOptions)({
-    theme: 'ios',
-    themeVariant: 'light'
-  }); //datepicker("#calendarControl",{display:'inline'});
-  // @ts-ignore
-
-  const element = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4__.createElement(App, {
-    className: "container-fluid justify-content-around"
-  });
-  react_dom__WEBPACK_IMPORTED_MODULE_5__.render(element, document.getElementById('root'));
-});
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/CommonTypes.js":
-/*!********************************************************!*\
-  !*** ../../ui-framework/dist/framework/CommonTypes.js ***!
-  \********************************************************/
+/***/ "./src/framework/CommonTypes.ts":
+/*!**************************************!*\
+  !*** ./src/framework/CommonTypes.ts ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1035,7 +812,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ComparisonType": () => (/* binding */ ComparisonType)
 /* harmony export */ });
-var ComparisonType;
+let ComparisonType;
 
 (function (ComparisonType) {
   ComparisonType[ComparisonType["equals"] = 0] = "equals";
@@ -1050,48 +827,10 @@ var ComparisonType;
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/jsx/JSXParser.js":
-/*!**********************************************************!*\
-  !*** ../../ui-framework/dist/framework/jsx/JSXParser.js ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "jsxCreateElement": () => (/* binding */ jsxCreateElement),
-/* harmony export */   "jsxCreateFragment": () => (/* binding */ jsxCreateFragment)
-/* harmony export */ });
-function jsxCreateElement(tag, props, ...children) {
-  if (typeof tag === "function") return tag(props, ...children);
-  const element = document.createElement(tag);
-  Object.entries(props || {}).forEach(([name, value]) => {
-    if (name.startsWith("on") && name.toLowerCase() in window) element.addEventListener(name.toLowerCase().substr(2), value);else {
-      if (name === 'className') name = 'class'; // @ts-ignore
-
-      element.setAttribute(name, value.toString());
-    }
-  });
-  children.forEach(child => {
-    jsxAppendChild(element, child);
-  });
-  return element;
-}
-
-function jsxAppendChild(parent, child) {
-  if (Array.isArray(child)) child.forEach(nestedChild => jsxAppendChild(parent, nestedChild));else parent.appendChild(child.nodeType ? child : document.createTextNode(child));
-}
-
-function jsxCreateFragment(props, ...children) {
-  return children;
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/model/BasicFieldOperations.js":
-/*!***********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/model/BasicFieldOperations.js ***!
-  \***********************************************************************/
+/***/ "./src/framework/model/BasicFieldOperations.ts":
+/*!*****************************************************!*\
+  !*** ./src/framework/model/BasicFieldOperations.ts ***!
+  \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1099,14 +838,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "BasicFieldOperations": () => (/* binding */ BasicFieldOperations)
 /* harmony export */ });
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "../../ui-framework/node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "../../ui-framework/node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var _DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DataObjectTypeDefs */ "./src/framework/model/DataObjectTypeDefs.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ui/ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../security/SecurityManager */ "../../ui-framework/dist/framework/security/SecurityManager.js");
+/* harmony import */ var _ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ui/ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../security/SecurityManager */ "./src/framework/security/SecurityManager.ts");
 
 
 
@@ -1118,6 +857,17 @@ const vlogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('basic-field-operat
 const glogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('basic-field-operations-generator');
 const rlogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('basic-field-operations-renderer');
 class BasicFieldOperations {
+  static dateRegex = /^((0?[1-9]|[12]\d|31)\/(0?[13578]|1[02])\/(\d{2}|\d{4})|(0?[1-9]|[12]\d|30)\/(0?[469]|11])\/(\d{2}|\d{4})|(0?[1-9]|1\d|2[0-8])\/02\/(\d{2}|\d{4})|(29\/02\/(\d{2})?(0[48]|[2468][048]|[13579][26]))|(29\/02\/([02468][048]|[13579][26])00))$/;
+  static emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/;
+  static shortTimeRegex = /^([01]\d|2[0-3]):?([0-5]\d)$/;
+  static timeRegex = /^([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)$/;
+  static dateTimeRegex = /^((0?[1-9]|[12]\d|31)\/(0?[13578]|1[02])\/(\d{2}|\d{4})|(0?[1-9]|[12]\d|30)\/(0?[469]|11])\/(\d{2}|\d{4})|(0?[1-9]|1\d|2[0-8])\/02\/(\d{2}|\d{4})|(29\/02\/(\d{2})?(0[48]|[2468][048]|[13579][26]))|(29\/02\/([02468][048]|[13579][26])00))\s([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)$/;
+  static basicPasswordRegex = /^[a-zA-Z0-9]{8,15}$/;
+  static integerRegex = /^[+-]?\d+$/;
+  static floatRegexp = /^[+-]?\d+(\.\d+)?$/;
+  static booleanRegexp = /^true|false$/;
+  static durationRegexp = /^(\d+:)?[0-5]?\d:[0-5]\d$/;
+
   constructor() {
     this.previousFieldValues = [];
   }
@@ -1524,23 +1274,13 @@ class BasicFieldOperations {
   }
 
 }
-BasicFieldOperations.dateRegex = /^((0?[1-9]|[12]\d|31)\/(0?[13578]|1[02])\/(\d{2}|\d{4})|(0?[1-9]|[12]\d|30)\/(0?[469]|11])\/(\d{2}|\d{4})|(0?[1-9]|1\d|2[0-8])\/02\/(\d{2}|\d{4})|(29\/02\/(\d{2})?(0[48]|[2468][048]|[13579][26]))|(29\/02\/([02468][048]|[13579][26])00))$/;
-BasicFieldOperations.emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/;
-BasicFieldOperations.shortTimeRegex = /^([01]\d|2[0-3]):?([0-5]\d)$/;
-BasicFieldOperations.timeRegex = /^([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)$/;
-BasicFieldOperations.dateTimeRegex = /^((0?[1-9]|[12]\d|31)\/(0?[13578]|1[02])\/(\d{2}|\d{4})|(0?[1-9]|[12]\d|30)\/(0?[469]|11])\/(\d{2}|\d{4})|(0?[1-9]|1\d|2[0-8])\/02\/(\d{2}|\d{4})|(29\/02\/(\d{2})?(0[48]|[2468][048]|[13579][26]))|(29\/02\/([02468][048]|[13579][26])00))\s([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)$/;
-BasicFieldOperations.basicPasswordRegex = /^[a-zA-Z0-9]{8,15}$/;
-BasicFieldOperations.integerRegex = /^[+-]?\d+$/;
-BasicFieldOperations.floatRegexp = /^[+-]?\d+(\.\d+)?$/;
-BasicFieldOperations.booleanRegexp = /^true|false$/;
-BasicFieldOperations.durationRegexp = /^(\d+:)?[0-5]?\d:[0-5]\d$/;
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/model/BasicObjectDefinitionFactory.js":
-/*!*******************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/model/BasicObjectDefinitionFactory.js ***!
-  \*******************************************************************************/
+/***/ "./src/framework/model/BasicObjectDefinitionFactory.ts":
+/*!*************************************************************!*\
+  !*** ./src/framework/model/BasicObjectDefinitionFactory.ts ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1557,9 +1297,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "FIELD_ModifiedOn_Desc": () => (/* binding */ FIELD_ModifiedOn_Desc),
 /* harmony export */   "BasicObjectDefinitionFactory": () => (/* binding */ BasicObjectDefinitionFactory)
 /* harmony export */ });
-/* harmony import */ var _ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ui/ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BasicFieldOperations */ "../../ui-framework/dist/framework/model/BasicFieldOperations.js");
-/* harmony import */ var _DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
+/* harmony import */ var _ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ui/ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BasicFieldOperations */ "./src/framework/model/BasicFieldOperations.ts");
+/* harmony import */ var _DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DataObjectTypeDefs */ "./src/framework/model/DataObjectTypeDefs.ts");
 
 
 
@@ -1740,66 +1480,10 @@ class BasicObjectDefinitionFactory {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/model/DataObjectController.js":
-/*!***********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/model/DataObjectController.js ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DataObjectController": () => (/* binding */ DataObjectController)
-/* harmony export */ });
-class DataObjectController {
-  constructor(typeName) {
-    this.isCreatingNew = false;
-    this.typeName = typeName;
-    this.listeners = [];
-  }
-
-  addListener(listener) {
-    this.listeners.push(listener);
-  }
-
-  startNewObject() {
-    let result = false;
-
-    if (!this.isCreatingNew) {
-      result = this._startNewObject();
-      this.isCreatingNew = result;
-    }
-
-    return result;
-  }
-
-  isCreatingNewObject() {
-    return this.isCreatingNew;
-  }
-
-  informListenersOfCreate(dataObj) {
-    this.isCreatingNew = false;
-    this.listeners.forEach(listener => listener.create(this, this.typeName, dataObj));
-  }
-
-  informListenersOfUpdate(dataObj) {
-    this.isCreatingNew = false;
-    this.listeners.forEach(listener => listener.update(this, this.typeName, dataObj));
-  }
-
-  informListenersOfDelete(dataObj) {
-    this.isCreatingNew = false;
-    this.listeners.forEach(listener => listener.delete(this, this.typeName, dataObj));
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js":
-/*!*********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/model/DataObjectTypeDefs.js ***!
-  \*********************************************************************/
+/***/ "./src/framework/model/DataObjectTypeDefs.ts":
+/*!***************************************************!*\
+  !*** ./src/framework/model/DataObjectTypeDefs.ts ***!
+  \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1807,7 +1491,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "FieldType": () => (/* binding */ FieldType)
 /* harmony export */ });
-var FieldType;
+let FieldType;
 
 (function (FieldType) {
   FieldType["id"] = "Id";
@@ -1832,10 +1516,10 @@ var FieldType;
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/model/ObjectDefinitionRegistry.js":
-/*!***************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/model/ObjectDefinitionRegistry.js ***!
-  \***************************************************************************/
+/***/ "./src/framework/model/ObjectDefinitionRegistry.ts":
+/*!*********************************************************!*\
+  !*** ./src/framework/model/ObjectDefinitionRegistry.ts ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1843,11 +1527,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ObjectDefinitionRegistry": () => (/* binding */ ObjectDefinitionRegistry)
 /* harmony export */ });
-/* harmony import */ var _DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BasicObjectDefinitionFactory */ "../../ui-framework/dist/framework/model/BasicObjectDefinitionFactory.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DataObjectTypeDefs */ "./src/framework/model/DataObjectTypeDefs.ts");
+/* harmony import */ var _BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BasicObjectDefinitionFactory */ "./src/framework/model/BasicObjectDefinitionFactory.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _BasicFieldOperations__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BasicFieldOperations */ "../../ui-framework/dist/framework/model/BasicFieldOperations.js");
+/* harmony import */ var _BasicFieldOperations__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BasicFieldOperations */ "./src/framework/model/BasicFieldOperations.ts");
 
 
 
@@ -1939,10 +1623,10 @@ class ObjectDefinitionRegistry {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/network/ApiUtil.js":
-/*!************************************************************!*\
-  !*** ../../ui-framework/dist/framework/network/ApiUtil.js ***!
-  \************************************************************/
+/***/ "./src/framework/network/ApiUtil.ts":
+/*!******************************************!*\
+  !*** ./src/framework/network/ApiUtil.ts ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1950,42 +1634,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ApiUtil": () => (/* binding */ ApiUtil)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
 
 const apiLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('api-ts');
+const apiResultsLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('api-ts-results');
 class ApiUtil {
   static getInstance() {
     if (!ApiUtil._instance) {
@@ -1995,20 +1648,18 @@ class ApiUtil {
     return ApiUtil._instance;
   }
 
-  postFetchJSON(url, query) {
-    return __awaiter(this, void 0, void 0, function* () {
-      const postParameters = {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          query
-        })
-      };
-      const response = yield fetch(url, postParameters);
-      return response.json();
-    });
+  async postFetchJSON(url, query) {
+    const postParameters = {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        query
+      })
+    };
+    const response = await fetch(url, postParameters);
+    return response.json();
   }
   /*
       Utility function for calling JSON POST requests
@@ -2040,7 +1691,8 @@ class ApiUtil {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(Object.assign({}, request.originalRequest.params))
+      body: JSON.stringify({ ...request.originalRequest.params
+      })
     };
     this.fetchJSON(request.originalRequest.url, postParameters, request.callback, request.queueType, request.requestId);
   }
@@ -2076,7 +1728,8 @@ class ApiUtil {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(Object.assign({}, request.originalRequest.params))
+      body: JSON.stringify({ ...request.originalRequest.params
+      })
     };
     if (request.originalRequest.params.id && !request.wasOffline) request.originalRequest.url += `/${request.originalRequest.params.id}`;
     this.fetchJSON(request.originalRequest.url, putParameters, request.callback, request.queueType, request.requestId);
@@ -2091,10 +1744,10 @@ class ApiUtil {
       }
 
       if (response.status === 400) {
-        apiLogger(response.json());
+        apiResultsLogger(response.json());
       }
     }).then(data => {
-      apiLogger(data);
+      apiResultsLogger(data);
       callback(data, 200, queueType, requestId);
     }).catch(error => {
       apiLogger(error);
@@ -2106,10 +1759,10 @@ class ApiUtil {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/network/CallbackRegistry.js":
-/*!*********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/network/CallbackRegistry.js ***!
-  \*********************************************************************/
+/***/ "./src/framework/network/CallbackRegistry.ts":
+/*!***************************************************!*\
+  !*** ./src/framework/network/CallbackRegistry.ts ***!
+  \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2117,14 +1770,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CallbackRegistry": () => (/* binding */ CallbackRegistry)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('callback-registry');
 class CallbackRegistry {
-  constructor() {
-    this.callbacks = [];
-  }
+  callbacks = [];
+
+  constructor() {}
 
   static getInstance() {
     if (!CallbackRegistry._instance) {
@@ -2160,10 +1813,10 @@ class CallbackRegistry {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/network/DownloadManager.js":
-/*!********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/network/DownloadManager.js ***!
-  \********************************************************************/
+/***/ "./src/framework/network/DownloadManager.ts":
+/*!**************************************************!*\
+  !*** ./src/framework/network/DownloadManager.ts ***!
+  \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2171,52 +1824,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "DownloadManager": () => (/* binding */ DownloadManager)
 /* harmony export */ });
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "../../ui-framework/node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _Types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Types */ "../../ui-framework/dist/framework/network/Types.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var _Types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Types */ "./src/framework/network/Types.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _CallbackRegistry__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CallbackRegistry */ "../../ui-framework/dist/framework/network/CallbackRegistry.js");
-/* harmony import */ var _OfflineManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./OfflineManager */ "../../ui-framework/dist/framework/network/OfflineManager.js");
-/* harmony import */ var _ApiUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ApiUtil */ "../../ui-framework/dist/framework/network/ApiUtil.js");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
+/* harmony import */ var _CallbackRegistry__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CallbackRegistry */ "./src/framework/network/CallbackRegistry.ts");
+/* harmony import */ var _OfflineManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./OfflineManager */ "./src/framework/network/OfflineManager.ts");
+/* harmony import */ var _ApiUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ApiUtil */ "./src/framework/network/ApiUtil.ts");
 
 
 
 
 
 
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('api-ts');
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('dm-api-ts');
 class DownloadManager {
   constructor() {
     this.backgroundQueue = [];
@@ -2284,80 +1905,72 @@ class DownloadManager {
     this.addApiRequest(request, isPriority);
   }
 
-  addApiRequest(jsonRequest, isPriority = false, wasOffline = false) {
-    return __awaiter(this, void 0, void 0, function* () {
-      // add a new requestId to the request for future tracking
-      const requestId = (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])();
-      logger(`Adding Queue Request ${requestId}`);
-      logger(jsonRequest); // are we currently offline?
+  async addApiRequest(jsonRequest, isPriority = false, wasOffline = false) {
+    // add a new requestId to the request for future tracking
+    const requestId = (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])();
+    logger(`Adding Queue Request ${requestId}`);
+    logger(jsonRequest); // are we currently offline?
 
-      if (_OfflineManager__WEBPACK_IMPORTED_MODULE_3__.OfflineManager.getInstance().areWeOffline()) {
-        logger(`We are offline, queueing request for when server back online.`);
-        _OfflineManager__WEBPACK_IMPORTED_MODULE_3__.OfflineManager.getInstance().addOfflineRequest(jsonRequest); // let the callback function know, with a custom code to let the receiver know there was a problem
+    if (_OfflineManager__WEBPACK_IMPORTED_MODULE_3__.OfflineManager.getInstance().areWeOffline()) {
+      logger(`We are offline, queueing request for when server back online.`);
+      _OfflineManager__WEBPACK_IMPORTED_MODULE_3__.OfflineManager.getInstance().addOfflineRequest(jsonRequest); // let the callback function know, with a custom code to let the receiver know there was a problem
 
-        _CallbackRegistry__WEBPACK_IMPORTED_MODULE_2__.CallbackRegistry.getInstance().getCallbackById(jsonRequest.callbackId)(jsonRequest.params, 500, jsonRequest.associatedStateName, false);
-        return;
-      } // we are online (hopefully), continue for now, we will catch offline errors later
+      _CallbackRegistry__WEBPACK_IMPORTED_MODULE_2__.CallbackRegistry.getInstance().getCallbackById(jsonRequest.callbackId)(jsonRequest.params, 500, jsonRequest.associatedStateName, false);
+      return;
+    } // we are online (hopefully), continue for now, we will catch offline errors later
 
 
-      if (isPriority) {
-        let managerRequest = {
-          originalRequest: jsonRequest,
-          requestId: requestId,
-          queueType: _Types__WEBPACK_IMPORTED_MODULE_0__.queueType.PRIORITY,
-          callback: this.callbackForQueueRequest,
-          wasOffline: wasOffline
-        };
-        this.priorityQueue.push(managerRequest);
-        if (this.priorityChangeListener) this.priorityChangeListener.handleEventAddToQueue();
-      } else {
-        let managerRequest = {
-          originalRequest: jsonRequest,
-          requestId: requestId,
-          queueType: _Types__WEBPACK_IMPORTED_MODULE_0__.queueType.BACKGROUND,
-          callback: this.callbackForQueueRequest,
-          wasOffline: wasOffline
-        };
-        this.backgroundQueue.push(managerRequest);
-        if (this.backgroundChangeListener) this.backgroundChangeListener.handleEventAddToQueue();
+    if (isPriority) {
+      let managerRequest = {
+        originalRequest: jsonRequest,
+        requestId: requestId,
+        queueType: _Types__WEBPACK_IMPORTED_MODULE_0__.queueType.PRIORITY,
+        callback: this.callbackForQueueRequest,
+        wasOffline: wasOffline
+      };
+      this.priorityQueue.push(managerRequest);
+      if (this.priorityChangeListener) this.priorityChangeListener.handleEventAddToQueue();
+    } else {
+      let managerRequest = {
+        originalRequest: jsonRequest,
+        requestId: requestId,
+        queueType: _Types__WEBPACK_IMPORTED_MODULE_0__.queueType.BACKGROUND,
+        callback: this.callbackForQueueRequest,
+        wasOffline: wasOffline
+      };
+      this.backgroundQueue.push(managerRequest);
+      if (this.backgroundChangeListener) this.backgroundChangeListener.handleEventAddToQueue();
+    }
+
+    this.processQueues();
+  }
+
+  async processPriorityQueue() {
+    const queueItem = this.priorityQueue.shift();
+    if (queueItem !== undefined) this.inProgress.push(queueItem);
+    if (queueItem !== undefined) this.initiateFetchForQueueItem(queueItem);
+  }
+
+  async processBackgroundQueue() {
+    const queueItem = this.backgroundQueue.shift();
+    if (queueItem !== undefined) this.inProgress.push(queueItem);
+    if (queueItem !== undefined) this.initiateFetchForQueueItem(queueItem);
+  }
+
+  async processQueues() {
+    let totalQueuedItems = this.priorityQueue.length + this.backgroundQueue.length;
+
+    while (totalQueuedItems > 0) {
+      logger(`processing queue, items remaining ${totalQueuedItems}`); // priority queue takes priority
+
+      if (this.priorityQueue.length > 0) {
+        await this.processPriorityQueue();
+      } else if (this.backgroundQueue.length > 0) {
+        await this.processBackgroundQueue();
       }
 
-      this.processQueues();
-    });
-  }
-
-  processPriorityQueue() {
-    return __awaiter(this, void 0, void 0, function* () {
-      const queueItem = this.priorityQueue.shift();
-      if (queueItem !== undefined) this.inProgress.push(queueItem);
-      if (queueItem !== undefined) this.initiateFetchForQueueItem(queueItem);
-    });
-  }
-
-  processBackgroundQueue() {
-    return __awaiter(this, void 0, void 0, function* () {
-      const queueItem = this.backgroundQueue.shift();
-      if (queueItem !== undefined) this.inProgress.push(queueItem);
-      if (queueItem !== undefined) this.initiateFetchForQueueItem(queueItem);
-    });
-  }
-
-  processQueues() {
-    return __awaiter(this, void 0, void 0, function* () {
-      let totalQueuedItems = this.priorityQueue.length + this.backgroundQueue.length;
-
-      while (totalQueuedItems > 0) {
-        logger(`processing queue, items remaining ${totalQueuedItems}`); // priority queue takes priority
-
-        if (this.priorityQueue.length > 0) {
-          yield this.processPriorityQueue();
-        } else if (this.backgroundQueue.length > 0) {
-          yield this.processBackgroundQueue();
-        }
-
-        totalQueuedItems = this.priorityQueue.length + this.backgroundQueue.length;
-      }
-    });
+      totalQueuedItems = this.priorityQueue.length + this.backgroundQueue.length;
+    }
   }
 
   callbackForQueueRequest(jsonData, httpStatus, queueId, requestId) {
@@ -2425,10 +2038,10 @@ class DownloadManager {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/network/OfflineManager.js":
-/*!*******************************************************************!*\
-  !*** ../../ui-framework/dist/framework/network/OfflineManager.js ***!
-  \*******************************************************************/
+/***/ "./src/framework/network/OfflineManager.ts":
+/*!*************************************************!*\
+  !*** ./src/framework/network/OfflineManager.ts ***!
+  \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2436,12 +2049,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "OfflineManager": () => (/* binding */ OfflineManager)
 /* harmony export */ });
-/* harmony import */ var _Poller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Poller */ "../../ui-framework/dist/framework/network/Poller.js");
-/* harmony import */ var _state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../state/IndexedDBStateManager */ "../../ui-framework/dist/framework/state/IndexedDBStateManager.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "../../ui-framework/node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _DownloadManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DownloadManager */ "../../ui-framework/dist/framework/network/DownloadManager.js");
-/* harmony import */ var _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../notification/NotificationManager */ "../../ui-framework/dist/framework/notification/NotificationManager.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _Poller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Poller */ "./src/framework/network/Poller.ts");
+/* harmony import */ var _state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../state/IndexedDBStateManager */ "./src/framework/state/IndexedDBStateManager.ts");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var _DownloadManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DownloadManager */ "./src/framework/network/DownloadManager.ts");
+/* harmony import */ var _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../notification/NotificationManager */ "./src/framework/notification/NotificationManager.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_4__);
 
 
@@ -2451,6 +2064,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_4___default()('offline-manager');
 class OfflineManager {
+  static DB_NAME = 'offline.manager.db';
+  static OBJECT_STORE = 'offline.manager.db.requests';
+
   constructor() {
     this.serverBackOnline = this.serverBackOnline.bind(this);
     const indexedDB = new _state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_1__.IndexedDBStateManager();
@@ -2524,15 +2140,13 @@ class OfflineManager {
   filterResults(managerName, name, filterResults) {}
 
 }
-OfflineManager.DB_NAME = 'offline.manager.db';
-OfflineManager.OBJECT_STORE = 'offline.manager.db.requests';
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/network/Poller.js":
-/*!***********************************************************!*\
-  !*** ../../ui-framework/dist/framework/network/Poller.js ***!
-  \***********************************************************/
+/***/ "./src/framework/network/Poller.ts":
+/*!*****************************************!*\
+  !*** ./src/framework/network/Poller.ts ***!
+  \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2540,15 +2154,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Poller": () => (/* binding */ Poller)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('poller');
 class Poller {
-  constructor() {
-    this.interval = null;
-    this.isPollingBool = false;
-  }
+  static INTERVAL_DEFAULT = 10000; // 30 seconds
+
+  static URL_CALL = '/ping';
+  interval = null;
+  isPollingBool = false;
+
+  constructor() {}
 
   static getInstance() {
     if (!Poller._instance) {
@@ -2585,16 +2202,13 @@ class Poller {
   }
 
 }
-Poller.INTERVAL_DEFAULT = 10000; // 30 seconds
-
-Poller.URL_CALL = '/ping';
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/network/Types.js":
-/*!**********************************************************!*\
-  !*** ../../ui-framework/dist/framework/network/Types.js ***!
-  \**********************************************************/
+/***/ "./src/framework/network/Types.ts":
+/*!****************************************!*\
+  !*** ./src/framework/network/Types.ts ***!
+  \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2603,7 +2217,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "RequestType": () => (/* binding */ RequestType),
 /* harmony export */   "queueType": () => (/* binding */ queueType)
 /* harmony export */ });
-var RequestType;
+let RequestType;
 
 (function (RequestType) {
   RequestType[RequestType["POST"] = 0] = "POST";
@@ -2612,7 +2226,7 @@ var RequestType;
   RequestType[RequestType["DELETE"] = 3] = "DELETE";
 })(RequestType || (RequestType = {}));
 
-var queueType;
+let queueType;
 
 (function (queueType) {
   queueType[queueType["PRIORITY"] = 0] = "PRIORITY";
@@ -2621,10 +2235,10 @@ var queueType;
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/notification/BootstrapNotification.js":
-/*!*******************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/notification/BootstrapNotification.js ***!
-  \*******************************************************************************/
+/***/ "./src/framework/notification/BootstrapNotification.ts":
+/*!*************************************************************!*\
+  !*** ./src/framework/notification/BootstrapNotification.ts ***!
+  \*************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2632,8 +2246,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "BootstrapNotification": () => (/* binding */ BootstrapNotification)
 /* harmony export */ });
-/* harmony import */ var _Notification__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Notification */ "../../ui-framework/dist/framework/notification/Notification.js");
-/* harmony import */ var _NotificationManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NotificationManager */ "../../ui-framework/dist/framework/notification/NotificationManager.js");
+/* harmony import */ var _Notification__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Notification */ "./src/framework/notification/Notification.ts");
+/* harmony import */ var _NotificationManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NotificationManager */ "./src/framework/notification/NotificationManager.ts");
 
 
 class BootstrapNotification extends _Notification__WEBPACK_IMPORTED_MODULE_0__.Notification {
@@ -2728,10 +2342,10 @@ class BootstrapNotification extends _Notification__WEBPACK_IMPORTED_MODULE_0__.N
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/notification/Notification.js":
-/*!**********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/notification/Notification.js ***!
-  \**********************************************************************/
+/***/ "./src/framework/notification/Notification.ts":
+/*!****************************************************!*\
+  !*** ./src/framework/notification/Notification.ts ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2745,16 +2359,17 @@ class Notification {
     this.notificationManager = notificationManager; // Create DOM notification structure when instantiated
 
     this.containerId = this.notificationManager.getContainerId();
-  }
+  } // Make the notification visible on the screen
+
 
 }
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/notification/NotificationFactory.js":
-/*!*****************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/notification/NotificationFactory.js ***!
-  \*****************************************************************************/
+/***/ "./src/framework/notification/NotificationFactory.ts":
+/*!***********************************************************!*\
+  !*** ./src/framework/notification/NotificationFactory.ts ***!
+  \***********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2762,11 +2377,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "NotificationFactory": () => (/* binding */ NotificationFactory)
 /* harmony export */ });
-/* harmony import */ var _BootstrapNotification__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BootstrapNotification */ "../../ui-framework/dist/framework/notification/BootstrapNotification.js");
+/* harmony import */ var _BootstrapNotification__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BootstrapNotification */ "./src/framework/notification/BootstrapNotification.ts");
 
 class NotificationFactory {
-  constructor() {}
-
   static getInstance() {
     if (!NotificationFactory._instance) {
       NotificationFactory._instance = new NotificationFactory();
@@ -2774,6 +2387,8 @@ class NotificationFactory {
 
     return NotificationFactory._instance;
   }
+
+  constructor() {}
 
   createNotification(manager) {
     return new _BootstrapNotification__WEBPACK_IMPORTED_MODULE_0__.BootstrapNotification(manager);
@@ -2783,10 +2398,10 @@ class NotificationFactory {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/notification/NotificationManager.js":
-/*!*****************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/notification/NotificationManager.js ***!
-  \*****************************************************************************/
+/***/ "./src/framework/notification/NotificationManager.ts":
+/*!***********************************************************!*\
+  !*** ./src/framework/notification/NotificationManager.ts ***!
+  \***********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2795,9 +2410,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "NotificationType": () => (/* binding */ NotificationType),
 /* harmony export */   "NotificationManager": () => (/* binding */ NotificationManager)
 /* harmony export */ });
-/* harmony import */ var _NotificationFactory__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NotificationFactory */ "../../ui-framework/dist/framework/notification/NotificationFactory.js");
+/* harmony import */ var _NotificationFactory__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NotificationFactory */ "./src/framework/notification/NotificationFactory.ts");
 
-var NotificationType;
+let NotificationType;
 
 (function (NotificationType) {
   NotificationType[NotificationType["info"] = 0] = "info";
@@ -2856,10 +2471,10 @@ class NotificationManager {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/security/SecurityManager.js":
-/*!*********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/security/SecurityManager.js ***!
-  \*********************************************************************/
+/***/ "./src/framework/security/SecurityManager.ts":
+/*!***************************************************!*\
+  !*** ./src/framework/security/SecurityManager.ts ***!
+  \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2867,15 +2482,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "SecurityManager": () => (/* binding */ SecurityManager)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('security-manager');
 class SecurityManager {
-  constructor() {
-    this.hash = null;
-    this.logoutEl = null;
-  }
+  hash = null;
+  logoutEl = null;
+
+  constructor() {}
 
   static getInstance() {
     if (!SecurityManager._instance) {
@@ -2993,10 +2608,10 @@ class SecurityManager {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/socket/ChatManager.js":
-/*!***************************************************************!*\
-  !*** ../../ui-framework/dist/framework/socket/ChatManager.js ***!
-  \***************************************************************/
+/***/ "./src/framework/socket/ChatManager.ts":
+/*!*********************************************!*\
+  !*** ./src/framework/socket/ChatManager.ts ***!
+  \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3004,15 +2619,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ChatManager": () => (/* binding */ ChatManager)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "../../ui-framework/node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _SocketManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SocketManager */ "../../ui-framework/dist/framework/socket/SocketManager.js");
-/* harmony import */ var _Types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Types */ "../../ui-framework/dist/framework/socket/Types.js");
-/* harmony import */ var _state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../state/BrowserStorageStateManager */ "../../ui-framework/dist/framework/state/BrowserStorageStateManager.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! uuid */ "../../ui-framework/node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/EqualityFunctions */ "../../ui-framework/dist/framework/util/EqualityFunctions.js");
+/* harmony import */ var _SocketManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SocketManager */ "./src/framework/socket/SocketManager.ts");
+/* harmony import */ var _Types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Types */ "./src/framework/socket/Types.ts");
+/* harmony import */ var _state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../state/BrowserStorageStateManager */ "./src/framework/state/BrowserStorageStateManager.ts");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var _util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/EqualityFunctions */ "./src/framework/util/EqualityFunctions.ts");
 
 
 
@@ -3029,12 +2644,17 @@ var UserStatus;
 
 const cmLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('chat-manager');
 class ChatManager {
+  static chatLogKey = 'im-board-chat-logs';
+  static blockedListKey = 'im-board-blocked-list';
+  static favouriteListKey = 'im-board-favourite-list'; // TO DO chat logs, blocked list, favourites per user
+
+  blockedList = [];
+  favouriteList = [];
+  loggedInUsers = [];
+  currentUsername = '';
+  unreadListener = null;
+
   constructor() {
-    this.blockedList = [];
-    this.favouriteList = [];
-    this.loggedInUsers = [];
-    this.currentUsername = '';
-    this.unreadListener = null;
     cmLogger('Setting up chat logs, blocked list, and favourites');
     this.chatLogs = [];
     this.chatListeners = [];
@@ -3515,13 +3135,13 @@ class ChatManager {
   }
 
   emitUnreadMessageCountChanged() {
-    var _a;
+    var _this$unreadListener;
 
     let unreadCount = 0;
     this.chatLogs.forEach(log => {
       unreadCount += log.numOfNewMessages;
     });
-    (_a = this.unreadListener) === null || _a === void 0 ? void 0 : _a.countChanged(unreadCount);
+    (_this$unreadListener = this.unreadListener) === null || _this$unreadListener === void 0 ? void 0 : _this$unreadListener.countChanged(unreadCount);
   }
 
   addMessageToChatLog(log, message) {
@@ -3556,16 +3176,13 @@ class ChatManager {
   }
 
 }
-ChatManager.chatLogKey = 'im-board-chat-logs';
-ChatManager.blockedListKey = 'im-board-blocked-list';
-ChatManager.favouriteListKey = 'im-board-favourite-list';
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/socket/NotificationController.js":
-/*!**************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/socket/NotificationController.js ***!
-  \**************************************************************************/
+/***/ "./src/framework/socket/NotificationController.ts":
+/*!********************************************************!*\
+  !*** ./src/framework/socket/NotificationController.ts ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3573,19 +3190,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "NotificationController": () => (/* binding */ NotificationController)
 /* harmony export */ });
-/* harmony import */ var _ChatManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatManager */ "../../ui-framework/dist/framework/socket/ChatManager.js");
-/* harmony import */ var _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../notification/NotificationManager */ "../../ui-framework/dist/framework/notification/NotificationManager.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _ChatManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatManager */ "./src/framework/socket/ChatManager.ts");
+/* harmony import */ var _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../notification/NotificationManager */ "./src/framework/notification/NotificationManager.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Types */ "../../ui-framework/dist/framework/socket/Types.js");
+/* harmony import */ var _Types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Types */ "./src/framework/socket/Types.ts");
 
 
 
 
 const notLogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('notification-controller');
 class NotificationController {
+  doNotDisturb = false;
+
   constructor() {
-    this.doNotDisturb = false;
     this.chatManager = _ChatManager__WEBPACK_IMPORTED_MODULE_0__.ChatManager.getInstance();
     this.doNotDisturb = false;
     this.chatListeners = [];
@@ -3740,10 +3358,10 @@ class NotificationController {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/socket/SocketManager.js":
-/*!*****************************************************************!*\
-  !*** ../../ui-framework/dist/framework/socket/SocketManager.js ***!
-  \*****************************************************************/
+/***/ "./src/framework/socket/SocketManager.ts":
+/*!***********************************************!*\
+  !*** ./src/framework/socket/SocketManager.ts ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3751,15 +3369,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "SocketManager": () => (/* binding */ SocketManager)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Types */ "../../ui-framework/dist/framework/socket/Types.js");
+/* harmony import */ var _Types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Types */ "./src/framework/socket/Types.ts");
 
 
 const sDebug = debug__WEBPACK_IMPORTED_MODULE_0___default()('socket-ts');
 class SocketManager {
+  chatReceivers = [];
+
   constructor() {
-    this.chatReceivers = [];
     this.callbackForMessage = this.callbackForMessage.bind(this);
     this.callbackForData = this.callbackForData.bind(this);
     this.listener = null;
@@ -4021,10 +3640,10 @@ class SocketManager {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/socket/Types.js":
-/*!*********************************************************!*\
-  !*** ../../ui-framework/dist/framework/socket/Types.js ***!
-  \*********************************************************/
+/***/ "./src/framework/socket/Types.ts":
+/*!***************************************!*\
+  !*** ./src/framework/socket/Types.ts ***!
+  \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4033,7 +3652,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "Priority": () => (/* binding */ Priority),
 /* harmony export */   "InviteType": () => (/* binding */ InviteType)
 /* harmony export */ });
-var Priority;
+let Priority;
 
 (function (Priority) {
   Priority[Priority["Normal"] = 0] = "Normal";
@@ -4041,7 +3660,7 @@ var Priority;
   Priority[Priority["Urgent"] = 2] = "Urgent";
 })(Priority || (Priority = {}));
 
-var InviteType;
+let InviteType;
 
 (function (InviteType) {
   InviteType[InviteType["ChatRoom"] = 0] = "ChatRoom";
@@ -4050,10 +3669,10 @@ var InviteType;
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/AbstractStateManager.js":
-/*!***********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/AbstractStateManager.js ***!
-  \***********************************************************************/
+/***/ "./src/framework/state/AbstractStateManager.ts":
+/*!*****************************************************!*\
+  !*** ./src/framework/state/AbstractStateManager.ts ***!
+  \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4061,21 +3680,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "AbstractStateManager": () => (/* binding */ AbstractStateManager)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StateManager */ "../../ui-framework/dist/framework/state/StateManager.js");
-/* harmony import */ var _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./StateChangedDelegate */ "../../ui-framework/dist/framework/state/StateChangedDelegate.js");
-/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../CommonTypes */ "../../ui-framework/dist/framework/CommonTypes.js");
+/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StateManager */ "./src/framework/state/StateManager.ts");
+/* harmony import */ var _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./StateChangedDelegate */ "./src/framework/state/StateChangedDelegate.ts");
+/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../CommonTypes */ "./src/framework/CommonTypes.ts");
 
 
 
 
 const smLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('state-manager-ts');
 class AbstractStateManager {
+  forceSaves = true;
+  managerName = '';
+  equalityFns = null;
+
   constructor(managerName, defaultEquality, fnPerState = null) {
-    this.forceSaves = true;
-    this.managerName = '';
-    this.equalityFns = null;
     this.delegate = new _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_2__.StateChangedDelegate(managerName);
     this.managerName = managerName;
     this.defaultEquality = defaultEquality;
@@ -4117,6 +3737,7 @@ class AbstractStateManager {
   }
 
   _findItemsInState(name, filters) {
+    // default implementation assumes local values and simple comparisons
     let results = [];
 
     const state = this._getState(name);
@@ -4236,6 +3857,7 @@ class AbstractStateManager {
   }
 
   addNewItemToState(name, item, isPersisted = false) {
+    // assumes state is an array
     this._ensureStatePresent(name);
 
     smLogger(`State Manager: Adding item to state ${name}`); // const state = this.getStateByName(name);
@@ -4248,6 +3870,7 @@ class AbstractStateManager {
   }
 
   findItemInState(name, item) {
+    // assumes state is an array
     this._ensureStatePresent(name);
 
     let result = {};
@@ -4264,6 +3887,7 @@ class AbstractStateManager {
   }
 
   isItemInState(name, item) {
+    // assumes state is an array
     this._ensureStatePresent(name);
 
     let result = false;
@@ -4329,10 +3953,10 @@ class AbstractStateManager {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/AggregateStateManager.js":
-/*!************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/AggregateStateManager.js ***!
-  \************************************************************************/
+/***/ "./src/framework/state/AggregateStateManager.ts":
+/*!******************************************************!*\
+  !*** ./src/framework/state/AggregateStateManager.ts ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4340,9 +3964,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "AggregateStateManager": () => (/* binding */ AggregateStateManager)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _AbstractStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractStateManager */ "../../ui-framework/dist/framework/state/AbstractStateManager.js");
+/* harmony import */ var _AbstractStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractStateManager */ "./src/framework/state/AbstractStateManager.ts");
 
 
 const aggLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('state-manager-aggregate');
@@ -4486,10 +4110,10 @@ class AggregateStateManager extends _AbstractStateManager__WEBPACK_IMPORTED_MODU
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/AsyncStateManagerWrapper.js":
-/*!***************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/AsyncStateManagerWrapper.js ***!
-  \***************************************************************************/
+/***/ "./src/framework/state/AsyncStateManagerWrapper.ts":
+/*!*********************************************************!*\
+  !*** ./src/framework/state/AsyncStateManagerWrapper.ts ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4497,9 +4121,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "AsyncStateManagerWrapper": () => (/* binding */ AsyncStateManagerWrapper)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _AbstractStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractStateManager */ "../../ui-framework/dist/framework/state/AbstractStateManager.js");
+/* harmony import */ var _AbstractStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractStateManager */ "./src/framework/state/AbstractStateManager.ts");
 
 
 const asyncLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('state-manager-async');
@@ -4599,10 +4223,10 @@ class AsyncStateManagerWrapper extends _AbstractStateManager__WEBPACK_IMPORTED_M
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/BrowserStorageStateManager.js":
-/*!*****************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/BrowserStorageStateManager.js ***!
-  \*****************************************************************************/
+/***/ "./src/framework/state/BrowserStorageStateManager.ts":
+/*!***********************************************************!*\
+  !*** ./src/framework/state/BrowserStorageStateManager.ts ***!
+  \***********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4610,17 +4234,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "BrowserStorageStateManager": () => (/* binding */ BrowserStorageStateManager)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _AbstractStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractStateManager */ "../../ui-framework/dist/framework/state/AbstractStateManager.js");
+/* harmony import */ var _AbstractStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractStateManager */ "./src/framework/state/AbstractStateManager.ts");
 
 
 const lsLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('browser-storage');
 class BrowserStorageStateManager extends _AbstractStateManager__WEBPACK_IMPORTED_MODULE_1__.AbstractStateManager {
-  constructor(useLocalStorage = false, allowPersistence = false, defaultEq, equalFns = null) {
-    super('browser', defaultEq, equalFns); // @ts-ignore
+  // @ts-ignore
+  configuration = [];
 
-    this.configuration = [];
+  constructor(useLocalStorage = false, allowPersistence = false, defaultEq, equalFns = null) {
+    super('browser', defaultEq, equalFns);
     this.storage = window.sessionStorage;
     this.allowPersistence = allowPersistence;
     if (useLocalStorage) this.storage = window.localStorage;
@@ -4733,228 +4358,10 @@ class BrowserStorageStateManager extends _AbstractStateManager__WEBPACK_IMPORTED
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/EncryptedBrowserStorageStateManager.js":
-/*!**************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/EncryptedBrowserStorageStateManager.js ***!
-  \**************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "EncryptedBrowserStorageStateManager": () => (/* binding */ EncryptedBrowserStorageStateManager)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BrowserStorageStateManager */ "../../ui-framework/dist/framework/state/BrowserStorageStateManager.js");
-/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../security/SecurityManager */ "../../ui-framework/dist/framework/security/SecurityManager.js");
-
-
-
-const lsLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('browser-storage-encrypted');
-class EncryptedBrowserStorageStateManager extends _BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_1__.BrowserStorageStateManager {
-  constructor(useLocalStorage = false, defaultEq, equalFns = null) {
-    super(useLocalStorage, true, defaultEq, equalFns);
-    this._addNewNamedStateToStorage = this._addNewNamedStateToStorage.bind(this);
-  }
-
-  _addNewNamedStateToStorage(state) {
-    lsLogger(`Saving with key ${state.name}`);
-    lsLogger(state);
-    const stringifiedSaveData = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_2__.SecurityManager.getInstance().encryptObject(state.value);
-    lsLogger(stringifiedSaveData);
-    const userStateName = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_2__.SecurityManager.getInstance().getLoggedInUsername().trim() + '.' + state.name;
-    this.storage.setItem(userStateName, stringifiedSaveData);
-  }
-
-  _getState(name) {
-    let savedResults = [];
-    lsLogger(`Loading with key ${name}`);
-    const userStateName = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_2__.SecurityManager.getInstance().getLoggedInUsername().trim() + '.' + name;
-    const savedResultsJSON = this.storage.getItem(userStateName);
-
-    if (savedResultsJSON !== null) {
-      savedResults = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_2__.SecurityManager.getInstance().decryptObject(savedResultsJSON);
-      lsLogger(`Loading with key ${name} decrypted to `);
-      lsLogger(`Loading with key ${name} decrypted to `);
-      lsLogger(savedResults);
-    }
-
-    return {
-      name: name,
-      value: savedResults
-    };
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/state/EncryptedIndexedDBStateManager.js":
-/*!*********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/EncryptedIndexedDBStateManager.js ***!
-  \*********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "EncryptedIndexedDBStateManager": () => (/* binding */ EncryptedIndexedDBStateManager)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! idb */ "../../ui-framework/node_modules/idb/build/esm/index.js");
-/* harmony import */ var _IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./IndexedDBStateManager */ "../../ui-framework/dist/framework/state/IndexedDBStateManager.js");
-/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../security/SecurityManager */ "../../ui-framework/dist/framework/security/SecurityManager.js");
-/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./StateManager */ "../../ui-framework/dist/framework/state/StateManager.js");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
-
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('indexeddb-ts-encrypted');
-class EncryptedIndexedDBStateManager extends _IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_2__.IndexedDBStateManager {
-  constructor() {
-    super();
-    this.initialise = this.initialise.bind(this);
-  }
-
-  initialise(dbName, collections) {
-    const _super = Object.create(null, {
-      initialise: {
-        get: () => super.initialise
-      }
-    });
-
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`opening encrypted database for ${dbName} with collections`);
-      const username = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_3__.SecurityManager.getInstance().getLoggedInUsername();
-      this.dbName = `${username}.${dbName}`;
-
-      _super.initialise.call(this, this.dbName, collections);
-    });
-  }
-  /* add a new item to the local storage if not already there */
-
-
-  addNewItemToCollection(key, item, keyField = 'id') {
-    const _super = Object.create(null, {
-      addNewItemToCollection: {
-        get: () => super.addNewItemToCollection
-      }
-    });
-
-    return __awaiter(this, void 0, void 0, function* () {
-      if (item !== null) {
-        let encrypted = {}; // @ts-ignore
-
-        encrypted[keyField] = item[keyField]; // @ts-ignore
-
-        encrypted.data = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_3__.SecurityManager.getInstance().encryptObject(item);
-        logger(encrypted);
-
-        _super.addNewItemToCollection.call(this, key, encrypted, keyField);
-      }
-    });
-  }
-
-  updateItemInCollection(key, item, keyField = 'id') {
-    const _super = Object.create(null, {
-      updateItemInCollection: {
-        get: () => super.updateItemInCollection
-      }
-    });
-
-    return __awaiter(this, void 0, void 0, function* () {
-      if (item) {
-        let encrypted = {}; // @ts-ignore
-
-        encrypted[keyField] = item[keyField]; // @ts-ignore
-
-        encrypted.data = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_3__.SecurityManager.getInstance().encryptObject(item);
-        logger(encrypted);
-
-        _super.updateItemInCollection.call(this, key, encrypted, keyField);
-      }
-    });
-  }
-
-  getWithCollectionKey(key, keyField = 'id') {
-    return __awaiter(this, void 0, void 0, function* () {
-      let savedResults = [];
-      logger(`Loading with key ${key}`);
-      let db = yield (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1);
-      yield this.checkForObjectStore(db, key, keyField); // @ts-ignore
-
-      let transaction = db.transaction([key]); // @ts-ignore
-
-      let objectStore = transaction.store; // @ts-ignore
-
-      let cursor = yield objectStore.openCursor();
-
-      while (cursor) {
-        let item = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_3__.SecurityManager.getInstance().decryptObject(cursor.value.data);
-        logger(item); // @ts-ignore
-
-        savedResults.push(item); // @ts-ignore
-
-        cursor = yield cursor.continue();
-      }
-
-      logger(savedResults);
-      this.callbackForGetItems(savedResults, key);
-    });
-  }
-
-  callbackForAddItem(data, associatedStateName) {
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`callback for add encrypted item for state ${associatedStateName}  - FORWARDING`);
-      let decryptedItem = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_3__.SecurityManager.getInstance().decryptObject(data.data);
-      logger(decryptedItem);
-      this.delegate.informChangeListenersForStateWithName(associatedStateName, decryptedItem, _StateManager__WEBPACK_IMPORTED_MODULE_4__.StateEventType.ItemAdded, null);
-    });
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/state/GraphQLApiStateManager.js":
-/*!*************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/GraphQLApiStateManager.js ***!
-  \*************************************************************************/
+/***/ "./src/framework/state/GraphQLApiStateManager.ts":
+/*!*******************************************************!*\
+  !*** ./src/framework/state/GraphQLApiStateManager.ts ***!
+  \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4962,13 +4369,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "GraphQLApiStateManager": () => (/* binding */ GraphQLApiStateManager)
 /* harmony export */ });
-/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StateManager */ "../../ui-framework/dist/framework/state/StateManager.js");
-/* harmony import */ var _network_Types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../network/Types */ "../../ui-framework/dist/framework/network/Types.js");
-/* harmony import */ var _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../network/DownloadManager */ "../../ui-framework/dist/framework/network/DownloadManager.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StateManager */ "./src/framework/state/StateManager.ts");
+/* harmony import */ var _network_Types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../network/Types */ "./src/framework/network/Types.ts");
+/* harmony import */ var _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../network/DownloadManager */ "./src/framework/network/DownloadManager.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./StateChangedDelegate */ "../../ui-framework/dist/framework/state/StateChangedDelegate.js");
-/* harmony import */ var _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../network/CallbackRegistry */ "../../ui-framework/dist/framework/network/CallbackRegistry.js");
+/* harmony import */ var _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./StateChangedDelegate */ "./src/framework/state/StateChangedDelegate.ts");
+/* harmony import */ var _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../network/CallbackRegistry */ "./src/framework/network/CallbackRegistry.ts");
 
 
 
@@ -4983,8 +4390,13 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_3___default()('state-manager-graphql');
 class GraphQLApiStateManager {
+  static FUNCTION_ID_ADD_ITEM = 'graphql.api.state.manager.add.item';
+  static FUNCTION_ID_REMOVE_ITEM = 'graphql.api.state.manager.remove.item';
+  static FUNCTION_ID_UPDATE_ITEM = 'graphql.api.state.manager.update.item';
+  static FUNCTION_ID_GET_ITEMS = 'graphql.api.state.manager.get.items';
+  configuration = [];
+
   constructor() {
-    this.configuration = [];
     this.delegate = new _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_4__.StateChangedDelegate('graphql');
     this.emitEvents();
     this.bHasCompletedRun = [];
@@ -5050,7 +4462,9 @@ class GraphQLApiStateManager {
     this.bHasCompletedRun = runsComplete;
   }
 
-  _addNewNamedStateToStorage(state) {}
+  _addNewNamedStateToStorage(state) {
+    /* assume model on the other end exists */
+  }
 
   _getState(name) {
     logger(`Getting All ${name}`);
@@ -5085,11 +4499,17 @@ class GraphQLApiStateManager {
     return state;
   }
 
-  _ensureStatePresent(name) {}
+  _ensureStatePresent(name) {
+    /* assume state exists */
+  }
 
-  _replaceNamedStateInStorage(state) {}
+  _replaceNamedStateInStorage(state) {
+    /* not going to replace all state */
+  }
 
-  _saveState(name, stateObj) {}
+  _saveState(name, stateObj) {
+    /* not going to replace all state */
+  }
 
   _addItemToState(name, stateObj, isPersisted = false) {
     if (isPersisted) return; // dont add complete objects to the state - they are already processed
@@ -5287,17 +4707,13 @@ class GraphQLApiStateManager {
   }
 
 }
-GraphQLApiStateManager.FUNCTION_ID_ADD_ITEM = 'graphql.api.state.manager.add.item';
-GraphQLApiStateManager.FUNCTION_ID_REMOVE_ITEM = 'graphql.api.state.manager.remove.item';
-GraphQLApiStateManager.FUNCTION_ID_UPDATE_ITEM = 'graphql.api.state.manager.update.item';
-GraphQLApiStateManager.FUNCTION_ID_GET_ITEMS = 'graphql.api.state.manager.get.items';
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/IndexedDBStateManager.js":
-/*!************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/IndexedDBStateManager.js ***!
-  \************************************************************************/
+/***/ "./src/framework/state/IndexedDBStateManager.ts":
+/*!******************************************************!*\
+  !*** ./src/framework/state/IndexedDBStateManager.ts ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5305,43 +4721,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "IndexedDBStateManager": () => (/* binding */ IndexedDBStateManager)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! idb */ "../../ui-framework/node_modules/idb/build/esm/index.js");
-/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./StateManager */ "../../ui-framework/dist/framework/state/StateManager.js");
-/* harmony import */ var _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./StateChangedDelegate */ "../../ui-framework/dist/framework/state/StateChangedDelegate.js");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/esm/index.js");
+/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./StateManager */ "./src/framework/state/StateManager.ts");
+/* harmony import */ var _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./StateChangedDelegate */ "./src/framework/state/StateChangedDelegate.ts");
 
 
 
@@ -5395,38 +4779,36 @@ class IndexedDBStateManager {
     }
   }
 
-  initialise(dbName, collections) {
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`opening database for ${dbName} with collections`);
-      logger(collections);
-      this.dbName = dbName;
-      this.collections = collections;
-      let runsComplete = [];
-      this.collections.forEach(collection => {
-        runsComplete.push(false);
-      });
-      this.bHasCompletedRun = runsComplete;
-      yield (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(dbName, 1, {
-        upgrade(db, oldVersion, newVersion, transaction) {
-          collections.forEach(collection => {
-            logger(`creating collection for ${collection.name} with key ${collection.keyField}`);
-            db.createObjectStore(collection.name, {
-              keyPath: collection.keyField,
-              autoIncrement: false
-            });
+  async initialise(dbName, collections) {
+    logger(`opening database for ${dbName} with collections`);
+    logger(collections);
+    this.dbName = dbName;
+    this.collections = collections;
+    let runsComplete = [];
+    this.collections.forEach(collection => {
+      runsComplete.push(false);
+    });
+    this.bHasCompletedRun = runsComplete;
+    await (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(dbName, 1, {
+      upgrade(db, oldVersion, newVersion, transaction) {
+        collections.forEach(collection => {
+          logger(`creating collection for ${collection.name} with key ${collection.keyField}`);
+          db.createObjectStore(collection.name, {
+            keyPath: collection.keyField,
+            autoIncrement: false
           });
-        },
+        });
+      },
 
-        blocked() {// …
-        },
+      blocked() {// …
+      },
 
-        blocking() {// …
-        },
+      blocking() {// …
+      },
 
-        terminated() {// …
-        }
+      terminated() {// …
+      }
 
-      });
     });
   }
 
@@ -5451,12 +4833,12 @@ class IndexedDBStateManager {
 
 
   _replaceNamedStateInStorage(state) {
-    let fn = () => __awaiter(this, void 0, void 0, function* () {
+    let fn = async () => {
       logger(`replacing item in storage ${state.name}`);
       logger(state.value);
-      yield this.removeAllItemsFromCollectionKey(state.name, this.getKeyFieldForKey(state.name));
-      yield this.saveWithCollectionKey(state.name, state.value, this.getKeyFieldForKey(state.name));
-    });
+      await this.removeAllItemsFromCollectionKey(state.name, this.getKeyFieldForKey(state.name));
+      await this.saveWithCollectionKey(state.name, state.value, this.getKeyFieldForKey(state.name));
+    };
 
     fn();
   }
@@ -5477,22 +4859,92 @@ class IndexedDBStateManager {
   }
 
   _saveState(name, stateObj) {
-    let fn = () => __awaiter(this, void 0, void 0, function* () {
+    let fn = async () => {
       logger(`saving state ${name}`);
-      yield this.removeAllItemsFromCollectionKey(name, this.getKeyFieldForKey(name));
-      yield this.saveWithCollectionKey(name, stateObj, this.getKeyFieldForKey(name));
-    });
+      await this.removeAllItemsFromCollectionKey(name, this.getKeyFieldForKey(name));
+      await this.saveWithCollectionKey(name, stateObj, this.getKeyFieldForKey(name));
+    };
 
     fn();
   }
 
-  saveWithCollectionKey(key, saveData, keyField = 'id') {
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`Saving array with key ${key}`);
-      logger(saveData);
-      let db = yield (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1); // @ts-ignore
+  async saveWithCollectionKey(key, saveData, keyField = 'id') {
+    logger(`Saving array with key ${key}`);
+    logger(saveData);
+    let db = await (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1); // @ts-ignore
 
-      let transaction = db.transaction([key], "readwrite");
+    let transaction = db.transaction([key], "readwrite");
+
+    transaction.oncomplete = function (ev) {
+      logger('Success');
+      logger(ev);
+    };
+
+    transaction.onerror = function (ev) {
+      logger('Error');
+      logger(ev);
+    }; // @ts-ignore
+
+
+    let objectStore = transaction.store; // @ts-ignore
+
+    await this.saveItemsToCollection(objectStore, saveData, keyField);
+  }
+  /* add a new item to the local storage if not already there */
+
+
+  async addNewItemToCollection(key, item, keyField = 'id') {
+    if (item !== null) {
+      logger(`Adding with key ${key}`);
+      logger(item);
+      let db = await (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1); // @ts-ignore
+
+      let transaction = db.transaction([key], "readwrite").objectStore(key).add(item);
+
+      transaction.oncomplete = function (ev) {
+        logger('Success');
+        logger(ev);
+      };
+
+      transaction.onerror = function (ev) {
+        logger('Error');
+        logger(ev);
+      };
+
+      this.callbackForAddItem(item, key);
+    }
+  }
+
+  async removeItemFromCollection(key, item, keyField = 'id') {
+    if (item !== null) {
+      logger(`Removing with key ${key} item ${item[keyField]}`);
+      logger(item);
+      let db = await (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1); // @ts-ignore
+
+      let transaction = db.transaction([key], "readwrite").objectStore(key).delete(item[keyField]);
+
+      transaction.oncomplete = function (ev) {
+        logger('Success');
+        logger(ev);
+      };
+
+      transaction.onerror = function (ev) {
+        logger('Error');
+        logger(ev);
+      };
+
+      await transaction.done;
+      this.callbackForRemoveItem(item, key);
+    }
+  }
+
+  async updateItemInCollection(key, item, keyField = 'id') {
+    if (item) {
+      logger(`Updating item in storage ${key}`);
+      logger(item);
+      let db = await (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1); // @ts-ignore
+
+      let transaction = db.transaction([key], "readwrite").objectStore(key).put(item);
 
       transaction.oncomplete = function (ev) {
         logger('Success');
@@ -5505,87 +4957,9 @@ class IndexedDBStateManager {
       }; // @ts-ignore
 
 
-      let objectStore = transaction.store; // @ts-ignore
-
-      yield this.saveItemsToCollection(objectStore, saveData, keyField);
-    });
-  }
-  /* add a new item to the local storage if not already there */
-
-
-  addNewItemToCollection(key, item, keyField = 'id') {
-    return __awaiter(this, void 0, void 0, function* () {
-      if (item !== null) {
-        logger(`Adding with key ${key}`);
-        logger(item);
-        let db = yield (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1); // @ts-ignore
-
-        let transaction = db.transaction([key], "readwrite").objectStore(key).add(item);
-
-        transaction.oncomplete = function (ev) {
-          logger('Success');
-          logger(ev);
-        };
-
-        transaction.onerror = function (ev) {
-          logger('Error');
-          logger(ev);
-        };
-
-        this.callbackForAddItem(item, key);
-      }
-    });
-  }
-
-  removeItemFromCollection(key, item, keyField = 'id') {
-    return __awaiter(this, void 0, void 0, function* () {
-      if (item !== null) {
-        logger(`Removing with key ${key} item ${item[keyField]}`);
-        logger(item);
-        let db = yield (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1); // @ts-ignore
-
-        let transaction = db.transaction([key], "readwrite").objectStore(key).delete(item[keyField]);
-
-        transaction.oncomplete = function (ev) {
-          logger('Success');
-          logger(ev);
-        };
-
-        transaction.onerror = function (ev) {
-          logger('Error');
-          logger(ev);
-        };
-
-        yield transaction.done;
-        this.callbackForRemoveItem(item, key);
-      }
-    });
-  }
-
-  updateItemInCollection(key, item, keyField = 'id') {
-    return __awaiter(this, void 0, void 0, function* () {
-      if (item) {
-        logger(`Updating item in storage ${key}`);
-        logger(item);
-        let db = yield (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1); // @ts-ignore
-
-        let transaction = db.transaction([key], "readwrite").objectStore(key).put(item);
-
-        transaction.oncomplete = function (ev) {
-          logger('Success');
-          logger(ev);
-        };
-
-        transaction.onerror = function (ev) {
-          logger('Error');
-          logger(ev);
-        }; // @ts-ignore
-
-
-        yield transaction.done;
-        this.callbackForUpdateItem(item, key);
-      }
-    });
+      await transaction.done;
+      this.callbackForUpdateItem(item, key);
+    }
   }
 
   addChangeListenerForName(name, listener) {
@@ -5644,29 +5018,27 @@ class IndexedDBStateManager {
     return true;
   }
 
-  getWithCollectionKey(key, keyField = 'id') {
-    return __awaiter(this, void 0, void 0, function* () {
-      let savedResults = [];
-      logger(`Loading with key ${key}`);
-      let db = yield (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1);
-      yield this.checkForObjectStore(db, key, keyField); // @ts-ignore
+  async getWithCollectionKey(key, keyField = 'id') {
+    let savedResults = [];
+    logger(`Loading with key ${key}`);
+    let db = await (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1);
+    await this.checkForObjectStore(db, key, keyField); // @ts-ignore
 
-      let transaction = db.transaction([key]); // @ts-ignore
+    let transaction = db.transaction([key]); // @ts-ignore
 
-      let objectStore = transaction.store; // @ts-ignore
+    let objectStore = transaction.store; // @ts-ignore
 
-      let cursor = yield objectStore.openCursor();
+    let cursor = await objectStore.openCursor();
 
-      while (cursor) {
-        // @ts-ignore
-        savedResults.push(cursor.value); // @ts-ignore
+    while (cursor) {
+      // @ts-ignore
+      savedResults.push(cursor.value); // @ts-ignore
 
-        cursor = yield cursor.continue();
-      }
+      cursor = await cursor.continue();
+    }
 
-      logger(savedResults);
-      this.callbackForGetItems(savedResults, key);
-    });
+    logger(savedResults);
+    this.callbackForGetItems(savedResults, key);
   }
 
   getConfiguredStateNames() {
@@ -5700,57 +5072,47 @@ class IndexedDBStateManager {
     return result;
   }
 
-  checkForObjectStore(db, key, keyField) {
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`Checking for collection ${key}`);
+  async checkForObjectStore(db, key, keyField) {
+    logger(`Checking for collection ${key}`);
 
-      if (!db.objectStoreNames.contains(key)) {
-        // @ts-ignore
-        logger(`Checking for collection ${key} - NOT found, creating`);
-        yield db.createObjectStore(key, {
-          keyPath: keyField,
-          autoIncrement: false
-        });
-      }
-    });
-  }
-
-  saveItemsToCollection(objectStore, saveData, keyField = 'id') {
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`Saving items to collection`);
-      saveData.forEach(data => {
-        // @ts-ignore
-        objectStore.add(data);
+    if (!db.objectStoreNames.contains(key)) {
+      // @ts-ignore
+      logger(`Checking for collection ${key} - NOT found, creating`);
+      await db.createObjectStore(key, {
+        keyPath: keyField,
+        autoIncrement: false
       });
+    }
+  }
+
+  async saveItemsToCollection(objectStore, saveData, keyField = 'id') {
+    logger(`Saving items to collection`);
+    saveData.forEach(data => {
+      // @ts-ignore
+      objectStore.add(data);
     });
   }
 
-  removeAllItemsFromCollectionKey(key, keyField = 'id') {
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`Clearing collection ${key}`);
-      let db = yield (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1);
-      yield this.checkForObjectStore(db, key, keyField); // @ts-ignore
+  async removeAllItemsFromCollectionKey(key, keyField = 'id') {
+    logger(`Clearing collection ${key}`);
+    let db = await (0,idb__WEBPACK_IMPORTED_MODULE_1__.openDB)(this.dbName, 1);
+    await this.checkForObjectStore(db, key, keyField); // @ts-ignore
 
-      let transaction = db.transaction([key], "readwrite"); // @ts-ignore
+    let transaction = db.transaction([key], "readwrite"); // @ts-ignore
 
-      let objectStore = transaction.store; // @ts-ignore
+    let objectStore = transaction.store; // @ts-ignore
 
-      yield objectStore.clear();
-    });
+    await objectStore.clear();
   }
 
-  callbackForRemoveItem(data, associatedStateName) {
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`callback for remove item for state ${associatedStateName}  - not forwarded`);
-      logger(data);
-    });
+  async callbackForRemoveItem(data, associatedStateName) {
+    logger(`callback for remove item for state ${associatedStateName}  - not forwarded`);
+    logger(data);
   }
 
-  callbackForUpdateItem(data, associatedStateName) {
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`callback for update item for state ${associatedStateName}  - not forwarded`);
-      logger(data);
-    });
+  async callbackForUpdateItem(data, associatedStateName) {
+    logger(`callback for update item for state ${associatedStateName}  - not forwarded`);
+    logger(data);
   }
 
   callbackForGetItems(data, associatedStateName) {
@@ -5760,22 +5122,20 @@ class IndexedDBStateManager {
     this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_2__.StateEventType.StateChanged, null);
   }
 
-  callbackForAddItem(data, associatedStateName) {
-    return __awaiter(this, void 0, void 0, function* () {
-      logger(`callback for add item for state ${associatedStateName}  - FORWARDING`);
-      logger(data);
-      this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_2__.StateEventType.ItemAdded, null);
-    });
+  async callbackForAddItem(data, associatedStateName) {
+    logger(`callback for add item for state ${associatedStateName}  - FORWARDING`);
+    logger(data);
+    this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_2__.StateEventType.ItemAdded, null);
   }
 
 }
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/MemoryBufferStateManager.js":
-/*!***************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/MemoryBufferStateManager.js ***!
-  \***************************************************************************/
+/***/ "./src/framework/state/MemoryBufferStateManager.ts":
+/*!*********************************************************!*\
+  !*** ./src/framework/state/MemoryBufferStateManager.ts ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5783,9 +5143,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "MemoryBufferStateManager": () => (/* binding */ MemoryBufferStateManager)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _AbstractStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractStateManager */ "../../ui-framework/dist/framework/state/AbstractStateManager.js");
+/* harmony import */ var _AbstractStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractStateManager */ "./src/framework/state/AbstractStateManager.ts");
 
 
 const msManager = debug__WEBPACK_IMPORTED_MODULE_0___default()('state-manager-ms');
@@ -5894,10 +5254,10 @@ class MemoryBufferStateManager extends _AbstractStateManager__WEBPACK_IMPORTED_M
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/RESTApiStateManager.js":
-/*!**********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/RESTApiStateManager.js ***!
-  \**********************************************************************/
+/***/ "./src/framework/state/RESTApiStateManager.ts":
+/*!****************************************************!*\
+  !*** ./src/framework/state/RESTApiStateManager.ts ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5905,13 +5265,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "RESTApiStateManager": () => (/* binding */ RESTApiStateManager)
 /* harmony export */ });
-/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StateManager */ "../../ui-framework/dist/framework/state/StateManager.js");
-/* harmony import */ var _network_Types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../network/Types */ "../../ui-framework/dist/framework/network/Types.js");
-/* harmony import */ var _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../network/DownloadManager */ "../../ui-framework/dist/framework/network/DownloadManager.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StateManager */ "./src/framework/state/StateManager.ts");
+/* harmony import */ var _network_Types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../network/Types */ "./src/framework/network/Types.ts");
+/* harmony import */ var _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../network/DownloadManager */ "./src/framework/network/DownloadManager.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./StateChangedDelegate */ "../../ui-framework/dist/framework/state/StateChangedDelegate.js");
-/* harmony import */ var _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../network/CallbackRegistry */ "../../ui-framework/dist/framework/network/CallbackRegistry.js");
+/* harmony import */ var _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./StateChangedDelegate */ "./src/framework/state/StateChangedDelegate.ts");
+/* harmony import */ var _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../network/CallbackRegistry */ "./src/framework/network/CallbackRegistry.ts");
 
 
 
@@ -5920,8 +5280,13 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_3___default()('state-manager-api');
 class RESTApiStateManager {
+  static FUNCTION_ID_ADD_ITEM = 'rest.api.state.manager.add.item';
+  static FUNCTION_ID_REMOVE_ITEM = 'rest.api.state.manager.remove.item';
+  static FUNCTION_ID_UPDATE_ITEM = 'rest.api.state.manager.update.item';
+  static FUNCTION_ID_GET_ITEMS = 'rest.api.state.manager.get.items';
+  configuration = [];
+
   constructor() {
-    this.configuration = [];
     this.delegate = new _StateChangedDelegate__WEBPACK_IMPORTED_MODULE_4__.StateChangedDelegate('restapi');
     this.emitEvents();
     this.bHasCompletedRun = [];
@@ -5987,7 +5352,9 @@ class RESTApiStateManager {
     this.bHasCompletedRun = runsComplete;
   }
 
-  _addNewNamedStateToStorage(state) {}
+  _addNewNamedStateToStorage(state) {
+    /* assume model on the other end exists */
+  }
 
   _getState(name) {
     logger(`Getting All ${name}`);
@@ -6018,11 +5385,17 @@ class RESTApiStateManager {
     return state;
   }
 
-  _ensureStatePresent(name) {}
+  _ensureStatePresent(name) {
+    /* assume state exists */
+  }
 
-  _replaceNamedStateInStorage(state) {}
+  _replaceNamedStateInStorage(state) {
+    /* not going to replace all state */
+  }
 
-  _saveState(name, stateObj) {}
+  _saveState(name, stateObj) {
+    /* not going to replace all state */
+  }
 
   _addItemToState(name, stateObj, isPersisted = false) {
     if (isPersisted) return; // dont add complete objects to the state - they are already processed
@@ -6225,17 +5598,13 @@ class RESTApiStateManager {
   }
 
 }
-RESTApiStateManager.FUNCTION_ID_ADD_ITEM = 'rest.api.state.manager.add.item';
-RESTApiStateManager.FUNCTION_ID_REMOVE_ITEM = 'rest.api.state.manager.remove.item';
-RESTApiStateManager.FUNCTION_ID_UPDATE_ITEM = 'rest.api.state.manager.update.item';
-RESTApiStateManager.FUNCTION_ID_GET_ITEMS = 'rest.api.state.manager.get.items';
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/StateChangedDelegate.js":
-/*!***********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/StateChangedDelegate.js ***!
-  \***********************************************************************/
+/***/ "./src/framework/state/StateChangedDelegate.ts":
+/*!*****************************************************!*\
+  !*** ./src/framework/state/StateChangedDelegate.ts ***!
+  \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6243,15 +5612,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "StateChangedDelegate": () => (/* binding */ StateChangedDelegate)
 /* harmony export */ });
-/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StateManager */ "../../ui-framework/dist/framework/state/StateManager.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _StateManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StateManager */ "./src/framework/state/StateManager.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 
 
 const smLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('state-manager-delegate');
 class StateChangedDelegate {
+  suppressEventEmits = false;
+
   constructor(managerName) {
-    this.suppressEventEmits = false;
     this.managerName = managerName;
     this.stateChangeListeners = [];
   }
@@ -6356,10 +5726,10 @@ class StateChangedDelegate {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/state/StateManager.js":
-/*!***************************************************************!*\
-  !*** ../../ui-framework/dist/framework/state/StateManager.js ***!
-  \***************************************************************/
+/***/ "./src/framework/state/StateManager.ts":
+/*!*********************************************!*\
+  !*** ./src/framework/state/StateManager.ts ***!
+  \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6368,7 +5738,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "StateEventType": () => (/* binding */ StateEventType),
 /* harmony export */   "StateManagerType": () => (/* binding */ StateManagerType)
 /* harmony export */ });
-var StateEventType;
+let StateEventType;
 
 (function (StateEventType) {
   StateEventType[StateEventType["ItemAdded"] = 0] = "ItemAdded";
@@ -6378,7 +5748,7 @@ var StateEventType;
   StateEventType[StateEventType["FilterResults"] = 4] = "FilterResults";
 })(StateEventType || (StateEventType = {}));
 
-var StateManagerType;
+let StateManagerType;
 
 (function (StateManagerType) {
   StateManagerType[StateManagerType["Local"] = 0] = "Local";
@@ -6388,10 +5758,10 @@ var StateManagerType;
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js":
-/*!******************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/ConfigurationTypes.js ***!
-  \******************************************************************/
+/***/ "./src/framework/ui/ConfigurationTypes.ts":
+/*!************************************************!*\
+  !*** ./src/framework/ui/ConfigurationTypes.ts ***!
+  \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6413,7 +5783,7 @@ const DRAGGABLE_KEY_ID = 'text/plain';
 const DRAGGABLE_TYPE = 'draggedType';
 const DRAGGABLE_FROM = 'draggedFrom';
 const EXTRA_ACTION_ATTRIBUTE_NAME = 'view-extra-action';
-var Modifier;
+let Modifier;
 
 (function (Modifier) {
   Modifier[Modifier["normal"] = 0] = "normal";
@@ -6422,7 +5792,7 @@ var Modifier;
   Modifier[Modifier["warning"] = 3] = "warning";
 })(Modifier || (Modifier = {}));
 
-var KeyType;
+let KeyType;
 
 (function (KeyType) {
   KeyType[KeyType["number"] = 0] = "number";
@@ -6431,7 +5801,7 @@ var KeyType;
   KeyType[KeyType["collection"] = 3] = "collection";
 })(KeyType || (KeyType = {}));
 
-var SidebarLocation;
+let SidebarLocation;
 
 (function (SidebarLocation) {
   SidebarLocation[SidebarLocation["top"] = 0] = "top";
@@ -6440,7 +5810,7 @@ var SidebarLocation;
   SidebarLocation[SidebarLocation["bottom"] = 3] = "bottom";
 })(SidebarLocation || (SidebarLocation = {}));
 
-var RowPosition;
+let RowPosition;
 
 (function (RowPosition) {
   RowPosition[RowPosition["first"] = 0] = "first";
@@ -6453,10 +5823,10 @@ const SCREEN_WIDTH_SMALL = 415;
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/alert/AlertListener.js":
-/*!*******************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/alert/AlertListener.js ***!
-  \*******************************************************************/
+/***/ "./src/framework/ui/alert/AlertListener.ts":
+/*!*************************************************!*\
+  !*** ./src/framework/ui/alert/AlertListener.ts ***!
+  \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6464,7 +5834,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "AlertType": () => (/* binding */ AlertType)
 /* harmony export */ });
-var AlertType;
+let AlertType;
 
 (function (AlertType) {
   AlertType[AlertType["cancelled"] = 0] = "cancelled";
@@ -6473,10 +5843,10 @@ var AlertType;
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/alert/AlertManager.js":
-/*!******************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/alert/AlertManager.js ***!
-  \******************************************************************/
+/***/ "./src/framework/ui/alert/AlertManager.ts":
+/*!************************************************!*\
+  !*** ./src/framework/ui/alert/AlertManager.ts ***!
+  \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6484,8 +5854,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "AlertManager": () => (/* binding */ AlertManager)
 /* harmony export */ });
-/* harmony import */ var _AlertListener__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AlertListener */ "../../ui-framework/dist/framework/ui/alert/AlertListener.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _AlertListener__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AlertListener */ "./src/framework/ui/alert/AlertListener.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 
 
@@ -6558,10 +5928,10 @@ class AlertManager {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/chat/BlockedUserView.js":
-/*!********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/chat/BlockedUserView.js ***!
-  \********************************************************************/
+/***/ "./src/framework/ui/chat/BlockedUserView.ts":
+/*!**************************************************!*\
+  !*** ./src/framework/ui/chat/BlockedUserView.ts ***!
+  \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6569,14 +5939,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "BlockedUserView": () => (/* binding */ BlockedUserView)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../socket/NotificationController */ "../../ui-framework/dist/framework/socket/NotificationController.js");
-/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/ChatManager */ "../../ui-framework/dist/framework/socket/ChatManager.js");
-/* harmony import */ var _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../view/implementation/AbstractStatefulCollectionView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../view/renderer/ListViewRenderer */ "../../ui-framework/dist/framework/ui/view/renderer/ListViewRenderer.js");
-/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ChatTypes */ "../../ui-framework/dist/framework/ui/chat/ChatTypes.js");
+/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../socket/NotificationController */ "./src/framework/socket/NotificationController.ts");
+/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/ChatManager */ "./src/framework/socket/ChatManager.ts");
+/* harmony import */ var _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../view/implementation/AbstractStatefulCollectionView */ "./src/framework/ui/view/implementation/AbstractStatefulCollectionView.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../view/renderer/ListViewRenderer */ "./src/framework/ui/view/renderer/ListViewRenderer.ts");
+/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ChatTypes */ "./src/framework/ui/chat/ChatTypes.ts");
 
 
 
@@ -6586,6 +5956,56 @@ __webpack_require__.r(__webpack_exports__);
 
 const vLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('user-search-sidebar');
 class BlockedUserView extends _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_3__.AbstractStatefulCollectionView {
+  static getInstance(stateManager) {
+    if (!BlockedUserView._instance) {
+      BlockedUserView._instance = new BlockedUserView(stateManager);
+    }
+
+    return BlockedUserView._instance;
+  }
+
+  static DOMConfig = {
+    viewConfig: {
+      resultsContainerId: 'blockedUsers',
+      dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.VIEW_NAME.blockedUsers,
+      drop: {
+        acceptFrom: [_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.fromUserSearch, _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.fromFavourites],
+        acceptTypes: [_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.typeUser]
+      }
+    },
+    resultsElementType: 'a',
+    resultsElementAttributes: [{
+      name: 'href',
+      value: '#'
+    }],
+    resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+    keyId: '_id',
+    keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__.KeyType.string,
+    modifiers: {
+      normal: 'list-group-item-primary',
+      inactive: 'list-group-item-light',
+      active: 'list-group-item-info',
+      warning: 'list-group-item-danger'
+    },
+    icons: {
+      normal: 'fas fa-comment',
+      inactive: 'fas fa-comment',
+      active: 'fas fa-heart',
+      warning: 'fas fa-exclamation-circle'
+    },
+    detail: {
+      containerClasses: 'd-flex w-100 justify-content-between',
+      textElementType: 'span',
+      textElementClasses: 'mb-1',
+      select: true,
+      quickDelete: true,
+      delete: {
+        buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+        iconClasses: 'fas fa-trash-alt'
+      }
+    }
+  };
+
   constructor(stateManager) {
     super(BlockedUserView.DOMConfig, stateManager, _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.STATE_NAMES.users); // list renderer
 
@@ -6598,14 +6018,6 @@ class BlockedUserView extends _view_implementation_AbstractStatefulCollectionVie
     this.handleBlockedUsersChanged = this.handleBlockedUsersChanged.bind(this);
     this.handleLoggedInUsersUpdated = this.handleLoggedInUsersUpdated.bind(this);
     _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addUserListener(this);
-  }
-
-  static getInstance(stateManager) {
-    if (!BlockedUserView._instance) {
-      BlockedUserView._instance = new BlockedUserView(stateManager);
-    }
-
-    return BlockedUserView._instance;
   }
 
   onDocumentLoaded() {
@@ -6671,11 +6083,11 @@ class BlockedUserView extends _view_implementation_AbstractStatefulCollectionVie
   }
 
   updateViewForNamedCollection(name, newState) {
-    var _a; // find the blocked users in the user list
+    var _this$stateManager; // find the blocked users in the user list
 
 
     let blockedUsers = [];
-    const users = (_a = this.stateManager) === null || _a === void 0 ? void 0 : _a.getStateByName(_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.STATE_NAMES.users);
+    const users = (_this$stateManager = this.stateManager) === null || _this$stateManager === void 0 ? void 0 : _this$stateManager.getStateByName(_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.STATE_NAMES.users);
 
     if (users) {
       users.forEach(user => {
@@ -6705,54 +6117,13 @@ class BlockedUserView extends _view_implementation_AbstractStatefulCollectionVie
   }
 
 }
-BlockedUserView.DOMConfig = {
-  viewConfig: {
-    resultsContainerId: 'blockedUsers',
-    dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.VIEW_NAME.blockedUsers,
-    drop: {
-      acceptFrom: [_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.fromUserSearch, _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.fromFavourites],
-      acceptTypes: [_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.typeUser]
-    }
-  },
-  resultsElementType: 'a',
-  resultsElementAttributes: [{
-    name: 'href',
-    value: '#'
-  }],
-  resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
-  keyId: '_id',
-  keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__.KeyType.string,
-  modifiers: {
-    normal: 'list-group-item-primary',
-    inactive: 'list-group-item-light',
-    active: 'list-group-item-info',
-    warning: 'list-group-item-danger'
-  },
-  icons: {
-    normal: 'fas fa-comment',
-    inactive: 'fas fa-comment',
-    active: 'fas fa-heart',
-    warning: 'fas fa-exclamation-circle'
-  },
-  detail: {
-    containerClasses: 'd-flex w-100 justify-content-between',
-    textElementType: 'span',
-    textElementClasses: 'mb-1',
-    select: true,
-    quickDelete: true,
-    delete: {
-      buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
-      iconClasses: 'fas fa-trash-alt'
-    }
-  }
-};
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/chat/ChatLogDetailView.js":
-/*!**********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/chat/ChatLogDetailView.js ***!
-  \**********************************************************************/
+/***/ "./src/framework/ui/chat/ChatLogDetailView.ts":
+/*!****************************************************!*\
+  !*** ./src/framework/ui/chat/ChatLogDetailView.ts ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6760,18 +6131,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ChatLogDetailView": () => (/* binding */ ChatLogDetailView)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../socket/NotificationController */ "../../ui-framework/dist/framework/socket/NotificationController.js");
-/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/ChatManager */ "../../ui-framework/dist/framework/socket/ChatManager.js");
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "../../ui-framework/node_modules/moment/moment.js");
+/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../socket/NotificationController */ "./src/framework/socket/NotificationController.ts");
+/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/ChatManager */ "./src/framework/socket/ChatManager.ts");
+/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../util/BrowserUtil */ "./src/framework/util/BrowserUtil.ts");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _socket_Types__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../socket/Types */ "../../ui-framework/dist/framework/socket/Types.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../notification/NotificationManager */ "../../ui-framework/dist/framework/notification/NotificationManager.js");
-/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ChatTypes */ "../../ui-framework/dist/framework/ui/chat/ChatTypes.js");
-/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../security/SecurityManager */ "../../ui-framework/dist/framework/security/SecurityManager.js");
+/* harmony import */ var _socket_Types__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../socket/Types */ "./src/framework/socket/Types.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../notification/NotificationManager */ "./src/framework/notification/NotificationManager.ts");
+/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ChatTypes */ "./src/framework/ui/chat/ChatTypes.ts");
+/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../security/SecurityManager */ "./src/framework/security/SecurityManager.ts");
 
 
 
@@ -6784,6 +6155,22 @@ __webpack_require__.r(__webpack_exports__);
 
 const csLoggerDetail = debug__WEBPACK_IMPORTED_MODULE_0___default()('chat-sidebar:detail');
 class ChatLogDetailView {
+  static getInstance(stateManager) {
+    if (!ChatLogDetailView._instance) {
+      ChatLogDetailView._instance = new ChatLogDetailView(stateManager);
+    }
+
+    return ChatLogDetailView._instance;
+  }
+
+  static newFormId = "newMessage";
+  static commentId = "message";
+  static submitCommentId = "submitMessage";
+  static chatLogId = 'chatLog';
+  static chatLogRoomId = 'chatLogRoom';
+  static leaveChatId = 'leaveChat';
+  static chatFastSearchUserNames = 'chatFastSearchUserNames'; // @ts-ignore
+
   constructor(stateManager) {
     this.stateManager = stateManager;
     this.selectedChatLog = null; // handler binding
@@ -6797,14 +6184,6 @@ class ChatLogDetailView {
     this.eventUserSelected = this.eventUserSelected.bind(this);
     _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this);
     this.stateManager.addChangeListenerForName(_ChatTypes__WEBPACK_IMPORTED_MODULE_8__.STATE_NAMES.users, this);
-  }
-
-  static getInstance(stateManager) {
-    if (!ChatLogDetailView._instance) {
-      ChatLogDetailView._instance = new ChatLogDetailView(stateManager);
-    }
-
-    return ChatLogDetailView._instance;
   }
 
   hasActionPermission(actionName, from, item) {
@@ -7182,20 +6561,13 @@ class ChatLogDetailView {
   }
 
 }
-ChatLogDetailView.newFormId = "newMessage";
-ChatLogDetailView.commentId = "message";
-ChatLogDetailView.submitCommentId = "submitMessage";
-ChatLogDetailView.chatLogId = 'chatLog';
-ChatLogDetailView.chatLogRoomId = 'chatLogRoom';
-ChatLogDetailView.leaveChatId = 'leaveChat';
-ChatLogDetailView.chatFastSearchUserNames = 'chatFastSearchUserNames';
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/chat/ChatLogsView.js":
-/*!*****************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/chat/ChatLogsView.js ***!
-  \*****************************************************************/
+/***/ "./src/framework/ui/chat/ChatLogsView.ts":
+/*!***********************************************!*\
+  !*** ./src/framework/ui/chat/ChatLogsView.ts ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7203,16 +6575,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ChatLogsView": () => (/* binding */ ChatLogsView)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../socket/NotificationController */ "../../ui-framework/dist/framework/socket/NotificationController.js");
-/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/ChatManager */ "../../ui-framework/dist/framework/socket/ChatManager.js");
-/* harmony import */ var _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../view/implementation/AbstractStatefulCollectionView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../state/MemoryBufferStateManager */ "../../ui-framework/dist/framework/state/MemoryBufferStateManager.js");
-/* harmony import */ var _util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../util/EqualityFunctions */ "../../ui-framework/dist/framework/util/EqualityFunctions.js");
-/* harmony import */ var _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../view/renderer/ListViewRenderer */ "../../ui-framework/dist/framework/ui/view/renderer/ListViewRenderer.js");
-/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ChatTypes */ "../../ui-framework/dist/framework/ui/chat/ChatTypes.js");
+/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../socket/NotificationController */ "./src/framework/socket/NotificationController.ts");
+/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/ChatManager */ "./src/framework/socket/ChatManager.ts");
+/* harmony import */ var _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../view/implementation/AbstractStatefulCollectionView */ "./src/framework/ui/view/implementation/AbstractStatefulCollectionView.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../state/MemoryBufferStateManager */ "./src/framework/state/MemoryBufferStateManager.ts");
+/* harmony import */ var _util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../util/EqualityFunctions */ "./src/framework/util/EqualityFunctions.ts");
+/* harmony import */ var _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../view/renderer/ListViewRenderer */ "./src/framework/ui/view/renderer/ListViewRenderer.ts");
+/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ChatTypes */ "./src/framework/ui/chat/ChatTypes.ts");
 
 
 
@@ -7224,23 +6596,58 @@ __webpack_require__.r(__webpack_exports__);
 
 const csLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('chat-sidebar');
 class ChatLogsView extends _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_3__.AbstractStatefulCollectionView {
-  constructor() {
-    super(ChatLogsView.DOMConfig, new _state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_5__.MemoryBufferStateManager(_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_6__.isSameRoom), _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.STATE_NAMES.chatLogs);
-    this.selectedChatLog = null;
-    this.renderer = new _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_7__.ListViewRenderer(this, this); // handler binding
-
-    this.handleChatLogsUpdated = this.handleChatLogsUpdated.bind(this);
-    this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
-    this.handleChatStarted = this.handleChatStarted.bind(this);
-    _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this);
-  }
-
   static getInstance() {
     if (!ChatLogsView._instance) {
       ChatLogsView._instance = new ChatLogsView();
     }
 
     return ChatLogsView._instance;
+  }
+
+  static DOMConfig = {
+    viewConfig: {
+      resultsContainerId: 'chatLogs',
+      dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.VIEW_NAME.chatLogs
+    },
+    resultsElementType: 'a',
+    resultsElementAttributes: [{
+      name: 'href',
+      value: '#'
+    }],
+    resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+    keyId: 'roomName',
+    keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__.KeyType.string,
+    modifiers: {
+      normal: '',
+      inactive: 'list-group-item-dark',
+      active: 'list-group-item-primary',
+      warning: ''
+    },
+    detail: {
+      containerClasses: 'd-flex w-100 justify-content-between',
+      textElementType: 'span',
+      textElementClasses: 'mb-1',
+      select: true,
+      delete: {
+        buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+        iconClasses: 'text-black fas fa-sign-out-alt'
+      },
+      badge: {
+        elementType: 'span',
+        elementClasses: 'badge badge-pill badge-primary mr-1'
+      }
+    }
+  };
+  selectedChatLog = null;
+
+  constructor() {
+    super(ChatLogsView.DOMConfig, new _state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_5__.MemoryBufferStateManager(_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_6__.isSameRoom), _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.STATE_NAMES.chatLogs);
+    this.renderer = new _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_7__.ListViewRenderer(this, this); // handler binding
+
+    this.handleChatLogsUpdated = this.handleChatLogsUpdated.bind(this);
+    this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
+    this.handleChatStarted = this.handleChatStarted.bind(this);
+    _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this);
   }
 
   compareItemsForEquality(item1, item2) {
@@ -7374,47 +6781,13 @@ class ChatLogsView extends _view_implementation_AbstractStatefulCollectionView__
   }
 
 }
-ChatLogsView.DOMConfig = {
-  viewConfig: {
-    resultsContainerId: 'chatLogs',
-    dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.VIEW_NAME.chatLogs
-  },
-  resultsElementType: 'a',
-  resultsElementAttributes: [{
-    name: 'href',
-    value: '#'
-  }],
-  resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
-  keyId: 'roomName',
-  keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__.KeyType.string,
-  modifiers: {
-    normal: '',
-    inactive: 'list-group-item-dark',
-    active: 'list-group-item-primary',
-    warning: ''
-  },
-  detail: {
-    containerClasses: 'd-flex w-100 justify-content-between',
-    textElementType: 'span',
-    textElementClasses: 'mb-1',
-    select: true,
-    delete: {
-      buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
-      iconClasses: 'text-black fas fa-sign-out-alt'
-    },
-    badge: {
-      elementType: 'span',
-      elementClasses: 'badge badge-pill badge-primary mr-1'
-    }
-  }
-};
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/chat/ChatRoomsSidebar.js":
-/*!*********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/chat/ChatRoomsSidebar.js ***!
-  \*********************************************************************/
+/***/ "./src/framework/ui/chat/ChatRoomsSidebar.ts":
+/*!***************************************************!*\
+  !*** ./src/framework/ui/chat/ChatRoomsSidebar.ts ***!
+  \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7422,15 +6795,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ChatRoomsSidebar": () => (/* binding */ ChatRoomsSidebar)
 /* harmony export */ });
-/* harmony import */ var _container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../container/SidebarViewContainer */ "../../ui-framework/dist/framework/ui/container/SidebarViewContainer.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _ChatLogsView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatLogsView */ "../../ui-framework/dist/framework/ui/chat/ChatLogsView.js");
-/* harmony import */ var _ChatLogDetailView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ChatLogDetailView */ "../../ui-framework/dist/framework/ui/chat/ChatLogDetailView.js");
+/* harmony import */ var _container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../container/SidebarViewContainer */ "./src/framework/ui/container/SidebarViewContainer.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _ChatLogsView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatLogsView */ "./src/framework/ui/chat/ChatLogsView.ts");
+/* harmony import */ var _ChatLogDetailView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ChatLogDetailView */ "./src/framework/ui/chat/ChatLogDetailView.ts");
 
 
 
 
 class ChatRoomsSidebar extends _container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_0__.SidebarViewContainer {
+  static getInstance(stateManager) {
+    if (!ChatRoomsSidebar._instance) {
+      ChatRoomsSidebar._instance = new ChatRoomsSidebar(stateManager);
+    }
+
+    return ChatRoomsSidebar._instance;
+  }
+
+  static SidebarPrefs = {
+    id: 'chatSideBar',
+    expandedSize: '35%',
+    location: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SidebarLocation.right
+  };
+  static SidebarContainers = {
+    chatLogs: 'chatLogs',
+    chatLog: 'chatLogRoom'
+  };
+
   constructor(stateManager) {
     super(ChatRoomsSidebar.SidebarPrefs);
     const chatView = _ChatLogsView__WEBPACK_IMPORTED_MODULE_2__.ChatLogsView.getInstance();
@@ -7444,31 +6835,14 @@ class ChatRoomsSidebar extends _container_SidebarViewContainer__WEBPACK_IMPORTED
     chatView.addEventListener(chatLogView);
   }
 
-  static getInstance(stateManager) {
-    if (!ChatRoomsSidebar._instance) {
-      ChatRoomsSidebar._instance = new ChatRoomsSidebar(stateManager);
-    }
-
-    return ChatRoomsSidebar._instance;
-  }
-
 }
-ChatRoomsSidebar.SidebarPrefs = {
-  id: 'chatSideBar',
-  expandedSize: '35%',
-  location: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SidebarLocation.right
-};
-ChatRoomsSidebar.SidebarContainers = {
-  chatLogs: 'chatLogs',
-  chatLog: 'chatLogRoom'
-};
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/chat/ChatTypes.js":
-/*!**************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/chat/ChatTypes.js ***!
-  \**************************************************************/
+/***/ "./src/framework/ui/chat/ChatTypes.ts":
+/*!********************************************!*\
+  !*** ./src/framework/ui/chat/ChatTypes.ts ***!
+  \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7498,10 +6872,10 @@ const VIEW_NAME = {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/chat/FavouriteUserView.js":
-/*!**********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/chat/FavouriteUserView.js ***!
-  \**********************************************************************/
+/***/ "./src/framework/ui/chat/FavouriteUserView.ts":
+/*!****************************************************!*\
+  !*** ./src/framework/ui/chat/FavouriteUserView.ts ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7509,14 +6883,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "FavouriteUserView": () => (/* binding */ FavouriteUserView)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../socket/NotificationController */ "../../ui-framework/dist/framework/socket/NotificationController.js");
-/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/ChatManager */ "../../ui-framework/dist/framework/socket/ChatManager.js");
-/* harmony import */ var _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../view/implementation/AbstractStatefulCollectionView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../view/renderer/ListViewRenderer */ "../../ui-framework/dist/framework/ui/view/renderer/ListViewRenderer.js");
-/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ChatTypes */ "../../ui-framework/dist/framework/ui/chat/ChatTypes.js");
+/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../socket/NotificationController */ "./src/framework/socket/NotificationController.ts");
+/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/ChatManager */ "./src/framework/socket/ChatManager.ts");
+/* harmony import */ var _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../view/implementation/AbstractStatefulCollectionView */ "./src/framework/ui/view/implementation/AbstractStatefulCollectionView.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../view/renderer/ListViewRenderer */ "./src/framework/ui/view/renderer/ListViewRenderer.ts");
+/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ChatTypes */ "./src/framework/ui/chat/ChatTypes.ts");
 
 
 
@@ -7527,6 +6901,65 @@ __webpack_require__.r(__webpack_exports__);
 const vLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('user-search-sidebar');
 const vLoggerDetail = debug__WEBPACK_IMPORTED_MODULE_0___default()('user-search-sidebar:detail');
 class FavouriteUserView extends _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_3__.AbstractStatefulCollectionView {
+  static getInstance(stateManager) {
+    if (!FavouriteUserView._instance) {
+      FavouriteUserView._instance = new FavouriteUserView(stateManager);
+    }
+
+    return FavouriteUserView._instance;
+  }
+
+  static DOMConfig = {
+    viewConfig: {
+      resultsContainerId: 'favouriteUsers',
+      drop: {
+        acceptFrom: [_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.fromUserSearch],
+        acceptTypes: [_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.typeUser]
+      },
+      dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.VIEW_NAME.favouriteUsers
+    },
+    resultsElementType: 'a',
+    resultsElementAttributes: [{
+      name: 'href',
+      value: '#'
+    }],
+    resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+    keyId: '_id',
+    keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__.KeyType.string,
+    modifiers: {
+      normal: 'list-group-item-primary',
+      inactive: 'list-group-item-light',
+      active: 'list-group-item-info',
+      warning: 'list-group-item-danger'
+    },
+    icons: {
+      normal: 'fas fa-comment',
+      inactive: 'fas fa-comment',
+      active: 'fas fa-heart',
+      warning: 'fas fa-exclamation-circle'
+    },
+    detail: {
+      containerClasses: 'd-flex w-100 justify-content-between',
+      textElementType: 'span',
+      textElementClasses: 'mb-1',
+      select: true,
+      quickDelete: true,
+      delete: {
+        buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+        iconClasses: 'fas fa-trash-alt'
+      },
+      drag: {
+        type: _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.typeUser,
+        from: _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.fromFavourites
+      }
+    },
+    extraActions: [{
+      name: 'block',
+      buttonClasses: 'btn bg-warning text-white btn-circle btn-sm mr-1',
+      iconClasses: 'fas fa-user-slash'
+    }]
+  };
+
   constructor(stateManager) {
     super(FavouriteUserView.DOMConfig, stateManager, _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.STATE_NAMES.users);
     this.renderer = new _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_5__.ListViewRenderer(this, this); // handler binding
@@ -7538,14 +6971,6 @@ class FavouriteUserView extends _view_implementation_AbstractStatefulCollectionV
     this.handleBlockedUsersChanged = this.handleBlockedUsersChanged.bind(this);
     this.handleLoggedInUsersUpdated = this.handleLoggedInUsersUpdated.bind(this);
     _socket_NotificationController__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addUserListener(this);
-  }
-
-  static getInstance(stateManager) {
-    if (!FavouriteUserView._instance) {
-      FavouriteUserView._instance = new FavouriteUserView(stateManager);
-    }
-
-    return FavouriteUserView._instance;
   }
 
   onDocumentLoaded() {
@@ -7609,11 +7034,11 @@ class FavouriteUserView extends _view_implementation_AbstractStatefulCollectionV
   }
 
   updateViewForNamedCollection(name, newState) {
-    var _a; // find the blocked users in the user list
+    var _this$stateManager; // find the blocked users in the user list
 
 
     let favUsers = [];
-    const users = (_a = this.stateManager) === null || _a === void 0 ? void 0 : _a.getStateByName(_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.STATE_NAMES.users);
+    const users = (_this$stateManager = this.stateManager) === null || _this$stateManager === void 0 ? void 0 : _this$stateManager.getStateByName(_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.STATE_NAMES.users);
 
     if (users) {
       users.forEach(user => {
@@ -7682,63 +7107,13 @@ class FavouriteUserView extends _view_implementation_AbstractStatefulCollectionV
   }
 
 }
-FavouriteUserView.DOMConfig = {
-  viewConfig: {
-    resultsContainerId: 'favouriteUsers',
-    drop: {
-      acceptFrom: [_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.fromUserSearch],
-      acceptTypes: [_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.typeUser]
-    },
-    dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.VIEW_NAME.favouriteUsers
-  },
-  resultsElementType: 'a',
-  resultsElementAttributes: [{
-    name: 'href',
-    value: '#'
-  }],
-  resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
-  keyId: '_id',
-  keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__.KeyType.string,
-  modifiers: {
-    normal: 'list-group-item-primary',
-    inactive: 'list-group-item-light',
-    active: 'list-group-item-info',
-    warning: 'list-group-item-danger'
-  },
-  icons: {
-    normal: 'fas fa-comment',
-    inactive: 'fas fa-comment',
-    active: 'fas fa-heart',
-    warning: 'fas fa-exclamation-circle'
-  },
-  detail: {
-    containerClasses: 'd-flex w-100 justify-content-between',
-    textElementType: 'span',
-    textElementClasses: 'mb-1',
-    select: true,
-    quickDelete: true,
-    delete: {
-      buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
-      iconClasses: 'fas fa-trash-alt'
-    },
-    drag: {
-      type: _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.typeUser,
-      from: _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.fromFavourites
-    }
-  },
-  extraActions: [{
-    name: 'block',
-    buttonClasses: 'btn bg-warning text-white btn-circle btn-sm mr-1',
-    iconClasses: 'fas fa-user-slash'
-  }]
-};
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/chat/UserSearchSidebar.js":
-/*!**********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/chat/UserSearchSidebar.js ***!
-  \**********************************************************************/
+/***/ "./src/framework/ui/chat/UserSearchSidebar.ts":
+/*!****************************************************!*\
+  !*** ./src/framework/ui/chat/UserSearchSidebar.ts ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7746,12 +7121,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "UserSearchSidebar": () => (/* binding */ UserSearchSidebar)
 /* harmony export */ });
-/* harmony import */ var _container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../container/SidebarViewContainer */ "../../ui-framework/dist/framework/ui/container/SidebarViewContainer.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _UserSearchView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UserSearchView */ "../../ui-framework/dist/framework/ui/chat/UserSearchView.js");
-/* harmony import */ var _FavouriteUserView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FavouriteUserView */ "../../ui-framework/dist/framework/ui/chat/FavouriteUserView.js");
-/* harmony import */ var _BlockedUserView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./BlockedUserView */ "../../ui-framework/dist/framework/ui/chat/BlockedUserView.js");
-/* harmony import */ var _ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ChatRoomsSidebar */ "../../ui-framework/dist/framework/ui/chat/ChatRoomsSidebar.js");
+/* harmony import */ var _container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../container/SidebarViewContainer */ "./src/framework/ui/container/SidebarViewContainer.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _UserSearchView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UserSearchView */ "./src/framework/ui/chat/UserSearchView.ts");
+/* harmony import */ var _FavouriteUserView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FavouriteUserView */ "./src/framework/ui/chat/FavouriteUserView.ts");
+/* harmony import */ var _BlockedUserView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./BlockedUserView */ "./src/framework/ui/chat/BlockedUserView.ts");
+/* harmony import */ var _ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ChatRoomsSidebar */ "./src/framework/ui/chat/ChatRoomsSidebar.ts");
 
 
 
@@ -7759,6 +7134,25 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class UserSearchSidebar extends _container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_0__.SidebarViewContainer {
+  static getInstance(stateManager) {
+    if (!UserSearchSidebar._instance) {
+      UserSearchSidebar._instance = new UserSearchSidebar(stateManager);
+    }
+
+    return UserSearchSidebar._instance;
+  }
+
+  static SidebarPrefs = {
+    id: 'userSearchSideBar',
+    expandedSize: '35%',
+    location: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SidebarLocation.left
+  };
+  static SidebarContainers = {
+    recentSearches: 'userSearchZone',
+    favourites: 'favouriteUsersDropZone',
+    blocked: 'blockedUsersDropZone'
+  };
+
   constructor(stateManager) {
     super(UserSearchSidebar.SidebarPrefs);
     const recentSearches = _UserSearchView__WEBPACK_IMPORTED_MODULE_2__.UserSearchView.getInstance(stateManager);
@@ -7776,32 +7170,14 @@ class UserSearchSidebar extends _container_SidebarViewContainer__WEBPACK_IMPORTE
     this.logSB = _ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_5__.ChatRoomsSidebar.getInstance(stateManager);
   }
 
-  static getInstance(stateManager) {
-    if (!UserSearchSidebar._instance) {
-      UserSearchSidebar._instance = new UserSearchSidebar(stateManager);
-    }
-
-    return UserSearchSidebar._instance;
-  }
-
 }
-UserSearchSidebar.SidebarPrefs = {
-  id: 'userSearchSideBar',
-  expandedSize: '35%',
-  location: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SidebarLocation.left
-};
-UserSearchSidebar.SidebarContainers = {
-  recentSearches: 'userSearchZone',
-  favourites: 'favouriteUsersDropZone',
-  blocked: 'blockedUsersDropZone'
-};
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/chat/UserSearchView.js":
-/*!*******************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/chat/UserSearchView.js ***!
-  \*******************************************************************/
+/***/ "./src/framework/ui/chat/UserSearchView.ts":
+/*!*************************************************!*\
+  !*** ./src/framework/ui/chat/UserSearchView.ts ***!
+  \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -7809,19 +7185,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "UserSearchView": () => (/* binding */ UserSearchView)
 /* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util/EqualityFunctions */ "../../ui-framework/dist/framework/util/EqualityFunctions.js");
-/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/NotificationController */ "../../ui-framework/dist/framework/socket/NotificationController.js");
-/* harmony import */ var _state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../state/BrowserStorageStateManager */ "../../ui-framework/dist/framework/state/BrowserStorageStateManager.js");
-/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../socket/ChatManager */ "../../ui-framework/dist/framework/socket/ChatManager.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../view/implementation/AbstractStatefulCollectionView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
-/* harmony import */ var _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../view/renderer/ListViewRenderer */ "../../ui-framework/dist/framework/ui/view/renderer/ListViewRenderer.js");
-/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ChatTypes */ "../../ui-framework/dist/framework/ui/chat/ChatTypes.js");
-/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../security/SecurityManager */ "../../ui-framework/dist/framework/security/SecurityManager.js");
-/* harmony import */ var _ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ChatRoomsSidebar */ "../../ui-framework/dist/framework/ui/chat/ChatRoomsSidebar.js");
-/* harmony import */ var _ChatLogsView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./ChatLogsView */ "../../ui-framework/dist/framework/ui/chat/ChatLogsView.js");
+/* harmony import */ var _util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util/EqualityFunctions */ "./src/framework/util/EqualityFunctions.ts");
+/* harmony import */ var _socket_NotificationController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../socket/NotificationController */ "./src/framework/socket/NotificationController.ts");
+/* harmony import */ var _state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../state/BrowserStorageStateManager */ "./src/framework/state/BrowserStorageStateManager.ts");
+/* harmony import */ var _socket_ChatManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../socket/ChatManager */ "./src/framework/socket/ChatManager.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../view/implementation/AbstractStatefulCollectionView */ "./src/framework/ui/view/implementation/AbstractStatefulCollectionView.ts");
+/* harmony import */ var _view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../view/renderer/ListViewRenderer */ "./src/framework/ui/view/renderer/ListViewRenderer.ts");
+/* harmony import */ var _ChatTypes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ChatTypes */ "./src/framework/ui/chat/ChatTypes.ts");
+/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../security/SecurityManager */ "./src/framework/security/SecurityManager.ts");
+/* harmony import */ var _ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ChatRoomsSidebar */ "./src/framework/ui/chat/ChatRoomsSidebar.ts");
+/* harmony import */ var _ChatLogsView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./ChatLogsView */ "./src/framework/ui/chat/ChatLogsView.ts");
 
 
 
@@ -7837,6 +7213,67 @@ __webpack_require__.r(__webpack_exports__);
 const vLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('user-search');
 const vLoggerDetail = debug__WEBPACK_IMPORTED_MODULE_0___default()('user-search-detail');
 class UserSearchView extends _view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_6__.AbstractStatefulCollectionView {
+  static getInstance(stateManager) {
+    if (!UserSearchView._instance) {
+      UserSearchView._instance = new UserSearchView(stateManager);
+    }
+
+    return UserSearchView._instance;
+  }
+
+  static fastSearchInputId = 'fastSearchUserNames';
+  static dataLimit = 10;
+  static DOMConfig = {
+    viewConfig: {
+      resultsContainerId: 'recentUserSearches',
+      dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.VIEW_NAME.userSearch
+    },
+    resultsElementType: 'a',
+    resultsElementAttributes: [{
+      name: 'href',
+      value: '#'
+    }],
+    resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+    keyId: '_id',
+    keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_5__.KeyType.string,
+    modifiers: {
+      normal: 'list-group-item-primary',
+      inactive: 'list-group-item-light',
+      active: 'list-group-item-info',
+      warning: 'list-group-item-danger'
+    },
+    icons: {
+      normal: 'fas fa-comment',
+      inactive: 'fas fa-comment',
+      active: 'fas fa-heart',
+      warning: 'fas fa-exclamation-circle'
+    },
+    detail: {
+      containerClasses: 'd-flex w-100 justify-content-between',
+      textElementType: 'span',
+      textElementClasses: 'mb-1',
+      select: true,
+      quickDelete: true,
+      delete: {
+        buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+        iconClasses: 'fas fa-trash-alt'
+      },
+      drag: {
+        type: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.DRAGGABLE.typeUser,
+        from: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.DRAGGABLE.fromUserSearch
+      }
+    },
+    extraActions: [{
+      name: 'favourite',
+      buttonClasses: 'btn bg-info text-white btn-circle btn-sm mr-1',
+      iconClasses: 'fas fa-user-plus'
+    }, {
+      name: 'block',
+      buttonClasses: 'btn bg-warning text-white btn-circle btn-sm mr-1',
+      iconClasses: 'fas fa-user-slash'
+    }]
+  };
+
   constructor(stateManager) {
     super(UserSearchView.DOMConfig, stateManager, _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.STATE_NAMES.users);
     this.loggedInUsers = [];
@@ -7856,14 +7293,6 @@ class UserSearchView extends _view_implementation_AbstractStatefulCollectionView
     this.localisedSM.addChangeListenerForName(_ChatTypes__WEBPACK_IMPORTED_MODULE_8__.STATE_NAMES.recentUserSearches, this);
     _socket_NotificationController__WEBPACK_IMPORTED_MODULE_2__.NotificationController.getInstance().addUserListener(this);
     vLogger(this.localisedSM.getStateByName(_ChatTypes__WEBPACK_IMPORTED_MODULE_8__.STATE_NAMES.recentUserSearches));
-  }
-
-  static getInstance(stateManager) {
-    if (!UserSearchView._instance) {
-      UserSearchView._instance = new UserSearchView(stateManager);
-    }
-
-    return UserSearchView._instance;
   }
 
   handleLoggedInUsersUpdated(usernames) {
@@ -8037,65 +7466,13 @@ class UserSearchView extends _view_implementation_AbstractStatefulCollectionView
   }
 
 }
-UserSearchView.fastSearchInputId = 'fastSearchUserNames';
-UserSearchView.dataLimit = 10;
-UserSearchView.DOMConfig = {
-  viewConfig: {
-    resultsContainerId: 'recentUserSearches',
-    dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.VIEW_NAME.userSearch
-  },
-  resultsElementType: 'a',
-  resultsElementAttributes: [{
-    name: 'href',
-    value: '#'
-  }],
-  resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
-  keyId: '_id',
-  keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_5__.KeyType.string,
-  modifiers: {
-    normal: 'list-group-item-primary',
-    inactive: 'list-group-item-light',
-    active: 'list-group-item-info',
-    warning: 'list-group-item-danger'
-  },
-  icons: {
-    normal: 'fas fa-comment',
-    inactive: 'fas fa-comment',
-    active: 'fas fa-heart',
-    warning: 'fas fa-exclamation-circle'
-  },
-  detail: {
-    containerClasses: 'd-flex w-100 justify-content-between',
-    textElementType: 'span',
-    textElementClasses: 'mb-1',
-    select: true,
-    quickDelete: true,
-    delete: {
-      buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
-      iconClasses: 'fas fa-trash-alt'
-    },
-    drag: {
-      type: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.DRAGGABLE.typeUser,
-      from: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.DRAGGABLE.fromUserSearch
-    }
-  },
-  extraActions: [{
-    name: 'favourite',
-    buttonClasses: 'btn bg-info text-white btn-circle btn-sm mr-1',
-    iconClasses: 'fas fa-user-plus'
-  }, {
-    name: 'block',
-    buttonClasses: 'btn bg-warning text-white btn-circle btn-sm mr-1',
-    iconClasses: 'fas fa-user-slash'
-  }]
-};
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/container/SidebarViewContainer.js":
-/*!******************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/container/SidebarViewContainer.js ***!
-  \******************************************************************************/
+/***/ "./src/framework/ui/container/SidebarViewContainer.ts":
+/*!************************************************************!*\
+  !*** ./src/framework/ui/container/SidebarViewContainer.ts ***!
+  \************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8103,8 +7480,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "SidebarViewContainer": () => (/* binding */ SidebarViewContainer)
 /* harmony export */ });
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 
 
@@ -8132,6 +7509,7 @@ class SidebarViewContainer {
   }
 
   onDocumentLoaded() {
+    // this should be called once at startup
     // hide the side bar panel
     this.eventHide(null); // add the event listener for the close button
 
@@ -8157,6 +7535,7 @@ class SidebarViewContainer {
   }
 
   eventShow(event) {
+    //414,768,1024
     let size = this.prefs.expandedSize;
 
     if (window.innerWidth < 769) {
@@ -8239,10 +7618,10 @@ class SidebarViewContainer {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/context/ContextualInformationHelper.js":
-/*!***********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/context/ContextualInformationHelper.js ***!
-  \***********************************************************************************/
+/***/ "./src/framework/ui/context/ContextualInformationHelper.ts":
+/*!*****************************************************************!*\
+  !*** ./src/framework/ui/context/ContextualInformationHelper.ts ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -8251,17 +7630,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "TogglePlacement": () => (/* binding */ TogglePlacement),
 /* harmony export */   "ContextualInformationHelper": () => (/* binding */ ContextualInformationHelper)
 /* harmony export */ });
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util/BrowserUtil */ "./src/framework/util/BrowserUtil.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../view/implementation/AbstractCollectionView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractCollectionView.js");
+/* harmony import */ var _view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../view/implementation/AbstractCollectionView */ "./src/framework/ui/view/implementation/AbstractCollectionView.ts");
 
 
 
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('context-helper');
-var TogglePlacement;
+let TogglePlacement;
 
 (function (TogglePlacement) {
   TogglePlacement[TogglePlacement["top"] = 0] = "top";
@@ -8275,10 +7654,26 @@ const defaultIdentifier = function (name, item) {
 };
 
 class ContextualInformationHelper {
+  static SOURCE = 'context-source';
+  static TYPE = 'context-type';
+  static DISPLAYNAME = 'context-display-name';
+  static IDENTIFIER = 'context-id';
+  static DESCRIPTION = 'title';
+  static BOOTSTRAP_TOGGLE = 'data-toggle';
+  static BOOTSTRAP_PLACEMENT = 'data-placement';
+  static BOOTSTRAP_TOOLTIP_VALUE = 'tooltip';
+  static BOOTSTRAP_POPOVER_VALUE = 'popover';
+  static BOOTSTRAP_TOGGLE_HTML = 'data-html';
+  static BOOTSTRAP_TOGGLE_HTML_VALUE = 'true';
+  static BOOTSTRAP_PLACEMENT_TOP = 'top';
+  static BOOTSTRAP_PLACEMENT_BOTTOM = 'bottom';
+  static BOOTSTRAP_PLACEMENT_RIGHT = 'right';
+  static BOOTSTRAP_PLACEMENT_LEFT = 'left';
+  registry = [];
+  menuDivEl = null;
+  menuContentEl = null;
+
   constructor() {
-    this.registry = [];
-    this.menuDivEl = null;
-    this.menuContentEl = null;
     this.handleContextMenu = this.handleContextMenu.bind(this);
     this.hideContextMenu = this.hideContextMenu.bind(this);
   }
@@ -8570,3737 +7965,13 @@ class ContextualInformationHelper {
   }
 
 }
-ContextualInformationHelper.SOURCE = 'context-source';
-ContextualInformationHelper.TYPE = 'context-type';
-ContextualInformationHelper.DISPLAYNAME = 'context-display-name';
-ContextualInformationHelper.IDENTIFIER = 'context-id';
-ContextualInformationHelper.DESCRIPTION = 'title';
-ContextualInformationHelper.BOOTSTRAP_TOGGLE = 'data-toggle';
-ContextualInformationHelper.BOOTSTRAP_PLACEMENT = 'data-placement';
-ContextualInformationHelper.BOOTSTRAP_TOOLTIP_VALUE = 'tooltip';
-ContextualInformationHelper.BOOTSTRAP_POPOVER_VALUE = 'popover';
-ContextualInformationHelper.BOOTSTRAP_TOGGLE_HTML = 'data-html';
-ContextualInformationHelper.BOOTSTRAP_TOGGLE_HTML_VALUE = 'true';
-ContextualInformationHelper.BOOTSTRAP_PLACEMENT_TOP = 'top';
-ContextualInformationHelper.BOOTSTRAP_PLACEMENT_BOTTOM = 'bottom';
-ContextualInformationHelper.BOOTSTRAP_PLACEMENT_RIGHT = 'right';
-ContextualInformationHelper.BOOTSTRAP_PLACEMENT_LEFT = 'left';
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/form/AbstractForm.js":
-/*!*****************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/AbstractForm.js ***!
-  \*****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AbstractForm": () => (/* binding */ AbstractForm)
-/* harmony export */ });
-/* harmony import */ var _FormListener__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormListener */ "../../ui-framework/dist/framework/ui/form/FormListener.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validation/ValidationManager */ "../../ui-framework/dist/framework/ui/form/validation/ValidationManager.js");
-/* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../alert/AlertListener */ "../../ui-framework/dist/framework/ui/alert/AlertListener.js");
-/* harmony import */ var _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../alert/AlertManager */ "../../ui-framework/dist/framework/ui/alert/AlertManager.js");
-/* harmony import */ var _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./validation/ValidationTypeDefs */ "../../ui-framework/dist/framework/ui/form/validation/ValidationTypeDefs.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! uuid */ "../../ui-framework/node_modules/uuid/dist/esm-browser/v4.js");
-
-
-
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form');
-const dlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail');
-const vlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail-validation');
-class AbstractForm {
-  constructor(containerId, dataObjDef) {
-    this.formListeners = [];
-    this.fieldListeners = [];
-    this.uiDef = null;
-    this.isVisible = false;
-    this.fields = [];
-    this.isInitialised = false;
-    this.hasChangedBoolean = false;
-    this.isDisplayOnly = false;
-    this.containerEl = document.getElementById(containerId);
-    if (!this.containerEl) throw new Error(`container ${containerId} for form ${dataObjDef.id} does not exist`);
-    this.map = [];
-    this.dataObjDef = dataObjDef;
-    this.currentDataObj = {};
-    this.id = (0,uuid__WEBPACK_IMPORTED_MODULE_6__["default"])(); // sub-classes need to create the form and it's fields
-    // listen to ourselves
-
-    this.addFormListener(this);
-  }
-
-  hasChanged() {
-    return this.hasChangedBoolean;
-  }
-
-  getName() {
-    return this.dataObjDef.displayName;
-  }
-
-  valueChanged(formId, field, newValue) {
-    this.hasChangedBoolean = true;
-    this.setUnsavedMessage();
-    logger(`Form has changed`);
-  }
-
-  failedValidation(formId, field, currentValue, message) {
-    this.hasChangedBoolean = true;
-    logger(`Form has changed`);
-  }
-
-  initialise(displayOrder, hasDeleteButton, hideModifierFields = false) {
-    if (this.isInitialised) return;
-    this.isInitialised = true;
-
-    this._initialise(displayOrder, hasDeleteButton, hideModifierFields);
-  }
-
-  addFieldListener(listener) {
-    this.fieldListeners.push(listener);
-  }
-
-  addFormListener(listener) {
-    this.formListeners.push(listener);
-  }
-
-  reset() {
-    logger(`Resetting form`);
-    this.clearUnsavedMessage();
-    this.isDisplayOnly = false;
-    this.hasChangedBoolean = false; // inform the listeners
-
-    if (this.uiDef) {
-      let formEvent = {
-        formId: this.id,
-        target: this,
-        eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.RESETTING
-      };
-      this.informFormListeners(formEvent, this.currentDataObj);
-    }
-
-    this.currentDataObj = {};
-
-    this._reset(); // reset all the fields
-
-
-    this.fields.forEach(field => {
-      field.reset();
-    });
-    this.hasChangedBoolean = false;
-  }
-
-  setIsVisible(isVisible) {
-    logger(`Changing visibility to ${isVisible}`);
-    this.isVisible = isVisible;
-
-    if (this.uiDef) {
-      let eventType = _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.HIDDEN;
-
-      if (this.isVisible) {
-        this._visible();
-
-        eventType = _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.SHOWN;
-      } else {
-        this._hidden();
-      } // inform the listeners
-
-
-      let formEvent = {
-        formId: this.id,
-        target: this,
-        eventType: eventType
-      };
-      this.informFormListeners(formEvent, this.currentDataObj);
-    }
-
-    if (isVisible && !this.isDisplayOnly) this.checkFormValidationOnDisplay();
-    if (isVisible && this.isDisplayOnly) this.checkForVisualValidationForDisplayOnly();
-  }
-
-  startCreateNew() {
-    this.clearUnsavedMessage();
-    logger(`Starting create new`);
-    this.reset();
-    this.currentDataObj = {};
-    this.isDisplayOnly = false;
-    this.hasChangedBoolean = false;
-
-    if (this.uiDef) {
-      let eventType = _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CREATING; // inform the listeners
-
-      let formEvent = {
-        formId: this.id,
-        target: this,
-        eventType: eventType
-      };
-
-      this._startCreate();
-
-      this.informFormListeners(formEvent, this.currentDataObj);
-    }
-
-    this.clearReadOnly();
-    return this.currentDataObj;
-  }
-
-  startUpdate(objectToEdit) {
-    this.clearUnsavedMessage();
-    logger(`Starting modify existing on `);
-    this.isDisplayOnly = false;
-    this.hasChangedBoolean = false;
-    logger(objectToEdit);
-    this.currentDataObj = Object.assign({}, objectToEdit); // take a copy
-
-    if (this.uiDef) {
-      let eventType = _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.MODIFYING; // inform the listeners
-
-      let formEvent = {
-        formId: this.id,
-        target: this,
-        eventType: eventType
-      };
-
-      this._startUpdate();
-
-      this.informFormListeners(formEvent, this.currentDataObj);
-    }
-
-    this.clearReadOnly();
-  }
-
-  displayOnly(objectToView) {
-    this.clearUnsavedMessage();
-    logger(`Starting display only `);
-    logger(objectToView);
-    this.isDisplayOnly = true;
-    this.hasChangedBoolean = false;
-    this.currentDataObj = Object.assign({}, objectToView); // take a copy
-
-    if (this.uiDef) {
-      this._displayOnly();
-    }
-
-    this.setReadOnly();
-  }
-
-  formChanged(event, formValues) {
-    // catch form events for user leaving the form
-    let shouldCancelChange = false;
-
-    switch (event.eventType) {
-      case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING:
-        {
-          logger(`Form is cancelling`);
-
-          if (this.hasChangedBoolean && !this.isDisplayOnly) {
-            if (this.uiDef) {
-              _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Lose any unsaved changes?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING);
-            }
-          } else {
-            if (this.uiDef) {
-              let formEvent = {
-                formId: this.id,
-                target: this,
-                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLED
-              };
-              this.informFormListeners(formEvent, this.currentDataObj);
-            }
-          }
-
-          break;
-        }
-
-      case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING_ABORTED:
-        {
-          logger(`Form is cancelling - aborted`);
-          break;
-        }
-
-      case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLED:
-        {
-          logger(`Form is cancelled - resetting`); // user cancelled the form, will become invisible
-
-          this.isDisplayOnly = true;
-          this.reset(); // reset the form state
-
-          this.setReadOnly();
-          break;
-        }
-
-      case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING:
-        {
-          logger(`Form is deleting`);
-
-          if (this.uiDef) {
-            _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Are you sure you want to delete this information?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING);
-          }
-
-          break;
-        }
-
-      case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETE_ABORTED:
-        {
-          logger(`Form is deleting - aborted`);
-          break;
-        }
-
-      case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETED:
-        {
-          logger(`Form is deleted - resetting`); // user is deleting the object, will become invisible
-
-          this.reset();
-          break;
-        }
-
-      case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.SAVE_ABORTED:
-        {
-          this._saveFinishedOrAborted();
-
-          logger(`Form save cancelled`);
-          break;
-        }
-
-      case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.SAVED:
-        {
-          this._saveFinishedOrAborted();
-
-          logger(`Form is saved with data`);
-          logger(formValues);
-          this.isDisplayOnly = false;
-          this.hasChangedBoolean = false;
-          break;
-        }
-
-      case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.SAVING:
-        {
-          logger(`Form is saving, checking validation and storing values`);
-
-          this._saveIsActive();
-
-          if (this.uiDef) {
-            let allFieldsValid = true; // user attempting to save the form, lets check the field validation
-
-            this.fields.forEach(field => {
-              const currentValue = field.getValue();
-
-              if (!field.isValid()) {
-                vlogger(`Field ${field.getId()} is invalid`);
-                field.setInvalid(`${field.getName()} has an invalid format or is required.`);
-                allFieldsValid = false;
-              } else {
-                // does the field fulfil any rules from the Validation manager
-                // @ts-ignore
-                const response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this.id, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.invalid);
-
-                if (response.ruleFailed) {
-                  // @ts-ignore
-                  field.setInvalid(response.message);
-                  vlogger(`Field ${field.getId()} is invalid from validation manager with message ${response.message}`);
-                  allFieldsValid = false;
-                } else {
-                  this.setFieldValueToDataObject(this.currentDataObj, field, currentValue);
-                }
-              }
-            }); // is every field valid?
-
-            if (!allFieldsValid) {
-              logger(`Form is saving, checking validation - FAILED`);
-              let formEvent = {
-                formId: this.id,
-                target: this,
-                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.SAVE_ABORTED
-              };
-              this.informFormListeners(formEvent, this.currentDataObj);
-              shouldCancelChange = true;
-            } else {
-              logger(`formatted data object is`);
-              const formattedDataObject = this.getFormattedDataObject();
-              let formEvent = {
-                formId: this.id,
-                target: this,
-                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.SAVED
-              };
-              this.informFormListeners(formEvent, formattedDataObject);
-            }
-
-            break;
-          }
-        }
-    }
-
-    return shouldCancelChange;
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  getFieldFromDataFieldId(dataFieldId) {
-    let result = undefined;
-    dlogger(`Finding field for attribute ${dataFieldId} `);
-    const mapItem = this.map.find(mapItem => mapItem.attributeId === dataFieldId);
-
-    if (mapItem) {
-      dlogger(`Mapped attribute ${mapItem.attributeId} to field ${mapItem.fieldId}`); // find the field with that id
-
-      result = this.fields.find(field => field.getId() === mapItem.attributeId);
-    }
-
-    return result;
-  }
-
-  completed(event) {
-    logger(`Handling alert completed`);
-    logger(event);
-
-    if (event.context && this.uiDef) {
-      switch (event.context) {
-        case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING:
-          {
-            if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__.AlertType.confirmed) {
-              let formEvent = {
-                formId: this.id,
-                target: this,
-                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLED
-              };
-              this.informFormListeners(formEvent, this.currentDataObj);
-            } else {
-              let formEvent = {
-                formId: this.id,
-                target: this,
-                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING_ABORTED
-              };
-              this.informFormListeners(formEvent, this.currentDataObj);
-            }
-
-            break;
-          }
-
-        case _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING:
-          {
-            if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__.AlertType.confirmed) {
-              let formEvent = {
-                formId: this.id,
-                target: this,
-                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETED
-              };
-              this.informFormListeners(formEvent, this.currentDataObj);
-            } else {
-              let formEvent = {
-                formId: this.id,
-                target: this,
-                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETE_ABORTED
-              };
-              this.informFormListeners(formEvent, this.currentDataObj);
-            }
-
-            break;
-          }
-      }
-    }
-  }
-
-  clearReadOnly() {
-    this.fields.forEach(field => {
-      field.clearReadOnly();
-    });
-  }
-
-  setReadOnly() {
-    this.fields.forEach(field => {
-      field.setReadOnly();
-    });
-  }
-
-  isDisplayingItem(dataObj) {
-    if (this.currentDataObj) {
-      return this._isSameObjectAsDisplayed(dataObj);
-    }
-
-    return false;
-  }
-
-  isReadOnly() {
-    return this.isDisplayOnly;
-  }
-
-  informFormListeners(formEvent, dataObj) {
-    this.formListeners.forEach(listener => listener.formChanged(formEvent, dataObj));
-  }
-
-  findFieldUiConfig(fieldDef) {
-    dlogger(`Finding field UI Config for field ${fieldDef.displayName}`);
-    let result = null;
-
-    if (this.uiDef) {
-      let index = 0;
-
-      while (index < this.uiDef.fieldGroups.length) {
-        const fieldGroup = this.uiDef.fieldGroups[index];
-        result = fieldGroup.fields.find(uiConfig => uiConfig.field.id === fieldDef.id);
-
-        if (result) {
-          dlogger(`Finding field UI Config for field ${fieldDef.displayName} - Found`);
-          break;
-        }
-
-        index++;
-      }
-    }
-
-    return result;
-  }
-
-  checkForVisualValidationForDisplayOnly() {
-    logger(`Checking display validation for display only`);
-    this.fields.forEach(field => {
-      field.show(); // @ts-ignore
-
-      let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this.id, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.hide);
-
-      if (response.ruleFailed) {
-        // @ts-ignore
-        field.hide();
-        vlogger(`Field ${field.getId()} is hidden from validation manager with message ${response.message}`);
-      }
-    });
-  }
-
-  checkFormValidationOnDisplay() {
-    logger(`Checking display validation`);
-    this.fields.forEach(field => {
-      field.show();
-      const currentValue = field.getValue();
-
-      if (!field.isValid()) {
-        logger(`Field ${field.getId()} is invalid`);
-        field.setInvalid(`${field.getName()} has an invalid format or is required.`);
-      } else {
-        // does the field fulfil any rules from the Validation manager
-        // @ts-ignore
-        let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this.id, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.invalid);
-
-        if (response.ruleFailed) {
-          // @ts-ignore
-          field.setInvalid(response.message);
-          vlogger(`Field ${field.getId()} is invalid from validation manager with message ${response.message}`);
-        } // @ts-ignore
-
-
-        response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this.id, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.hide);
-
-        if (response.ruleFailed) {
-          // @ts-ignore
-          field.hide();
-          vlogger(`Field ${field.getId()} is hidden from validation manager with message ${response.message}`);
-        }
-      }
-    });
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/BasicFormImplementation.js":
-/*!****************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/BasicFormImplementation.js ***!
-  \****************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "BasicFormImplementation": () => (/* binding */ BasicFormImplementation)
-/* harmony export */ });
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormUITypeDefs */ "../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _AbstractForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractForm */ "../../ui-framework/dist/framework/ui/form/AbstractForm.js");
-/* harmony import */ var _helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helper/BootstrapFormConfigHelper */ "../../ui-framework/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
-/* harmony import */ var _factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./factory/FormElementFactory */ "../../ui-framework/dist/framework/ui/form/factory/FormElementFactory.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _field_TextAreaField__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./field/TextAreaField */ "../../ui-framework/dist/framework/ui/form/field/TextAreaField.js");
-/* harmony import */ var _field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./field/RadioButtonGroupField */ "../../ui-framework/dist/framework/ui/form/field/RadioButtonGroupField.js");
-/* harmony import */ var _field_SelectField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./field/SelectField */ "../../ui-framework/dist/framework/ui/form/field/SelectField.js");
-/* harmony import */ var _field_InputField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./field/InputField */ "../../ui-framework/dist/framework/ui/form/field/InputField.js");
-
-
-
-
-
-
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_4___default()('basic-form');
-const dlogger = debug__WEBPACK_IMPORTED_MODULE_4___default()('basic-form-detail');
-class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__.AbstractForm {
-  constructor(containerId, dataObjDef) {
-    super(containerId, dataObjDef);
-    this.factoryElements = null;
-  }
-
-  getFormattedDataObject() {
-    logger(`Getting current formatted data`);
-    let formattedResult = {};
-    this.dataObjDef.fields.forEach(fieldDef => {
-      let fieldValue = this.currentDataObj[fieldDef.id];
-      formattedResult[fieldDef.id] = this.getFormattedFieldValue(fieldDef);
-    });
-    logger(formattedResult);
-    return formattedResult;
-  }
-
-  clearReadOnly() {
-    super.clearReadOnly();
-    this.enableButtons();
-  }
-
-  setReadOnly() {
-    super.setReadOnly();
-    this.disableButtons();
-  }
-
-  _hidden() {
-    var _a;
-
-    if (this.factoryElements) (_a = this.containerEl) === null || _a === void 0 ? void 0 : _a.removeChild(this.factoryElements.form);
-  }
-
-  setupFieldObject(fieldEl, subElements = []) {
-    // get the data-id field from the field element
-    const dataId = fieldEl.getAttribute(_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.DATA_ID_ATTRIBUTE);
-    const fieldId = fieldEl.getAttribute('id');
-    dlogger(`Converting field input element ${fieldId} with data-id of ${dataId}`);
-
-    if (dataId && fieldId) {
-      // find the corresponding field definition
-      const index = this.dataObjDef.fields.findIndex(value => value.id === dataId);
-      const fieldDef = this.dataObjDef.fields.find(value => value.id === dataId);
-
-      if (fieldDef) {
-        dlogger(`Converting field input element ${fieldId} with data-id of ${dataId} field definition is`);
-        logger(fieldDef); // find the corresponding ui definition
-
-        const fieldUIConfig = this.findFieldUiConfig(fieldDef);
-        dlogger(`Converting field input element ${fieldId} with data-id of ${dataId} field ui config is`);
-        logger(fieldUIConfig);
-
-        if (fieldUIConfig) {
-          if (this.uiDef) {
-            let field;
-
-            switch (fieldUIConfig.elementType) {
-              case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.textarea:
-                {
-                  field = new _field_TextAreaField__WEBPACK_IMPORTED_MODULE_6__.TextAreaField(this.id, fieldUIConfig, fieldDef, fieldEl);
-                  break;
-                }
-
-              case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup:
-                {
-                  field = new _field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_7__.RadioButtonGroupField(this.id, fieldUIConfig, fieldDef, fieldEl, subElements);
-                  break;
-                }
-
-              case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.select:
-                {
-                  field = new _field_SelectField__WEBPACK_IMPORTED_MODULE_8__.SelectField(this.id, fieldUIConfig, fieldDef, fieldEl);
-                  break;
-                }
-
-              default:
-                {
-                  field = new _field_InputField__WEBPACK_IMPORTED_MODULE_9__.InputField(this.id, fieldUIConfig, fieldDef, fieldEl);
-                  break;
-                }
-            }
-
-            this.fields.push(field);
-            field.addFieldListener(this);
-            this.map.push({
-              attributeId: dataId,
-              fieldId: fieldId
-            });
-          }
-        }
-      } else {
-        dlogger(`Converting field input element ${fieldId} with data-id of ${dataId} field definition is NOT FOUND`);
-      }
-    }
-  }
-
-  clearUnsavedMessage() {
-    if (this.factoryElements) this.factoryElements.unsavedMessage.innerHTML = '';
-  }
-
-  setUnsavedMessage() {
-    if (this.factoryElements && this.uiDef && this.uiDef.unsavedChanges.innerHTML) {
-      this.factoryElements.unsavedMessage.innerHTML = this.uiDef.unsavedChanges.innerHTML;
-    } else if (this.factoryElements) {
-      this.factoryElements.unsavedMessage.innerHTML = 'Pending changes to save';
-    }
-  }
-
-  _initialise(displayOrder, hasDeleteButton, hideModifierFields = false) {
-    logger(`Initialising`); // ok, so given a Data Object definition we are going to create the form ui config
-
-    this.uiDef = _helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_2__.BootstrapFormConfigHelper.getInstance().generateFormConfig(this.dataObjDef, displayOrder, hasDeleteButton, hideModifierFields);
-    logger(this.uiDef); // now we need to create all the form elements from the ui definition
-
-    this.factoryElements = _factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_3__.FormElementFactory.getInstance().createFormElements(this, this.formListeners, this.uiDef, this.fieldListeners);
-    logger(this.factoryElements); // create field elements for each field element, and the basic map
-
-    logger(`Converting field input elements to Field objects`);
-    this.factoryElements.fields.forEach(fieldEl => {
-      fieldEl.addEventListener('keyup', event => {
-        dlogger(`key up in form ${this.getName()}`);
-        this.hasChangedBoolean = true;
-        this.setUnsavedMessage();
-      });
-      this.setupFieldObject(fieldEl);
-    });
-    logger(`Converting field text area elements to Field objects`);
-    this.factoryElements.textFields.forEach(fieldEl => {
-      fieldEl.addEventListener('keyup', event => {
-        dlogger(`key up in form ${this.getName()}`);
-        this.hasChangedBoolean = true;
-        this.setUnsavedMessage();
-      });
-      this.setupFieldObject(fieldEl);
-    });
-    logger(`Converting field select elements to Field objects`);
-    this.factoryElements.selectFields.forEach(fieldEl => {
-      dlogger(`key up in form ${this.getName()}`);
-    });
-    logger(`Converting field rbg elements to Field objects`);
-    this.factoryElements.radioButtonGroups.forEach(rbg => {
-      this.setupFieldObject(rbg.container, rbg.radioButtons);
-    });
-    logger(`field/data map is `);
-    logger(this.map);
-    logger('fields are');
-    logger(this.fields);
-  }
-
-  _reset() {
-    this.clearUnsavedMessage();
-  }
-
-  validateField(fieldDef) {
-    const field = this.getFieldFromDataFieldId(fieldDef.id);
-    if (field) field.validate();
-  }
-
-  renderField(fieldDef, currentValue) {
-    let result = currentValue;
-    const field = this.getFieldFromDataFieldId(fieldDef.id);
-
-    if (field) {
-      result = field.render(result);
-    }
-
-    return result;
-  }
-
-  _startCreate() {
-    this.clearUnsavedMessage(); // we have a new object, there might be some values to generate
-
-    this.dataObjDef.fields.forEach(fieldDef => {
-      if (fieldDef.generator && fieldDef.generator.onCreation) {
-        let fieldValue = fieldDef.generator.generator.generate(fieldDef, true);
-        dlogger(`Setting default values for ${fieldDef.displayName} to ${fieldValue}`);
-        this.currentDataObj[fieldDef.id] = fieldValue;
-      }
-
-      let fieldValue = this.currentDataObj[fieldDef.id];
-
-      if (fieldValue) {
-        fieldValue = this.renderField(fieldDef, fieldValue);
-        this.setFieldValueFromDataObject(fieldDef, fieldValue);
-      } // run the validation to let the user know what is required
-
-
-      this.validateField(fieldDef);
-    }); // delete button can go
-
-    if (this.factoryElements && this.factoryElements.deleteButton) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_5__["default"].addAttributes(this.factoryElements.deleteButton, [{
-      name: 'style',
-      value: 'display:none'
-    }]);
-  }
-
-  _startUpdate() {
-    this.clearUnsavedMessage(); // we have an existing object, there might be some values to generate
-
-    logger(this.currentDataObj);
-    this.dataObjDef.fields.forEach(fieldDef => {
-      if (fieldDef.generator && fieldDef.generator.onModify) {
-        let fieldValue = fieldDef.generator.generator.generate(fieldDef, false);
-        dlogger(`Setting default modified values for ${fieldDef.displayName} to ${fieldValue}`);
-        this.currentDataObj[fieldDef.id] = fieldValue;
-      }
-
-      let fieldValue = this.currentDataObj[fieldDef.id];
-      if (fieldValue) fieldValue = this.renderField(fieldDef, fieldValue);
-      this.setFieldValueFromDataObject(fieldDef, fieldValue);
-      this.validateField(fieldDef);
-    }); // delete button make visible again
-
-    if (this.factoryElements && this.factoryElements.deleteButton) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_5__["default"].removeAttributes(this.factoryElements.deleteButton, ['style']);
-  }
-
-  _displayOnly() {
-    this.clearUnsavedMessage(); // we have an existing object, there might be some values to generate
-
-    logger(this.currentDataObj);
-    this.dataObjDef.fields.forEach(fieldDef => {
-      let fieldValue = this.currentDataObj[fieldDef.id];
-      if (fieldValue) fieldValue = this.renderField(fieldDef, fieldValue);
-      this.setFieldValueFromDataObject(fieldDef, fieldValue);
-    }); // delete button can go
-
-    if (this.factoryElements && this.factoryElements.deleteButton) if (this.factoryElements) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_5__["default"].addAttributes(this.factoryElements.deleteButton, [{
-      name: 'style',
-      value: 'display:none'
-    }]);
-  }
-
-  _visible() {
-    var _a;
-
-    if (this.factoryElements) (_a = this.containerEl) === null || _a === void 0 ? void 0 : _a.appendChild(this.factoryElements.form);
-  }
-
-  setFieldValueToDataObject(dataObj, field, currentValue) {
-    // find the attribute id from the map
-    const mapItem = this.map.find(mapItem => mapItem.attributeId === field.getId());
-
-    if (mapItem) {
-      dlogger(`Mapped field ${mapItem.fieldId} to attribute ${mapItem.attributeId} with value ${currentValue}`);
-      this.currentDataObj[mapItem.attributeId] = currentValue;
-    } else {
-      logger(`Mapped field ${field.getId()} to attribute NOT FOUND`);
-    }
-  }
-
-  setFieldValueFromDataObject(fieldDef, currentValue) {
-    const field = this.getFieldFromDataFieldId(fieldDef.id); // find the field id from the map
-
-    if (field) {
-      if (currentValue) {
-        field.setValue(currentValue);
-      } else {
-        field.clearValue();
-      }
-    }
-  }
-
-  getFormattedFieldValue(fieldDef) {
-    let result = null;
-    const mapItem = this.map.find(mapItem => mapItem.attributeId === fieldDef.id);
-
-    if (mapItem) {
-      dlogger(`Mapped attribute ${mapItem.attributeId} to field ${mapItem.fieldId} with for getting formatted value`); // find the field with that id
-
-      const field = this.fields.find(field => field.getId() === mapItem.attributeId);
-
-      if (field) {
-        result = field.getFormattedValue();
-      }
-    }
-
-    return result;
-  }
-
-  _isSameObjectAsDisplayed(dataObj) {
-    // we can only be sure for objects with keys
-    let isSameObject = false;
-    dlogger(`is same object as current`);
-    dlogger(dataObj);
-    dlogger(this.currentDataObj);
-    this.dataObjDef.fields.every(field => {
-      var _a;
-
-      if (field.isKey) {
-        const currentObjId = (_a = this.getFieldFromDataFieldId(field.id)) === null || _a === void 0 ? void 0 : _a.getValue();
-        const suppliedObjId = dataObj[field.id];
-        dlogger(`is same object id ${suppliedObjId} as current ${currentObjId}`);
-
-        if (currentObjId && !suppliedObjId || currentObjId && !suppliedObjId) {
-          isSameObject = false;
-        }
-
-        if (currentObjId && suppliedObjId && currentObjId == suppliedObjId) {
-          isSameObject = true;
-        }
-
-        return false;
-      }
-
-      return true;
-    });
-    return isSameObject;
-  }
-
-  enableButtons() {
-    if (this.factoryElements && this.uiDef) {
-      if (this.factoryElements.deleteButton) {
-        this.factoryElements.deleteButton.removeAttribute('disabled');
-      }
-
-      this.factoryElements.cancelButton.removeAttribute('disabled');
-      this.factoryElements.submitButton.removeAttribute('disabled'); // @ts-ignore
-
-      this.factoryElements.submitButton.innerHTML = this.uiDef.submitButton.buttonText;
-    }
-  }
-
-  disableButtons() {
-    if (this.factoryElements) {
-      if (this.factoryElements.deleteButton) {
-        this.factoryElements.deleteButton.setAttribute('disabled', 'true');
-      }
-
-      this.factoryElements.cancelButton.setAttribute('disabled', 'true');
-      this.factoryElements.submitButton.setAttribute('disabled', 'true');
-    }
-  }
-
-  _saveFinishedOrAborted() {
-    dlogger(`save is finished or aborted`);
-    this.enableButtons();
-    this.clearUnsavedMessage();
-  }
-
-  _saveIsActive() {
-    dlogger(`save is active`);
-    this.disableButtons();
-
-    if (this.factoryElements && this.uiDef) {
-      if (this.uiDef.activeSave) {
-        dlogger(`save is active ${this.uiDef.activeSave}`); // @ts-ignore
-
-        this.factoryElements.submitButton.innerHTML = this.uiDef.activeSave + this.uiDef.submitButton.buttonText;
-      }
-    }
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/FormListener.js":
-/*!*****************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/FormListener.js ***!
-  \*****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FormEventType": () => (/* binding */ FormEventType)
-/* harmony export */ });
-var FormEventType;
-
-(function (FormEventType) {
-  FormEventType["SHOWN"] = "shown";
-  FormEventType["HIDDEN"] = "hidden";
-  FormEventType["CANCELLING"] = "cancelling";
-  FormEventType["CANCELLING_ABORTED"] = "cancelling-aborted";
-  FormEventType["CANCELLED"] = "cancelled";
-  FormEventType["SAVING"] = "saving";
-  FormEventType["SAVE_ABORTED"] = "save-aborted";
-  FormEventType["SAVED"] = "saved";
-  FormEventType["DELETING"] = "deleting";
-  FormEventType["DELETE_ABORTED"] = "delete-aborted";
-  FormEventType["DELETED"] = "deleted";
-  FormEventType["CREATING"] = "creating";
-  FormEventType["MODIFYING"] = "modifying";
-  FormEventType["RESETTING"] = "reset";
-})(FormEventType || (FormEventType = {}));
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js":
-/*!*******************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "UIFieldType": () => (/* binding */ UIFieldType),
-/* harmony export */   "defaultGetValue": () => (/* binding */ defaultGetValue),
-/* harmony export */   "FormMode": () => (/* binding */ FormMode),
-/* harmony export */   "DATA_ID_ATTRIBUTE": () => (/* binding */ DATA_ID_ATTRIBUTE)
-/* harmony export */ });
-var UIFieldType;
-
-(function (UIFieldType) {
-  UIFieldType[UIFieldType["checkbox"] = 0] = "checkbox";
-  UIFieldType[UIFieldType["email"] = 1] = "email";
-  UIFieldType[UIFieldType["hidden"] = 2] = "hidden";
-  UIFieldType[UIFieldType["number"] = 3] = "number";
-  UIFieldType[UIFieldType["password"] = 4] = "password";
-  UIFieldType[UIFieldType["text"] = 5] = "text";
-  UIFieldType[UIFieldType["textarea"] = 6] = "textarea";
-  UIFieldType[UIFieldType["select"] = 7] = "select";
-  UIFieldType[UIFieldType["radioGroup"] = 8] = "radioGroup";
-  UIFieldType[UIFieldType["tableData"] = 9] = "tableData";
-})(UIFieldType || (UIFieldType = {}));
-
-const defaultGetValue = (fieldUIConfig, currentValue) => {
-  let result = currentValue;
-
-  if (fieldUIConfig.renderer) {
-    let value = fieldUIConfig.renderer.renderValue(fieldUIConfig.field, currentValue);
-    if (value) result = value;
-  }
-
-  return result;
-};
-var FormMode;
-
-(function (FormMode) {
-  FormMode[FormMode["unset"] = -1] = "unset";
-  FormMode[FormMode["create"] = 0] = "create";
-  FormMode[FormMode["update"] = 1] = "update";
-})(FormMode || (FormMode = {}));
-
-const DATA_ID_ATTRIBUTE = 'data-id';
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/event-handlers/EditingEventListener.js":
-/*!****************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/event-handlers/EditingEventListener.js ***!
-  \****************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "EditingEventListener": () => (/* binding */ EditingEventListener)
-/* harmony export */ });
-class EditingEventListener {
-  constructor(formId, fieldConfig, listeners) {
-    this.formId = formId;
-    this.fieldConfig = fieldConfig;
-    this.listeners = listeners;
-    this.handleEvent = this.handleEvent.bind(this);
-  }
-
-  handleEvent(event) {
-    event.preventDefault();
-    event.stopPropagation(); // @ts-ignore
-
-    const fieldElement = event.target;
-
-    if (this.fieldConfig.editor) {
-      const field = this.fieldConfig.field;
-      const value = fieldElement.value;
-      const newValue = this.fieldConfig.editor.editValue(field, value);
-
-      if (newValue) {
-        fieldElement.value = newValue;
-        this.listeners.forEach(listener => listener.valueChanged(this.formId, field, newValue));
-      }
-    }
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/event-handlers/RenderingEventListener.js":
-/*!******************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/event-handlers/RenderingEventListener.js ***!
-  \******************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "RenderingEventListener": () => (/* binding */ RenderingEventListener)
-/* harmony export */ });
-class RenderingEventListener {
-  constructor(formId, fieldConfig, listeners, subElements = null) {
-    this.formId = formId;
-    this.fieldConfig = fieldConfig;
-    this.listeners = listeners;
-    this.subElements = subElements;
-    this.handleEvent = this.handleEvent.bind(this);
-  }
-
-  processRendering(fieldElement) {
-    let newValue = '';
-
-    if (this.fieldConfig.renderer) {
-      const field = this.fieldConfig.field;
-      const value = fieldElement.value;
-      if (this.subElements) this.fieldConfig.renderer.setSubElements(this.subElements);
-      newValue = this.fieldConfig.renderer.renderValue(field, value);
-
-      if (newValue) {
-        fieldElement.value = newValue; // @ts-ignore
-
-        this.listeners.forEach(listener => listener.valueChanged(field, newValue));
-      }
-    }
-
-    if (newValue) {
-      return newValue;
-    } else {
-      return '';
-    }
-  }
-
-  handleEvent(event) {
-    event.preventDefault();
-    event.stopPropagation(); // @ts-ignore
-
-    const fieldElement = event.target;
-    this.processRendering(fieldElement);
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/event-handlers/ValidationEventHandler.js":
-/*!******************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/event-handlers/ValidationEventHandler.js ***!
-  \******************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ValidationEventHandler": () => (/* binding */ ValidationEventHandler)
-/* harmony export */ });
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../FormUITypeDefs */ "../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-
-
-
-class ValidationEventHandler {
-  constructor(formId, fieldConfig, listeners, subElements = null) {
-    this.formId = formId;
-    this.fieldConfig = fieldConfig;
-    this.listeners = listeners;
-    this.subElements = subElements;
-    this.handleEvent = this.handleEvent.bind(this);
-  }
-
-  setValidationStatusAndMessage(fieldElement, isValid, value, message = undefined, resetOnFailure = false) {
-    if (this.fieldConfig.validator && fieldElement) {
-      const field = this.fieldConfig.field;
-      let validationElementTarget = fieldElement; // we are providing user feedback on the field element, unless...
-
-      if (this.subElements) {
-        // sub elements change the validation target
-        this.fieldConfig.validator.validator.setSubElements(this.subElements);
-
-        if (this.fieldConfig.subElement) {
-          // should be targetting the parentelement
-          let parentEl = fieldElement.parentElement;
-
-          if (parentEl) {
-            validationElementTarget = parentEl;
-
-            if (this.fieldConfig.subElement.container) {
-              // another layer up required
-              parentEl = parentEl.parentElement;
-
-              if (parentEl) {
-                validationElementTarget = parentEl;
-              }
-            }
-          }
-        }
-      }
-
-      const errorMessageDiv = document.getElementById(`${this.formId}.field.${this.fieldConfig.field.id}.error`);
-      const errorMessageEl = document.getElementById(`${this.formId}.field.${this.fieldConfig.field.id}.error.message`); // clear any previous message
-
-      errorMessageDiv === null || errorMessageDiv === void 0 ? void 0 : errorMessageDiv.setAttribute('style', 'display:none');
-      if (errorMessageEl) errorMessageEl.innerHTML = '';
-      if (this.fieldConfig.validator.invalidClasses) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses, false);
-      if (this.fieldConfig.validator.validClasses) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.validClasses);
-
-      if (!isValid) {
-        if (this.fieldConfig.validator.invalidClasses) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses);
-        if (this.fieldConfig.validator.validClasses) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.validClasses, false);
-
-        if (!message) {
-          message = `${field.displayName} does not have a valid value.`;
-        } // show the error message
-
-
-        errorMessageDiv === null || errorMessageDiv === void 0 ? void 0 : errorMessageDiv.setAttribute('style', 'display:block');
-        if (errorMessageEl) errorMessageEl.innerHTML = message;
-
-        if (resetOnFailure) {
-          switch (field.type) {
-            case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.boolean:
-              {
-                // @ts-ignore
-                fieldElement.checked = false;
-                break;
-              }
-
-            case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.integer:
-              {
-                // @ts-ignore
-                fieldElement.value = '0';
-                break;
-              }
-
-            case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.float:
-              {
-                // @ts-ignore
-                fieldElement.value = '0.0';
-                break;
-              }
-
-            default:
-              {
-                // @ts-ignore
-                fieldElement.value = '';
-                break;
-              }
-          }
-        } // @ts-ignore
-
-
-        this.listeners.forEach(listener => listener.failedValidation(this.formId, field, value, message));
-      }
-    }
-  }
-
-  processValidation(fieldElement) {
-    if (this.fieldConfig.validator && fieldElement) {
-      const field = this.fieldConfig.field; // @ts-ignore
-
-      let value = fieldElement.value; // checkboxes store values differently
-
-      if (this.fieldConfig.elementType === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.UIFieldType.checkbox) {
-        // @ts-ignore
-        value = '' + fieldElement.checked;
-      }
-
-      if (this.subElements) {
-        value = '';
-        this.subElements.forEach(subElement => {
-          if (subElement.checked) {
-            value = subElement.value;
-          }
-        });
-      }
-
-      const validationResp = this.fieldConfig.validator.validator.isValidValue(field, value);
-      this.setValidationStatusAndMessage(fieldElement, validationResp.isValid, value, validationResp.message, validationResp.resetOnFailure);
-    }
-  }
-
-  handleEvent(event) {
-    event.preventDefault();
-    event.stopPropagation(); // @ts-ignore
-
-    const fieldElement = event.target;
-    this.processValidation(fieldElement);
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/factory/FieldInputElementFactory.js":
-/*!*************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/factory/FieldInputElementFactory.js ***!
-  \*************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FieldInputElementFactory": () => (/* binding */ FieldInputElementFactory)
-/* harmony export */ });
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../FormUITypeDefs */ "../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../event-handlers/ValidationEventHandler */ "../../ui-framework/dist/framework/ui/form/event-handlers/ValidationEventHandler.js");
-/* harmony import */ var _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../event-handlers/EditingEventListener */ "../../ui-framework/dist/framework/ui/form/event-handlers/EditingEventListener.js");
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
-
-
-
-
-
-
-class DefaultFieldOptionsListener {
-  constructor(formId, parentElement, fieldUIConfig) {
-    this.formId = formId;
-    this.parentElement = parentElement;
-    this.fieldUIConfig = fieldUIConfig;
-  }
-
-  optionsChanged(newOptions) {
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].removeAllChildren(this.parentElement);
-    let subEls = FieldInputElementFactory.createSubElements(this.formId, this.parentElement, this.fieldUIConfig, newOptions);
-  }
-
-}
-
-class FieldInputElementFactory {
-  constructor() {}
-
-  static getInstance() {
-    if (!FieldInputElementFactory._instance) {
-      FieldInputElementFactory._instance = new FieldInputElementFactory();
-    }
-
-    return FieldInputElementFactory._instance;
-  }
-
-  static initialiseFieldElementAndEventHandlers(fieldElement, formId, fieldConfig, listeners, subElements = null) {
-    fieldElement.setAttribute('id', `${formId}.field.${fieldConfig.field.id}`);
-    fieldElement.setAttribute(_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.DATA_ID_ATTRIBUTE, fieldConfig.field.id);
-    fieldElement.setAttribute('name', fieldConfig.field.id);
-    if (fieldConfig.elementAttributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(fieldElement, fieldConfig.elementAttributes);
-    if (fieldConfig.elementClasses) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(fieldElement, fieldConfig.elementClasses); // readonly field?
-
-    if (fieldConfig.field.displayOnly) {
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(fieldElement, [{
-        name: 'disabled',
-        value: 'true'
-      }, {
-        name: 'readonly',
-        value: 'true'
-      }]);
-    }
-    /*
-    setup event handlers
-    */
-
-
-    if (fieldConfig.validator) {
-      // is the value in the field valid
-      const eventHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(formId, fieldConfig, listeners, subElements);
-
-      if (subElements) {
-        // event for the subelements
-        subElements.forEach(subElement => {
-          subElement.addEventListener('blur', eventHandler);
-        });
-      } else {
-        fieldElement.addEventListener('blur', eventHandler);
-      }
-    }
-
-    if (fieldConfig.editor) {
-      // render the value when the field gains focus
-      fieldElement.addEventListener('focus', new _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_3__.EditingEventListener(formId, fieldConfig, listeners));
-    } // care for endless loops here, renderer needs to return null if no changes
-    // date picker for date fields
-
-
-    if (fieldConfig.field.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__.FieldType.date) {
-      $(fieldElement).datepicker();
-      $(fieldElement).datepicker("option", "dateFormat", 'dd/mm/yy');
-    }
-  }
-
-  static createFieldComponentsAndContainer(fieldElement, formId, containerEl, fieldConfig, listeners) {
-    // if the field has a validator, then we need a div for error messages
-    let errorMessageDivEl = null;
-
-    if (fieldConfig.validator) {
-      errorMessageDivEl = document.createElement('div');
-      errorMessageDivEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.error`);
-      errorMessageDivEl.setAttribute('style', 'display: none'); // default to not visible
-
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(errorMessageDivEl, fieldConfig.validator.messageDisplay.elementClasses);
-      let messageEl = document.createElement(fieldConfig.validator.messageDisplay.elementType);
-
-      if (messageEl) {
-        messageEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.error.message`);
-        if (fieldConfig.validator.messageDisplay.elementAttributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(messageEl, fieldConfig.validator.messageDisplay.elementAttributes);
-        errorMessageDivEl.appendChild(messageEl);
-      }
-    } // ok, so is the field contained?
-
-
-    if (fieldConfig.containedBy) {
-      // we need to create a container for the field and option label and description text
-      let containedByEl = document.createElement(fieldConfig.containedBy.elementType);
-
-      if (containedByEl) {
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containedByEl, fieldConfig.containedBy.elementClasses);
-        containedByEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.container`);
-        if (fieldConfig.containedBy.elementAttributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, fieldConfig.containedBy.elementAttributes); // do we have a label also?
-
-        if (fieldConfig.label) {
-          let labelEl = document.createElement('label');
-          labelEl.setAttribute('for', `${formId}.field.${fieldConfig.field.id}`);
-          labelEl.innerHTML = fieldConfig.field.displayName;
-          if (fieldConfig.label.attributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(labelEl, fieldConfig.label.attributes);
-          if (fieldConfig.label.classes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(labelEl, fieldConfig.label.classes);
-          containedByEl.appendChild(labelEl);
-        }
-
-        if (fieldConfig.describedBy) {
-          let descEl = document.createElement(fieldConfig.describedBy.elementType);
-
-          if (descEl) {
-            // link the field and the description
-            descEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.desc`);
-            if (fieldConfig.field.description) descEl.innerHTML = fieldConfig.field.description;
-            fieldElement.setAttribute('aria-describedby', `${formId}.field.${fieldConfig.field.id}.desc`);
-            if (fieldConfig.describedBy.elementClasses) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(descEl, fieldConfig.describedBy.elementClasses);
-            containedByEl.appendChild(fieldElement);
-            containedByEl.appendChild(descEl);
-            if (errorMessageDivEl) containedByEl.appendChild(errorMessageDivEl);
-          } else {
-            // description failure, add the field
-            containedByEl.appendChild(fieldElement);
-            if (errorMessageDivEl) containedByEl.appendChild(errorMessageDivEl);
-          }
-        } else {
-          // no description, add field to container
-          containedByEl.appendChild(fieldElement);
-          if (errorMessageDivEl) containedByEl.appendChild(errorMessageDivEl);
-        }
-
-        containerEl.appendChild(containedByEl);
-      } else {
-        // errors should keep making something!
-        containerEl.appendChild(fieldElement);
-        if (errorMessageDivEl) containerEl.appendChild(errorMessageDivEl);
-      }
-    } else {
-      containerEl.appendChild(fieldElement);
-      if (errorMessageDivEl) containerEl.appendChild(errorMessageDivEl);
-    }
-  }
-
-  static createSubElements(formId, parentEl, fieldConfig, valueOptions) {
-    let results = [];
-    valueOptions.forEach((valueOption, index) => {
-      if (fieldConfig.subElement) {
-        let containerEl = parentEl; // is there a container?
-
-        if (fieldConfig.subElement.container) {
-          containerEl = document.createElement(fieldConfig.subElement.container.elementType);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containerEl, fieldConfig.subElement.container.elementClasses);
-          if (fieldConfig.subElement.container.elementAttributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, fieldConfig.subElement.container.elementAttributes);
-          parentEl.appendChild(containerEl);
-        }
-
-        let valueEl = document.createElement(fieldConfig.subElement.element.elementType);
-        valueEl.setAttribute('value', valueOption.value);
-        valueEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.${index}`);
-        valueEl.setAttribute('name', `${formId}.field.${fieldConfig.field.id}`);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(valueEl, fieldConfig.subElement.element.elementClasses);
-        if (fieldConfig.subElement.element.elementAttributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(valueEl, fieldConfig.subElement.element.elementAttributes);
-        containerEl.appendChild(valueEl);
-
-        if (fieldConfig.subElement.label) {
-          let labelEl = document.createElement('label');
-          if (fieldConfig.subElement.label.classes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(labelEl, fieldConfig.subElement.label.classes);
-          if (fieldConfig.subElement.label.attributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(labelEl, fieldConfig.subElement.label.attributes);
-          labelEl.innerHTML = valueOption.name;
-          containerEl.appendChild(labelEl);
-        } else {
-          valueEl.innerHTML = valueOption.name;
-        }
-
-        results.push(valueEl);
-      }
-    });
-    return results;
-  }
-
-  createInputFormFieldComponentElement(formId, containerEl, fieldConfig, listeners) {
-    let fieldElement = document.createElement('input');
-
-    switch (fieldConfig.elementType) {
-      case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.UIFieldType.checkbox:
-        {
-          fieldElement.setAttribute('type', 'checkbox');
-          fieldElement.setAttribute('value', fieldConfig.field.id);
-          break;
-        }
-
-      case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.UIFieldType.email:
-        {
-          fieldElement.setAttribute('type', 'email');
-          break;
-        }
-
-      case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.UIFieldType.hidden:
-        {
-          fieldElement.setAttribute('type', 'hidden');
-          break;
-        }
-
-      case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.UIFieldType.number:
-        {
-          fieldElement.setAttribute('type', 'number');
-          break;
-        }
-
-      case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.UIFieldType.password:
-        {
-          fieldElement.setAttribute('type', 'password');
-          break;
-        }
-
-      case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.UIFieldType.text:
-        {
-          fieldElement.setAttribute('type', 'text');
-          break;
-        }
-    }
-
-    FieldInputElementFactory.initialiseFieldElementAndEventHandlers(fieldElement, formId, fieldConfig, listeners);
-    FieldInputElementFactory.createFieldComponentsAndContainer(fieldElement, formId, containerEl, fieldConfig, listeners);
-    return fieldElement;
-  }
-
-  createTAFormFieldComponentElement(formId, containerEl, fieldConfig, listeners) {
-    let fieldElement = document.createElement('textarea');
-
-    if (fieldConfig.textarea) {
-      fieldElement.setAttribute('rows', `${fieldConfig.textarea.rows}`);
-      fieldElement.setAttribute('cols', `${fieldConfig.textarea.cols}`);
-    }
-
-    FieldInputElementFactory.initialiseFieldElementAndEventHandlers(fieldElement, formId, fieldConfig, listeners);
-    FieldInputElementFactory.createFieldComponentsAndContainer(fieldElement, formId, containerEl, fieldConfig, listeners);
-    return fieldElement;
-  }
-
-  createSelectFormFieldComponentElement(formId, containerEl, fieldConfig, listeners) {
-    let fieldElement = document.createElement('select'); // create the options from the data source
-
-    if (fieldConfig.datasource) {
-      FieldInputElementFactory.createSubElements(formId, fieldElement, fieldConfig, fieldConfig.datasource.getOptions()); // listen for data source changes
-
-      fieldConfig.datasource.addListener(new DefaultFieldOptionsListener(formId, fieldElement, fieldConfig));
-    }
-
-    FieldInputElementFactory.initialiseFieldElementAndEventHandlers(fieldElement, formId, fieldConfig, listeners);
-    FieldInputElementFactory.createFieldComponentsAndContainer(fieldElement, formId, containerEl, fieldConfig, listeners);
-    return fieldElement;
-  }
-
-  createRadioGroupFormFieldComponentElement(formId, containerEl, fieldConfig, listeners) {
-    // create a div for each option in the source
-    // create the div for the radio group
-    let radioGroupElement = document.createElement('div');
-    if (fieldConfig.elementAttributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(radioGroupElement, fieldConfig.elementAttributes);
-    if (fieldConfig.elementClasses) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(radioGroupElement, fieldConfig.elementClasses);
-    let subElements = []; // create the options from the data source
-
-    if (fieldConfig.datasource) {
-      // we should get the radio buttons back
-      subElements = FieldInputElementFactory.createSubElements(formId, radioGroupElement, fieldConfig, fieldConfig.datasource.getOptions()); // listen for data source changes
-
-      fieldConfig.datasource.addListener(new DefaultFieldOptionsListener(formId, radioGroupElement, fieldConfig)); // setup the subelements for the validator, formatter, and renderer
-
-      if (fieldConfig.validator) fieldConfig.validator.validator.setSubElements(subElements);
-      if (fieldConfig.renderer) fieldConfig.renderer.setSubElements(subElements);
-      if (fieldConfig.formatter) fieldConfig.formatter.setSubElements(subElements);
-    }
-
-    FieldInputElementFactory.initialiseFieldElementAndEventHandlers(radioGroupElement, formId, fieldConfig, listeners, subElements);
-    FieldInputElementFactory.createFieldComponentsAndContainer(radioGroupElement, formId, containerEl, fieldConfig, listeners);
-    return {
-      container: radioGroupElement,
-      radioButtons: subElements
-    };
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/factory/FormElementFactory.js":
-/*!*******************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/factory/FormElementFactory.js ***!
-  \*******************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FormElementFactory": () => (/* binding */ FormElementFactory)
-/* harmony export */ });
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FieldInputElementFactory */ "../../ui-framework/dist/framework/ui/form/factory/FieldInputElementFactory.js");
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../FormUITypeDefs */ "../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _FormListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../FormListener */ "../../ui-framework/dist/framework/ui/form/FormListener.js");
-
-
-
-
-class FormElementFactory {
-  constructor() {}
-
-  static getInstance() {
-    if (!FormElementFactory._instance) {
-      FormElementFactory._instance = new FormElementFactory();
-    }
-
-    return FormElementFactory._instance;
-  }
-
-  createFormElements(form, formListeners, formConfig, fieldListeners) {
-    let formEl = document.createElement('form');
-    formEl.setAttribute('id', formConfig.id);
-    formEl.setAttribute('name', formConfig.displayName);
-    if (formConfig.classes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(formEl, formConfig.classes); // create each of the fields and collect them
-
-    let formInputElements = [];
-    let formTAElements = [];
-    let formRBGElements = [];
-    let formSelectElements = [];
-    let unsavedMessage = document.createElement(formConfig.unsavedChanges.elementType);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(unsavedMessage, formConfig.unsavedChanges.elementClasses);
-    if (formConfig.unsavedChanges.elementAttributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(unsavedMessage, formConfig.unsavedChanges.elementAttributes);
-    formEl.appendChild(unsavedMessage);
-    formConfig.fieldGroups.forEach(group => {
-      // if the group has a container make that, otherwise the form is the container
-      let containerEl = formEl;
-
-      if (group.containedBy) {
-        // @ts-ignore
-        containerEl = document.createElement(group.containedBy.elementType);
-
-        if (containerEl) {
-          if (group.containedBy.elementAttributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, group.containedBy.elementAttributes);
-          if (group.containedBy.elementClasses) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containerEl, group.containedBy.elementClasses);
-          formEl.appendChild(containerEl);
-        }
-      }
-
-      group.fields.forEach(field => {
-        switch (field.elementType) {
-          case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.textarea:
-            {
-              const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createTAFormFieldComponentElement(formConfig.id, containerEl, field, fieldListeners);
-              formTAElements.push(fieldEl);
-              break;
-            }
-
-          case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.select:
-            {
-              const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createSelectFormFieldComponentElement(formConfig.id, containerEl, field, fieldListeners);
-              formSelectElements.push(fieldEl);
-              break;
-            }
-
-          case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.radioGroup:
-            {
-              const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createRadioGroupFormFieldComponentElement(formConfig.id, containerEl, field, fieldListeners);
-              formRBGElements.push(fieldEl);
-              break;
-            }
-
-          default:
-            {
-              const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createInputFormFieldComponentElement(formConfig.id, containerEl, field, fieldListeners);
-              formInputElements.push(fieldEl);
-            }
-        }
-      });
-    });
-    /* setup the buttons */
-
-    let buttonContainer = formEl;
-
-    if (formConfig.buttonsContainedBy) {
-      buttonContainer = document.createElement(formConfig.buttonsContainedBy.elementType);
-
-      if (buttonContainer) {
-        if (formConfig.buttonsContainedBy.elementAttributes) _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(buttonContainer, formConfig.buttonsContainedBy.elementAttributes);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(buttonContainer, formConfig.buttonsContainedBy.elementClasses);
-        formEl.appendChild(buttonContainer);
-      } else {
-        buttonContainer = formEl; // couldn't create the button container, use the form
-      }
-    }
-
-    let deleteButtonEl = undefined;
-
-    if (formConfig.deleteButton) {
-      deleteButtonEl = this.createFormButton(form, formConfig, formListeners, formConfig.deleteButton, _FormListener__WEBPACK_IMPORTED_MODULE_3__.FormEventType.DELETING);
-      buttonContainer.appendChild(deleteButtonEl);
-    }
-
-    let cancelButtonEl = this.createFormButton(form, formConfig, formListeners, formConfig.cancelButton, _FormListener__WEBPACK_IMPORTED_MODULE_3__.FormEventType.CANCELLING);
-    buttonContainer.appendChild(cancelButtonEl);
-    let submitButtonEl = this.createFormButton(form, formConfig, formListeners, formConfig.submitButton, _FormListener__WEBPACK_IMPORTED_MODULE_3__.FormEventType.SAVING);
-    buttonContainer.appendChild(submitButtonEl);
-    let result = {
-      form: formEl,
-      unsavedMessage: unsavedMessage,
-      fields: formInputElements,
-      selectFields: formSelectElements,
-      radioButtonGroups: formRBGElements,
-      textFields: formTAElements,
-      deleteButton: deleteButtonEl,
-      cancelButton: cancelButtonEl,
-      submitButton: submitButtonEl
-    };
-    return result;
-  }
-
-  createFormButton(form, formConfig, formListeners, buttonDef, eventType) {
-    let buttonEl = document.createElement('button');
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(buttonEl, buttonDef.buttonClasses);
-    buttonEl.setAttribute('id', `${formConfig.id}.${eventType}`);
-
-    if (buttonDef.buttonText) {
-      buttonEl.innerText = buttonDef.buttonText;
-    }
-
-    if (buttonDef.iconClasses) {
-      let iconEl = document.createElement('i');
-
-      if (iconEl) {
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, buttonDef.iconClasses);
-        buttonEl.appendChild(iconEl);
-      }
-    }
-    /* setup the event handler for the button */
-
-
-    buttonEl.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopPropagation();
-      let formEvent = {
-        target: form,
-        formId: formConfig.id,
-        eventType: eventType
-      };
-      formListeners.forEach(listener => listener.formChanged(formEvent));
-    });
-    return buttonEl;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/field/AbstractField.js":
-/*!************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/field/AbstractField.js ***!
-  \************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AbstractField": () => (/* binding */ AbstractField)
-/* harmony export */ });
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../FormUITypeDefs */ "../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../event-handlers/ValidationEventHandler */ "../../ui-framework/dist/framework/ui/form/event-handlers/ValidationEventHandler.js");
-/* harmony import */ var _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../event-handlers/RenderingEventListener */ "../../ui-framework/dist/framework/ui/form/event-handlers/RenderingEventListener.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_4__);
-
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_4___default()('abstract-field');
-class AbstractField {
-  constructor(formId, config, fieldDef, element, subElements = null) {
-    this.config = null;
-    this.subElements = [];
-    this.listeners = [];
-    this.hidden = false;
-    this.formId = formId;
-    this.config = config;
-    this.definition = fieldDef;
-    this.element = element;
-    if (subElements) this.subElements = subElements;
-    this.validationHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(formId, config, [this], subElements);
-    this.renderingHandler = new _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__.RenderingEventListener(formId, config, [this], subElements); // listen for our own change events
-
-    this.handleChangeEvent = this.handleChangeEvent.bind(this);
-
-    if (this.subElements) {
-      this.subElements.forEach(subElement => {
-        subElement.addEventListener('change', this.handleChangeEvent);
-      });
-    } else {
-      this.element.addEventListener('change', this.handleChangeEvent);
-    }
-  }
-
-  isHidden() {
-    return this.hidden;
-  }
-
-  addFieldListener(listener) {
-    logger(`${this.getName()} - adding listener ${listener.getName()}`); // don't duplicate listeners
-
-    let index = this.listeners.findIndex(listenerInList => listenerInList.getName() === listener.getName());
-
-    if (index < 0) {
-      this.listeners.push(listener);
-    } else {
-      logger(`${this.getName()} - duplicate listener ${listener.getName()} ignored`);
-    }
-  }
-
-  getFieldDefinition() {
-    return this.definition;
-  }
-
-  setInvalid(message) {
-    this.validationHandler.setValidationStatusAndMessage(this.element, false, '', message, false); // @ts-ignore
-
-    this.listeners.forEach(listener => listener.failedValidation(this.formId, this.definition, this.getValue(), message));
-  }
-
-  initialise() {}
-
-  getValue() {
-    let result = null;
-
-    if (this.config && this.element) {
-      switch (this.config.elementType) {
-        case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup:
-          {
-            logger(`${this.definition.id} - getting value - rbg`);
-
-            if (this.subElements) {
-              this.subElements.forEach(subElement => {
-                if (subElement.checked) {
-                  logger(`${this.definition.id} - getting value - rbg - checked ${subElement.value}`);
-                  result = subElement.value;
-                  subElement.checked = true;
-                }
-              });
-            }
-
-            break;
-          }
-
-        case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox:
-          {
-            // @ts-ignore
-            result = '' + this.element.checked;
-            break;
-          }
-
-        default:
-          {
-            // @ts-ignore
-            result = this.element.value;
-            break;
-          }
-      }
-    }
-
-    logger(`${this.definition.id} - getting value - ${result}`);
-    return result;
-  }
-
-  getFormattedValue() {
-    let result = null;
-
-    if (this.config && this.element) {
-      // @ts-ignore
-      result = this.element.value;
-
-      if (this.config.elementType === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox) {
-        // @ts-ignore
-        result = '' + this.element.checked;
-      }
-
-      if (this.config.formatter) {
-        result = this.config.formatter.formatValue(this.definition, result);
-      }
-    }
-
-    return result;
-  }
-
-  isValid() {
-    let result = true;
-
-    if (this.config && this.element) {
-      if (this.config.validator) {
-        if (this.config.validator.validator) {
-          const validator = this.config.validator.validator;
-          const response = validator.isValidValue(this.definition, this.getValue());
-          result = response.isValid;
-        }
-      }
-    }
-
-    return result;
-  }
-
-  getId() {
-    return this.definition.id;
-  }
-
-  setValue(newValue) {
-    newValue = '' + newValue;
-
-    if (this.element && this.config) {
-      // @ts-ignore
-      switch (this.config.elementType) {
-        case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup:
-          {
-            if (this.subElements) {
-              this.subElements.forEach(subElement => {
-                if (subElement.value === newValue) {
-                  subElement.checked = true;
-                }
-              });
-            }
-
-            break;
-          }
-
-        case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox:
-          {
-            // @ts-ignore
-            this.element.checked = newValue.toLowerCase() === 'true';
-            break;
-          }
-
-        case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.select:
-          {
-            logger(`${this.definition.id} - setting value - ${newValue}`);
-            const selectEl = this.element;
-            let selectedIndex = -1;
-
-            for (let index = 0; index < selectEl.options.length; index++) {
-              // @ts-ignore
-              const option = selectEl.options.item(index);
-              logger(`${this.definition.id} - option value - ${option.value}`);
-
-              if (option.value === newValue) {
-                logger(`${this.definition.id} - option value - ${option.value} - SELECTED`);
-                option.selected = true;
-                selectedIndex = index;
-              }
-            }
-
-            logger(`${this.definition.id} - selected index ${selectedIndex}`);
-            selectEl.selectedIndex = selectedIndex;
-            break;
-          }
-
-        default:
-          {
-            logger(`${this.definition.id} - setting value - ${newValue}`); // @ts-ignore
-
-            this.element.value = newValue;
-            break;
-          }
-      }
-    }
-  }
-
-  reset() {
-    if (this.element) {
-      switch (this.definition.type) {
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.boolean:
-          {
-            // @ts-ignore
-            this.element.checked = false;
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.integer:
-          {
-            // @ts-ignore
-            this.element.value = '0';
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.float:
-          {
-            // @ts-ignore
-            this.element.value = '0.0';
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.limitedChoice:
-          {
-            if (this.subElements) {
-              this.subElements.forEach(subElement => {
-                subElement.checked = false;
-              });
-            }
-
-            break;
-          }
-
-        default:
-          {
-            // @ts-ignore
-            this.element.value = '';
-            break;
-          }
-      }
-    }
-
-    this.show();
-  }
-
-  clearValue() {
-    this.reset();
-  }
-
-  validate() {
-    if (this.element) {
-      this.validationHandler.processValidation(this.element);
-    }
-  }
-
-  render(currentValue) {
-    var _a;
-
-    let result = currentValue;
-
-    if ((_a = this.config) === null || _a === void 0 ? void 0 : _a.renderer) {
-      let value = this.config.renderer.renderValue(this.definition, currentValue);
-      if (value) result = value;
-    }
-
-    return result;
-  }
-
-  failedValidation(formId, field, currentValue, message) {}
-
-  valueChanged(formId, field, newValue) {}
-
-  getName() {
-    return this.definition.displayName;
-  }
-
-  hide() {
-    /*
-      if we have an enclosing container (per the config) then we can hide
-      otherwise we become readonly and disabled
-     */
-    if (this.config) {
-      if (this.config.containedBy) {
-        const parentEl = this.element.parentElement;
-
-        if (parentEl) {
-          parentEl.setAttribute('style', 'display:none');
-        }
-      } else {
-        this.setReadOnly();
-      }
-    }
-
-    this.hidden = true;
-  }
-
-  setValid() {
-    this.validationHandler.setValidationStatusAndMessage(this.element, true, '');
-  }
-
-  show() {
-    /*
-      if we have an enclosing container (per the config) then we can hide
-      otherwise we become readonly and disabled
-     */
-    if (this.config) {
-      if (this.config.containedBy) {
-        const parentEl = this.element.parentElement;
-
-        if (parentEl) {
-          parentEl.removeAttribute('style');
-        }
-      } else {
-        this.clearReadOnly();
-      }
-    }
-
-    this.hidden = true;
-  }
-
-  clearReadOnly() {
-    if (this.definition.displayOnly) return;
-    this.element.removeAttribute('readonly');
-    this.element.removeAttribute('disabled'); // do the same for subelements
-
-    if (this.subElements) {
-      this.subElements.forEach(subElement => {
-        subElement.removeAttribute('readonly');
-        subElement.removeAttribute('disabled');
-      });
-    }
-  }
-
-  setReadOnly() {
-    this.element.setAttribute('readonly', 'true');
-    this.element.setAttribute('disabled', 'true'); // do the same for subelements
-
-    if (this.subElements) {
-      this.subElements.forEach(subElement => {
-        subElement.setAttribute('readonly', 'true');
-        subElement.setAttribute('disabled', 'true');
-      });
-    }
-  }
-
-  handleChangeEvent(event) {
-    logger(`Handling change event`);
-
-    if (this.config) {
-      let value = this.getValue();
-      logger(`Handling change event - informing listeners`);
-      this.listeners.forEach(listener => listener.valueChanged(this.formId, this.definition, value));
-    }
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/field/InputField.js":
-/*!*********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/field/InputField.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "InputField": () => (/* binding */ InputField)
-/* harmony export */ });
-/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "../../ui-framework/dist/framework/ui/form/field/AbstractField.js");
-
-class InputField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-  constructor(formId, config, fieldDef, element) {
-    super(formId, config, fieldDef, element);
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/field/RadioButtonGroupField.js":
-/*!********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/field/RadioButtonGroupField.js ***!
-  \********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "RadioButtonGroupField": () => (/* binding */ RadioButtonGroupField)
-/* harmony export */ });
-/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "../../ui-framework/dist/framework/ui/form/field/AbstractField.js");
-
-class RadioButtonGroupField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-  constructor(formId, config, fieldDef, element, subElements) {
-    super(formId, config, fieldDef, element, subElements);
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/field/SelectField.js":
-/*!**********************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/field/SelectField.js ***!
-  \**********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "SelectField": () => (/* binding */ SelectField)
-/* harmony export */ });
-/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "../../ui-framework/dist/framework/ui/form/field/AbstractField.js");
-
-class SelectField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-  constructor(formId, config, fieldDef, element) {
-    super(formId, config, fieldDef, element);
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/field/TextAreaField.js":
-/*!************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/field/TextAreaField.js ***!
-  \************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "TextAreaField": () => (/* binding */ TextAreaField)
-/* harmony export */ });
-/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "../../ui-framework/dist/framework/ui/form/field/AbstractField.js");
-
-class TextAreaField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-  constructor(formId, config, fieldDef, element) {
-    super(formId, config, fieldDef, element);
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/validation/ValidationManager.js":
-/*!*********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/validation/ValidationManager.js ***!
-  \*********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ValidationManager": () => (/* binding */ ValidationManager)
-/* harmony export */ });
-/* harmony import */ var _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ValidationTypeDefs */ "../../ui-framework/dist/framework/ui/form/validation/ValidationTypeDefs.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../CommonTypes */ "../../ui-framework/dist/framework/CommonTypes.js");
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager');
-const flogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-rule-failure');
-class ValidationManager {
-  constructor() {
-    this.formRules = [];
-  }
-
-  static getInstance() {
-    if (!ValidationManager._instance) {
-      ValidationManager._instance = new ValidationManager();
-    }
-
-    return ValidationManager._instance;
-  }
-
-  getName() {
-    return "Validation Manager";
-  }
-
-  addRuleToForm(form, rule) {
-    logger(`Adding rule on form ${form.getId()} for target field ${rule.targetDataFieldId}`);
-    /*
-     validate the rule
-     1. does the rule have a comparison field or static for each condition?
-     2. do the fields exist?
-     3. are the comparisons valid types to compare?
-    */
-
-    let targetField = form.getFieldFromDataFieldId(rule.targetDataFieldId);
-
-    if (!targetField) {
-      flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - NOT FOUND in form`);
-      return false;
-    }
-
-    let convertedRule = {
-      targetField: targetField,
-      response: rule.response,
-      fieldConditions: [],
-      valueConditions: []
-    };
-    rule.conditions.forEach(condition => {
-      // do we have one of values or source field?
-      if (!condition.values && !condition.sourceDataFieldId) {
-        flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - a condition is missing both values and source field`);
-        return false;
-      } // is this a target field value comparison?
-
-
-      if (condition.values && condition.sourceDataFieldId) {
-        logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} with values ${condition.values}`);
-        let sourceField = form.getFieldFromDataFieldId(condition.sourceDataFieldId);
-
-        if (!sourceField) {
-          flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
-          return false;
-        }
-
-        convertedRule.fieldConditions.push({
-          sourceField: sourceField,
-          comparison: condition.comparison,
-          values: condition.values
-        });
-        sourceField.addFieldListener(this);
-      } else if (condition.values && !condition.sourceDataFieldId) {
-        // is this a value comparison?
-        logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - values ${condition.values}`); // add a new value rule to the internal structure
-
-        convertedRule.valueConditions.push({
-          values: condition.values,
-          comparison: condition.comparison
-        }); // @ts-ignore
-
-        targetField.addFieldListener(this);
-      } else if (condition.sourceDataFieldId && !condition.values) {
-        // is this a field vs field comparison
-        logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId}`);
-        let sourceField = form.getFieldFromDataFieldId(condition.sourceDataFieldId);
-
-        if (!sourceField) {
-          flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
-          return false;
-        }
-        /*
-           are we comparing two fields that can be compared?
-           allowed combinations are:
-           date|datetime vs date|datetime
-           time|short time vs time|short time
-           boolean vs boolean
-           integer|float vs number|float
-           any other vs any other
-         */
-
-
-        let sourceType = sourceField.getFieldDefinition().type; // @ts-ignore
-
-        let targetType = targetField.getFieldDefinition().type;
-
-        switch (targetType) {
-          case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date:
-          case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime:
-            {
-              if (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime && sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date) {
-                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is date(time), source is NOT`);
-                return false;
-              }
-
-              break;
-            }
-
-          case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time:
-          case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime:
-            {
-              if (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time && sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime) {
-                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is time, source is NOT`);
-                return false;
-              }
-
-              break;
-            }
-
-          case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean:
-            {
-              if (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean) {
-                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is boolean, source is NOT`);
-                return false;
-              }
-
-              break;
-            }
-
-          case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer:
-          case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float:
-            {
-              if (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer && sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float) {
-                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is number, source is NOT`);
-                return false;
-              }
-
-              break;
-            }
-        }
-
-        convertedRule.fieldConditions.push({
-          sourceField: sourceField,
-          comparison: condition.comparison
-        });
-        sourceField.addFieldListener(this);
-      }
-    });
-    logger(`Converted rule to `);
-    logger(convertedRule);
-    let index = this.formRules.findIndex(formRule => formRule.form.getId() === form.getId());
-    let formRuleSet; // store the rules for later execution
-
-    if (index < 0) {
-      formRuleSet = {
-        form: form,
-        rules: []
-      };
-      formRuleSet.rules.push(convertedRule);
-      this.formRules.push(formRuleSet);
-    } else {
-      formRuleSet = this.formRules[index];
-      formRuleSet.rules.push(convertedRule);
-    }
-
-    logger(`Current set of rules for form ${form.getId()}`);
-    logger(formRuleSet);
-    return true;
-  }
-
-  failedValidation(formId, field, currentValue, message) {} // ignored, we might be causing
-
-
-  applyRulesToTargetField(formId, field, onlyRulesOfType) {
-    logger(`Checking rules for form ${formId}, data field ${field.id} of type ${onlyRulesOfType}`); // which rules apply?
-
-    let rules = this.getRulesForFieldChange(formId, field.id, false);
-    let result = {
-      ruleFailed: false
-    }; // get the rules for the field, filtered by the condition response type
-
-    if (onlyRulesOfType) {
-      let ruleSubset = [];
-      rules.forEach(rule => {
-        if (rule.response === onlyRulesOfType) {
-          ruleSubset.push(rule);
-        }
-      });
-      rules = ruleSubset;
-    }
-
-    rules.forEach(rule => {
-      let response = this.executeRule(rule);
-
-      if (response.ruleFailed) {
-        flogger(`Rule failed for form ${formId} with field ${field.displayName} with message ${response.message}`);
-        result.ruleFailed = true;
-        result.message = response.message;
-      }
-    });
-    return result;
-  }
-
-  valueChanged(formId, field, newValue) {
-    logger(`Handling field change - form ${formId}, data field ${field.id}, value ${newValue}`); // a field we are listening to has changed
-    // which rules apply?
-
-    const rules = this.getRulesForFieldChange(formId, field.id, true); // execute each rule and collect the responses
-
-    let failedResponses = [];
-    rules.forEach(rule => {
-      let response = this.executeRule(rule);
-
-      if (response.ruleFailed) {
-        failedResponses.push(response);
-      }
-    });
-    logger(`Have ${failedResponses.length} failed rules - applying each`); // for each failed response let the target field know based on the response type
-
-    failedResponses.forEach(response => {
-      switch (response.response) {
-        case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide:
-          {
-            logger(`Apply hide ${response.field.getId()}`);
-            response.field.hide();
-            break;
-          }
-
-        case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show:
-          {
-            logger(`Apply show ${response.field.getId()}`);
-            response.field.show();
-            break;
-          }
-
-        case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid:
-          {
-            logger(`Apply invalid ${response.field.getId()}`);
-            if (response.message) response.field.setInvalid(response.message);
-            break;
-          }
-
-        case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.valid:
-          {
-            logger(`Apply valid ${response.field.getId()}`);
-            response.field.setValid();
-            break;
-          }
-      }
-    });
-  }
-
-  areTwoFieldsEqual(targetField, sourceField) {
-    if (targetField.getValue() !== sourceField.getValue()) {
-      return {
-        ruleFailed: true,
-        message: `${targetField.getName()} must be equal to ${sourceField.getName()}`
-      };
-    }
-
-    return {
-      ruleFailed: false
-    };
-  }
-
-  compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, comparison) {
-    if (!targetValue || !sourceValue) return false; // no null comparisons
-
-    switch (targetType) {
-      case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date:
-        {
-          targetValue += ' 00:00:00';
-
-          if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date) {
-            sourceValue += ' 00:00:00';
-          }
-
-          break;
-        }
-
-      case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime:
-        {
-          if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date) {
-            sourceValue += ' 00:00:00';
-          }
-
-          break;
-        }
-
-      case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time:
-        {
-          if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime) {
-            sourceValue += ':00';
-          }
-
-          break;
-        }
-
-      case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime:
-        {
-          targetValue += ':00';
-
-          if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime) {
-            sourceValue += ':00';
-          }
-
-          break;
-        }
-    }
-
-    logger(`Comparing ${targetValue} of type ${targetType} against ${sourceValue} of type ${sourceType}`);
-
-    switch (comparison) {
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThan:
-        {
-          return targetValue < sourceValue;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThanEqual:
-        {
-          return targetValue <= sourceValue;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThanEqual:
-        {
-          return targetValue >= sourceValue;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThan:
-        {
-          return targetValue > sourceValue;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.equals:
-        {
-          return targetValue === sourceValue;
-        }
-    }
-
-    return false;
-  }
-
-  isTargetLessThanSource(targetField, sourceField) {
-    let sourceType = sourceField.getFieldDefinition().type;
-    let targetType = targetField.getFieldDefinition().type;
-    let sourceValue = sourceField.getValue();
-    let targetValue = targetField.getValue();
-
-    if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThan)) {
-      return {
-        ruleFailed: true,
-        message: `${targetField.getName()} must be less than ${sourceField.getName()}`
-      };
-    }
-
-    return {
-      ruleFailed: false
-    };
-  }
-
-  isTargetLessThanEqualSource(targetField, sourceField) {
-    let check = this.areTwoFieldsEqual(targetField, sourceField);
-
-    if (check.ruleFailed) {
-      check = this.isTargetLessThanSource(targetField, sourceField);
-
-      if (check.ruleFailed) {
-        return {
-          ruleFailed: true,
-          message: `${targetField.getName()} must be less than or equal to ${sourceField.getName()}`
-        };
-      }
-    }
-
-    return {
-      ruleFailed: false
-    };
-  }
-
-  isTargetGreaterThan(targetField, sourceField) {
-    let sourceType = sourceField.getFieldDefinition().type;
-    let targetType = targetField.getFieldDefinition().type;
-    let sourceValue = sourceField.getValue();
-    let targetValue = targetField.getValue();
-
-    if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThan)) {
-      return {
-        ruleFailed: true,
-        message: `${targetField.getName()} must be greater than ${sourceField.getName()}`
-      };
-    }
-
-    return {
-      ruleFailed: false
-    };
-  }
-
-  isSourceNull(sourceField) {
-    let targetValue = sourceField.getValue(); // @ts-ignore
-
-    if (targetValue && targetValue.trim().length > 0) {
-      return {
-        ruleFailed: true,
-        message: `${sourceField.getName()} must be empty`
-      };
-    }
-
-    return {
-      ruleFailed: false
-    };
-  }
-
-  isSourceNotNull(sourceField) {
-    let targetValue = sourceField.getValue(); // @ts-ignore
-
-    if (!targetValue || targetValue.trim().length > 0) {
-      return {
-        ruleFailed: true,
-        message: `${sourceField.getName()} must not be empty`
-      };
-    }
-
-    return {
-      ruleFailed: false
-    };
-  }
-
-  doesFieldHaveValue(field, values) {
-    let targetValue = field.getValue();
-    logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue}`);
-
-    if (targetValue) {
-      // split the values by commas
-      let splits = values.split(',');
-      let foundInValue = false;
-      splits.forEach(split => {
-        if (targetValue === split) {
-          logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue} - found in value(s)`);
-          foundInValue = true;
-        }
-      });
-
-      if (foundInValue) {
-        return {
-          ruleFailed: false
-        };
-      }
-    }
-
-    return {
-      ruleFailed: true,
-      message: `${field.getName()} must be have a value in ${values}`
-    };
-  }
-
-  doesSourceFieldHaveValue(field, values) {
-    return this.doesFieldHaveValue(field, values);
-  }
-
-  isTargetGreaterThanEqualSource(targetField, sourceField) {
-    let check = this.areTwoFieldsEqual(targetField, sourceField);
-
-    if (check.ruleFailed) {
-      check = this.isTargetGreaterThan(targetField, sourceField);
-
-      if (check.ruleFailed) {
-        return {
-          ruleFailed: true,
-          message: `${targetField.getName()} must be greater than or equal to ${sourceField.getName()}`
-        };
-      }
-    }
-
-    return {
-      ruleFailed: false
-    };
-  }
-
-  compareFields(targetField, sourceField, comparison, value) {
-    switch (comparison) {
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.equals:
-        {
-          return this.areTwoFieldsEqual(targetField, sourceField);
-          break;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThan:
-        {
-          return this.isTargetLessThanSource(targetField, sourceField);
-          break;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThanEqual:
-        {
-          return this.isTargetLessThanEqualSource(targetField, sourceField);
-          break;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThan:
-        {
-          return this.isTargetGreaterThan(targetField, sourceField);
-          break;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThanEqual:
-        {
-          return this.isTargetGreaterThanEqualSource(targetField, sourceField);
-          break;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.isNull:
-        {
-          return this.isSourceNull(sourceField);
-          break;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.isNotNull:
-        {
-          return this.isSourceNotNull(sourceField);
-          break;
-        }
-
-      case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.hasValue:
-        {
-          return this.doesSourceFieldHaveValue(sourceField, value);
-          break;
-        }
-    }
-  }
-
-  executeRule(rule) {
-    let response = {
-      field: rule.targetField,
-      ruleFailed: false,
-      response: rule.response
-    }; // run each field comparison
-
-    logger(`Executing rule for target ${rule.targetField.getId()}`);
-    logger(rule);
-    rule.fieldConditions.every(condition => {
-      logger('field condition rule');
-      logger(condition);
-      let values = condition.values ? condition.values : '';
-      let ruleCheck = this.compareFields(rule.targetField, condition.sourceField, condition.comparison, values);
-
-      if (ruleCheck.ruleFailed) {
-        flogger('field condition rule FAILED');
-        response.ruleFailed = true; // only need messages for invalid responses
-
-        response.message = ruleCheck.message;
-        return false;
-      }
-
-      flogger('field condition rule PASSED');
-      return true;
-    }); // run each value comparison if we haven't already failed
-
-    if (!response.ruleFailed) {
-      rule.valueConditions.forEach(condition => {
-        logger('value condition rule');
-        logger(condition);
-        let ruleCheck = this.compareFields(rule.targetField, rule.targetField, _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.hasValue, condition.values);
-
-        if (ruleCheck.ruleFailed) {
-          flogger('value condition rule FAILED');
-          response.ruleFailed = true;
-          response.message = ruleCheck.message;
-          return false;
-        }
-
-        flogger('value condition rule PASSED');
-        return true;
-      });
-    }
-
-    return response;
-  }
-
-  getRulesForFieldChange(formId, dataFieldId, includeSourceFields) {
-    let rules = []; // lets go through the rules for the form
-
-    logger(`Finding rules for form ${formId} and data field ${dataFieldId}`);
-    let index = this.formRules.findIndex(formRule => formRule.form.getId() === formId);
-
-    if (index >= 0) {
-      const ruleSet = this.formRules[index]; // the dataFieldId could be the target or one of the sources
-
-      ruleSet.rules.forEach(rule => {
-        if (rule.targetField.getId() === dataFieldId) {
-          logger(`Found rule where data field ${dataFieldId} is target`);
-
-          if (rule.targetField.isValid()) {
-            rules.push(rule);
-          } else {
-            flogger(`Found rule where data field ${dataFieldId} is target but value is not currently valid`);
-          }
-        } else {
-          if (includeSourceFields) {
-            rule.fieldConditions.every(value => {
-              if (value.sourceField.getId() === dataFieldId) {
-                logger(`Found rule where data field ${dataFieldId} is source`);
-
-                if (value.sourceField.isValid()) {
-                  rules.push(rule);
-                } else {
-                  flogger(`Found rule where data field ${dataFieldId} is source but value is not currently valid`);
-                }
-
-                return false;
-              }
-
-              return true;
-            });
-          }
-        }
-      });
-    }
-
-    return rules;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/form/validation/ValidationTypeDefs.js":
-/*!**********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/form/validation/ValidationTypeDefs.js ***!
-  \**********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ConditionResponse": () => (/* binding */ ConditionResponse)
-/* harmony export */ });
-var ConditionResponse;
-
-(function (ConditionResponse) {
-  ConditionResponse[ConditionResponse["show"] = 0] = "show";
-  ConditionResponse[ConditionResponse["hide"] = 1] = "hide";
-  ConditionResponse[ConditionResponse["invalid"] = 2] = "invalid";
-  ConditionResponse[ConditionResponse["valid"] = 3] = "valid";
-})(ConditionResponse || (ConditionResponse = {}));
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/helper/BootstrapFormConfigHelper.js":
-/*!********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/helper/BootstrapFormConfigHelper.js ***!
-  \********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "BootstrapFormConfigHelper": () => (/* binding */ BootstrapFormConfigHelper)
-/* harmony export */ });
-/* harmony import */ var _model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../model/BasicFieldOperations */ "../../ui-framework/dist/framework/model/BasicFieldOperations.js");
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../model/DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../form/FormUITypeDefs */ "../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _RBGFieldOperations__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./RBGFieldOperations */ "../../ui-framework/dist/framework/ui/helper/RBGFieldOperations.js");
-/* harmony import */ var _model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../model/BasicObjectDefinitionFactory */ "../../ui-framework/dist/framework/model/BasicObjectDefinitionFactory.js");
-
-
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_3___default()('bootstrap-form-config-helper');
-class BootstrapFormConfigHelper {
-  constructor() {}
-
-  static getInstance() {
-    if (!BootstrapFormConfigHelper._instance) {
-      BootstrapFormConfigHelper._instance = new BootstrapFormConfigHelper();
-    }
-
-    return BootstrapFormConfigHelper._instance;
-  }
-
-  generateFormConfig(dataObjDef, displayOrders, hasDeleteButton, hideModifierFields = false) {
-    let fieldOperations = new _model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_0__.BasicFieldOperations();
-    let rbgFieldOperation = new _RBGFieldOperations__WEBPACK_IMPORTED_MODULE_4__.RBGFieldOperations(); // create the Field UI config for each field
-
-    let fieldUIConfigs = [];
-    dataObjDef.fields.forEach((fieldDef, index) => {
-      let fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.text;
-
-      switch (fieldDef.type) {
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.time:
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.text:
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.date:
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.shortTime:
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.duration:
-          {
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.datetime:
-          {
-            // is this the created or modified date
-            if (hideModifierFields) {
-              if (fieldDef.id === _model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_5__.FIELD_CreatedOn) {
-                fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden;
-              }
-
-              if (fieldDef.id === _model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_5__.FIELD_ModifiedOn) {
-                fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden;
-              }
-            }
-
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.userId:
-          {
-            if (hideModifierFields) {
-              fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden;
-            } else {
-              fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.text;
-            }
-
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.uuid:
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.id:
-          {
-            fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden;
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.integer:
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.float:
-          {
-            fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.number;
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.email:
-          {
-            fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.email;
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.password:
-          {
-            fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.password;
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.boolean:
-          {
-            fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.checkbox;
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.largeText:
-          {
-            fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.textarea;
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.choice:
-          {
-            fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.select;
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.limitedChoice:
-          {
-            fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.radioGroup;
-            break;
-          }
-      } // see if the field was supplied with a display order
-
-
-      const displayOrder = displayOrders.find(value => value.fieldId === fieldDef.id);
-      let displayOrderValue = index;
-
-      if (displayOrder) {
-        displayOrderValue = displayOrder.displayOrder;
-      } // construct the field ui config
-
-
-      let fieldUIConfig = {
-        field: fieldDef,
-        displayOrder: displayOrderValue,
-        elementType: fieldType,
-        elementClasses: 'form-control col-sm-9',
-        renderer: fieldOperations,
-        formatter: fieldOperations,
-        getValue: _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.defaultGetValue
-      };
-
-      if (fieldDef.type !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.id && fieldDef.type !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.uuid && fieldType !== _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden) {
-        // no labels, descriptions, container for id,uuid
-        fieldUIConfig.containedBy = {
-          elementType: 'div',
-          elementClasses: 'form-group row'
-        };
-        fieldUIConfig.label = {
-          label: fieldDef.displayName,
-          classes: 'col-md-12 col-lg-3 col-form-label'
-        };
-
-        if (fieldDef.description) {
-          // descriptions if the field has one
-          fieldUIConfig.describedBy = {
-            message: fieldDef.description,
-            elementType: 'small',
-            elementClasses: 'text-muted col-md-12 col-lg-9 offset-lg-3 mt-1'
-          };
-        }
-
-        if (!fieldDef.displayOnly) {
-          // no validator for readonly items
-          fieldUIConfig.validator = {
-            validator: fieldOperations,
-            messageDisplay: {
-              elementType: 'div',
-              elementClasses: 'invalid-feedback col-md-12 col-lg-9 offset-lg-3'
-            },
-            validClasses: 'is-valid',
-            invalidClasses: 'is-invalid'
-          };
-        }
-      } // text areas
-
-
-      if (fieldDef.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.largeText) {
-        fieldUIConfig.textarea = {
-          rows: 5,
-          cols: 20
-        };
-      } // select
-
-
-      if (fieldDef.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.choice) {
-        // subelements are options, with no classes, no labels, and no other container
-        fieldUIConfig.subElement = {
-          element: {
-            elementType: 'option',
-            elementClasses: ''
-          }
-        };
-        fieldUIConfig.datasource = fieldDef.dataSource;
-      } // radio button group
-
-
-      if (fieldDef.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.limitedChoice) {
-        fieldUIConfig.subElement = {
-          element: {
-            elementType: 'input',
-            elementClasses: 'form-check-input',
-            elementAttributes: [{
-              name: 'type',
-              value: 'radio'
-            }]
-          },
-          container: {
-            elementType: 'div',
-            elementClasses: 'form-check form-check-inline'
-          },
-          label: {
-            label: 'label',
-            classes: 'form-check-label'
-          }
-        };
-        fieldUIConfig.renderer = rbgFieldOperation;
-        if (fieldUIConfig.validator) fieldUIConfig.validator.validator = rbgFieldOperation;
-        fieldUIConfig.formatter = rbgFieldOperation;
-        fieldUIConfig.datasource = fieldDef.dataSource;
-      }
-
-      fieldUIConfigs.push(fieldUIConfig);
-    }); // create a form with a single group and button container with Bootstrap styles
-
-    const fieldGroup = {
-      containedBy: {
-        elementType: 'div',
-        elementClasses: 'col-sm-12'
-      },
-      fields: fieldUIConfigs
-    };
-    const formConfig = {
-      id: dataObjDef.id,
-      displayName: dataObjDef.displayName,
-      fieldGroups: [fieldGroup],
-      unsavedChanges: {
-        elementType: 'div',
-        elementClasses: 'invalid-feedback text-right col-md-12 col-lg-9 offset-lg-3',
-        elementAttributes: [{
-          name: 'style',
-          value: 'display:block'
-        }],
-        innerHTML: `Pending changes to ${dataObjDef.displayName}`
-      },
-      buttonsContainedBy: {
-        elementType: 'div',
-        elementClasses: 'd-flex w-100 justify-space-between'
-      },
-      cancelButton: {
-        buttonText: 'Cancel  ',
-        buttonClasses: 'btn-info rounded p-1 mr-2 mt-2 w-100',
-        iconClasses: 'fas fa-ban'
-      },
-      submitButton: {
-        buttonText: 'Save  ',
-        buttonClasses: 'btn-primary rounded p-1 mt-2 w-100',
-        iconClasses: 'fas fa-save'
-      },
-      activeSave: '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;'
-    }; // sort the fields into display order
-
-    formConfig.fieldGroups.forEach(group => {
-      group.fields.sort((a, b) => {
-        return a.displayOrder - b.displayOrder;
-      });
-    });
-
-    if (hasDeleteButton) {
-      formConfig.deleteButton = {
-        buttonText: 'Delete  ',
-        buttonClasses: 'btn-warning rounded p-1 mr-2 mt-2 w-100',
-        iconClasses: 'fas fa-trash-alt'
-      };
-    }
-
-    logger(formConfig);
-    return formConfig;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/helper/BootstrapTableConfigHelper.js":
-/*!*********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/helper/BootstrapTableConfigHelper.js ***!
-  \*********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "BootstrapTableConfigHelper": () => (/* binding */ BootstrapTableConfigHelper)
-/* harmony export */ });
-/* harmony import */ var _model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../model/BasicFieldOperations */ "../../ui-framework/dist/framework/model/BasicFieldOperations.js");
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../model/DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../form/FormUITypeDefs */ "../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../model/BasicObjectDefinitionFactory */ "../../ui-framework/dist/framework/model/BasicObjectDefinitionFactory.js");
-/* harmony import */ var _LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./LimitedChoiceTextRenderer */ "../../ui-framework/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
-
-
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_3___default()('bootstrap-tabular-config-helper');
-class BootstrapTableConfigHelper {
-  constructor() {}
-
-  static getInstance() {
-    if (!BootstrapTableConfigHelper._instance) {
-      BootstrapTableConfigHelper._instance = new BootstrapTableConfigHelper();
-    }
-
-    return BootstrapTableConfigHelper._instance;
-  }
-
-  generateTableRowConfig(dataObjDef, displayOrders, itemDetailColumn, hasActions, hideModifierFields = false) {
-    let fieldOperations = new _model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_0__.BasicFieldOperations();
-    let choiceRenderer = new _LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_5__.LimitedChoiceTextRenderer(); // create the Field UI config for each field
-
-    let fieldUIConfigs = [];
-    let columnHeaderConfigs = [];
-    dataObjDef.fields.forEach((fieldDef, index) => {
-      let fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.text;
-
-      switch (fieldDef.type) {
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.datetime:
-          {
-            // is this the created or modified date
-            if (hideModifierFields) {
-              if (fieldDef.id === _model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_4__.FIELD_CreatedOn) {
-                fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden;
-              }
-
-              if (fieldDef.id === _model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_4__.FIELD_ModifiedOn) {
-                fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden;
-              }
-            }
-
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.userId:
-          {
-            if (hideModifierFields) {
-              fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden;
-            } else {
-              fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.text;
-            }
-
-            break;
-          }
-
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.uuid:
-        case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.id:
-          {
-            fieldType = _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden;
-            break;
-          }
-      } // see if the field was supplied with a display order, no order, no display for a table
-
-
-      const displayOrder = displayOrders.find(value => value.fieldId === fieldDef.id);
-      let displayOrderValue = index;
-
-      if (displayOrder) {
-        displayOrderValue = displayOrder.displayOrder;
-
-        if (fieldDef.type !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.id && fieldDef.type !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.uuid && fieldType !== _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden) {
-          // no labels, descriptions, container for id,uuid
-          let headerConfig = {
-            field: fieldDef,
-            element: {
-              elementType: 'th',
-              elementAttributes: [{
-                name: 'scope',
-                value: 'col'
-              }],
-              elementClasses: '',
-              innerHTML: fieldDef.displayName
-            }
-          }; // construct the field ui config
-
-          let fieldUIConfig = {
-            field: fieldDef,
-            displayOrder: displayOrderValue,
-            elementType: _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.tableData,
-            elementClasses: 'text-center',
-            renderer: fieldOperations,
-            getValue: _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.defaultGetValue
-          };
-
-          if (fieldDef.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.limitedChoice) {
-            fieldUIConfig.renderer = choiceRenderer;
-          }
-
-          columnHeaderConfigs.push(headerConfig);
-          fieldUIConfigs.push(fieldUIConfig);
-        }
-      }
-    });
-    let actionColumn = null;
-
-    if (hasActions) {
-      actionColumn = {
-        element: {
-          elementType: 'th',
-          elementAttributes: [{
-            name: 'scope',
-            value: 'col'
-          }],
-          elementClasses: 'text-right',
-          innerHTML: 'Actions'
-        }
-      };
-    }
-
-    const tableConfig = {
-      id: dataObjDef.id,
-      displayName: dataObjDef.displayName,
-      container: {
-        elementType: 'div',
-        elementClasses: 'table-responsive'
-      },
-      table: {
-        elementType: 'table',
-        elementClasses: 'table table-hover table-sm'
-      },
-      header: {
-        elementType: 'thead',
-        elementClasses: ''
-      },
-      headerColumns: columnHeaderConfigs,
-      body: {
-        elementType: 'tbody',
-        elementClasses: ''
-      },
-      columns: fieldUIConfigs,
-      itemDetailColumn: itemDetailColumn
-    }; // sort the fields into display order
-
-    tableConfig.columns.sort((a, b) => {
-      return a.displayOrder - b.displayOrder;
-    });
-
-    if (actionColumn) {
-      tableConfig.actionColumn = actionColumn;
-    }
-
-    logger(tableConfig);
-    return tableConfig;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/helper/LimitedChoiceTextRenderer.js":
-/*!********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/helper/LimitedChoiceTextRenderer.js ***!
-  \********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "LimitedChoiceTextRenderer": () => (/* binding */ LimitedChoiceTextRenderer)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-
-const rlogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('limited-choice-text-renderer');
-class LimitedChoiceTextRenderer {
-  constructor() {}
-
-  renderValue(field, currentValue) {
-    rlogger(`Rendering value for field ${field.displayName} with new value ${currentValue}`); // find the current value in the data source and convert to text for display
-
-    let result = currentValue;
-
-    if (field.dataSource) {
-      const valueOptions = field.dataSource.getOptions();
-      const foundIndex = valueOptions.findIndex(option => option.value === currentValue);
-
-      if (foundIndex >= 0) {
-        result = valueOptions[foundIndex].name;
-      }
-    }
-
-    return result;
-  }
-
-  generate(field, isCreate) {
-    return '';
-  }
-
-  setSubElements(elements) {}
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/helper/LinkedCollectionDetailController.js":
-/*!***************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/helper/LinkedCollectionDetailController.js ***!
-  \***************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ChangeDataObjectDelegate": () => (/* binding */ ChangeDataObjectDelegate),
-/* harmony export */   "LinkedCollectionDetailController": () => (/* binding */ LinkedCollectionDetailController)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _model_DataObjectController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../model/DataObjectController */ "../../ui-framework/dist/framework/model/DataObjectController.js");
-/* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../alert/AlertListener */ "../../ui-framework/dist/framework/ui/alert/AlertListener.js");
-/* harmony import */ var _alert_AlertManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../alert/AlertManager */ "../../ui-framework/dist/framework/ui/alert/AlertManager.js");
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('linked-controller');
-const dlogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('linked-controller-detail');
-
-class ChildViewListenerDelegate {
-  constructor(controller) {
-    this.controller = controller;
-  }
-
-  addView(view) {
-    view.addEventListener(this);
-  }
-
-  canDeleteItem(view, selectedItem) {
-    return true;
-  }
-
-  documentLoaded(view) {}
-
-  hideRequested(view) {}
-
-  itemAction(view, actionName, selectedItem) {}
-
-  itemDeleted(view, selectedItem) {}
-
-  itemDropped(view, droppedItem) {}
-
-  showRequested(view) {}
-
-  cancelled(view, dataObj) {
-    this.controller.cancelled(view, dataObj);
-  }
-
-  deletedItem(view, dataObj) {
-    this.controller.deletedItem(view, dataObj);
-  }
-
-  saveNewItem(view, dataObj) {
-    this.controller.saveNewItem(view, dataObj);
-  }
-
-  updateItem(view, dataObj) {
-    this.controller.updateItem(view, dataObj);
-  }
-
-}
-
-class ChangeDataObjectDelegate {
-  constructor(callback) {
-    this.callback = callback;
-  }
-
-  shouldDiscardChanges() {
-    _alert_AlertManager__WEBPACK_IMPORTED_MODULE_3__.AlertManager.getInstance().startAlert(this, 'Discard Changes', 'There are unsaved changes.  Discard?', {});
-  }
-
-  completed(event) {
-    if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_2__.AlertType.confirmed) {
-      this.callback();
-    }
-  }
-
-}
-class LinkedCollectionDetailController extends _model_DataObjectController__WEBPACK_IMPORTED_MODULE_1__.DataObjectController {
-  constructor(typeName, parentView) {
-    super(typeName);
-    this.children = [];
-    logger(`Starting with parent view ${parentView.getName()}`);
-    this.parentView = parentView;
-    this.delegate = new ChildViewListenerDelegate(this);
-    this.parentView.addEventListener(this);
-  }
-
-  addLinkedDetailView(childView) {
-    logger(`Adding child view ${childView.getName()}`);
-    this.children.push(childView);
-    this.delegate.addView(childView); // this delegate will only pass us the unique detail view events (save, new, etc)
-  }
-
-  initialise() {}
-
-  canDeleteItem(view, selectedItem) {
-    logger(`Handling delete item from view ${view.getName()}`);
-    dlogger(selectedItem);
-    return this.parentView.hasPermissionToDeleteItemInNamedCollection('', selectedItem);
-  }
-
-  documentLoaded(view) {
-    logger(`Handling document loaded view ${view.getName()}`); // let the children know
-
-    this.children.forEach(childView => {
-      childView.onDocumentLoaded();
-    });
-  }
-
-  hideRequested(view) {
-    // let the children know
-    logger(`Handling hide  from view ${view.getName()}`);
-    this.children.forEach(childView => {
-      childView.hidden();
-    });
-  }
-
-  itemAction(view, actionName, selectedItem) {
-    logger(`Handling item action ${actionName} from view ${view.getName()}`);
-    dlogger(selectedItem);
-    this.children.forEach(childView => {
-      childView.handleActionItem(actionName, selectedItem);
-    });
-  }
-
-  itemDeleted(view, selectedItem) {
-    logger(`Handling item deleted from view ${view.getName()}`);
-    dlogger(selectedItem);
-    this.children.forEach(childView => {
-      // clear the child display and set readonly
-      childView.clearDisplay();
-      childView.setReadOnly();
-    });
-  }
-
-  itemDeselected(view, selectedItem) {
-    logger(`Handling item deselected from view ${view.getName()}`);
-    dlogger(selectedItem);
-    this.children.forEach(childView => {
-      // clear the child display and set readonly
-      childView.clearDisplay();
-      childView.setReadOnly();
-    });
-  }
-
-  itemDragStarted(view, selectedItem) {}
-
-  itemDropped(view, droppedItem) {}
-
-  itemSelected(view, selectedItem) {
-    logger(`Handling item selected from view ${view.getName()}`);
-    dlogger(selectedItem);
-    this.children.forEach(childView => {
-      childView.displayItem(selectedItem);
-    });
-  }
-
-  showRequested(view) {
-    logger(`Handling show from view ${view.getName()}`); // let the children know
-
-    this.children.forEach(childView => {
-      childView.show();
-    });
-  }
-
-  canSelectItem(view, selectedItem) {
-    logger(`Handling can select item from view ${view.getName()}`);
-    dlogger(selectedItem); // are we currently in the middle of creating a new object?
-
-    if (this.isCreatingNew) return false; // prevent selection if the children views have modified this item
-
-    let canProceedWithSelection = true;
-    this.children.forEach(childView => {
-      if (childView.hasChanged()) {
-        dlogger(`child view ${childView.getName()} has changed - cancelling`);
-        canProceedWithSelection = false;
-      }
-    });
-
-    if (!canProceedWithSelection) {
-      canProceedWithSelection = confirm(`${view.getName()} - unsaved changes.  Discard them?`);
-    }
-
-    return canProceedWithSelection;
-  }
-
-  cancelled(view, dataObj) {
-    logger(`Handling cancelled from child view ${view.getName()}`);
-    dlogger(dataObj);
-    this.isCreatingNew = false;
-  }
-
-  deletedItem(view, dataObj) {
-    logger(`Handling deleted from child view ${view.getName()}`);
-    dlogger(dataObj);
-    this.informListenersOfDelete(dataObj);
-  }
-
-  saveNewItem(view, dataObj) {
-    logger(`Handling save new from child view ${view.getName()}`);
-    dlogger(dataObj);
-    this.informListenersOfCreate(dataObj);
-  }
-
-  updateItem(view, dataObj) {
-    logger(`Handling update from child view ${view.getName()}`);
-    dlogger(dataObj);
-    this.informListenersOfUpdate(dataObj);
-  }
-
-  _startNewObject() {
-    logger(`Handling start new object`); // assume the first detail view will create the object for us
-
-    let canProceedWithCreateNew = true;
-    this.children.forEach(childView => {
-      if (childView.hasChanged()) {
-        dlogger(`child view ${childView.getName()} has changed - cancelling`);
-        canProceedWithCreateNew = false;
-      }
-    });
-
-    if (!canProceedWithCreateNew) {
-      canProceedWithCreateNew = confirm(`There are unsaved changes.  Discard them?`);
-    }
-
-    if (this.children.length > 0) {
-      logger(`Handling start new object with child view ${this.children[0].getName()}`);
-      let dataObj = this.children[0].createItem();
-
-      if (dataObj) {
-        canProceedWithCreateNew = true;
-        this.children[0].show();
-      }
-    }
-
-    return canProceedWithCreateNew;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/helper/RBGFieldOperations.js":
-/*!*************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/helper/RBGFieldOperations.js ***!
-  \*************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "RBGFieldOperations": () => (/* binding */ RBGFieldOperations)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-
-
-const flogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('basic-field-operations-formatter');
-const vlogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('basic-field-operations-validator');
-const glogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('basic-field-operations-generator');
-const rlogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('basic-field-operations-renderer');
-class RBGFieldOperations {
-  constructor() {
-    this.radioButtons = [];
-  } // called when saving, change to final values
-
-
-  formatValue(field, currentValue) {
-    flogger(`Handling format value for RBG ${field.displayName} with value ${currentValue}`);
-    let result = currentValue; // find the current selected radio button
-
-    this.radioButtons.forEach(radioButton => {
-      if (radioButton.checked) {
-        result = radioButton.value;
-
-        if (field.idType === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.KeyType.number) {
-          result = parseInt(result);
-        }
-      }
-    });
-    flogger(`Handling format value for field ${field.displayName} with value ${currentValue} - result is ${result}`);
-    return result;
-  }
-
-  isValidValue(field, currentValue) {
-    vlogger(`Handling is valid value for field ${field.displayName} with value ${currentValue}`);
-    let response = {
-      isValid: false,
-      resetOnFailure: false
-    }; // basics first, is the field mandatory?
-
-    if (field.mandatory) {
-      this.radioButtons.forEach(radioButton => {
-        if (radioButton.checked) {
-          response.isValid = true;
-        }
-      });
-
-      if (!response.isValid) {
-        response.message = `${field.displayName} is required. Please select one of the values.`;
-        vlogger(`Handling is valid value for field ${field.displayName} with value ${currentValue} - is valid is ${response.isValid} with message ${response.message}`);
-        return response;
-      }
-    } else {
-      response.isValid = true;
-    } // ok, so we have some content, we need to check if the value is a valid format with regular expressions
-
-
-    vlogger(`Handling is valid value for field ${field.displayName} with value ${currentValue} - is valid is ${response.isValid} with message ${response.message}`);
-    return response;
-  }
-
-  renderValue(field, currentValue) {
-    rlogger(`Rendering value for field ${field.displayName} with new value ${currentValue}`);
-    this.radioButtons.forEach(radioButton => {
-      if (radioButton.value === currentValue) radioButton.checked = true;
-    });
-    return null;
-  }
-
-  generate(field, isCreate) {
-    return '';
-  }
-
-  setSubElements(elements) {
-    this.radioButtons = elements;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/helper/SimpleValueDataSource.js":
-/*!****************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/helper/SimpleValueDataSource.js ***!
-  \****************************************************************************/
+/***/ "./src/framework/ui/helper/SimpleValueDataSource.ts":
+/*!**********************************************************!*\
+  !*** ./src/framework/ui/helper/SimpleValueDataSource.ts ***!
+  \**********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -12309,6 +7980,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "SimpleValueDataSource": () => (/* binding */ SimpleValueDataSource)
 /* harmony export */ });
 class SimpleValueDataSource {
+  // static value list
   constructor(options) {
     this.options = options;
     this.listeners = [];
@@ -12334,10 +8006,10 @@ class SimpleValueDataSource {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js":
-/*!************************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js ***!
-  \************************************************************************************************/
+/***/ "./src/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.ts":
+/*!******************************************************************************!*\
+  !*** ./src/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.ts ***!
+  \******************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -12345,12 +8017,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* binding */ CollectionViewEventHandlerDelegate)
 /* harmony export */ });
-/* harmony import */ var _implementation_AbstractView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../implementation/AbstractView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractView.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _alert_AlertManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../alert/AlertManager */ "../../ui-framework/dist/framework/ui/alert/AlertManager.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _implementation_AbstractView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../implementation/AbstractView */ "./src/framework/ui/view/implementation/AbstractView.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _alert_AlertManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../alert/AlertManager */ "./src/framework/ui/alert/AlertManager.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../alert/AlertListener */ "../../ui-framework/dist/framework/ui/alert/AlertListener.js");
+/* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../alert/AlertListener */ "./src/framework/ui/alert/AlertListener.ts");
 
 
 
@@ -12358,8 +8030,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_3___default()('collection-view-event-handler-delegate');
 class CollectionViewEventHandlerDelegate {
+  selectedItem = null;
+
   constructor(view, forwarder) {
-    this.selectedItem = null;
     this.view = view;
     this.eventForwarder = forwarder; // event handlers
 
@@ -12370,8 +8043,6 @@ class CollectionViewEventHandlerDelegate {
   }
 
   getDragData(event) {
-    var _a, _b;
-
     const context = this.getItemContext(event);
     let itemId = context.itemId;
     const dataSource = context.dataSource;
@@ -12389,10 +8060,12 @@ class CollectionViewEventHandlerDelegate {
     selectedItem = this.view.getItemInNamedCollection(this.view.getCollectionName(), compareWith);
 
     if (selectedItem) {
-      // @ts-ignore
-      selectedItem[_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.DRAGGABLE_TYPE] = (_a = this.view.getCollectionUIConfig().detail.drag) === null || _a === void 0 ? void 0 : _a.type; // @ts-ignore
+      var _this$view$getCollect, _this$view$getCollect2; // @ts-ignore
 
-      selectedItem[_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.DRAGGABLE_FROM] = (_b = this.view.getCollectionUIConfig().detail.drag) === null || _b === void 0 ? void 0 : _b.from;
+
+      selectedItem[_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.DRAGGABLE_TYPE] = (_this$view$getCollect = this.view.getCollectionUIConfig().detail.drag) === null || _this$view$getCollect === void 0 ? void 0 : _this$view$getCollect.type; // @ts-ignore
+
+      selectedItem[_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.DRAGGABLE_FROM] = (_this$view$getCollect2 = this.view.getCollectionUIConfig().detail.drag) === null || _this$view$getCollect2 === void 0 ? void 0 : _this$view$getCollect2.from;
     }
 
     return selectedItem;
@@ -12533,53 +8206,10 @@ class CollectionViewEventHandlerDelegate {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js":
-/*!************************************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js ***!
-  \************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* binding */ CollectionViewEventHandlerDelegateUsingContext)
-/* harmony export */ });
-/* harmony import */ var _CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CollectionViewEventHandlerDelegate */ "../../ui-framework/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
-/* harmony import */ var _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../context/ContextualInformationHelper */ "../../ui-framework/dist/framework/ui/context/ContextualInformationHelper.js");
-
-
-class CollectionViewEventHandlerDelegateUsingContext extends _CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_0__.CollectionViewEventHandlerDelegate {
-  constructor(view, forwarder) {
-    super(view, forwarder);
-  }
-
-  getItemContext(event) {
-    const contextDetail = _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_1__.ContextualInformationHelper.getInstance().findContextFromEvent(event);
-    let context;
-
-    if (contextDetail) {
-      context = {
-        itemId: contextDetail.identifier,
-        dataSource: contextDetail.source
-      };
-    } else {
-      context = {
-        itemId: '',
-        dataSource: this.view.getName()
-      };
-    }
-
-    return context;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js":
-/*!*********************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js ***!
-  \*********************************************************************************************/
+/***/ "./src/framework/ui/view/delegate/CollectionViewListenerForwarder.ts":
+/*!***************************************************************************!*\
+  !*** ./src/framework/ui/view/delegate/CollectionViewListenerForwarder.ts ***!
+  \***************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -12587,7 +8217,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CollectionViewListenerForwarder": () => (/* binding */ CollectionViewListenerForwarder)
 /* harmony export */ });
-/* harmony import */ var _ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ViewListenerForwarder */ "../../ui-framework/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
+/* harmony import */ var _ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ViewListenerForwarder */ "./src/framework/ui/view/delegate/ViewListenerForwarder.ts");
 
 class CollectionViewListenerForwarder extends _ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_0__.ViewListenerForwarder {
   constructor() {
@@ -12636,62 +8266,10 @@ class CollectionViewListenerForwarder extends _ViewListenerForwarder__WEBPACK_IM
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js":
-/*!*****************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js ***!
-  \*****************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DetailViewListenerForwarder": () => (/* binding */ DetailViewListenerForwarder)
-/* harmony export */ });
-/* harmony import */ var _ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ViewListenerForwarder */ "../../ui-framework/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
-
-class DetailViewListenerForwarder extends _ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_0__.ViewListenerForwarder {
-  constructor() {
-    super();
-    this.detailViewListeners = [];
-  }
-
-  addListener(listener) {
-    super.addListener(listener);
-    this.detailViewListeners.push(listener);
-  }
-
-  saveNewItem(view, dataObj) {
-    if (!this.suppressEventEmits) {
-      this.detailViewListeners.forEach(listener => listener.saveNewItem(view, dataObj));
-    }
-  }
-
-  updateItem(view, dataObj) {
-    if (!this.suppressEventEmits) {
-      this.detailViewListeners.forEach(listener => listener.updateItem(view, dataObj));
-    }
-  }
-
-  deletedItem(view, dataObj) {
-    if (!this.suppressEventEmits) {
-      this.detailViewListeners.forEach(listener => listener.deletedItem(view, dataObj));
-    }
-  }
-
-  cancelled(view, dataObj) {
-    if (!this.suppressEventEmits) {
-      this.detailViewListeners.forEach(listener => listener.cancelled(view, dataObj));
-    }
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/view/delegate/ViewListenerForwarder.js":
-/*!***********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/delegate/ViewListenerForwarder.js ***!
-  \***********************************************************************************/
+/***/ "./src/framework/ui/view/delegate/ViewListenerForwarder.ts":
+/*!*****************************************************************!*\
+  !*** ./src/framework/ui/view/delegate/ViewListenerForwarder.ts ***!
+  \*****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -12700,8 +8278,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "ViewListenerForwarder": () => (/* binding */ ViewListenerForwarder)
 /* harmony export */ });
 class ViewListenerForwarder {
+  suppressEventEmits = false;
+
   constructor() {
-    this.suppressEventEmits = false;
     this.viewListeners = [];
   }
 
@@ -12771,10 +8350,10 @@ class ViewListenerForwarder {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/view/implementation/AbstractCollectionView.js":
-/*!******************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/implementation/AbstractCollectionView.js ***!
-  \******************************************************************************************/
+/***/ "./src/framework/ui/view/implementation/AbstractCollectionView.ts":
+/*!************************************************************************!*\
+  !*** ./src/framework/ui/view/implementation/AbstractCollectionView.ts ***!
+  \************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -12782,13 +8361,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "AbstractCollectionView": () => (/* binding */ AbstractCollectionView)
 /* harmony export */ });
-/* harmony import */ var _AbstractView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractView.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../util/EqualityFunctions */ "../../ui-framework/dist/framework/util/EqualityFunctions.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _AbstractView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractView */ "./src/framework/ui/view/implementation/AbstractView.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var _util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../util/EqualityFunctions */ "./src/framework/util/EqualityFunctions.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../delegate/CollectionViewListenerForwarder */ "../../ui-framework/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
-/* harmony import */ var _delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../delegate/CollectionViewEventHandlerDelegate */ "../../ui-framework/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
+/* harmony import */ var _delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../delegate/CollectionViewListenerForwarder */ "./src/framework/ui/view/delegate/CollectionViewListenerForwarder.ts");
+/* harmony import */ var _delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../delegate/CollectionViewEventHandlerDelegate */ "./src/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.ts");
 
 
 
@@ -12912,10 +8491,10 @@ class AbstractCollectionView extends _AbstractView__WEBPACK_IMPORTED_MODULE_0__.
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js":
-/*!**************************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js ***!
-  \**************************************************************************************************/
+/***/ "./src/framework/ui/view/implementation/AbstractStatefulCollectionView.ts":
+/*!********************************************************************************!*\
+  !*** ./src/framework/ui/view/implementation/AbstractStatefulCollectionView.ts ***!
+  \********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -12923,8 +8502,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "AbstractStatefulCollectionView": () => (/* binding */ AbstractStatefulCollectionView)
 /* harmony export */ });
-/* harmony import */ var _AbstractCollectionView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractCollectionView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractCollectionView.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _AbstractCollectionView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractCollectionView */ "./src/framework/ui/view/implementation/AbstractCollectionView.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 
 
@@ -13026,10 +8605,10 @@ class AbstractStatefulCollectionView extends _AbstractCollectionView__WEBPACK_IM
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/view/implementation/AbstractView.js":
-/*!********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/implementation/AbstractView.js ***!
-  \********************************************************************************/
+/***/ "./src/framework/ui/view/implementation/AbstractView.ts":
+/*!**************************************************************!*\
+  !*** ./src/framework/ui/view/implementation/AbstractView.ts ***!
+  \**************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -13037,18 +8616,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "AbstractView": () => (/* binding */ AbstractView)
 /* harmony export */ });
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../delegate/ViewListenerForwarder */ "../../ui-framework/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
+/* harmony import */ var _delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../delegate/ViewListenerForwarder */ "./src/framework/ui/view/delegate/ViewListenerForwarder.ts");
 
 
 
 const avLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-view-ts');
 const avLoggerDetails = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-view-ts-detail');
 class AbstractView {
+  static DATA_SOURCE = 'data-source';
+  containerEl = null;
+
   constructor(uiConfig) {
-    this.containerEl = null;
     this.uiConfig = uiConfig;
     this.viewEl = null;
     this.eventForwarder = new _delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_2__.ViewListenerForwarder();
@@ -13127,1252 +8708,13 @@ class AbstractView {
   }
 
 }
-AbstractView.DATA_SOURCE = 'data-source';
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/view/implementation/DefaultPermissionChecker.js":
-/*!********************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/implementation/DefaultPermissionChecker.js ***!
-  \********************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DefaultPermissionChecker": () => (/* binding */ DefaultPermissionChecker)
-/* harmony export */ });
-class DefaultPermissionChecker {
-  hasPermissionToUpdateItem(item) {
-    return true;
-  }
-
-  hasPermissionToDeleteItem(item) {
-    return true;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/view/implementation/DetailViewImplementation.js":
-/*!********************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/implementation/DetailViewImplementation.js ***!
-  \********************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DetailViewImplementation": () => (/* binding */ DetailViewImplementation)
-/* harmony export */ });
-/* harmony import */ var _AbstractView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractView.js");
-/* harmony import */ var _delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../delegate/DetailViewListenerForwarder */ "../../ui-framework/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
-
-
-class DetailViewImplementation extends _AbstractView__WEBPACK_IMPORTED_MODULE_0__.AbstractView {
-  constructor(uiConfig, renderer) {
-    super(uiConfig);
-    this.currentItem = null;
-    this.renderer = renderer;
-    const forwarder = new _delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_1__.DetailViewListenerForwarder();
-    this.eventForwarder = forwarder;
-    this.renderer.setView(this);
-    this.renderer.setEventForwarder(forwarder);
-  }
-
-  addEventDetailListener(listener) {
-    this.eventForwarder.addListener(listener);
-  }
-
-  getItemId(name, item) {
-    return '';
-  }
-
-  getItemDescription(name, item) {
-    return '';
-  }
-
-  hasActionPermission(actionName, from, item) {
-    return true;
-  }
-
-  getItem(from, identifier) {
-    return this.currentItem;
-  }
-
-  clearDisplay() {
-    this.renderer.reset();
-  }
-
-  clearReadOnly() {
-    this.renderer.clearReadOnly();
-  }
-
-  setReadOnly() {
-    this.renderer.setReadOnly();
-  }
-
-  isReadOnly() {
-    return this.renderer.isReadOnly();
-  }
-
-  createItem() {
-    return this.renderer.createItem();
-  }
-
-  displayItem(dataObj) {
-    this.currentItem = dataObj;
-
-    if (this.renderer.hasPermissionToUpdateItem(dataObj)) {
-      this.renderer.displayItem(dataObj);
-    } else {
-      this.renderer.displayItemReadonly(dataObj);
-    }
-
-    this.show();
-  }
-
-  hidden() {
-    this.renderer.hidden();
-  }
-
-  show() {
-    this.renderer.show();
-  }
-
-  render() {
-    this.displayItem(this.currentItem);
-  }
-
-  onDocumentLoaded() {
-    this.renderer.onDocumentLoaded();
-    super.onDocumentLoaded();
-  }
-
-  hasPermissionToDeleteItem(item) {
-    return this.renderer.hasPermissionToDeleteItem(item);
-  }
-
-  hasPermissionToUpdateItem(item) {
-    return this.renderer.hasPermissionToUpdateItem(item);
-  }
-
-  handleActionItem(actionName, selectedItem) {
-    this.renderer.handleActionItem(actionName, selectedItem);
-  }
-
-  isDisplayingItem(dataObj) {
-    return this.renderer.isDisplayingItem(dataObj);
-  }
-
-  hasChanged() {
-    return this.renderer.hasChanged();
-  }
-
-  initialise(displayOrder, hasDeleteButton, hideModifierFields = false) {
-    this.renderer.initialise(displayOrder, hasDeleteButton, hideModifierFields);
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/view/renderer/CarouselViewRenderer.js":
-/*!**********************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/renderer/CarouselViewRenderer.js ***!
-  \**********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CarouselViewRenderer": () => (/* binding */ CarouselViewRenderer)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-
-
-
-const avLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('carousel-renderer');
-class CarouselViewRenderer {
-  constructor(view, eventHandler, config) {
-    this.lastRenderedContainer = null;
-    this.lastRenderedCollectionName = null;
-    this.lastRenderedCollection = null;
-    this.previousWindowWidth = 0;
-    this.view = view;
-    this.eventHandler = eventHandler;
-    this.config = config;
-  }
-
-  onDocumentLoaded() {
-    // we need to track window resizing
-    this.previousWindowWidth = window.innerWidth;
-    window.addEventListener('resize', event => {
-      const newWindowWidth = window.innerWidth;
-      let reRenderRequired = false;
-
-      if (newWindowWidth < this.previousWindowWidth) {
-        if (this.previousWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_LARGE) {
-          if (newWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_LARGE) {
-            // need to re-render carousel
-            reRenderRequired = true;
-            avLogger(`window reduced and is now smaller or equal to large`);
-          }
-        }
-
-        if (this.previousWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_MEDIUM) {
-          if (newWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_MEDIUM) {
-            // need to re-render carousel
-            reRenderRequired = true;
-            avLogger(`window reduced and is now smaller or equal to medium`);
-          }
-        }
-
-        if (this.previousWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_SMALL) {
-          if (newWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_SMALL) {
-            // need to re-render carousel
-            reRenderRequired = true;
-            avLogger(`window reduced and is now smaller or equal to small`);
-          }
-        }
-      } else {
-        if (this.previousWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_SMALL) {
-          if (newWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_SMALL) {
-            // need to re-render carousel
-            avLogger(`window increased and is now larger than small`);
-            reRenderRequired = true;
-          }
-        }
-
-        if (this.previousWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_MEDIUM) {
-          if (newWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_MEDIUM) {
-            avLogger(`window increased and is now larger than medium`); // need to re-render carousel
-
-            reRenderRequired = true;
-          }
-        }
-
-        if (this.previousWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_LARGE) {
-          if (newWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_LARGE) {
-            avLogger(`window increased and is now larger than large`); // need to re-render carousel
-
-            reRenderRequired = true;
-          }
-        }
-      }
-
-      this.previousWindowWidth = newWindowWidth;
-
-      if (this.lastRenderedContainer && this.lastRenderedCollection && this.lastRenderedCollectionName && reRenderRequired) {
-        this.setDisplayElementsForCollectionInContainer(this.lastRenderedContainer, this.lastRenderedCollectionName, this.lastRenderedCollection);
-      }
-    });
-  }
-
-  createDisplayElementForCollectionItem(collectionName, item) {
-    const dataSourceKeyId = this.view.getDataSourceKeyId();
-    const resultDataKeyId = this.view.getIdForItemInNamedCollection(collectionName, item);
-    const canDeleteItem = this.view.hasPermissionToDeleteItemInNamedCollection(collectionName, item);
-    avLogger(`view ${this.view.getName()}: creating carousel item`);
-    avLogger(item);
-    const collectionConfig = this.view.getCollectionUIConfig();
-    let childEl = document.createElement(collectionConfig.resultsElementType);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.resultsClasses);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(childEl, collectionConfig.resultsElementAttributes);
-    childEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-    childEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-
-    if (collectionConfig.detail.background) {
-      let backgroundEl = document.createElement(collectionConfig.detail.background.elementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(backgroundEl, collectionConfig.detail.background.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(backgroundEl, collectionConfig.detail.background.elementAttributes);
-      backgroundEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-      backgroundEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-      childEl.appendChild(backgroundEl);
-      this.view.renderBackgroundForItemInNamedCollection(backgroundEl, collectionName, item);
-    } // the content may be structured
-
-
-    let textEl = childEl;
-
-    if (collectionConfig.detail.containerClasses) {
-      let contentEl = document.createElement('div');
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(contentEl, collectionConfig.detail.containerClasses);
-      contentEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-      contentEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-      textEl = document.createElement(collectionConfig.detail.textElementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(textEl, collectionConfig.detail.textElementClasses);
-      textEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-      textEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-      contentEl.appendChild(textEl);
-
-      if (collectionConfig.extraActions || collectionConfig.detail.delete) {
-        let buttonsEl = document.createElement(this.config.actionContainer.elementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(buttonsEl, this.config.actionContainer.elementClasses);
-        contentEl.appendChild(buttonsEl);
-
-        if (collectionConfig.extraActions) {
-          collectionConfig.extraActions.forEach(extraAction => {
-            const hasPermissionForAction = this.view.hasPermissionToActionItemInNamedCollection(extraAction.name, collectionName, item);
-
-            if (hasPermissionForAction) {
-              let action = document.createElement('button');
-              action.setAttribute('type', 'button');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(action, extraAction.buttonClasses);
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(action, extraAction.attributes);
-
-              if (extraAction.buttonText) {
-                action.innerHTML = extraAction.buttonText;
-              }
-
-              if (extraAction.iconClasses) {
-                let iconEl = document.createElement('i');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, extraAction.iconClasses);
-                iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-                iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-                iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
-                action.appendChild(iconEl);
-              }
-
-              action.setAttribute(collectionConfig.keyId, resultDataKeyId);
-              action.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-              action.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
-              action.addEventListener('click', event => {
-                event.preventDefault();
-                event.stopPropagation();
-                this.eventHandler.eventActionClicked(event);
-              });
-              buttonsEl.appendChild(action);
-            }
-          });
-        }
-
-        if (collectionConfig.detail.delete && collectionConfig && canDeleteItem) {
-          let deleteButtonEl = document.createElement('button');
-          deleteButtonEl.setAttribute('type', 'button');
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(deleteButtonEl, collectionConfig.detail.delete.buttonClasses);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(deleteButtonEl, collectionConfig.detail.delete.attributes);
-
-          if (collectionConfig.detail.delete.buttonText) {
-            deleteButtonEl.innerHTML = collectionConfig.detail.delete.buttonText;
-          }
-
-          if (collectionConfig.detail.delete.iconClasses) {
-            let iconEl = document.createElement('i');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.detail.delete.iconClasses);
-            iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-            iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-            deleteButtonEl.appendChild(iconEl);
-          }
-
-          deleteButtonEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-          deleteButtonEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-          deleteButtonEl.addEventListener('click', event => {
-            event.preventDefault();
-            event.stopPropagation();
-            this.eventHandler.eventDeleteClickItem(event);
-          });
-          buttonsEl.appendChild(deleteButtonEl);
-        }
-      }
-
-      childEl.appendChild(contentEl);
-
-      if (collectionConfig.detail.drag) {
-        childEl.setAttribute('draggable', 'true');
-        childEl.addEventListener('dragstart', this.eventHandler.eventStartDrag);
-      } // add selection actions
-
-
-      if (collectionConfig.detail.select) {
-        childEl.addEventListener('click', this.eventHandler.eventClickItem);
-      }
-    } // add the key ids for selection
-
-
-    textEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-    textEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-    const displayText = this.view.renderDisplayForItemInNamedCollection(textEl, collectionName, item); // add icons
-    // add modifiers for patient state
-
-    if (collectionConfig.modifiers) {
-      const modifier = this.view.getModifierForItemInNamedCollection(collectionName, item);
-      const secondModifier = this.view.getSecondaryModifierForItemInNamedCollection(collectionName, item);
-
-      switch (modifier) {
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.normal:
-          {
-            avLogger(`view ${this.view.getName()}: normal item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.normal);
-
-            if (collectionConfig.icons && collectionConfig.icons.normal) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.normal);
-              iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-              iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-              textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.warning:
-                {
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.normal, false);
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
-
-                  if (collectionConfig.icons && collectionConfig.icons.warning) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
-                    iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-                    iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.active:
-                {
-                  if (collectionConfig.icons && collectionConfig.icons.active) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
-                    iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-                    iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-                    textEl.appendChild(iconEl);
-                  }
-                }
-            }
-
-            break;
-          }
-
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.active:
-          {
-            avLogger(`view ${this.view.getName()}: active item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.active);
-
-            if (collectionConfig.icons && collectionConfig.icons.active) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
-              iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-              iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-              textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.warning:
-                {
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.active, false);
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
-
-                  if (collectionConfig.icons && collectionConfig.icons.warning) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
-                    iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-                    iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-            }
-
-            break;
-          }
-
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.inactive:
-          {
-            avLogger(`view ${this.view.getName()}: inactive item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.inactive);
-
-            if (collectionConfig.icons && collectionConfig.icons.inactive) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.inactive);
-              iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-              iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-              textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.warning:
-                {
-                  if (collectionConfig.icons && collectionConfig.icons.warning) {
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.inactive, false);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
-                    iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-                    iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.active:
-                {
-                  if (collectionConfig.icons && collectionConfig.icons.active) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
-                    iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
-                    iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-            }
-
-            break;
-          }
-      }
-    }
-
-    return childEl;
-  }
-
-  setDisplayElementsForCollectionInContainer(containerEl, collectionName, newState) {
-    avLogger(`view ${this.view.getName()}: creating carousel results`);
-    avLogger(newState); // remove the previous items from list
-
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAllChildren(containerEl); // need to break the items up by row, and the last row is active (assumes increasing time order)
-
-    const numberOfResults = newState.length; // number of items per row depends on view port
-
-    let itemsPerRow = this.config.itemsPerRow.xlarge;
-
-    if (window.innerWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_LARGE) {
-      itemsPerRow = this.config.itemsPerRow.large;
-    }
-
-    if (window.innerWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_MEDIUM) {
-      itemsPerRow = this.config.itemsPerRow.medium;
-    }
-
-    if (window.innerWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.SCREEN_WIDTH_SMALL) {
-      itemsPerRow = this.config.itemsPerRow.small;
-    }
-
-    const numberOfRows = Math.ceil(numberOfResults / itemsPerRow);
-    avLogger(`view ${this.view.getName()}: creating carousel with number of results per row of ${itemsPerRow} with rows ${numberOfRows}`);
-
-    for (let rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
-      // create the row
-      let rowContainerEl = document.createElement(this.config.rowContainer.elementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowContainerEl, this.config.rowContainer.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowContainerEl, this.config.rowContainer.elementAttributes); //browserUtil.addAttributes(rowContainerEl,[{name:'style',value:'display:block'}]);
-
-      let rowEl = document.createElement(this.config.row.elementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowEl, this.config.row.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowEl, this.config.row.elementAttributes);
-      rowContainerEl.appendChild(rowEl); // if this the active row?
-
-      if (rowIndex === 0 && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.RowPosition.first || rowIndex === numberOfRows - 1 && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.RowPosition.last) {
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowContainerEl, this.config.activeRow.elementClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowContainerEl, this.config.activeRow.elementAttributes);
-      }
-
-      let itemIndex = rowIndex * itemsPerRow;
-
-      while (itemIndex < (rowIndex + 1) * itemsPerRow && itemIndex < numberOfResults) {
-        avLogger(`rowIndex ${rowIndex} item index ${itemIndex}`);
-        const item = newState[itemIndex];
-        let itemContainerEl = rowEl;
-
-        if (this.config.multipleItemsPerRowContainer) {
-          itemContainerEl = document.createElement(this.config.multipleItemsPerRowContainer.elementType);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.elementClasses);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(itemContainerEl, this.config.multipleItemsPerRowContainer.elementAttributes);
-          rowEl.appendChild(itemContainerEl);
-        }
-
-        const itemEl = this.createDisplayElementForCollectionItem(collectionName, item);
-        itemContainerEl.appendChild(itemEl);
-        itemIndex++;
-      }
-
-      containerEl.appendChild(rowContainerEl);
-    }
-
-    $('[data-toggle="tooltip"]').tooltip();
-    this.lastRenderedContainer = containerEl;
-    this.lastRenderedCollectionName = collectionName;
-    this.lastRenderedCollection = newState;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js":
-/*!**********************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js ***!
-  \**********************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CarouselViewRendererUsingContext": () => (/* binding */ CarouselViewRendererUsingContext)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../context/ContextualInformationHelper */ "../../ui-framework/dist/framework/ui/context/ContextualInformationHelper.js");
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('carousel-renderer');
-class CarouselViewRendererUsingContext {
-  constructor(view, eventHandler, config) {
-    this.lastRenderedContainer = null;
-    this.lastRenderedCollectionName = null;
-    this.lastRenderedCollection = null;
-    this.previousWindowWidth = 0;
-    this.view = view;
-    this.eventHandler = eventHandler;
-    this.config = config;
-  }
-
-  onDocumentLoaded() {
-    // we need to track window resizing
-    this.previousWindowWidth = window.innerWidth;
-    window.addEventListener('resize', event => {
-      const newWindowWidth = window.innerWidth;
-      let reRenderRequired = false;
-
-      if (newWindowWidth < this.previousWindowWidth) {
-        if (this.previousWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_LARGE) {
-          if (newWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_LARGE) {
-            // need to re-render carousel
-            reRenderRequired = true;
-            logger(`window reduced and is now smaller or equal to large`);
-          }
-        }
-
-        if (this.previousWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_MEDIUM) {
-          if (newWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_MEDIUM) {
-            // need to re-render carousel
-            reRenderRequired = true;
-            logger(`window reduced and is now smaller or equal to medium`);
-          }
-        }
-
-        if (this.previousWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_SMALL) {
-          if (newWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_SMALL) {
-            // need to re-render carousel
-            reRenderRequired = true;
-            logger(`window reduced and is now smaller or equal to small`);
-          }
-        }
-      } else {
-        if (this.previousWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_SMALL) {
-          if (newWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_SMALL) {
-            // need to re-render carousel
-            logger(`window increased and is now larger than small`);
-            reRenderRequired = true;
-          }
-        }
-
-        if (this.previousWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_MEDIUM) {
-          if (newWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_MEDIUM) {
-            logger(`window increased and is now larger than medium`); // need to re-render carousel
-
-            reRenderRequired = true;
-          }
-        }
-
-        if (this.previousWindowWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_LARGE) {
-          if (newWindowWidth > _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_LARGE) {
-            logger(`window increased and is now larger than large`); // need to re-render carousel
-
-            reRenderRequired = true;
-          }
-        }
-      }
-
-      this.previousWindowWidth = newWindowWidth;
-
-      if (this.lastRenderedContainer && this.lastRenderedCollection && this.lastRenderedCollectionName && reRenderRequired) {
-        this.setDisplayElementsForCollectionInContainer(this.lastRenderedContainer, this.lastRenderedCollectionName, this.lastRenderedCollection);
-      }
-    });
-  }
-
-  createDisplayElementForCollectionItem(collectionName, item) {
-    const canDeleteItem = this.view.hasPermissionToDeleteItemInNamedCollection(collectionName, item);
-    logger(`view ${this.view.getName()}: creating carousel item`);
-    logger(item);
-    const collectionConfig = this.view.getCollectionUIConfig();
-    let childEl = document.createElement(collectionConfig.resultsElementType);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.resultsClasses);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(childEl, collectionConfig.resultsElementAttributes);
-
-    if (collectionConfig.detail.background) {
-      let backgroundEl = document.createElement(collectionConfig.detail.background.elementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(backgroundEl, collectionConfig.detail.background.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(backgroundEl, collectionConfig.detail.background.elementAttributes);
-      childEl.appendChild(backgroundEl);
-      this.view.renderBackgroundForItemInNamedCollection(backgroundEl, collectionName, item);
-    } // the content may be structured
-
-
-    let textEl = childEl;
-
-    if (collectionConfig.detail.containerClasses) {
-      let contentEl = document.createElement('div');
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, collectionConfig.detail.containerClasses);
-      textEl = document.createElement(collectionConfig.detail.textElementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(textEl, collectionConfig.detail.textElementClasses);
-      contentEl.appendChild(textEl);
-
-      if (collectionConfig.extraActions || collectionConfig.detail.delete) {
-        let buttonsEl = document.createElement(this.config.actionContainer.elementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(buttonsEl, this.config.actionContainer.elementClasses);
-        contentEl.appendChild(buttonsEl);
-
-        if (collectionConfig.extraActions) {
-          collectionConfig.extraActions.forEach(extraAction => {
-            const hasPermissionForAction = this.view.hasPermissionToActionItemInNamedCollection(extraAction.name, collectionName, item);
-
-            if (hasPermissionForAction) {
-              let action = document.createElement('button');
-              action.setAttribute('type', 'button');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(action, extraAction.buttonClasses);
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(action, extraAction.attributes);
-
-              if (extraAction.buttonText) {
-                action.innerHTML = extraAction.buttonText;
-              }
-
-              if (extraAction.iconClasses) {
-                let iconEl = document.createElement('i');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, extraAction.iconClasses);
-                iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
-                action.appendChild(iconEl);
-              }
-
-              action.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
-              action.addEventListener('click', event => {
-                event.preventDefault();
-                event.stopPropagation();
-                this.eventHandler.eventActionClicked(event);
-              });
-              buttonsEl.appendChild(action);
-            }
-          });
-        }
-
-        if (collectionConfig.detail.delete && collectionConfig && canDeleteItem) {
-          let deleteButtonEl = document.createElement('button');
-          deleteButtonEl.setAttribute('type', 'button');
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(deleteButtonEl, collectionConfig.detail.delete.buttonClasses);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(deleteButtonEl, collectionConfig.detail.delete.attributes);
-
-          if (collectionConfig.detail.delete.buttonText) {
-            deleteButtonEl.innerHTML = collectionConfig.detail.delete.buttonText;
-          }
-
-          if (collectionConfig.detail.delete.iconClasses) {
-            let iconEl = document.createElement('i');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.detail.delete.iconClasses);
-            deleteButtonEl.appendChild(iconEl);
-          }
-
-          deleteButtonEl.addEventListener('click', event => {
-            event.preventDefault();
-            event.stopPropagation();
-            this.eventHandler.eventDeleteClickItem(event);
-          });
-          buttonsEl.appendChild(deleteButtonEl);
-        }
-      }
-
-      childEl.appendChild(contentEl);
-
-      if (collectionConfig.detail.drag) {
-        childEl.setAttribute('draggable', 'true');
-        childEl.addEventListener('dragstart', this.eventHandler.eventStartDrag);
-      } // add selection actions
-
-
-      if (collectionConfig.detail.select) {
-        childEl.addEventListener('click', this.eventHandler.eventClickItem);
-      }
-    }
-
-    const displayText = this.view.renderDisplayForItemInNamedCollection(textEl, collectionName, item); // add icons
-    // add modifiers for patient state
-
-    if (collectionConfig.modifiers) {
-      const modifier = this.view.getModifierForItemInNamedCollection(collectionName, item);
-      const secondModifier = this.view.getSecondaryModifierForItemInNamedCollection(collectionName, item);
-
-      switch (modifier) {
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal:
-          {
-            logger(`view ${this.view.getName()}: normal item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.normal);
-
-            if (collectionConfig.icons && collectionConfig.icons.normal) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.normal);
-              textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning:
-                {
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.normal, false);
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
-
-                  if (collectionConfig.icons && collectionConfig.icons.warning) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active:
-                {
-                  if (collectionConfig.icons && collectionConfig.icons.active) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
-                    textEl.appendChild(iconEl);
-                  }
-                }
-            }
-
-            break;
-          }
-
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active:
-          {
-            logger(`view ${this.view.getName()}: active item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.active);
-
-            if (collectionConfig.icons && collectionConfig.icons.active) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
-              textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning:
-                {
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.active, false);
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
-
-                  if (collectionConfig.icons && collectionConfig.icons.warning) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-            }
-
-            break;
-          }
-
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.inactive:
-          {
-            logger(`view ${this.view.getName()}: inactive item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.inactive);
-
-            if (collectionConfig.icons && collectionConfig.icons.inactive) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.inactive);
-              textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning:
-                {
-                  if (collectionConfig.icons && collectionConfig.icons.warning) {
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.inactive, false);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active:
-                {
-                  if (collectionConfig.icons && collectionConfig.icons.active) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-            }
-
-            break;
-          }
-      }
-    }
-
-    return childEl;
-  }
-
-  setDisplayElementsForCollectionInContainer(containerEl, collectionName, newState) {
-    logger(`view ${this.view.getName()}: creating carousel results`);
-    logger(newState); // remove the previous items from list
-
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeAllChildren(containerEl); // need to break the items up by row, and the last row is active (assumes increasing time order)
-
-    const numberOfResults = newState.length; // number of items per row depends on view port
-
-    let itemsPerRow = this.config.itemsPerRow.xlarge;
-
-    if (window.innerWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_LARGE) {
-      itemsPerRow = this.config.itemsPerRow.large;
-    }
-
-    if (window.innerWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_MEDIUM) {
-      itemsPerRow = this.config.itemsPerRow.medium;
-    }
-
-    if (window.innerWidth <= _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.SCREEN_WIDTH_SMALL) {
-      itemsPerRow = this.config.itemsPerRow.small;
-    }
-
-    const numberOfRows = Math.ceil(numberOfResults / itemsPerRow);
-    logger(`view ${this.view.getName()}: creating carousel with number of results per row of ${itemsPerRow} with rows ${numberOfRows}`);
-
-    for (let rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
-      // create the row
-      let rowContainerEl = document.createElement(this.config.rowContainer.elementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowContainerEl, this.config.rowContainer.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowContainerEl, this.config.rowContainer.elementAttributes); //browserUtil.addAttributes(rowContainerEl,[{name:'style',value:'display:block'}]);
-
-      let rowEl = document.createElement(this.config.row.elementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowEl, this.config.row.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowEl, this.config.row.elementAttributes);
-      rowContainerEl.appendChild(rowEl); // if this the active row?
-
-      if (rowIndex === 0 && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.RowPosition.first || rowIndex === numberOfRows - 1 && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.RowPosition.last) {
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowContainerEl, this.config.activeRow.elementClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowContainerEl, this.config.activeRow.elementAttributes);
-      }
-
-      let itemIndex = rowIndex * itemsPerRow;
-
-      while (itemIndex < (rowIndex + 1) * itemsPerRow && itemIndex < numberOfResults) {
-        logger(`rowIndex ${rowIndex} item index ${itemIndex}`);
-        const item = newState[itemIndex];
-        let itemContainerEl = rowEl;
-
-        if (this.config.multipleItemsPerRowContainer) {
-          itemContainerEl = document.createElement(this.config.multipleItemsPerRowContainer.elementType);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.elementClasses);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(itemContainerEl, this.config.multipleItemsPerRowContainer.elementAttributes);
-          rowEl.appendChild(itemContainerEl);
-        }
-
-        const itemEl = this.createDisplayElementForCollectionItem(collectionName, item);
-        itemContainerEl.appendChild(itemEl);
-        _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__.ContextualInformationHelper.getInstance().addContextToElement(this.view.getName(), collectionName, item, itemEl, true, _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__.TogglePlacement.bottom);
-        itemEl.addEventListener('contextmenu', _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__.ContextualInformationHelper.getInstance().handleContextMenu);
-        itemIndex++;
-      }
-
-      containerEl.appendChild(rowContainerEl);
-    }
-
-    $('[data-toggle="tooltip"]').tooltip();
-    this.lastRenderedContainer = containerEl;
-    this.lastRenderedCollectionName = collectionName;
-    this.lastRenderedCollection = newState;
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/view/renderer/FormDetailViewRenderer.js":
-/*!************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/renderer/FormDetailViewRenderer.js ***!
-  \************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FormDetailViewRenderer": () => (/* binding */ FormDetailViewRenderer)
-/* harmony export */ });
-/* harmony import */ var _form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../form/BasicFormImplementation */ "../../ui-framework/dist/framework/ui/form/BasicFormImplementation.js");
-/* harmony import */ var _form_FormListener__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../form/FormListener */ "../../ui-framework/dist/framework/ui/form/FormListener.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('form-detail-view-renderer');
-class FormDetailViewRenderer {
-  constructor(containerId, objDef, permissionChecker) {
-    this.form = null;
-    this.containerId = containerId;
-    this.objDef = objDef;
-    this.currentItem = {};
-    this.isNewItem = false;
-    this.forwarder = null;
-    this.view = null;
-    this.permissionChecker = permissionChecker;
-  }
-
-  hasActionPermission(actionName, from, item) {
-    throw new Error("Method not implemented.");
-  }
-
-  setEventForwarder(forwarder) {
-    this.forwarder = forwarder;
-  }
-
-  setView(view) {
-    this.view = view;
-  }
-
-  onDocumentLoaded() {
-    this.form = new _form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_0__.BasicFormImplementation(this.containerId, this.objDef);
-    this.form.addFormListener(this);
-  }
-
-  reset() {
-    if (this.form) this.form.reset();
-  }
-
-  initialise(displayOrder, hasDeleteButton, hideModifierFields) {
-    if (this.form) this.form.initialise(displayOrder, hasDeleteButton, hideModifierFields);
-  }
-
-  displayItemReadonly(dataObject) {
-    this.isNewItem = false;
-    if (this.form) this.form.displayOnly(dataObject);
-  }
-
-  getName() {
-    return this.objDef.displayName;
-  }
-
-  setContainedBy(container) {
-    throw new Error("Method not implemented.");
-  }
-
-  addEventListener(listener) {
-    throw new Error("Method not implemented.");
-  }
-
-  hasChanged() {
-    let result = false;
-    if (this.form) result = this.form.hasChanged();
-    return result;
-  }
-
-  getUIConfig() {
-    throw new Error("Method not implemented.");
-  }
-
-  getDataSourceKeyId() {
-    throw new Error("Method not implemented.");
-  }
-
-  clearDisplay() {
-    this.isNewItem = false;
-    if (this.form) this.form.reset();
-  }
-
-  clearReadOnly() {
-    if (this.form) this.form.clearReadOnly();
-  }
-
-  setReadOnly() {
-    if (this.form) this.form.setReadOnly();
-  }
-
-  isReadOnly() {
-    let result = false;
-    if (this.form) result = this.form.isReadOnly();
-    return result;
-  }
-
-  createItem() {
-    var _a;
-
-    this.currentItem = {};
-    logger(`Creating new item with form ${(_a = this.form) === null || _a === void 0 ? void 0 : _a.getId()}`);
-
-    if (this.form) {
-      this.isNewItem = true;
-      this.currentItem = this.form.startCreateNew();
-    }
-
-    $('[data-toggle="tooltip"]').tooltip();
-    return this.currentItem;
-  }
-
-  displayItem(dataObj) {
-    this.currentItem = dataObj;
-    this.isNewItem = false;
-
-    if (this.hasPermissionToUpdateItem(dataObj)) {
-      if (this.form) this.form.startUpdate(dataObj);
-    } else {
-      if (this.form) this.form.displayOnly(dataObj);
-    }
-
-    $('[data-toggle="tooltip"]').tooltip();
-  }
-
-  hidden() {
-    if (this.form) this.form.setIsVisible(false);
-  }
-
-  show() {
-    if (this.form) this.form.setIsVisible(true);
-  }
-
-  render() {
-    this.displayItem(this.currentItem);
-    this.show();
-  }
-
-  hasPermissionToDeleteItem(item) {
-    return this.permissionChecker.hasPermissionToDeleteItem(item);
-  }
-
-  hasPermissionToUpdateItem(item) {
-    return this.permissionChecker.hasPermissionToUpdateItem(item);
-  }
-
-  getForm() {
-    return this.form;
-  }
-
-  handleActionItem(actionName, selectedItem) {}
-
-  isDisplayingItem(dataObj) {
-    let result = false;
-
-    if (this.currentItem) {
-      if (this.form) {
-        result = this.form.isDisplayingItem(dataObj);
-      }
-    }
-
-    return result;
-  }
-
-  formChanged(event, formValues) {
-    var _a; // catch form events for user leaving the form
-
-
-    switch (event.eventType) {
-      case _form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.CANCELLING:
-        {
-          logger(`Form is cancelling`);
-          break;
-        }
-
-      case _form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.CANCELLING_ABORTED:
-        {
-          logger(`Form is cancelling - aborted`);
-          break;
-        }
-
-      case _form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.CANCELLED:
-        {
-          logger(`Form is cancelled - resetting`);
-          this.currentItem = formValues;
-          if (this.forwarder && this.view) this.forwarder.cancelled(this.view, this.currentItem);
-          break;
-        }
-
-      case _form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.DELETING:
-        {
-          logger(`Form is deleting`);
-          break;
-        }
-
-      case _form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.DELETE_ABORTED:
-        {
-          logger(`Form is deleting - aborted`);
-          break;
-        }
-
-      case _form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.DELETED:
-        {
-          logger(`Form is deleted - resetting`);
-          this.currentItem = formValues;
-          if (this.forwarder && this.view) this.forwarder.deletedItem(this.view, this.currentItem); // user is deleting the object, will become invisible
-
-          break;
-        }
-
-      case _form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.SAVE_ABORTED:
-        {
-          logger(`Form save cancelled`);
-          break;
-        }
-
-      case _form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.SAVED:
-        {
-          logger(`Form is saved with data`);
-
-          if (this.form) {
-            let formattedObj = (_a = this.form) === null || _a === void 0 ? void 0 : _a.getFormattedDataObject();
-
-            if (this.isNewItem) {
-              if (this.forwarder && this.view) this.forwarder.saveNewItem(this.view, formattedObj);
-            } else {
-              if (this.forwarder && this.view) this.forwarder.updateItem(this.view, formattedObj);
-            }
-
-            this.isNewItem = false;
-          }
-
-          break;
-        }
-
-      case _form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.SAVING:
-        {
-          logger(`Form is saving`);
-          break;
-        }
-    }
-
-    return false;
-  }
-
-  getItemDescription(from, item) {
-    return "";
-  }
-
-  getItemId(from, item) {
-    return "";
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/view/renderer/ListViewRenderer.js":
-/*!******************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/renderer/ListViewRenderer.js ***!
-  \******************************************************************************/
+/***/ "./src/framework/ui/view/renderer/ListViewRenderer.ts":
+/*!************************************************************!*\
+  !*** ./src/framework/ui/view/renderer/ListViewRenderer.ts ***!
+  \************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -14380,9 +8722,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ListViewRenderer": () => (/* binding */ ListViewRenderer)
 /* harmony export */ });
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
+/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "./src/framework/util/BrowserUtil.ts");
+/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
 
 
@@ -14694,638 +9036,10 @@ class ListViewRenderer {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js":
-/*!******************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js ***!
-  \******************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ListViewRendererUsingContext": () => (/* binding */ ListViewRendererUsingContext)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../context/ContextualInformationHelper */ "../../ui-framework/dist/framework/ui/context/ContextualInformationHelper.js");
-
-
-
-
-const avLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('list-view-renderer-with-context');
-class ListViewRendererUsingContext {
-  constructor(view, eventHandler) {
-    this.view = view;
-    this.eventHandler = eventHandler;
-  }
-
-  createDisplayElementForCollectionItem(collectionName, item) {
-    const canDeleteItem = this.view.hasPermissionToDeleteItemInNamedCollection(collectionName, item);
-    const uiConfig = this.view.getCollectionUIConfig();
-    avLogger(`view ${this.view.getName()}: creating List item`);
-    avLogger(item);
-    const resultDataKeyId = this.view.getIdForItemInNamedCollection(collectionName, item);
-    let childEl = document.createElement(uiConfig.resultsElementType);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.resultsClasses);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(childEl, uiConfig.resultsElementAttributes); // the content may be structured
-
-    let textEl = childEl;
-
-    if (uiConfig.detail.containerClasses) {
-      let contentEl = document.createElement('div');
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, uiConfig.detail.containerClasses);
-      textEl = document.createElement(uiConfig.detail.textElementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(textEl, uiConfig.detail.textElementClasses);
-      contentEl.appendChild(textEl);
-
-      if (uiConfig.detail.background) {
-        let imgEl = document.createElement(uiConfig.detail.background.elementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.elementClasses);
-        imgEl.setAttribute('src', this.view.getBackgroundImageForItemInNamedCollection(collectionName, item));
-        childEl.appendChild(imgEl);
-      }
-
-      let buttonsEl = document.createElement('div');
-      contentEl.appendChild(buttonsEl);
-
-      if (uiConfig.detail.badge) {
-        const badgeValue = this.view.getBadgeValueForItemInNamedCollection(collectionName, item);
-
-        if (badgeValue > 0) {
-          let badgeEl = document.createElement(uiConfig.detail.badge.elementType);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.elementClasses);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(badgeEl, uiConfig.detail.badge.elementAttributes);
-          buttonsEl.appendChild(badgeEl);
-          badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
-        }
-      }
-
-      if (uiConfig.extraActions) {
-        uiConfig.extraActions.forEach(extraAction => {
-          const hasPermissionForAction = this.view.hasPermissionToActionItemInNamedCollection(extraAction.name, collectionName, item);
-
-          if (hasPermissionForAction) {
-            let action = document.createElement('button');
-            action.setAttribute('type', 'button');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(action, extraAction.buttonClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(action, extraAction.attributes);
-
-            if (extraAction.buttonText) {
-              action.innerHTML = extraAction.buttonText;
-            }
-
-            if (extraAction.iconClasses) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, extraAction.iconClasses);
-              iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
-              action.appendChild(iconEl);
-            }
-
-            action.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
-            action.addEventListener('click', event => {
-              event.preventDefault();
-              event.stopPropagation();
-              this.eventHandler.eventActionClicked(event);
-            });
-            buttonsEl.appendChild(action);
-          }
-        });
-      }
-
-      if (uiConfig.detail.delete && canDeleteItem) {
-        let deleteButtonEl = document.createElement('button');
-        deleteButtonEl.setAttribute('type', 'button');
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.buttonClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(deleteButtonEl, uiConfig.detail.delete.attributes);
-
-        if (uiConfig.detail.delete.buttonText) {
-          deleteButtonEl.innerHTML = uiConfig.detail.delete.buttonText;
-        }
-
-        if (uiConfig.detail.delete.iconClasses) {
-          let iconEl = document.createElement('i');
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.detail.delete.iconClasses);
-          deleteButtonEl.appendChild(iconEl);
-        }
-
-        deleteButtonEl.addEventListener('click', event => {
-          event.preventDefault();
-          event.stopPropagation();
-          this.eventHandler.eventDeleteClickItem(event);
-        });
-        buttonsEl.appendChild(deleteButtonEl);
-      }
-
-      childEl.appendChild(contentEl);
-
-      if (uiConfig.detail.drag) {
-        childEl.setAttribute('draggable', 'true');
-        childEl.addEventListener('dragstart', this.eventHandler.eventStartDrag);
-      } // add selection actions
-
-
-      if (uiConfig.detail.select) {
-        childEl.addEventListener('click', this.eventHandler.eventClickItem);
-      }
-    } // add the key ids for selection
-
-
-    this.view.renderDisplayForItemInNamedCollection(textEl, collectionName, item); // add icons
-
-    if (uiConfig.detail.icons) {
-      const icons = uiConfig.detail.icons(collectionName, item);
-      icons.forEach(icon => {
-        let iconEl = document.createElement('i');
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, icon);
-        textEl.appendChild(iconEl);
-      });
-    } // add modifiers for patient state
-
-
-    if (uiConfig.modifiers) {
-      const modifier = this.view.getModifierForItemInNamedCollection(collectionName, item);
-      const secondModifier = this.view.getSecondaryModifierForItemInNamedCollection(collectionName, item);
-
-      switch (modifier) {
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal:
-          {
-            avLogger(`view ${this.view.getName()}: normal item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.normal);
-
-            if (uiConfig.icons && uiConfig.icons.normal) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.normal);
-              textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning:
-                {
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.normal, false);
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.warning, true);
-
-                  if (uiConfig.icons && uiConfig.icons.warning) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active:
-                {
-                  if (uiConfig.icons && uiConfig.icons.active) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
-                    textEl.appendChild(iconEl);
-                  }
-                }
-            }
-
-            break;
-          }
-
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active:
-          {
-            avLogger(`view ${this.view.getName()}: active item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.active);
-
-            if (uiConfig.icons && uiConfig.icons.active) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
-              textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning:
-                {
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.active, false);
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.warning, true);
-
-                  if (uiConfig.icons && uiConfig.icons.warning) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-            }
-
-            break;
-          }
-
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.inactive:
-          {
-            avLogger(`view ${this.view.getName()}: inactive item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.inactive);
-
-            if (uiConfig.icons && uiConfig.icons.inactive) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.inactive);
-              textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning:
-                {
-                  if (uiConfig.icons && uiConfig.icons.warning) {
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.inactive, false);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.warning, true);
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active:
-                {
-                  if (uiConfig.icons && uiConfig.icons.active) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
-                    textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-            }
-
-            break;
-          }
-      }
-    }
-
-    return childEl;
-  }
-
-  setDisplayElementsForCollectionInContainer(containerEl, collectionName, newState) {
-    avLogger(`view ${this.view.getName()}: creating Results`);
-    avLogger(newState); // remove the previous items from list
-
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeAllChildren(containerEl); // add the new children
-
-    newState.map((item, index) => {
-      const childEl = this.createDisplayElementForCollectionItem(collectionName, item); // add draggable actions
-
-      avLogger(`view ${this.view.getName()}:  Adding child ${this.view.getIdForItemInNamedCollection(collectionName, item)}`);
-      containerEl.appendChild(childEl);
-      _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__.ContextualInformationHelper.getInstance().addContextToElement(this.view.getName(), collectionName, item, childEl, true);
-      childEl.addEventListener('contextmenu', _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__.ContextualInformationHelper.getInstance().handleContextMenu);
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-  }
-
-  onDocumentLoaded() {}
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js":
-/*!*********************************************************************************************!*\
-  !*** ../../ui-framework/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js ***!
-  \*********************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "TabularViewRendererUsingContext": () => (/* binding */ TabularViewRendererUsingContext)
-/* harmony export */ });
-/* harmony import */ var _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "../../ui-framework/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "../../ui-framework/node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../context/ContextualInformationHelper */ "../../ui-framework/dist/framework/ui/context/ContextualInformationHelper.js");
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('tabular-view-renderer-with-context');
-class TabularViewRendererUsingContext {
-  constructor(view, eventHandler, tableConfig) {
-    this.view = view;
-    this.eventHandler = eventHandler;
-    this.tableConfig = tableConfig;
-  }
-
-  createDisplayElementForCollectionItem(collectionName, item) {
-    const canDeleteItem = this.view.hasPermissionToDeleteItemInNamedCollection(collectionName, item);
-    const uiConfig = this.view.getCollectionUIConfig();
-    logger(`view ${this.view.getName()}: creating table row item`);
-    logger(item);
-    const resultDataKeyId = this.view.getIdForItemInNamedCollection(collectionName, item);
-    let tableRowEl = document.createElement(uiConfig.resultsElementType);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.resultsClasses);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableRowEl, uiConfig.resultsElementAttributes); // we need to build the row from the displayed item values using the renderer if present
-
-    this.tableConfig.columns.forEach((column, index) => {
-      const fieldValue = column.getValue(column, item[column.field.id]);
-      let tdEl = document.createElement('td');
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tdEl, column.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, column.elementAttributes);
-
-      if (index + 1 === this.tableConfig.itemDetailColumn) {
-        // this column is different and can have many components
-        // the content may be structured
-        if (uiConfig.detail.containerClasses) {
-          let contentEl = document.createElement('div');
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(contentEl, uiConfig.detail.containerClasses);
-          let textEl = document.createElement(uiConfig.detail.textElementType);
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(textEl, uiConfig.detail.textElementClasses); // add the key ids for selection
-
-          this.view.renderDisplayForItemInNamedCollection(textEl, collectionName, item);
-          contentEl.appendChild(textEl);
-
-          if (uiConfig.detail.background) {
-            let imgEl = document.createElement(uiConfig.detail.background.elementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.elementClasses);
-            imgEl.setAttribute('src', this.view.getBackgroundImageForItemInNamedCollection(collectionName, item));
-            contentEl.appendChild(imgEl);
-          }
-
-          if (uiConfig.detail.badge) {
-            const badgeValue = this.view.getBadgeValueForItemInNamedCollection(collectionName, item);
-
-            if (badgeValue > 0) {
-              let badgeEl = document.createElement(uiConfig.detail.badge.elementType);
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.elementClasses);
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(badgeEl, uiConfig.detail.badge.elementAttributes);
-              contentEl.appendChild(badgeEl);
-              badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
-            }
-          } // add icons
-
-
-          if (uiConfig.detail.icons) {
-            const icons = uiConfig.detail.icons(collectionName, item);
-            icons.forEach(icon => {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, icon);
-              contentEl.appendChild(iconEl);
-            });
-          }
-
-          tdEl.appendChild(contentEl);
-        }
-      } else {
-        tdEl.innerHTML = fieldValue;
-      }
-
-      tableRowEl.appendChild(tdEl);
-    }); // we add an extra column for any actions or the delete function
-
-    if (this.tableConfig.actionColumn) {
-      // create the extra table column
-      let tdEl = document.createElement('td');
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tdEl, this.tableConfig.actionColumn.element.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, this.tableConfig.actionColumn.element.elementAttributes);
-
-      if (uiConfig.extraActions) {
-        uiConfig.extraActions.forEach(extraAction => {
-          const hasPermissionForAction = this.view.hasPermissionToActionItemInNamedCollection(extraAction.name, collectionName, item);
-
-          if (hasPermissionForAction) {
-            let action = document.createElement('button');
-            action.setAttribute('type', 'button');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(action, extraAction.buttonClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(action, extraAction.attributes);
-
-            if (extraAction.buttonText) {
-              action.innerHTML = extraAction.buttonText;
-            }
-
-            if (extraAction.iconClasses) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, extraAction.iconClasses);
-              iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
-              action.appendChild(iconEl);
-            }
-
-            action.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
-            action.addEventListener('click', event => {
-              event.preventDefault();
-              event.stopPropagation();
-              this.eventHandler.eventActionClicked(event);
-            });
-            tdEl.appendChild(action);
-          }
-        });
-      }
-
-      if (uiConfig.detail.delete && canDeleteItem) {
-        let deleteButtonEl = document.createElement('button');
-        deleteButtonEl.setAttribute('type', 'button');
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.buttonClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(deleteButtonEl, uiConfig.detail.delete.attributes);
-
-        if (uiConfig.detail.delete.buttonText) {
-          deleteButtonEl.innerHTML = uiConfig.detail.delete.buttonText;
-        }
-
-        if (uiConfig.detail.delete.iconClasses) {
-          let iconEl = document.createElement('i');
-          _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.detail.delete.iconClasses);
-          deleteButtonEl.appendChild(iconEl);
-        }
-
-        deleteButtonEl.addEventListener('click', event => {
-          event.preventDefault();
-          event.stopPropagation();
-          this.eventHandler.eventDeleteClickItem(event);
-        });
-        tdEl.appendChild(deleteButtonEl);
-      }
-
-      tableRowEl.appendChild(tdEl);
-
-      if (uiConfig.detail.drag) {
-        tableRowEl.setAttribute('draggable', 'true');
-        tableRowEl.addEventListener('dragstart', this.eventHandler.eventStartDrag);
-      } // add selection actions
-
-
-      if (uiConfig.detail.select) {
-        tableRowEl.addEventListener('click', this.eventHandler.eventClickItem);
-      }
-    } // add modifiers for patient state
-
-
-    if (uiConfig.modifiers) {
-      const modifier = this.view.getModifierForItemInNamedCollection(collectionName, item);
-      const secondModifier = this.view.getSecondaryModifierForItemInNamedCollection(collectionName, item);
-
-      switch (modifier) {
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.normal:
-          {
-            logger(`view ${this.view.getName()}: normal item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.normal);
-
-            if (uiConfig.icons && uiConfig.icons.normal) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.normal); //textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.warning:
-                {
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.normal, false);
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.warning, true);
-
-                  if (uiConfig.icons && uiConfig.icons.warning) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning); //textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.active:
-                {
-                  if (uiConfig.icons && uiConfig.icons.active) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.active); //textEl.appendChild(iconEl);
-                  }
-                }
-            }
-
-            break;
-          }
-
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.active:
-          {
-            logger(`view ${this.view.getName()}: active item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.active);
-
-            if (uiConfig.icons && uiConfig.icons.active) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.active); //textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.warning:
-                {
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.active, false);
-                  _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.warning, true);
-
-                  if (uiConfig.icons && uiConfig.icons.warning) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning); //textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-            }
-
-            break;
-          }
-
-        case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.inactive:
-          {
-            logger(`view ${this.view.getName()}: inactive item`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.inactive);
-
-            if (uiConfig.icons && uiConfig.icons.inactive) {
-              let iconEl = document.createElement('i');
-              _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.inactive); //textEl.appendChild(iconEl);
-            }
-
-            switch (secondModifier) {
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.warning:
-                {
-                  if (uiConfig.icons && uiConfig.icons.warning) {
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.inactive, false);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.warning, true);
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning); //textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-
-              case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.active:
-                {
-                  if (uiConfig.icons && uiConfig.icons.active) {
-                    let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.active); //textEl.appendChild(iconEl);
-                  }
-
-                  break;
-                }
-            }
-
-            break;
-          }
-      }
-    }
-
-    return tableRowEl;
-  }
-
-  onDocumentLoaded() {}
-
-  setDisplayElementsForCollectionInContainer(containerEl, collectionName, newState) {
-    logger(`view ${this.view.getName()}: creating Results`);
-    logger(newState); // remove the previous items from list
-
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAllChildren(containerEl); // create the table
-
-    let tableEl = document.createElement(this.tableConfig.table.elementType);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableEl, this.tableConfig.table.elementClasses);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableEl, this.tableConfig.table.elementAttributes); // create the headers
-
-    let tableHeaderEl = document.createElement(this.tableConfig.header.elementType);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableHeaderEl, this.tableConfig.header.elementClasses);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableHeaderEl, this.tableConfig.header.elementAttributes); // create the column headers
-
-    this.tableConfig.headerColumns.forEach(header => {
-      let thEl = document.createElement(header.element.elementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(thEl, header.element.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(thEl, header.element.elementAttributes);
-      if (header.element.innerHTML) thEl.innerHTML = header.element.innerHTML;
-      tableHeaderEl.appendChild(thEl);
-    }); // create the action column header (if one)
-
-    if (this.tableConfig.actionColumn) {
-      let thEl = document.createElement(this.tableConfig.actionColumn.element.elementType);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(thEl, this.tableConfig.actionColumn.element.elementClasses);
-      _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(thEl, this.tableConfig.actionColumn.element.elementAttributes);
-      if (this.tableConfig.actionColumn.element.innerHTML) thEl.innerHTML = this.tableConfig.actionColumn.element.innerHTML;
-      tableHeaderEl.appendChild(thEl);
-    }
-
-    tableEl.appendChild(tableHeaderEl); // create the table body
-
-    let tableBodyEl = document.createElement(this.tableConfig.body.elementType);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableBodyEl, this.tableConfig.body.elementClasses);
-    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableBodyEl, this.tableConfig.body.elementAttributes); // add the new children
-
-    newState.map((item, index) => {
-      const childEl = this.createDisplayElementForCollectionItem(collectionName, item); // add draggable actions
-
-      logger(`view ${this.view.getName()}:  Adding child ${this.view.getIdForItemInNamedCollection(collectionName, item)}`);
-      tableBodyEl.appendChild(childEl);
-      _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__.ContextualInformationHelper.getInstance().addContextToElement(this.view.getName(), collectionName, item, childEl, true);
-      childEl.addEventListener('contextmenu', _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__.ContextualInformationHelper.getInstance().handleContextMenu);
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-    tableEl.appendChild(tableBodyEl);
-    containerEl.appendChild(tableEl);
-  }
-
-}
-
-/***/ }),
-
-/***/ "../../ui-framework/dist/framework/util/BrowserUtil.js":
-/*!*************************************************************!*\
-  !*** ../../ui-framework/dist/framework/util/BrowserUtil.js ***!
-  \*************************************************************/
+/***/ "./src/framework/util/BrowserUtil.ts":
+/*!*******************************************!*\
+  !*** ./src/framework/util/BrowserUtil.ts ***!
+  \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15448,10 +9162,10 @@ const browserUtil = new BrowserUtil();
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/framework/util/EqualityFunctions.js":
-/*!*******************************************************************!*\
-  !*** ../../ui-framework/dist/framework/util/EqualityFunctions.js ***!
-  \*******************************************************************/
+/***/ "./src/framework/util/EqualityFunctions.ts":
+/*!*************************************************!*\
+  !*** ./src/framework/util/EqualityFunctions.ts ***!
+  \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15477,253 +9191,258 @@ function isSameRoom(item1, item2) {
 
 /***/ }),
 
-/***/ "../../ui-framework/dist/index.js":
-/*!****************************************!*\
-  !*** ../../ui-framework/dist/index.js ***!
-  \****************************************/
+/***/ "./src/App.tsx":
+/*!*********************!*\
+  !*** ./src/App.tsx ***!
+  \*********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ComparisonType": () => (/* reexport safe */ _framework_CommonTypes__WEBPACK_IMPORTED_MODULE_0__.ComparisonType),
-/* harmony export */   "BasicFieldOperations": () => (/* reexport safe */ _framework_model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__.BasicFieldOperations),
-/* harmony export */   "BasicObjectDefinitionFactory": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.BasicObjectDefinitionFactory),
-/* harmony export */   "FIELD_ModifiedOn": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_ModifiedOn),
-/* harmony export */   "FIELD_CreatedOn": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_CreatedOn),
-/* harmony export */   "FIELD_ID": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_ID),
-/* harmony export */   "FIELD_CreatedBy": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_CreatedBy),
-/* harmony export */   "FIELD_CreatedBy_Desc": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_CreatedBy_Desc),
-/* harmony export */   "FIELD_CreatedOn_Desc": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_CreatedOn_Desc),
-/* harmony export */   "FIELD_ModifiedBy": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_ModifiedBy),
-/* harmony export */   "FIELD_ModifiedBy_Desc": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_ModifiedBy_Desc),
-/* harmony export */   "FIELD_ModifiedOn_Desc": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_ModifiedOn_Desc),
-/* harmony export */   "DataObjectController": () => (/* reexport safe */ _framework_model_DataObjectController__WEBPACK_IMPORTED_MODULE_3__.DataObjectController),
-/* harmony export */   "FieldType": () => (/* reexport safe */ _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__.FieldType),
-/* harmony export */   "ObjectDefinitionRegistry": () => (/* reexport safe */ _framework_model_ObjectDefinitionRegistry__WEBPACK_IMPORTED_MODULE_5__.ObjectDefinitionRegistry),
-/* harmony export */   "ApiUtil": () => (/* reexport safe */ _framework_network_ApiUtil__WEBPACK_IMPORTED_MODULE_6__.ApiUtil),
-/* harmony export */   "DownloadManager": () => (/* reexport safe */ _framework_network_DownloadManager__WEBPACK_IMPORTED_MODULE_7__.DownloadManager),
-/* harmony export */   "RequestType": () => (/* reexport safe */ _framework_network_Types__WEBPACK_IMPORTED_MODULE_8__.RequestType),
-/* harmony export */   "queueType": () => (/* reexport safe */ _framework_network_Types__WEBPACK_IMPORTED_MODULE_8__.queueType),
-/* harmony export */   "NotificationType": () => (/* reexport safe */ _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_9__.NotificationType),
-/* harmony export */   "NotificationManager": () => (/* reexport safe */ _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_9__.NotificationManager),
-/* harmony export */   "SecurityManager": () => (/* reexport safe */ _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_10__.SecurityManager),
-/* harmony export */   "ChatManager": () => (/* reexport safe */ _framework_socket_ChatManager__WEBPACK_IMPORTED_MODULE_11__.ChatManager),
-/* harmony export */   "NotificationController": () => (/* reexport safe */ _framework_socket_NotificationController__WEBPACK_IMPORTED_MODULE_12__.NotificationController),
-/* harmony export */   "SocketManager": () => (/* reexport safe */ _framework_socket_SocketManager__WEBPACK_IMPORTED_MODULE_13__.SocketManager),
-/* harmony export */   "Priority": () => (/* reexport safe */ _framework_socket_Types__WEBPACK_IMPORTED_MODULE_14__.Priority),
-/* harmony export */   "InviteType": () => (/* reexport safe */ _framework_socket_Types__WEBPACK_IMPORTED_MODULE_14__.InviteType),
-/* harmony export */   "AbstractStateManager": () => (/* reexport safe */ _framework_state_AbstractStateManager__WEBPACK_IMPORTED_MODULE_15__.AbstractStateManager),
-/* harmony export */   "AggregateStateManager": () => (/* reexport safe */ _framework_state_AggregateStateManager__WEBPACK_IMPORTED_MODULE_16__.AggregateStateManager),
-/* harmony export */   "AsyncStateManagerWrapper": () => (/* reexport safe */ _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_17__.AsyncStateManagerWrapper),
-/* harmony export */   "BrowserStorageStateManager": () => (/* reexport safe */ _framework_state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_18__.BrowserStorageStateManager),
-/* harmony export */   "EncryptedBrowserStorageStateManager": () => (/* reexport safe */ _framework_state_EncryptedBrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_19__.EncryptedBrowserStorageStateManager),
-/* harmony export */   "EncryptedIndexedDBStateManager": () => (/* reexport safe */ _framework_state_EncryptedIndexedDBStateManager__WEBPACK_IMPORTED_MODULE_20__.EncryptedIndexedDBStateManager),
-/* harmony export */   "GraphQLApiStateManager": () => (/* reexport safe */ _framework_state_GraphQLApiStateManager__WEBPACK_IMPORTED_MODULE_21__.GraphQLApiStateManager),
-/* harmony export */   "IndexedDBStateManager": () => (/* reexport safe */ _framework_state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_22__.IndexedDBStateManager),
-/* harmony export */   "RESTApiStateManager": () => (/* reexport safe */ _framework_state_RESTApiStateManager__WEBPACK_IMPORTED_MODULE_23__.RESTApiStateManager),
-/* harmony export */   "MemoryBufferStateManager": () => (/* reexport safe */ _framework_state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_24__.MemoryBufferStateManager),
-/* harmony export */   "StateManagerType": () => (/* reexport safe */ _framework_state_StateManager__WEBPACK_IMPORTED_MODULE_25__.StateManagerType),
-/* harmony export */   "jsxCreateFragment": () => (/* reexport safe */ _framework_jsx_JSXParser__WEBPACK_IMPORTED_MODULE_26__.jsxCreateFragment),
-/* harmony export */   "jsxCreateElement": () => (/* reexport safe */ _framework_jsx_JSXParser__WEBPACK_IMPORTED_MODULE_26__.jsxCreateElement),
-/* harmony export */   "Modifier": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_27__.Modifier),
-/* harmony export */   "KeyType": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_27__.KeyType),
-/* harmony export */   "SidebarLocation": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_27__.SidebarLocation),
-/* harmony export */   "RowPosition": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_27__.RowPosition),
-/* harmony export */   "AlertType": () => (/* reexport safe */ _framework_ui_alert_AlertListener__WEBPACK_IMPORTED_MODULE_28__.AlertType),
-/* harmony export */   "AlertManager": () => (/* reexport safe */ _framework_ui_alert_AlertManager__WEBPACK_IMPORTED_MODULE_29__.AlertManager),
-/* harmony export */   "BlockedUserView": () => (/* reexport safe */ _framework_ui_chat_BlockedUserView__WEBPACK_IMPORTED_MODULE_30__.BlockedUserView),
-/* harmony export */   "ChatLogDetailView": () => (/* reexport safe */ _framework_ui_chat_ChatLogDetailView__WEBPACK_IMPORTED_MODULE_31__.ChatLogDetailView),
-/* harmony export */   "ChatLogsView": () => (/* reexport safe */ _framework_ui_chat_ChatLogsView__WEBPACK_IMPORTED_MODULE_32__.ChatLogsView),
-/* harmony export */   "ChatRoomsSidebar": () => (/* reexport safe */ _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_33__.ChatRoomsSidebar),
-/* harmony export */   "STATE_NAMES": () => (/* reexport safe */ _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_34__.STATE_NAMES),
-/* harmony export */   "DRAGGABLE": () => (/* reexport safe */ _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_34__.DRAGGABLE),
-/* harmony export */   "VIEW_NAME": () => (/* reexport safe */ _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_34__.VIEW_NAME),
-/* harmony export */   "FavouriteUserView": () => (/* reexport safe */ _framework_ui_chat_FavouriteUserView__WEBPACK_IMPORTED_MODULE_35__.FavouriteUserView),
-/* harmony export */   "UserSearchSidebar": () => (/* reexport safe */ _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_36__.UserSearchSidebar),
-/* harmony export */   "UserSearchView": () => (/* reexport safe */ _framework_ui_chat_UserSearchView__WEBPACK_IMPORTED_MODULE_37__.UserSearchView),
-/* harmony export */   "SidebarViewContainer": () => (/* reexport safe */ _framework_ui_container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_38__.SidebarViewContainer),
-/* harmony export */   "ContextualInformationHelper": () => (/* reexport safe */ _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_39__.ContextualInformationHelper),
-/* harmony export */   "UIFieldType": () => (/* reexport safe */ _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_40__.UIFieldType),
-/* harmony export */   "defaultGetValue": () => (/* reexport safe */ _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_40__.defaultGetValue),
-/* harmony export */   "FormMode": () => (/* reexport safe */ _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_40__.FormMode),
-/* harmony export */   "FormEventType": () => (/* reexport safe */ _framework_ui_form_FormListener__WEBPACK_IMPORTED_MODULE_41__.FormEventType),
-/* harmony export */   "AbstractForm": () => (/* reexport safe */ _framework_ui_form_AbstractForm__WEBPACK_IMPORTED_MODULE_42__.AbstractForm),
-/* harmony export */   "FormElementFactory": () => (/* reexport safe */ _framework_ui_form_factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_43__.FormElementFactory),
-/* harmony export */   "BasicFormImplementation": () => (/* reexport safe */ _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_44__.BasicFormImplementation),
-/* harmony export */   "ConditionResponse": () => (/* reexport safe */ _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_45__.ConditionResponse),
-/* harmony export */   "ValidationManager": () => (/* reexport safe */ _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_46__.ValidationManager),
-/* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_47__.BootstrapFormConfigHelper),
-/* harmony export */   "BootstrapTableConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_48__.BootstrapTableConfigHelper),
-/* harmony export */   "LimitedChoiceTextRenderer": () => (/* reexport safe */ _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_49__.LimitedChoiceTextRenderer),
-/* harmony export */   "LinkedCollectionDetailController": () => (/* reexport safe */ _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_50__.LinkedCollectionDetailController),
-/* harmony export */   "RBGFieldOperations": () => (/* reexport safe */ _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_51__.RBGFieldOperations),
-/* harmony export */   "SimpleValueDataSource": () => (/* reexport safe */ _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_52__.SimpleValueDataSource),
-/* harmony export */   "AbstractView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_53__.AbstractView),
-/* harmony export */   "AbstractCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_54__.AbstractCollectionView),
-/* harmony export */   "AbstractStatefulCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_55__.AbstractStatefulCollectionView),
-/* harmony export */   "DefaultPermissionChecker": () => (/* reexport safe */ _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_56__.DefaultPermissionChecker),
-/* harmony export */   "DetailViewImplementation": () => (/* reexport safe */ _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_57__.DetailViewImplementation),
-/* harmony export */   "CarouselViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_58__.CarouselViewRenderer),
-/* harmony export */   "CarouselViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_59__.CarouselViewRendererUsingContext),
-/* harmony export */   "FormDetailViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_60__.FormDetailViewRenderer),
-/* harmony export */   "ListViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_61__.ListViewRenderer),
-/* harmony export */   "ListViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_62__.ListViewRendererUsingContext),
-/* harmony export */   "TabularViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_63__.TabularViewRendererUsingContext),
-/* harmony export */   "ViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_64__.ViewListenerForwarder),
-/* harmony export */   "DetailViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_65__.DetailViewListenerForwarder),
-/* harmony export */   "CollectionViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_66__.CollectionViewListenerForwarder),
-/* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_67__.CollectionViewEventHandlerDelegate),
-/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_68__.CollectionViewEventHandlerDelegateUsingContext)
+/* harmony export */   "default": () => (/* binding */ App)
 /* harmony export */ });
-/* harmony import */ var _framework_CommonTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/CommonTypes */ "../../ui-framework/dist/framework/CommonTypes.js");
-/* harmony import */ var _framework_model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./framework/model/BasicFieldOperations */ "../../ui-framework/dist/framework/model/BasicFieldOperations.js");
-/* harmony import */ var _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./framework/model/BasicObjectDefinitionFactory */ "../../ui-framework/dist/framework/model/BasicObjectDefinitionFactory.js");
-/* harmony import */ var _framework_model_DataObjectController__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./framework/model/DataObjectController */ "../../ui-framework/dist/framework/model/DataObjectController.js");
-/* harmony import */ var _framework_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./framework/model/DataObjectTypeDefs */ "../../ui-framework/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _framework_model_ObjectDefinitionRegistry__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./framework/model/ObjectDefinitionRegistry */ "../../ui-framework/dist/framework/model/ObjectDefinitionRegistry.js");
-/* harmony import */ var _framework_network_ApiUtil__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./framework/network/ApiUtil */ "../../ui-framework/dist/framework/network/ApiUtil.js");
-/* harmony import */ var _framework_network_DownloadManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./framework/network/DownloadManager */ "../../ui-framework/dist/framework/network/DownloadManager.js");
-/* harmony import */ var _framework_network_Types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./framework/network/Types */ "../../ui-framework/dist/framework/network/Types.js");
-/* harmony import */ var _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./framework/notification/NotificationManager */ "../../ui-framework/dist/framework/notification/NotificationManager.js");
-/* harmony import */ var _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./framework/security/SecurityManager */ "../../ui-framework/dist/framework/security/SecurityManager.js");
-/* harmony import */ var _framework_socket_ChatManager__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./framework/socket/ChatManager */ "../../ui-framework/dist/framework/socket/ChatManager.js");
-/* harmony import */ var _framework_socket_NotificationController__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./framework/socket/NotificationController */ "../../ui-framework/dist/framework/socket/NotificationController.js");
-/* harmony import */ var _framework_socket_SocketManager__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./framework/socket/SocketManager */ "../../ui-framework/dist/framework/socket/SocketManager.js");
-/* harmony import */ var _framework_socket_Types__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./framework/socket/Types */ "../../ui-framework/dist/framework/socket/Types.js");
-/* harmony import */ var _framework_state_AbstractStateManager__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./framework/state/AbstractStateManager */ "../../ui-framework/dist/framework/state/AbstractStateManager.js");
-/* harmony import */ var _framework_state_AggregateStateManager__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./framework/state/AggregateStateManager */ "../../ui-framework/dist/framework/state/AggregateStateManager.js");
-/* harmony import */ var _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./framework/state/AsyncStateManagerWrapper */ "../../ui-framework/dist/framework/state/AsyncStateManagerWrapper.js");
-/* harmony import */ var _framework_state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./framework/state/BrowserStorageStateManager */ "../../ui-framework/dist/framework/state/BrowserStorageStateManager.js");
-/* harmony import */ var _framework_state_EncryptedBrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./framework/state/EncryptedBrowserStorageStateManager */ "../../ui-framework/dist/framework/state/EncryptedBrowserStorageStateManager.js");
-/* harmony import */ var _framework_state_EncryptedIndexedDBStateManager__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./framework/state/EncryptedIndexedDBStateManager */ "../../ui-framework/dist/framework/state/EncryptedIndexedDBStateManager.js");
-/* harmony import */ var _framework_state_GraphQLApiStateManager__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./framework/state/GraphQLApiStateManager */ "../../ui-framework/dist/framework/state/GraphQLApiStateManager.js");
-/* harmony import */ var _framework_state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./framework/state/IndexedDBStateManager */ "../../ui-framework/dist/framework/state/IndexedDBStateManager.js");
-/* harmony import */ var _framework_state_RESTApiStateManager__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./framework/state/RESTApiStateManager */ "../../ui-framework/dist/framework/state/RESTApiStateManager.js");
-/* harmony import */ var _framework_state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./framework/state/MemoryBufferStateManager */ "../../ui-framework/dist/framework/state/MemoryBufferStateManager.js");
-/* harmony import */ var _framework_state_StateManager__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./framework/state/StateManager */ "../../ui-framework/dist/framework/state/StateManager.js");
-/* harmony import */ var _framework_jsx_JSXParser__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./framework/jsx/JSXParser */ "../../ui-framework/dist/framework/jsx/JSXParser.js");
-/* harmony import */ var _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./framework/ui/ConfigurationTypes */ "../../ui-framework/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _framework_ui_alert_AlertListener__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./framework/ui/alert/AlertListener */ "../../ui-framework/dist/framework/ui/alert/AlertListener.js");
-/* harmony import */ var _framework_ui_alert_AlertManager__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./framework/ui/alert/AlertManager */ "../../ui-framework/dist/framework/ui/alert/AlertManager.js");
-/* harmony import */ var _framework_ui_chat_BlockedUserView__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./framework/ui/chat/BlockedUserView */ "../../ui-framework/dist/framework/ui/chat/BlockedUserView.js");
-/* harmony import */ var _framework_ui_chat_ChatLogDetailView__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./framework/ui/chat/ChatLogDetailView */ "../../ui-framework/dist/framework/ui/chat/ChatLogDetailView.js");
-/* harmony import */ var _framework_ui_chat_ChatLogsView__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./framework/ui/chat/ChatLogsView */ "../../ui-framework/dist/framework/ui/chat/ChatLogsView.js");
-/* harmony import */ var _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./framework/ui/chat/ChatRoomsSidebar */ "../../ui-framework/dist/framework/ui/chat/ChatRoomsSidebar.js");
-/* harmony import */ var _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./framework/ui/chat/ChatTypes */ "../../ui-framework/dist/framework/ui/chat/ChatTypes.js");
-/* harmony import */ var _framework_ui_chat_FavouriteUserView__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./framework/ui/chat/FavouriteUserView */ "../../ui-framework/dist/framework/ui/chat/FavouriteUserView.js");
-/* harmony import */ var _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchSidebar */ "../../ui-framework/dist/framework/ui/chat/UserSearchSidebar.js");
-/* harmony import */ var _framework_ui_chat_UserSearchView__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchView */ "../../ui-framework/dist/framework/ui/chat/UserSearchView.js");
-/* harmony import */ var _framework_ui_container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./framework/ui/container/SidebarViewContainer */ "../../ui-framework/dist/framework/ui/container/SidebarViewContainer.js");
-/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "../../ui-framework/dist/framework/ui/context/ContextualInformationHelper.js");
-/* harmony import */ var _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./framework/ui/form/FormUITypeDefs */ "../../ui-framework/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _framework_ui_form_FormListener__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./framework/ui/form/FormListener */ "../../ui-framework/dist/framework/ui/form/FormListener.js");
-/* harmony import */ var _framework_ui_form_AbstractForm__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./framework/ui/form/AbstractForm */ "../../ui-framework/dist/framework/ui/form/AbstractForm.js");
-/* harmony import */ var _framework_ui_form_factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./framework/ui/form/factory/FormElementFactory */ "../../ui-framework/dist/framework/ui/form/factory/FormElementFactory.js");
-/* harmony import */ var _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./framework/ui/form/BasicFormImplementation */ "../../ui-framework/dist/framework/ui/form/BasicFormImplementation.js");
-/* harmony import */ var _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationTypeDefs */ "../../ui-framework/dist/framework/ui/form/validation/ValidationTypeDefs.js");
-/* harmony import */ var _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationManager */ "../../ui-framework/dist/framework/ui/form/validation/ValidationManager.js");
-/* harmony import */ var _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapFormConfigHelper */ "../../ui-framework/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableConfigHelper */ "../../ui-framework/dist/framework/ui/helper/BootstrapTableConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./framework/ui/helper/LimitedChoiceTextRenderer */ "../../ui-framework/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
-/* harmony import */ var _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./framework/ui/helper/LinkedCollectionDetailController */ "../../ui-framework/dist/framework/ui/helper/LinkedCollectionDetailController.js");
-/* harmony import */ var _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./framework/ui/helper/RBGFieldOperations */ "../../ui-framework/dist/framework/ui/helper/RBGFieldOperations.js");
-/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./framework/ui/helper/SimpleValueDataSource */ "../../ui-framework/dist/framework/ui/helper/SimpleValueDataSource.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractCollectionView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractStatefulCollectionView */ "../../ui-framework/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./framework/ui/view/implementation/DefaultPermissionChecker */ "../../ui-framework/dist/framework/ui/view/implementation/DefaultPermissionChecker.js");
-/* harmony import */ var _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./framework/ui/view/implementation/DetailViewImplementation */ "../../ui-framework/dist/framework/ui/view/implementation/DetailViewImplementation.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRenderer */ "../../ui-framework/dist/framework/ui/view/renderer/CarouselViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRendererUsingContext */ "../../ui-framework/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./framework/ui/view/renderer/FormDetailViewRenderer */ "../../ui-framework/dist/framework/ui/view/renderer/FormDetailViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRenderer */ "../../ui-framework/dist/framework/ui/view/renderer/ListViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRendererUsingContext */ "../../ui-framework/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./framework/ui/view/renderer/TabularViewRendererUsingContext */ "../../ui-framework/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./framework/ui/view/delegate/ViewListenerForwarder */ "../../ui-framework/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./framework/ui/view/delegate/DetailViewListenerForwarder */ "../../ui-framework/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewListenerForwarder */ "../../ui-framework/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegate */ "../../ui-framework/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext */ "../../ui-framework/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js");
-
-
-
-
-
-
-/* network utils */
-
-
-
-
-/* notifications */
-
-
-/* Security Manager */
-
-
-
-
-
-
-/* state management */
-
-
-
-
-
-
-
-
-
-
-
-
-/* ui */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _app_Controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app/Controller */ "./src/app/Controller.ts");
+/* harmony import */ var _app_AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app/AppTypes */ "./src/app/AppTypes.ts");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
+/* harmony import */ var _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./app/AppointmentController */ "./src/app/AppointmentController.ts");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "./src/framework/ui/context/ContextualInformationHelper.ts");
+/* harmony import */ var _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./framework/security/SecurityManager */ "./src/framework/security/SecurityManager.ts");
+/* harmony import */ var _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchSidebar */ "./src/framework/ui/chat/UserSearchSidebar.ts");
+/* harmony import */ var _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./framework/ui/chat/ChatRoomsSidebar */ "./src/framework/ui/chat/ChatRoomsSidebar.ts");
+//localStorage.debug = 'linked-controller api-ts exercise-types-view app controller-ts controller-ts-detail api-ts socket-ts user-search user-search-detail list-view-renderer';
+//localStorage.debug = 'collection-view-ts collection-view-ts-detail form-detail-view-renderer linked-controller linked-controller-detail exercise-types-view app validation-manager-rule-failure validation-manager';
+//localStorage.debug = 'validation-manager validation-manager-rule-failure abstract-form-detail-validation';
+
+
+
+
+
+
+
+
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('app');
+class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
+  thisEl = null;
+  chatNavigationItem = null;
+  datePicker = null;
+  calendar = null;
+
+  constructor() {
+    // @ts-ignore
+    super(); // event handlers
+
+    this.handleShowUserSearch = this.handleShowUserSearch.bind(this);
+    this.handleShowChat = this.handleShowChat.bind(this);
+    _app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().connectToApplication(this, window.localStorage);
+  }
+
+  render() {
+    logger("Rendering App");
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", null);
+  }
+
+  componentDidMount() {
+    logger('component Did Mount');
+    logger('document loaded'); // @ts-ignore
+
+    this.thisEl = document.getElementById('root');
+    this.setupUserSearchViews();
+    this.setupChatViews();
+    this.setupNavigationItemHandling(); // setup the scheduler
+    // @ts-ignore
+
+    this.datePicker = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.datepicker)(document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.VIEW_CONTAINER.calendarControl), {
+      controls: ['calendar'],
+      display: "inline",
+      dateFormat: 'YYYYMMDD',
+      dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      showWeekNumbers: true,
+      onChange: (event, inst) => {
+        var _this$calendar;
+
+        (_this$calendar = this.calendar) === null || _this$calendar === void 0 ? void 0 : _this$calendar.navigate(event.value);
+        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().handleNewDatePicked(event.value, inst);
+      }
+    }); // @ts-ignore
+
+    this.calendar = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.eventcalendar)(document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.VIEW_CONTAINER.calendarDetail), {
+      clickToCreate: 'double',
+      dragTimeStep: 5,
+      dragToCreate: true,
+      dragToMove: true,
+      dragToResize: true,
+      min: moment__WEBPACK_IMPORTED_MODULE_7___default()().subtract(3, "months"),
+      controls: ['calendar'],
+      showControls: true,
+      view: {
+        schedule: {
+          type: 'day',
+          startDay: 1,
+          endDay: 5,
+          startTime: '09:00',
+          endTime: '16:00',
+          timeCellStep: 10,
+          timeLabelStep: 60
+        }
+      },
+      invalidateEvent: 'strict',
+      invalid: [{
+        recurring: {
+          repeat: 'weekly',
+          weekDays: 'SA,SU'
+        }
+      }, {
+        start: '12:15',
+        end: '16:00',
+        title: 'Close Early',
+        recurring: {
+          repeat: 'weekly',
+          weekDays: 'FR'
+        }
+      }, {
+        start: '12:00',
+        end: '13:00',
+        title: 'Lunch Break',
+        recurring: {
+          repeat: 'weekly',
+          weekDays: 'MO,TU,WE,TH'
+        }
+      }],
+      onSelectedDateChange: (event, inst) => {
+        var _this$datePicker;
+
+        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().handleNewDatePicked(event.date, inst);
+        (_this$datePicker = this.datePicker) === null || _this$datePicker === void 0 ? void 0 : _this$datePicker.setVal(event.date);
+      },
+      onPageLoading: (event, inst) => {
+        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onPageLoading(event, inst);
+      },
+      onEventCreated: (event, inst) => {
+        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentCreated(event, inst);
+      },
+      onEventDelete: (event, inst) => {
+        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentDeleting(event, inst);
+      },
+      onEventDeleted: (event, inst) => {
+        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentDeleted(event, inst);
+      },
+      onEventRightClick: (event, inst) => {
+        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentContext(event, inst);
+      },
+      onEventUpdated: (event, inst) => {
+        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentUpdated(event, inst);
+      },
+      onEventDoubleClick: (event, inst) => {
+        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentEditRequested(event, inst);
+      }
+    });
+    if (this.calendar && this.datePicker) _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().setViewObjects(this.datePicker, this.calendar);
+    _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_8__.ContextualInformationHelper.getInstance().onDocumentLoaded();
+    _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_9__.SecurityManager.getInstance().onDocumentLoaded(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
+    _app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
+  }
+
+  getCurrentUser() {
+    return _app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getLoggedInUserId();
+  }
+
+  hideAllSideBars() {
+    this.chatSidebar.eventHide(null);
+    this.userSearchSidebar.eventHide(null);
+  }
+
+  handleShowUserSearch(event) {
+    logger('Handling Show User Search');
+    event.preventDefault(); //this.hideAllSideBars();
+    // prevent anything from happening if we are not logged in
+
+    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().isLoggedIn()) {
+      // @ts-ignore
+      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.login;
+      return;
+    }
+
+    this.userSearchSidebar.eventShow(event);
+  }
+
+  handleShowChat(roomName) {
+    logger('Handling Show Chat'); // prevent anything from happening if we are not logged in
+
+    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().isLoggedIn()) {
+      // @ts-ignore
+      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.login;
+      return;
+    }
+
+    this.chatSidebar.eventShow(null);
+
+    if (roomName) {
+      this.chatView.selectChatRoom(roomName);
+    }
+  }
+
+  countChanged(newCount) {
+    //
+    let buffer = 'Chat <i class="fas fa-inbox"></i>';
+
+    if (newCount > 0) {
+      buffer += ` <span class="badge badge-pill badge-primary">&nbsp;${newCount}&nbsp;</span>`;
+    }
+
+    if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
+  }
+
+  setupNavigationItemHandling() {
+    // @ts-ignore
+    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.userSearchId).addEventListener('click', this.handleShowUserSearch); // @ts-ignore
+
+    this.chatNavigationItem = document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.chatId); // @ts-ignore
+
+    this.chatNavigationItem.addEventListener('click', this.handleShowChat);
+  }
+
+  setupUserSearchViews() {
+    // add the subviews for the user search
+    this.userSearchSidebar = _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.UserSearchSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
+    this.userSearchSidebar.onDocumentLoaded();
+  }
+
+  setupChatViews() {
+    // add the views to the chat side bar
+    this.chatSidebar = _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_11__.ChatRoomsSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
+    this.chatSidebar.onDocumentLoaded();
+  }
+
+}
+localStorage.debug = 'api-ts-results dm-api-ts';
+localStorage.plugin = 'chat';
+(debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
+$(function () {
+  (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.setOptions)({
+    theme: 'ios',
+    themeVariant: 'light'
+  }); //datepicker("#calendarControl",{display:'inline'});
+  // @ts-ignore
+
+  const element = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(App, {
+    className: "container-fluid justify-content-around"
+  });
+  react_dom__WEBPACK_IMPORTED_MODULE_4__.render(element, document.getElementById('root'));
+});
 
 /***/ }),
 
@@ -16025,307 +9744,6 @@ webpackContext.keys = function webpackContextKeys() {
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
 webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
-
-/***/ }),
-
-/***/ "../../ui-framework/node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!********************************************************************!*\
-  !*** ../../ui-framework/node_modules/moment/locale/ sync ^\.\/.*$ ***!
-  \********************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var map = {
-	"./af": "../../ui-framework/node_modules/moment/locale/af.js",
-	"./af.js": "../../ui-framework/node_modules/moment/locale/af.js",
-	"./ar": "../../ui-framework/node_modules/moment/locale/ar.js",
-	"./ar-dz": "../../ui-framework/node_modules/moment/locale/ar-dz.js",
-	"./ar-dz.js": "../../ui-framework/node_modules/moment/locale/ar-dz.js",
-	"./ar-kw": "../../ui-framework/node_modules/moment/locale/ar-kw.js",
-	"./ar-kw.js": "../../ui-framework/node_modules/moment/locale/ar-kw.js",
-	"./ar-ly": "../../ui-framework/node_modules/moment/locale/ar-ly.js",
-	"./ar-ly.js": "../../ui-framework/node_modules/moment/locale/ar-ly.js",
-	"./ar-ma": "../../ui-framework/node_modules/moment/locale/ar-ma.js",
-	"./ar-ma.js": "../../ui-framework/node_modules/moment/locale/ar-ma.js",
-	"./ar-sa": "../../ui-framework/node_modules/moment/locale/ar-sa.js",
-	"./ar-sa.js": "../../ui-framework/node_modules/moment/locale/ar-sa.js",
-	"./ar-tn": "../../ui-framework/node_modules/moment/locale/ar-tn.js",
-	"./ar-tn.js": "../../ui-framework/node_modules/moment/locale/ar-tn.js",
-	"./ar.js": "../../ui-framework/node_modules/moment/locale/ar.js",
-	"./az": "../../ui-framework/node_modules/moment/locale/az.js",
-	"./az.js": "../../ui-framework/node_modules/moment/locale/az.js",
-	"./be": "../../ui-framework/node_modules/moment/locale/be.js",
-	"./be.js": "../../ui-framework/node_modules/moment/locale/be.js",
-	"./bg": "../../ui-framework/node_modules/moment/locale/bg.js",
-	"./bg.js": "../../ui-framework/node_modules/moment/locale/bg.js",
-	"./bm": "../../ui-framework/node_modules/moment/locale/bm.js",
-	"./bm.js": "../../ui-framework/node_modules/moment/locale/bm.js",
-	"./bn": "../../ui-framework/node_modules/moment/locale/bn.js",
-	"./bn-bd": "../../ui-framework/node_modules/moment/locale/bn-bd.js",
-	"./bn-bd.js": "../../ui-framework/node_modules/moment/locale/bn-bd.js",
-	"./bn.js": "../../ui-framework/node_modules/moment/locale/bn.js",
-	"./bo": "../../ui-framework/node_modules/moment/locale/bo.js",
-	"./bo.js": "../../ui-framework/node_modules/moment/locale/bo.js",
-	"./br": "../../ui-framework/node_modules/moment/locale/br.js",
-	"./br.js": "../../ui-framework/node_modules/moment/locale/br.js",
-	"./bs": "../../ui-framework/node_modules/moment/locale/bs.js",
-	"./bs.js": "../../ui-framework/node_modules/moment/locale/bs.js",
-	"./ca": "../../ui-framework/node_modules/moment/locale/ca.js",
-	"./ca.js": "../../ui-framework/node_modules/moment/locale/ca.js",
-	"./cs": "../../ui-framework/node_modules/moment/locale/cs.js",
-	"./cs.js": "../../ui-framework/node_modules/moment/locale/cs.js",
-	"./cv": "../../ui-framework/node_modules/moment/locale/cv.js",
-	"./cv.js": "../../ui-framework/node_modules/moment/locale/cv.js",
-	"./cy": "../../ui-framework/node_modules/moment/locale/cy.js",
-	"./cy.js": "../../ui-framework/node_modules/moment/locale/cy.js",
-	"./da": "../../ui-framework/node_modules/moment/locale/da.js",
-	"./da.js": "../../ui-framework/node_modules/moment/locale/da.js",
-	"./de": "../../ui-framework/node_modules/moment/locale/de.js",
-	"./de-at": "../../ui-framework/node_modules/moment/locale/de-at.js",
-	"./de-at.js": "../../ui-framework/node_modules/moment/locale/de-at.js",
-	"./de-ch": "../../ui-framework/node_modules/moment/locale/de-ch.js",
-	"./de-ch.js": "../../ui-framework/node_modules/moment/locale/de-ch.js",
-	"./de.js": "../../ui-framework/node_modules/moment/locale/de.js",
-	"./dv": "../../ui-framework/node_modules/moment/locale/dv.js",
-	"./dv.js": "../../ui-framework/node_modules/moment/locale/dv.js",
-	"./el": "../../ui-framework/node_modules/moment/locale/el.js",
-	"./el.js": "../../ui-framework/node_modules/moment/locale/el.js",
-	"./en-au": "../../ui-framework/node_modules/moment/locale/en-au.js",
-	"./en-au.js": "../../ui-framework/node_modules/moment/locale/en-au.js",
-	"./en-ca": "../../ui-framework/node_modules/moment/locale/en-ca.js",
-	"./en-ca.js": "../../ui-framework/node_modules/moment/locale/en-ca.js",
-	"./en-gb": "../../ui-framework/node_modules/moment/locale/en-gb.js",
-	"./en-gb.js": "../../ui-framework/node_modules/moment/locale/en-gb.js",
-	"./en-ie": "../../ui-framework/node_modules/moment/locale/en-ie.js",
-	"./en-ie.js": "../../ui-framework/node_modules/moment/locale/en-ie.js",
-	"./en-il": "../../ui-framework/node_modules/moment/locale/en-il.js",
-	"./en-il.js": "../../ui-framework/node_modules/moment/locale/en-il.js",
-	"./en-in": "../../ui-framework/node_modules/moment/locale/en-in.js",
-	"./en-in.js": "../../ui-framework/node_modules/moment/locale/en-in.js",
-	"./en-nz": "../../ui-framework/node_modules/moment/locale/en-nz.js",
-	"./en-nz.js": "../../ui-framework/node_modules/moment/locale/en-nz.js",
-	"./en-sg": "../../ui-framework/node_modules/moment/locale/en-sg.js",
-	"./en-sg.js": "../../ui-framework/node_modules/moment/locale/en-sg.js",
-	"./eo": "../../ui-framework/node_modules/moment/locale/eo.js",
-	"./eo.js": "../../ui-framework/node_modules/moment/locale/eo.js",
-	"./es": "../../ui-framework/node_modules/moment/locale/es.js",
-	"./es-do": "../../ui-framework/node_modules/moment/locale/es-do.js",
-	"./es-do.js": "../../ui-framework/node_modules/moment/locale/es-do.js",
-	"./es-mx": "../../ui-framework/node_modules/moment/locale/es-mx.js",
-	"./es-mx.js": "../../ui-framework/node_modules/moment/locale/es-mx.js",
-	"./es-us": "../../ui-framework/node_modules/moment/locale/es-us.js",
-	"./es-us.js": "../../ui-framework/node_modules/moment/locale/es-us.js",
-	"./es.js": "../../ui-framework/node_modules/moment/locale/es.js",
-	"./et": "../../ui-framework/node_modules/moment/locale/et.js",
-	"./et.js": "../../ui-framework/node_modules/moment/locale/et.js",
-	"./eu": "../../ui-framework/node_modules/moment/locale/eu.js",
-	"./eu.js": "../../ui-framework/node_modules/moment/locale/eu.js",
-	"./fa": "../../ui-framework/node_modules/moment/locale/fa.js",
-	"./fa.js": "../../ui-framework/node_modules/moment/locale/fa.js",
-	"./fi": "../../ui-framework/node_modules/moment/locale/fi.js",
-	"./fi.js": "../../ui-framework/node_modules/moment/locale/fi.js",
-	"./fil": "../../ui-framework/node_modules/moment/locale/fil.js",
-	"./fil.js": "../../ui-framework/node_modules/moment/locale/fil.js",
-	"./fo": "../../ui-framework/node_modules/moment/locale/fo.js",
-	"./fo.js": "../../ui-framework/node_modules/moment/locale/fo.js",
-	"./fr": "../../ui-framework/node_modules/moment/locale/fr.js",
-	"./fr-ca": "../../ui-framework/node_modules/moment/locale/fr-ca.js",
-	"./fr-ca.js": "../../ui-framework/node_modules/moment/locale/fr-ca.js",
-	"./fr-ch": "../../ui-framework/node_modules/moment/locale/fr-ch.js",
-	"./fr-ch.js": "../../ui-framework/node_modules/moment/locale/fr-ch.js",
-	"./fr.js": "../../ui-framework/node_modules/moment/locale/fr.js",
-	"./fy": "../../ui-framework/node_modules/moment/locale/fy.js",
-	"./fy.js": "../../ui-framework/node_modules/moment/locale/fy.js",
-	"./ga": "../../ui-framework/node_modules/moment/locale/ga.js",
-	"./ga.js": "../../ui-framework/node_modules/moment/locale/ga.js",
-	"./gd": "../../ui-framework/node_modules/moment/locale/gd.js",
-	"./gd.js": "../../ui-framework/node_modules/moment/locale/gd.js",
-	"./gl": "../../ui-framework/node_modules/moment/locale/gl.js",
-	"./gl.js": "../../ui-framework/node_modules/moment/locale/gl.js",
-	"./gom-deva": "../../ui-framework/node_modules/moment/locale/gom-deva.js",
-	"./gom-deva.js": "../../ui-framework/node_modules/moment/locale/gom-deva.js",
-	"./gom-latn": "../../ui-framework/node_modules/moment/locale/gom-latn.js",
-	"./gom-latn.js": "../../ui-framework/node_modules/moment/locale/gom-latn.js",
-	"./gu": "../../ui-framework/node_modules/moment/locale/gu.js",
-	"./gu.js": "../../ui-framework/node_modules/moment/locale/gu.js",
-	"./he": "../../ui-framework/node_modules/moment/locale/he.js",
-	"./he.js": "../../ui-framework/node_modules/moment/locale/he.js",
-	"./hi": "../../ui-framework/node_modules/moment/locale/hi.js",
-	"./hi.js": "../../ui-framework/node_modules/moment/locale/hi.js",
-	"./hr": "../../ui-framework/node_modules/moment/locale/hr.js",
-	"./hr.js": "../../ui-framework/node_modules/moment/locale/hr.js",
-	"./hu": "../../ui-framework/node_modules/moment/locale/hu.js",
-	"./hu.js": "../../ui-framework/node_modules/moment/locale/hu.js",
-	"./hy-am": "../../ui-framework/node_modules/moment/locale/hy-am.js",
-	"./hy-am.js": "../../ui-framework/node_modules/moment/locale/hy-am.js",
-	"./id": "../../ui-framework/node_modules/moment/locale/id.js",
-	"./id.js": "../../ui-framework/node_modules/moment/locale/id.js",
-	"./is": "../../ui-framework/node_modules/moment/locale/is.js",
-	"./is.js": "../../ui-framework/node_modules/moment/locale/is.js",
-	"./it": "../../ui-framework/node_modules/moment/locale/it.js",
-	"./it-ch": "../../ui-framework/node_modules/moment/locale/it-ch.js",
-	"./it-ch.js": "../../ui-framework/node_modules/moment/locale/it-ch.js",
-	"./it.js": "../../ui-framework/node_modules/moment/locale/it.js",
-	"./ja": "../../ui-framework/node_modules/moment/locale/ja.js",
-	"./ja.js": "../../ui-framework/node_modules/moment/locale/ja.js",
-	"./jv": "../../ui-framework/node_modules/moment/locale/jv.js",
-	"./jv.js": "../../ui-framework/node_modules/moment/locale/jv.js",
-	"./ka": "../../ui-framework/node_modules/moment/locale/ka.js",
-	"./ka.js": "../../ui-framework/node_modules/moment/locale/ka.js",
-	"./kk": "../../ui-framework/node_modules/moment/locale/kk.js",
-	"./kk.js": "../../ui-framework/node_modules/moment/locale/kk.js",
-	"./km": "../../ui-framework/node_modules/moment/locale/km.js",
-	"./km.js": "../../ui-framework/node_modules/moment/locale/km.js",
-	"./kn": "../../ui-framework/node_modules/moment/locale/kn.js",
-	"./kn.js": "../../ui-framework/node_modules/moment/locale/kn.js",
-	"./ko": "../../ui-framework/node_modules/moment/locale/ko.js",
-	"./ko.js": "../../ui-framework/node_modules/moment/locale/ko.js",
-	"./ku": "../../ui-framework/node_modules/moment/locale/ku.js",
-	"./ku.js": "../../ui-framework/node_modules/moment/locale/ku.js",
-	"./ky": "../../ui-framework/node_modules/moment/locale/ky.js",
-	"./ky.js": "../../ui-framework/node_modules/moment/locale/ky.js",
-	"./lb": "../../ui-framework/node_modules/moment/locale/lb.js",
-	"./lb.js": "../../ui-framework/node_modules/moment/locale/lb.js",
-	"./lo": "../../ui-framework/node_modules/moment/locale/lo.js",
-	"./lo.js": "../../ui-framework/node_modules/moment/locale/lo.js",
-	"./lt": "../../ui-framework/node_modules/moment/locale/lt.js",
-	"./lt.js": "../../ui-framework/node_modules/moment/locale/lt.js",
-	"./lv": "../../ui-framework/node_modules/moment/locale/lv.js",
-	"./lv.js": "../../ui-framework/node_modules/moment/locale/lv.js",
-	"./me": "../../ui-framework/node_modules/moment/locale/me.js",
-	"./me.js": "../../ui-framework/node_modules/moment/locale/me.js",
-	"./mi": "../../ui-framework/node_modules/moment/locale/mi.js",
-	"./mi.js": "../../ui-framework/node_modules/moment/locale/mi.js",
-	"./mk": "../../ui-framework/node_modules/moment/locale/mk.js",
-	"./mk.js": "../../ui-framework/node_modules/moment/locale/mk.js",
-	"./ml": "../../ui-framework/node_modules/moment/locale/ml.js",
-	"./ml.js": "../../ui-framework/node_modules/moment/locale/ml.js",
-	"./mn": "../../ui-framework/node_modules/moment/locale/mn.js",
-	"./mn.js": "../../ui-framework/node_modules/moment/locale/mn.js",
-	"./mr": "../../ui-framework/node_modules/moment/locale/mr.js",
-	"./mr.js": "../../ui-framework/node_modules/moment/locale/mr.js",
-	"./ms": "../../ui-framework/node_modules/moment/locale/ms.js",
-	"./ms-my": "../../ui-framework/node_modules/moment/locale/ms-my.js",
-	"./ms-my.js": "../../ui-framework/node_modules/moment/locale/ms-my.js",
-	"./ms.js": "../../ui-framework/node_modules/moment/locale/ms.js",
-	"./mt": "../../ui-framework/node_modules/moment/locale/mt.js",
-	"./mt.js": "../../ui-framework/node_modules/moment/locale/mt.js",
-	"./my": "../../ui-framework/node_modules/moment/locale/my.js",
-	"./my.js": "../../ui-framework/node_modules/moment/locale/my.js",
-	"./nb": "../../ui-framework/node_modules/moment/locale/nb.js",
-	"./nb.js": "../../ui-framework/node_modules/moment/locale/nb.js",
-	"./ne": "../../ui-framework/node_modules/moment/locale/ne.js",
-	"./ne.js": "../../ui-framework/node_modules/moment/locale/ne.js",
-	"./nl": "../../ui-framework/node_modules/moment/locale/nl.js",
-	"./nl-be": "../../ui-framework/node_modules/moment/locale/nl-be.js",
-	"./nl-be.js": "../../ui-framework/node_modules/moment/locale/nl-be.js",
-	"./nl.js": "../../ui-framework/node_modules/moment/locale/nl.js",
-	"./nn": "../../ui-framework/node_modules/moment/locale/nn.js",
-	"./nn.js": "../../ui-framework/node_modules/moment/locale/nn.js",
-	"./oc-lnc": "../../ui-framework/node_modules/moment/locale/oc-lnc.js",
-	"./oc-lnc.js": "../../ui-framework/node_modules/moment/locale/oc-lnc.js",
-	"./pa-in": "../../ui-framework/node_modules/moment/locale/pa-in.js",
-	"./pa-in.js": "../../ui-framework/node_modules/moment/locale/pa-in.js",
-	"./pl": "../../ui-framework/node_modules/moment/locale/pl.js",
-	"./pl.js": "../../ui-framework/node_modules/moment/locale/pl.js",
-	"./pt": "../../ui-framework/node_modules/moment/locale/pt.js",
-	"./pt-br": "../../ui-framework/node_modules/moment/locale/pt-br.js",
-	"./pt-br.js": "../../ui-framework/node_modules/moment/locale/pt-br.js",
-	"./pt.js": "../../ui-framework/node_modules/moment/locale/pt.js",
-	"./ro": "../../ui-framework/node_modules/moment/locale/ro.js",
-	"./ro.js": "../../ui-framework/node_modules/moment/locale/ro.js",
-	"./ru": "../../ui-framework/node_modules/moment/locale/ru.js",
-	"./ru.js": "../../ui-framework/node_modules/moment/locale/ru.js",
-	"./sd": "../../ui-framework/node_modules/moment/locale/sd.js",
-	"./sd.js": "../../ui-framework/node_modules/moment/locale/sd.js",
-	"./se": "../../ui-framework/node_modules/moment/locale/se.js",
-	"./se.js": "../../ui-framework/node_modules/moment/locale/se.js",
-	"./si": "../../ui-framework/node_modules/moment/locale/si.js",
-	"./si.js": "../../ui-framework/node_modules/moment/locale/si.js",
-	"./sk": "../../ui-framework/node_modules/moment/locale/sk.js",
-	"./sk.js": "../../ui-framework/node_modules/moment/locale/sk.js",
-	"./sl": "../../ui-framework/node_modules/moment/locale/sl.js",
-	"./sl.js": "../../ui-framework/node_modules/moment/locale/sl.js",
-	"./sq": "../../ui-framework/node_modules/moment/locale/sq.js",
-	"./sq.js": "../../ui-framework/node_modules/moment/locale/sq.js",
-	"./sr": "../../ui-framework/node_modules/moment/locale/sr.js",
-	"./sr-cyrl": "../../ui-framework/node_modules/moment/locale/sr-cyrl.js",
-	"./sr-cyrl.js": "../../ui-framework/node_modules/moment/locale/sr-cyrl.js",
-	"./sr.js": "../../ui-framework/node_modules/moment/locale/sr.js",
-	"./ss": "../../ui-framework/node_modules/moment/locale/ss.js",
-	"./ss.js": "../../ui-framework/node_modules/moment/locale/ss.js",
-	"./sv": "../../ui-framework/node_modules/moment/locale/sv.js",
-	"./sv.js": "../../ui-framework/node_modules/moment/locale/sv.js",
-	"./sw": "../../ui-framework/node_modules/moment/locale/sw.js",
-	"./sw.js": "../../ui-framework/node_modules/moment/locale/sw.js",
-	"./ta": "../../ui-framework/node_modules/moment/locale/ta.js",
-	"./ta.js": "../../ui-framework/node_modules/moment/locale/ta.js",
-	"./te": "../../ui-framework/node_modules/moment/locale/te.js",
-	"./te.js": "../../ui-framework/node_modules/moment/locale/te.js",
-	"./tet": "../../ui-framework/node_modules/moment/locale/tet.js",
-	"./tet.js": "../../ui-framework/node_modules/moment/locale/tet.js",
-	"./tg": "../../ui-framework/node_modules/moment/locale/tg.js",
-	"./tg.js": "../../ui-framework/node_modules/moment/locale/tg.js",
-	"./th": "../../ui-framework/node_modules/moment/locale/th.js",
-	"./th.js": "../../ui-framework/node_modules/moment/locale/th.js",
-	"./tk": "../../ui-framework/node_modules/moment/locale/tk.js",
-	"./tk.js": "../../ui-framework/node_modules/moment/locale/tk.js",
-	"./tl-ph": "../../ui-framework/node_modules/moment/locale/tl-ph.js",
-	"./tl-ph.js": "../../ui-framework/node_modules/moment/locale/tl-ph.js",
-	"./tlh": "../../ui-framework/node_modules/moment/locale/tlh.js",
-	"./tlh.js": "../../ui-framework/node_modules/moment/locale/tlh.js",
-	"./tr": "../../ui-framework/node_modules/moment/locale/tr.js",
-	"./tr.js": "../../ui-framework/node_modules/moment/locale/tr.js",
-	"./tzl": "../../ui-framework/node_modules/moment/locale/tzl.js",
-	"./tzl.js": "../../ui-framework/node_modules/moment/locale/tzl.js",
-	"./tzm": "../../ui-framework/node_modules/moment/locale/tzm.js",
-	"./tzm-latn": "../../ui-framework/node_modules/moment/locale/tzm-latn.js",
-	"./tzm-latn.js": "../../ui-framework/node_modules/moment/locale/tzm-latn.js",
-	"./tzm.js": "../../ui-framework/node_modules/moment/locale/tzm.js",
-	"./ug-cn": "../../ui-framework/node_modules/moment/locale/ug-cn.js",
-	"./ug-cn.js": "../../ui-framework/node_modules/moment/locale/ug-cn.js",
-	"./uk": "../../ui-framework/node_modules/moment/locale/uk.js",
-	"./uk.js": "../../ui-framework/node_modules/moment/locale/uk.js",
-	"./ur": "../../ui-framework/node_modules/moment/locale/ur.js",
-	"./ur.js": "../../ui-framework/node_modules/moment/locale/ur.js",
-	"./uz": "../../ui-framework/node_modules/moment/locale/uz.js",
-	"./uz-latn": "../../ui-framework/node_modules/moment/locale/uz-latn.js",
-	"./uz-latn.js": "../../ui-framework/node_modules/moment/locale/uz-latn.js",
-	"./uz.js": "../../ui-framework/node_modules/moment/locale/uz.js",
-	"./vi": "../../ui-framework/node_modules/moment/locale/vi.js",
-	"./vi.js": "../../ui-framework/node_modules/moment/locale/vi.js",
-	"./x-pseudo": "../../ui-framework/node_modules/moment/locale/x-pseudo.js",
-	"./x-pseudo.js": "../../ui-framework/node_modules/moment/locale/x-pseudo.js",
-	"./yo": "../../ui-framework/node_modules/moment/locale/yo.js",
-	"./yo.js": "../../ui-framework/node_modules/moment/locale/yo.js",
-	"./zh-cn": "../../ui-framework/node_modules/moment/locale/zh-cn.js",
-	"./zh-cn.js": "../../ui-framework/node_modules/moment/locale/zh-cn.js",
-	"./zh-hk": "../../ui-framework/node_modules/moment/locale/zh-hk.js",
-	"./zh-hk.js": "../../ui-framework/node_modules/moment/locale/zh-hk.js",
-	"./zh-mo": "../../ui-framework/node_modules/moment/locale/zh-mo.js",
-	"./zh-mo.js": "../../ui-framework/node_modules/moment/locale/zh-mo.js",
-	"./zh-tw": "../../ui-framework/node_modules/moment/locale/zh-tw.js",
-	"./zh-tw.js": "../../ui-framework/node_modules/moment/locale/zh-tw.js"
-};
-
-
-function webpackContext(req) {
-	var id = webpackContextResolve(req);
-	return __webpack_require__(id);
-}
-function webpackContextResolve(req) {
-	if(!__webpack_require__.o(map, req)) {
-		var e = new Error("Cannot find module '" + req + "'");
-		e.code = 'MODULE_NOT_FOUND';
-		throw e;
-	}
-	return map[req];
-}
-webpackContext.keys = function webpackContextKeys() {
-	return Object.keys(map);
-};
-webpackContext.resolve = webpackContextResolve;
-module.exports = webpackContext;
-webpackContext.id = "../../ui-framework/node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ })
 

@@ -1,13 +1,3 @@
-import {
-    AbstractStatefulCollectionView,
-    CarouselDOMConfig,
-    CarouselViewRenderer,
-    CollectionViewListener,
-    KeyType,
-    Modifier,
-    RowPosition,
-    View
-} from 'ui-framework-jps';
 
 import {DRAGGABLE, STATE_NAMES, VIEW_NAME} from "../AppTypes";
 import Controller from "../Controller";
@@ -18,10 +8,14 @@ import debug from 'debug';
 import moment from "moment";
 
 import Chart from 'chart.js/auto';
-import App from "../../App";
 import {isSameMongo} from "../EqualityFunctions";
 import {truncateString} from "../MiscFunctions";
 import {addDurations} from "../DurationFunctions";
+import {AbstractStatefulCollectionView} from "../../framework/ui/view/implementation/AbstractStatefulCollectionView";
+import {CarouselDOMConfig, KeyType, Modifier, RowPosition} from "../../framework/ui/ConfigurationTypes";
+import {CollectionViewListener} from "../../framework/ui/view/interface/CollectionViewListener";
+import {CarouselViewRenderer} from "../../framework/ui/view/renderer/CarouselViewRenderer";
+import {View} from "../../framework/ui/view/interface/View";
 
 const logger = debug('workouts-view');
 

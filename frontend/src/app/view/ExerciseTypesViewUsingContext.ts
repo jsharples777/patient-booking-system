@@ -1,23 +1,19 @@
-import {
-    AbstractStatefulCollectionView,
-    CollectionViewDOMConfig,
-    CollectionViewEventHandlerDelegateUsingContext,
-    CollectionViewListener,
-    CollectionViewListenerForwarder,
-    ContextDefinition,
-    ContextualInformationHelper,
-    FIELD_CreatedBy,
-    KeyType,
-    ListViewRendererUsingContext,
-    StateManager,
-    View
-} from 'ui-framework-jps';
 
 import {DRAGGABLE, STATE_NAMES, VIEW_NAME} from "../AppTypes";
 import Controller from "../Controller";
 
 import debug from 'debug';
 import {isSameMongo} from "../EqualityFunctions";
+import {AbstractStatefulCollectionView} from "../../framework/ui/view/implementation/AbstractStatefulCollectionView";
+import {CollectionViewDOMConfig, KeyType} from "../../framework/ui/ConfigurationTypes";
+import {CollectionViewListener} from "../../framework/ui/view/interface/CollectionViewListener";
+import {StateManager} from "../../framework/state/StateManager";
+import {ListViewRendererUsingContext} from "../../framework/ui/view/renderer/ListViewRendererUsingContext";
+import {CollectionViewEventHandlerDelegateUsingContext} from "../../framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext";
+import {CollectionViewListenerForwarder} from "../../framework/ui/view/delegate/CollectionViewListenerForwarder";
+import {ContextDefinition, ContextualInformationHelper} from "../../framework/ui/context/ContextualInformationHelper";
+import {View} from "../../framework/ui/view/interface/View";
+import {FIELD_CreatedBy} from "../../framework/model/BasicObjectDefinitionFactory";
 
 const logger = debug('exercise-types-view');
 

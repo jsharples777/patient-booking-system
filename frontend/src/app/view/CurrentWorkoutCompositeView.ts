@@ -1,30 +1,25 @@
-import {
-    BasicObjectDefinitionFactory,
-    DataObjectController,
-    DataObjectDefinition,
-    DataObjectListener,
-    DefaultPermissionChecker,
-    DetailView,
-    DetailViewImplementation,
-    Form,
-    FormDetailViewRenderer,
-    LinkedCollectionDetailController,
-    MemoryBufferStateManager,
-    ObjectDefinitionRegistry,
-    SidebarViewContainer,
-    StateChangeListener,
-    StateManager
-} from 'ui-framework-jps';
-
 import {BUTTON, INPUT, STATE_NAMES, VIEW_CONTAINER, VIEW_NAME} from "../AppTypes";
-
 import Controller from "../Controller";
 import debug from "debug";
 import {ValidationHelper} from "../helper/ValidationHelper";
 import {CurrentWorkoutExercisesView} from "./CurrentWorkoutExercisesView";
 import moment from "moment";
-import App from "../../App";
 import {isSameMongo} from '../EqualityFunctions'
+import {StateChangeListener} from "../../framework/state/StateChangeListener";
+import {DataObjectListener} from "../../framework/model/DataObjectListener";
+import {SidebarViewContainer} from "../../framework/ui/container/SidebarViewContainer";
+import {DataObjectDefinition} from "../../framework/model/DataObjectTypeDefs";
+import {StateManager} from "../../framework/state/StateManager";
+import {MemoryBufferStateManager} from "../../framework/state/MemoryBufferStateManager";
+import {ObjectDefinitionRegistry} from "../../framework/model/ObjectDefinitionRegistry";
+import {FormDetailViewRenderer} from "../../framework/ui/view/renderer/FormDetailViewRenderer";
+import {LinkedCollectionDetailController} from "../../framework/ui/helper/LinkedCollectionDetailController";
+import {BasicObjectDefinitionFactory} from "../../framework/model/BasicObjectDefinitionFactory";
+import {Form} from "../../framework/ui/form/Form";
+import {DetailViewImplementation} from "../../framework/ui/view/implementation/DetailViewImplementation";
+import {DetailView} from "../../framework/ui/view/interface/DetailView";
+import {DataObjectController} from "../../framework/model/DataObjectController";
+import {DefaultPermissionChecker} from "../../framework/ui/view/implementation/DefaultPermissionChecker";
 
 const logger = debug('current-workout-composite-view');
 

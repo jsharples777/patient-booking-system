@@ -1,17 +1,3 @@
-import {
-    AbstractStatefulCollectionView,
-    CarouselDOMConfig,
-    CarouselViewRendererUsingContext,
-    CollectionViewEventHandlerDelegateUsingContext,
-    CollectionViewListenerForwarder,
-    CollectionViewListener,
-    ContextDefinition,
-    ContextualInformationHelper,
-    KeyType,
-    Modifier,
-    RowPosition,
-    View
-} from 'ui-framework-jps';
 
 
 import {DRAGGABLE, STATE_NAMES, VIEW_NAME} from "../AppTypes";
@@ -24,6 +10,14 @@ import App from "../../App";
 import {isSameMongo} from "../EqualityFunctions";
 import {truncateString} from "../MiscFunctions";
 import {addDurations} from "../DurationFunctions";
+import {AbstractStatefulCollectionView} from "../../framework/ui/view/implementation/AbstractStatefulCollectionView";
+import {CarouselDOMConfig, KeyType, Modifier, RowPosition} from "../../framework/ui/ConfigurationTypes";
+import {CollectionViewListener} from "../../framework/ui/view/interface/CollectionViewListener";
+import {CollectionViewEventHandlerDelegateUsingContext} from "../../framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext";
+import {CollectionViewListenerForwarder} from "../../framework/ui/view/delegate/CollectionViewListenerForwarder";
+import {CarouselViewRendererUsingContext} from "../../framework/ui/view/renderer/CarouselViewRendererUsingContext";
+import {ContextDefinition, ContextualInformationHelper} from "../../framework/ui/context/ContextualInformationHelper";
+import {View} from "../../framework/ui/view/interface/View";
 
 const logger = debug('workouts-view');
 

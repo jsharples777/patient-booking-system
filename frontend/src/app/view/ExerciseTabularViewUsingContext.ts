@@ -1,29 +1,25 @@
-import {
-    AbstractStatefulCollectionView,
-    BootstrapTableConfigHelper,
-    CollectionViewDOMConfig,
-    CollectionViewEventHandlerDelegateUsingContext,
-    CollectionViewListener,
-    CollectionViewListenerForwarder,
-    ContextDefinition,
-    ContextualInformationHelper,
-    DataObjectDefinition,
-    DisplayOrder,
-    FIELD_CreatedBy,
-    KeyType,
-    Modifier,
-    ObjectDefinitionRegistry,
-    StateManager,
-    TableUIConfig,
-    TabularViewRendererUsingContext,
-    View
-} from 'ui-framework-jps';
+
 
 
 import {DRAGGABLE, STATE_NAMES, VIEW_NAME} from "../AppTypes";
 import Controller from "../Controller";
 import debug from 'debug';
 import {isSameMongo} from "../EqualityFunctions";
+import {AbstractStatefulCollectionView} from "../../framework/ui/view/implementation/AbstractStatefulCollectionView";
+import {CollectionViewListener} from "../../framework/ui/view/interface/CollectionViewListener";
+import {CollectionViewDOMConfig, KeyType, Modifier} from "../../framework/ui/ConfigurationTypes";
+import {StateManager} from "../../framework/state/StateManager";
+import {DataObjectDefinition} from "../../framework/model/DataObjectTypeDefs";
+import {ObjectDefinitionRegistry} from "../../framework/model/ObjectDefinitionRegistry";
+import {DisplayOrder} from "../../framework/ui/form/FormUITypeDefs";
+import {TableUIConfig} from "../../framework/ui/view/renderer/TableUITypeDefs";
+import {BootstrapTableConfigHelper} from "../../framework/ui/helper/BootstrapTableConfigHelper";
+import {TabularViewRendererUsingContext} from "../../framework/ui/view/renderer/TabularViewRendererUsingContext";
+import {ContextDefinition, ContextualInformationHelper} from "../../framework/ui/context/ContextualInformationHelper";
+import {CollectionViewEventHandlerDelegateUsingContext} from "../../framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext";
+import {CollectionViewListenerForwarder} from "../../framework/ui/view/delegate/CollectionViewListenerForwarder";
+import {View} from "../../framework/ui/view/interface/View";
+import {FIELD_CreatedBy} from "../../framework/model/BasicObjectDefinitionFactory";
 
 
 const logger = debug('exercise-types-view');

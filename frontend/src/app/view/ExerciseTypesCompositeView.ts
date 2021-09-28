@@ -1,14 +1,4 @@
-import {
-    BasicObjectDefinitionFactory,
-    DataObjectDefinition,
-    DetailView,
-    DetailViewImplementation,
-    Form,
-    FormDetailViewRenderer,
-    LinkedCollectionDetailController,
-    ObjectDefinitionRegistry,
-    SidebarViewContainer
-} from 'ui-framework-jps';
+
 
 import {BUTTON, ExerciseTypesSidebarContainers, STATE_NAMES, VIEW_CONTAINER, VIEW_NAME} from "../AppTypes";
 
@@ -18,6 +8,15 @@ import Controller from "../Controller";
 import debug from "debug";
 import {ValidationHelper} from "../helper/ValidationHelper";
 import {ExerciseTabularViewUsingContext} from "./ExerciseTabularViewUsingContext";
+import {SidebarViewContainer} from "../../framework/ui/container/SidebarViewContainer";
+import {DataObjectDefinition} from "../../framework/model/DataObjectTypeDefs";
+import {ObjectDefinitionRegistry} from "../../framework/model/ObjectDefinitionRegistry";
+import {FormDetailViewRenderer} from "../../framework/ui/view/renderer/FormDetailViewRenderer";
+import {DetailViewImplementation} from "../../framework/ui/view/implementation/DetailViewImplementation";
+import {DetailView} from "../../framework/ui/view/interface/DetailView";
+import {LinkedCollectionDetailController} from "../../framework/ui/helper/LinkedCollectionDetailController";
+import {BasicObjectDefinitionFactory} from "../../framework/model/BasicObjectDefinitionFactory";
+import {Form} from "../../framework/ui/form/Form";
 
 const logger = debug('exercise-types-composite-view');
 
