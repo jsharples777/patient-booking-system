@@ -1,5 +1,5 @@
 import debug from "debug";
-import {datepicker, Datepicker, eventcalendar, Eventcalendar} from "@mobiscroll/javascript";
+import {datepicker, Datepicker, eventcalendar, Eventcalendar, getInst, snackbar,popup} from "@mobiscroll/javascript";
 import moment from "moment";
 import {STATE_NAMES, VIEW_CONTAINER} from "./AppTypes";
 import Controller from "./Controller";
@@ -18,10 +18,38 @@ export class AppointmentController implements StateChangeListener {
         return AppointmentController._instance;
     }
 
-    private datePicker: Datepicker | null = null;
-    private calendar: Eventcalendar | null = null;
-    private appointmentTypes: any[] | null = null;
-    private clinicConfig: any | null = null;
+    private static datePicker: Datepicker | null = null;
+    private static calendar: Eventcalendar | null = null;
+    private static appointmentTypes: any[] | null = null;
+    private static clinicConfig: any | null = null;
+
+    private static popup:any|null = null;
+    private static range:any|null = null;
+    private static oldEvent:any|null = null;
+    private static tempEvent:any = {};
+
+    private static deleteEvent:boolean = false;
+    private static restoreEvent:boolean = false;
+
+    private static titleInput:any|null = null;
+    private static descriptionTextarea:any|null = null;
+    private static allDaySwitch:any|null = null;
+    private static freeSegmented:any|null = null;
+    private static busySegmented:any|null = null;
+    private static deleteButton:any|null = null;
+
+    private static datePickerResponsive = {
+        medium: {
+            controls: ['calendar'],
+            touchUi: false
+        }
+    }
+    private static datetimePickerResponsive = {
+        medium: {
+            controls: ['calendar', 'time'],
+            touchUi: false
+        }
+    }
 
     private constructor() {
         this.handleNewDatePicked = this.handleNewDatePicked.bind(this);
@@ -43,16 +71,11 @@ export class AppointmentController implements StateChangeListener {
         logger(event);
     }
 
-    public setViewObjects(datePicker: Datepicker, calendar: Eventcalendar): void {
-        this.datePicker = datePicker;
-        this.calendar = calendar;
-    }
-
     protected getColourForAppointment(appointment: any) {
         let result = `rgba(10, 100, 100, 50)`;
-        if (this.appointmentTypes) {
-            let foundIndex = this.appointmentTypes.findIndex((type) => type.name === appointment.type);
-            if (foundIndex >= 0) result = this.appointmentTypes[foundIndex].colour;
+        if (AppointmentController.appointmentTypes) {
+            let foundIndex = AppointmentController.appointmentTypes.findIndex((type) => type.name === appointment.type);
+            if (foundIndex >= 0) result = AppointmentController.appointmentTypes[foundIndex].colour;
         }
         return result;
     }
@@ -155,26 +178,26 @@ export class AppointmentController implements StateChangeListener {
             dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             showWeekNumbers: true,
             onChange: (event: any, inst: any) => {
-                this.calendar?.navigate(event.value);
+                AppointmentController.calendar?.navigate(event.value);
                 AppointmentController.getInstance().handleNewDatePicked(event.value, inst)
             }
         });
 
         let options: any;
-        if (this.clinicConfig) {
+        if (AppointmentController.clinicConfig) {
             logger('Using clinic config options');
             options = {
-                clickToCreate: this.clinicConfig.clickToCreate,
-                dragTimeStep: this.clinicConfig.dragTimeStep,
-                dragToCreate: this.clinicConfig.dragToCreate,
-                dragToMove: this.clinicConfig.dragToMove,
-                dragToResize: this.clinicConfig.dragToResize,
-                min: moment().subtract(this.clinicConfig.min, "months"),
-                controls: this.clinicConfig.controls,
-                showControls: this.clinicConfig.showControls,
-                view: this.clinicConfig.view,
-                invalidateEvent: this.clinicConfig.invalidateEvent,
-                invalid: this.clinicConfig.invalid,
+                clickToCreate: AppointmentController.clinicConfig.clickToCreate,
+                dragTimeStep: AppointmentController.clinicConfig.dragTimeStep,
+                dragToCreate: AppointmentController.clinicConfig.dragToCreate,
+                dragToMove: AppointmentController.clinicConfig.dragToMove,
+                dragToResize: AppointmentController.clinicConfig.dragToResize,
+                min: moment().subtract(AppointmentController.clinicConfig.min, "months"),
+                controls: AppointmentController.clinicConfig.controls,
+                showControls: AppointmentController.clinicConfig.showControls,
+                view: AppointmentController.clinicConfig.view,
+                invalidateEvent: AppointmentController.clinicConfig.invalidateEvent,
+                invalid: AppointmentController.clinicConfig.invalid,
             }
         } else {
             logger('Using DEFAULT config options');
@@ -220,19 +243,34 @@ export class AppointmentController implements StateChangeListener {
         }
         options.onSelectedDateChange = (event: any, inst: any) => {
             AppointmentController.getInstance().handleNewDatePicked(event.date, inst);
-            this.datePicker?.setVal(event.date);
+            AppointmentController.datePicker?.setVal(event.date);
         };
         options.onPageLoading = (event: any, inst: any) => {
             AppointmentController.getInstance().onPageLoading(event, inst);
         };
         options.onEventCreated = (event: any, inst: any) => {
             AppointmentController.getInstance().onAppointmentCreated(event, inst);
+            AppointmentController.popup.close();
+            // store temporary event
+            AppointmentController.tempEvent = event.event;
+            console.log(event.event);
+            this.createAddPopup(event.target);
         };
         options.onEventDelete = (event: any, inst: any) => {
             AppointmentController.getInstance().onAppointmentDeleting(event, inst);
         };
         options.onEventDeleted = (event: any, inst: any) => {
             AppointmentController.getInstance().onAppointmentDeleted(event, inst);
+            snackbar({
+                button: {
+                    action: function () {
+                        // @ts-ignore
+                        AppointmentController.calendar.addEvent(event.event);
+                    },
+                    text: 'Undo'
+                },
+                message: 'Event deleted'
+            });
         };
         options.onEventRightClick = (event: any, inst: any) => {
             AppointmentController.getInstance().onAppointmentContext(event, inst);
@@ -243,190 +281,40 @@ export class AppointmentController implements StateChangeListener {
         options.onEventDoubleClick = (event: any, inst: any) => {
             AppointmentController.getInstance().onAppointmentEditRequested(event, inst);
         };
+        options.onEventClick = (args:any) => {
+            AppointmentController.oldEvent = Object.assign({}, args.event);
+            AppointmentController.tempEvent = args.event;
+
+            if (!AppointmentController.popup.isVisible()) {
+                console.log(args);
+                this.createEditPopup(args);
+            }
+        }
 
         options.calendar = {labels: true}
 
-        var calendar,
-            popup,
-            range,
-            oldEvent,
-            tempEvent = {},
-            deleteEvent,
-            restoreEvent,
-            titleInput = document.getElementById('event-title'),
-            descriptionTextarea = document.getElementById('event-desc'),
-            allDaySwitch = document.getElementById('event-all-day'),
-            freeSegmented = document.getElementById('event-status-free'),
-            busySegmented = document.getElementById('event-status-busy'),
-            deleteButton = document.getElementById('event-delete'),
-            datePickerResponsive = {
-                medium: {
-                    controls: ['calendar'],
-                    touchUi: false
-                }
-            },
-            datetimePickerResponsive = {
-                medium: {
-                    controls: ['calendar', 'time'],
-                    touchUi: false
-                }
-            },
+        AppointmentController.titleInput = document.getElementById('event-title');
+        AppointmentController.descriptionTextarea = document.getElementById('event-desc');
+        AppointmentController.allDaySwitch = document.getElementById('event-all-day');
+        AppointmentController.freeSegmented = document.getElementById('event-status-free');
+        AppointmentController.busySegmented = document.getElementById('event-status-busy');
+        AppointmentController.deleteButton = document.getElementById('event-delete');
 
-        function createAddPopup(elm) {
-            // hide delete button inside add popup
-            deleteButton.style.display = 'none';
 
-            deleteEvent = true;
-            restoreEvent = false;
 
-            // set popup header text and buttons for adding
-            popup.setOptions({
-                headerText: 'New event',
-                buttons: [
-                    'cancel',
-                    {
-                        text: 'Add',
-                        keyCode: 'enter',
-                        handler: function () {
-                            calendar.updateEvent(tempEvent);
-                            deleteEvent = false;
 
-                            // navigate the calendar to the correct view
-                            calendar.navigate(tempEvent.start);
 
-                            popup.close();
-                        },
-                        cssClass: 'mbsc-popup-button-primary'
-                    }
-                ]
-            });
-
-            // fill popup with a new event data
-            mobiscroll.getInst(titleInput).value = tempEvent.title;
-            mobiscroll.getInst(descriptionTextarea).value = '';
-            mobiscroll.getInst(allDaySwitch).checked = tempEvent.allDay;
-            range.setVal([tempEvent.start, tempEvent.end]);
-            mobiscroll.getInst(busySegmented).checked = true;
-            range.setOptions({
-                controls: tempEvent.allDay ? ['date'] : ['datetime'],
-                responsive: tempEvent.allDay ? datePickerResponsive : datetimePickerResponsive
-            });
-
-            // set anchor for the popup
-            popup.setOptions({ anchor: elm });
-
-            popup.open();
-        }
-
-        function createEditPopup(args) {
-            var ev = args.event;
-
-            // show delete button inside edit popup
-            deleteButton.style.display = 'block';
-
-            deleteEvent = false;
-            restoreEvent = true;
-
-            // set popup header text and buttons for editing
-            popup.setOptions({
-                headerText: 'Edit event',
-                buttons: [
-                    'cancel',
-                    {
-                        text: 'Save',
-                        keyCode: 'enter',
-                        handler: function () {
-                            var date = range.getVal();
-                            // update event with the new properties on save button click
-                            calendar.updateEvent({
-                                id: ev.id,
-                                title: titleInput.value,
-                                description: descriptionTextarea.value,
-                                allDay: mobiscroll.getInst(allDaySwitch).checked,
-                                start: date[0],
-                                end: date[1],
-                                free: mobiscroll.getInst(freeSegmented).checked,
-                                color: ev.color,
-                            });
-
-                            // navigate the calendar to the correct view
-                            calendar.navigate(date[0]);;
-
-                            restoreEvent = false;
-                            popup.close();
-                        },
-                        cssClass: 'mbsc-popup-button-primary'
-                    }
-                ]
-            });
-
-            // fill popup with the selected event data
-            mobiscroll.getInst(titleInput).value = ev.title || '';
-            mobiscroll.getInst(descriptionTextarea).value = ev.description || '';
-            mobiscroll.getInst(allDaySwitch).checked = ev.allDay || false;
-            range.setVal([ev.start, ev.end]);
-
-            if (ev.free) {
-                mobiscroll.getInst(freeSegmented).checked = true;
-            } else {
-                mobiscroll.getInst(busySegmented).checked = true;
-            }
-
-            // change range settings based on the allDay
-            range.setOptions({
-                controls: ev.allDay ? ['date'] : ['datetime'],
-                responsive: ev.allDay ? datePickerResponsive : datetimePickerResponsive
-            });
-
-            // set anchor for the popup
-            popup.setOptions({ anchor: args.domEvent.currentTarget });
-            popup.open();
-        }
-
-        calendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
-            clickToCreate: 'double',
-            dragToCreate: true,
-            dragToMove: true,
-            dragToResize: true,
-            view: {
-                schedule: { type: 'week' }
-            },
-            data: myData,
-            onEventClick: function (args) {
-                oldEvent = Object.assign({}, args.event);
-                tempEvent = args.event;
-
-                if (!popup.isVisible()) {
-                    createEditPopup(args);
-                }
-            },
-            onEventCreated: function (args) {
-                popup.close();
-                // store temporary event
-                tempEvent = args.event;
-                createAddPopup(args.target);
-            },
-            onEventDeleted: function (args) {
-                mobiscroll.snackbar({            button: {
-                        action: function () {
-                            calendar.addEvent(args.event);
-                        },
-                        text: 'Undo'
-                    },
-                    message: 'Event deleted'
-                });
-            }
-        });
-
-        popup = mobiscroll.popup('#demo-add-popup', {
+        AppointmentController.popup = popup('#demo-add-popup', {
             display: 'bottom',
             contentPadding: false,
             fullScreen: true,
             onClose: function () {
-                if (deleteEvent) {
-                    calendar.removeEvent(tempEvent);
-                } else if (restoreEvent) {
-                    calendar.updateEvent(oldEvent);
+                if (AppointmentController.deleteEvent) {
+                    // @ts-ignore
+                    AppointmentController.calendar.removeEvent(AppointmentController.tempEvent);
+                } else if (AppointmentController.restoreEvent) {
+                    // @ts-ignore
+                    AppointmentController.calendar.updateEvent(AppointmentController.oldEvent);
                 }
             },
             responsive: {
@@ -439,62 +327,66 @@ export class AppointmentController implements StateChangeListener {
             }
         });
 
-        titleInput.addEventListener('input', function (ev) {
+        AppointmentController.titleInput.addEventListener('input', function (ev:any) {
             // update current event's title
-            tempEvent.title = ev.target.value;
+            AppointmentController.tempEvent.title = ev.target.value;
         });
 
-        descriptionTextarea.addEventListener('change', function (ev) {
+        AppointmentController.descriptionTextarea.addEventListener('change', function (ev:any) {
             // update current event's title
-            tempEvent.description = ev.target.value;
+            AppointmentController.tempEvent.description = ev.target.value;
         });
 
-        allDaySwitch.addEventListener('change', function () {
-            var checked = this.checked
+        AppointmentController.allDaySwitch.addEventListener('change', function () {
+            let checked = AppointmentController.allDaySwitch.checked
             // change range settings based on the allDay
-            range.setOptions({
+            AppointmentController.range.setOptions({
                 controls: checked ? ['date'] : ['datetime'],
-                responsive: checked ? datePickerResponsive : datetimePickerResponsive
+                responsive: checked ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
             });
 
             // update current event's allDay property
-            tempEvent.allDay = checked;
+            AppointmentController.tempEvent.allDay = checked;
         });
 
-        range = mobiscroll.datepicker('#event-date', {
+        AppointmentController.range = datepicker('#event-date', {
             controls: ['date'],
             select: 'range',
             startInput: '#start-input',
             endInput: '#end-input',
             showRangeLabels: false,
             touchUi: true,
-            responsive: datePickerResponsive,
+            responsive: AppointmentController.datePickerResponsive,
             onChange: function (args) {
                 var date = args.value;
                 // update event's start date
-                tempEvent.start = date[0];
-                tempEvent.end = date[1];
+                AppointmentController.tempEvent.start = date[0];
+                AppointmentController.tempEvent.end = date[1];
             }
         });
 
         document.querySelectorAll('input[name=event-status]').forEach(function (elm) {
             elm.addEventListener('change', function () {
                 // update current event's free property
-                tempEvent.free = mobiscroll.getInst(freeSegmented).checked;
+                // @ts-ignore
+                AppointmentController.tempEvent.free = getInst(AppointmentController.freeSegmented).checked;
             });
         });
 
-        deleteButton.addEventListener('click', function () {
+        AppointmentController.deleteButton.addEventListener('click', function () {
             // delete current event on button click
-            calendar.removeEvent(tempEvent);
-            popup.close();
+            // @ts-ignore
+            AppointmentController.calendar.removeEvent(AppointmentController.tempEvent);
+            AppointmentController.popup.close();
 
             // save a local reference to the deleted event
-            var deletedEvent = tempEvent;
+            let deletedEvent = AppointmentController.tempEvent;
 
-            mobiscroll.snackbar({        button: {
+            snackbar({
+                button: {
                     action: function () {
-                        calendar.addEvent(deletedEvent);
+                        // @ts-ignore
+                        AppointmentController.calendar.addEvent(deletedEvent);
                     },
                     text: 'Undo'
                 },
@@ -519,25 +411,26 @@ export class AppointmentController implements StateChangeListener {
 
         switch (name) {
             case STATE_NAMES.appointmentTypes: {
-                this.appointmentTypes = newValue;
+                AppointmentController.appointmentTypes = newValue;
                 break;
             }
             case STATE_NAMES.clinicConfig: {
-                this.clinicConfig = newValue[0];
-                if (this.calendar) {
+                AppointmentController.clinicConfig = newValue[0];
+                if (AppointmentController.calendar) {
                     logger('State changed, using clinic config options');
-                    this.calendar.setOptions({
-                        clickToCreate: this.clinicConfig.clickToCreate,
-                        dragTimeStep: this.clinicConfig.dragTimeStep,
-                        dragToCreate: this.clinicConfig.dragToCreate,
-                        dragToMove: this.clinicConfig.dragToMove,
-                        dragToResize: this.clinicConfig.dragToResize,
-                        min: moment().subtract(this.clinicConfig.min, "months"),
-                        controls: this.clinicConfig.controls,
-                        showControls: this.clinicConfig.showControls,
-                        view: this.clinicConfig.view,
-                        invalidateEvent: this.clinicConfig.invalidateEvent,
-                        invalid: this.clinicConfig.invalid,
+
+                    AppointmentController.calendar.setOptions({
+                        clickToCreate: AppointmentController.clinicConfig.clickToCreate,
+                        dragTimeStep: AppointmentController.clinicConfig.dragTimeStep,
+                        dragToCreate: AppointmentController.clinicConfig.dragToCreate,
+                        dragToMove: AppointmentController.clinicConfig.dragToMove,
+                        dragToResize: AppointmentController.clinicConfig.dragToResize,
+                        min: moment().subtract(AppointmentController.clinicConfig.min, "months"),
+                        controls: AppointmentController.clinicConfig.controls,
+                        showControls: AppointmentController.clinicConfig.showControls,
+                        view: AppointmentController.clinicConfig.view,
+                        invalidateEvent: AppointmentController.clinicConfig.invalidateEvent,
+                        invalid: AppointmentController.clinicConfig.invalid,
                     });
                 }
                 break;
@@ -553,5 +446,130 @@ export class AppointmentController implements StateChangeListener {
 
     stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, itemNewValue: any): void {
     }
+
+    private createAddPopup(elm:HTMLElement) {
+        // hide delete button inside add popup
+        AppointmentController.deleteButton.style.display = 'none';
+
+        AppointmentController.deleteEvent = true;
+        AppointmentController.restoreEvent = false;
+
+        // set popup header text and buttons for adding
+        AppointmentController.popup.setOptions({
+            headerText: 'New event',
+            buttons: [
+                'cancel',
+                {
+                    text: 'Add',
+                    keyCode: 'enter',
+                    handler: function () {
+                        // @ts-ignore
+                        AppointmentController.calendar.updateEvent(AppointmentController.tempEvent);
+                        // @ts-ignore
+                        AppointmentController.deleteEvent = false;
+
+                        // navigate the calendar to the correct view
+                        // @ts-ignore
+                        AppointmentController.calendar.navigate(AppointmentController.tempEvent.start);
+
+                        // @ts-ignore
+                        AppointmentController.popup.close();
+                    },
+                    cssClass: 'mbsc-popup-button-primary'
+                }
+            ]
+        });
+
+        // fill popup with a new event data
+        console.log(AppointmentController.titleInput);
+        console.log(getInst(AppointmentController.titleInput));
+
+        AppointmentController.titleInput.value = AppointmentController.tempEvent.title;
+
+        AppointmentController.descriptionTextarea.value = '';
+        AppointmentController.allDaySwitch.checked = AppointmentController.tempEvent.allDay;
+        AppointmentController.range.setVal([AppointmentController.tempEvent.start, AppointmentController.tempEvent.end]);
+        AppointmentController.busySegmented.checked = true;
+        AppointmentController.range.setOptions({
+            controls: AppointmentController.tempEvent.allDay ? ['date'] : ['datetime'],
+            responsive: AppointmentController.tempEvent.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
+        });
+
+        // set anchor for the popup
+        AppointmentController.popup.setOptions({ anchor: elm ,theme: 'ios'});
+
+        AppointmentController.popup.open();
+    }
+
+    private createEditPopup(args:any) {
+        let ev = args.event;
+
+        // show delete button inside edit popup
+        AppointmentController.deleteButton.style.display = 'block';
+
+        AppointmentController.deleteEvent = false;
+        AppointmentController.restoreEvent = true;
+
+        // set popup header text and buttons for editing
+        AppointmentController.popup.setOptions({
+            headerText: 'Edit event',
+            buttons: [
+                'cancel',
+                {
+                    text: 'Save',
+                    keyCode: 'enter',
+                    handler: function () {
+                        let date = AppointmentController.range.getVal();
+                        // update event with the new properties on save button click
+                        // @ts-ignore
+                        AppointmentController.calendar.updateEvent({
+                            id: ev.id,
+                            title: AppointmentController.titleInput.value,
+                            description: AppointmentController.descriptionTextarea.value,
+                            allDay: AppointmentController.allDaySwitch.checked,
+                            start: date[0],
+                            end: date[1],
+                            free: AppointmentController.freeSegmented.checked,
+                            color: ev.color,
+                        });
+
+                        // navigate the calendar to the correct view
+                        // @ts-ignore
+                        AppointmentController.calendar.navigate(date[0]);;
+
+                        AppointmentController.restoreEvent = false;
+                        AppointmentController.popup.close();
+                    },
+                    cssClass: 'mbsc-popup-button-primary'
+                }
+            ]
+        });
+
+        // fill popup with the selected event data
+
+        AppointmentController.titleInput.value = ev.title || '';
+        AppointmentController.descriptionTextarea.value = ev.description || '';
+        AppointmentController.allDaySwitch.checked = ev.allDay || false;
+        AppointmentController.range.setVal([ev.start, ev.end]);
+
+        if (ev.free) {
+            // @ts-ignore
+            AppointmentController.freeSegmented.checked = true;
+        } else {
+            // @ts-ignore
+            AppointmentController.busySegmented.checked = true;
+        }
+
+        // change range settings based on the allDay
+        AppointmentController.range.setOptions({
+            controls: ev.allDay ? ['date'] : ['datetime'],
+            responsive: ev.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
+        });
+
+        // set anchor for the popup
+        AppointmentController.popup.setOptions({ anchor: args.domEvent.currentTarget ,theme:'ios'});
+        AppointmentController.popup.open();
+    }
+
 
 }
