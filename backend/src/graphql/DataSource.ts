@@ -6,6 +6,7 @@ import {Express} from 'express';
 import ExampleQLDelegate from "./ExampleQLDelegate";
 import AppointmentsQLDelegate from "./AppointmentsQLDelegate";
 import PatientsQLDelegate from "./PatientsQLDelegate";
+import AppointmentTypesQLDelegate from "./AppointmentTypesQLDelegate";
 
 const dsLogger = debug('data-source');
 
@@ -21,7 +22,8 @@ export default class DataSource {
             Query: {
                 getExerciseTypes:ExampleQLDelegate.getExerciseTypes,
                 getAppointments:AppointmentsQLDelegate.getAppointments,
-                getPatientSearchDetails:PatientsQLDelegate.getPatientSearchDetails
+                getPatientSearchDetails:PatientsQLDelegate.getPatientSearchDetails,
+                getAppointmentTypes:AppointmentTypesQLDelegate.getAppointmentTypes,
             },
             Mutation: {
                 addExerciseType:ExampleQLDelegate.addExerciseType,
@@ -29,7 +31,10 @@ export default class DataSource {
                 deleteExerciseType:ExampleQLDelegate.deleteExerciseType,
                 addAppointment:AppointmentsQLDelegate.addAppointment,
                 updateAppointment:AppointmentsQLDelegate.updateAppointment,
-                deleteAppointment:AppointmentsQLDelegate.deleteAppointment
+                deleteAppointment:AppointmentsQLDelegate.deleteAppointment,
+                addAppointmentType:AppointmentTypesQLDelegate.addAppointmentType,
+                updateAppointmentType:AppointmentTypesQLDelegate.updateAppointmentType,
+                deleteAppointmentType:AppointmentTypesQLDelegate.deleteAppointmentType
             }
         };
 

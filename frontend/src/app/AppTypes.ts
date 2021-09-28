@@ -16,13 +16,15 @@ export const STATE_NAMES = {
     patientSearch: 'fastSearchNames',
     recentPatientSearches: 'recentPatientSearches',
     appointments: 'appointment',
+    appointmentTypes: 'appointmentType',
+    clinicConfig:'clinicConfig'
 }
 
 export const API_Config = {
     login: '/login',
+    graphQL: '/graphQL',
     users: '/api/users',
-    exerciseTypes: '/api/exercise-types',
-    workouts: '/api/workouts'
+    clinicConfig: '/api/clinic-config'
 };
 
 export const NAVIGATION = {

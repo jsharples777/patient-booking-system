@@ -40,8 +40,12 @@ export default class SocketListenerDelegate implements SocketListener {
                             NotificationManager.getInstance().show(stateObj.username, `${stateObj.username} has just registered.`, NotificationType.info);
                             break;
                         }
-                        case STATE_NAMES.exerciseTypes: {
-                            Controller.getInstance().getStateManager().addNewItemToState(STATE_NAMES.exerciseTypes, stateObj, true);
+                        case STATE_NAMES.appointments: {
+                            Controller.getInstance().getStateManager().addNewItemToState(STATE_NAMES.appointments, stateObj, true);
+                            break;
+                        }
+                        case STATE_NAMES.appointmentTypes: {
+                            Controller.getInstance().getStateManager().addNewItemToState(STATE_NAMES.appointmentTypes, stateObj, true);
                             break;
                         }
                     }
@@ -49,8 +53,12 @@ export default class SocketListenerDelegate implements SocketListener {
                 }
                 case "update": {
                     switch (message.stateName) {
-                        case STATE_NAMES.exerciseTypes: {
-                            Controller.getInstance().getStateManager().updateItemInState(STATE_NAMES.exerciseTypes, stateObj, true);
+                        case STATE_NAMES.appointmentTypes: {
+                            Controller.getInstance().getStateManager().updateItemInState(STATE_NAMES.appointmentTypes, stateObj, true);
+                            break;
+                        }
+                        case STATE_NAMES.appointments: {
+                            Controller.getInstance().getStateManager().updateItemInState(STATE_NAMES.appointments, stateObj, true);
                             break;
                         }
                     }
@@ -58,8 +66,12 @@ export default class SocketListenerDelegate implements SocketListener {
                 }
                 case "delete": {
                     switch (message.stateName) {
-                        case STATE_NAMES.exerciseTypes: {
-                            Controller.getInstance().getStateManager().removeItemFromState(STATE_NAMES.exerciseTypes, stateObj, true);
+                        case STATE_NAMES.appointmentTypes: {
+                            Controller.getInstance().getStateManager().removeItemFromState(STATE_NAMES.appointmentTypes, stateObj, true);
+                            break;
+                        }
+                        case STATE_NAMES.appointments: {
+                            Controller.getInstance().getStateManager().removeItemFromState(STATE_NAMES.appointments, stateObj, true);
                             break;
                         }
                     }
