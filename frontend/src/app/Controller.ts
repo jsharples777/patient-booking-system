@@ -61,14 +61,20 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 serverURL: '',
                 api: API_Config.users,
                 isActive: true
-            }
+            },
+            {
+                stateName: STATE_NAMES.clinicConfig,
+                serverURL: '',
+                api: API_Config.clinicConfig,
+                isActive: true
+            },
         ]);
         let qlSM = GraphQLApiStateManager.getInstance();
         qlSM.initialise([
             {
                 stateName: STATE_NAMES.patientSearch,
                 serverURL: '',
-                apiURL: '/graphql',
+                apiURL: API_Config.graphQL,
                 apis: {
                     findAll: 'query {getPatientSearchDetails {_id,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}}}',
                     create: '',
@@ -89,7 +95,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
             {
                 stateName: STATE_NAMES.appointments,
                 serverURL: '',
-                apiURL: '/graphql',
+                apiURL: API_Config.graphQL,
                 apis: {
                     findAll: 'query {getAppointments {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type,name}}',
                     create: 'mutation createAppointment($data: AppointmentInput!){addAppointment(appt: $data) {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type,name }}',
@@ -107,6 +113,27 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 isActive: true,
                 idField: '_id'
             },
+            {
+                stateName: STATE_NAMES.appointmentTypes,
+                serverURL: '',
+                apiURL: API_Config.graphQL,
+                apis: {
+                    findAll: 'query {getAppointmentTypes {_id,name,colour}}',
+                    create: 'mutation createAppointmentType($data: AppointmentInput!){addAppointmentType(apptType: $data) {_id,name,colour}}',
+                    destroy: 'mutation deleteAppointmentType($identifier: String!){deleteAppointmentType(id: $identifier)}',
+                    update: 'mutation updateAppointmentType($data: AppointmentInput!){updateAppointmentType(apptType: $data)}',
+                    find: '',
+                },
+                data: {
+                    findAll: 'getAppointmentTypes',
+                    create: 'addAppointmentType',
+                    destroy: 'deleteAppointmentType',
+                    update: 'updateAppointmentType',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
+            },
         ])
 
 
@@ -117,8 +144,8 @@ export default class Controller implements StateChangeListener, DataObjectListen
         let asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
 
         aggregateSM.addStateManager(memorySM, [], false);
-        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.exerciseTypes,STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches], false);
-        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users, STATE_NAMES.workouts], false);
+        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.clinicConfig], false);
+        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
         this.stateManager = aggregateSM;
 
         // state listener
@@ -159,6 +186,8 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
             // load the users
             this.getStateManager().getStateByName(STATE_NAMES.users);
+            this.getStateManager().getStateByName(STATE_NAMES.appointmentTypes);
+            this.getStateManager().getStateByName(STATE_NAMES.clinicConfig);
             this.getStateManager().getStateByName(STATE_NAMES.patientSearch);
             this.getStateManager().getStateByName(STATE_NAMES.appointments);
 

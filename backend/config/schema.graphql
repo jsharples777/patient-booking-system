@@ -79,11 +79,23 @@ type PatientSearchItem {
     flags: flags
 }
 
+type AppointmentType {
+    _id:String,
+    name:String,
+    colour:String
+}
+
+input AppointmentTypeInput {
+    _id:String,
+    name:String,
+    colour:String
+}
 
 type Query {
     getExerciseTypes:[ExerciseType]
     getAppointments:[Appointment]
     getPatientSearchDetails:[PatientSearchItem]
+    getAppointmentTypes:[AppointmentType]
 }
 
 type Mutation {
@@ -93,4 +105,7 @@ type Mutation {
     addAppointment(appt:AppointmentInput):Appointment
     updateAppointment(appt:AppointmentInput):Boolean
     deleteAppointment(id:String):Boolean
+    addAppointmentType(apptType:AppointmentTypeInput):AppointmentType
+    updateAppointmentType(apptType:AppointmentTypeInput):Boolean
+    deleteAppointmentType(id:String):Boolean
 }

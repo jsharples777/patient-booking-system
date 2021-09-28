@@ -46,13 +46,15 @@ const STATE_NAMES = {
   recentUserSearches: 'recentUserSearch',
   patientSearch: 'fastSearchNames',
   recentPatientSearches: 'recentPatientSearches',
-  appointments: 'appointment'
+  appointments: 'appointment',
+  appointmentTypes: 'appointmentType',
+  clinicConfig: 'clinicConfig'
 };
 const API_Config = {
   login: '/login',
+  graphQL: '/graphQL',
   users: '/api/users',
-  exerciseTypes: '/api/exercise-types',
-  workouts: '/api/workouts'
+  clinicConfig: '/api/clinic-config'
 };
 const NAVIGATION = {
   showMyWorkouts: 'navigationItemMyWorkouts',
@@ -143,7 +145,6 @@ let Day;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AppointmentType": () => (/* binding */ AppointmentType),
 /* harmony export */   "AppointmentController": () => (/* binding */ AppointmentController)
 /* harmony export */ });
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
@@ -155,17 +156,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-let AppointmentType;
-
-(function (AppointmentType) {
-  AppointmentType["Urgent"] = "Urgent Appointment";
-  AppointmentType["Appointment"] = "Appointment";
-  AppointmentType["Review"] = "Review/Recall";
-  AppointmentType["Telehealth"] = "TeleHealth Call";
-  AppointmentType["Consulting"] = "Consulting";
-  AppointmentType["Fluvax"] = "Fluvax";
-})(AppointmentType || (AppointmentType = {}));
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('appointment-controller');
 class AppointmentController {
@@ -203,11 +193,9 @@ class AppointmentController {
 
   getColourForAppointment(appointment) {
     switch (appointment.type) {
-      case AppointmentType.Urgent:
-        {
-          return `rgba(200,100,10,50)`;
-        }
-
+      // case AppointmentType.Urgent: {
+      //     return `rgba(200,100,10,50)`;
+      // }
       default:
         {
           return `rgba(10,100,100,50)`;
@@ -342,12 +330,17 @@ class Controller {
       serverURL: '',
       api: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.users,
       isActive: true
+    }, {
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig,
+      serverURL: '',
+      api: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.clinicConfig,
+      isActive: true
     }]);
     let qlSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.GraphQLApiStateManager.getInstance();
     qlSM.initialise([{
       stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch,
       serverURL: '',
-      apiURL: '/graphql',
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.graphQL,
       apis: {
         findAll: 'query {getPatientSearchDetails {_id,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}}}',
         create: '',
@@ -367,7 +360,7 @@ class Controller {
     }, {
       stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments,
       serverURL: '',
-      apiURL: '/graphql',
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.graphQL,
       apis: {
         findAll: 'query {getAppointments {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type,name}}',
         create: 'mutation createAppointment($data: AppointmentInput!){addAppointment(appt: $data) {_id,_patient, start, time, duration,createdBy,isDNA,isCancelled,provider,note,type,name }}',
@@ -384,14 +377,34 @@ class Controller {
       },
       isActive: true,
       idField: '_id'
+    }, {
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes,
+      serverURL: '',
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.API_Config.graphQL,
+      apis: {
+        findAll: 'query {getAppointmentTypes {_id,name,colour}}',
+        create: 'mutation createAppointmentType($data: AppointmentInput!){addAppointmentType(apptType: $data) {_id,name,colour}}',
+        destroy: 'mutation deleteAppointmentType($identifier: String!){deleteAppointmentType(id: $identifier)}',
+        update: 'mutation updateAppointmentType($data: AppointmentInput!){updateAppointmentType(apptType: $data)}',
+        find: ''
+      },
+      data: {
+        findAll: 'getAppointmentTypes',
+        create: 'addAppointmentType',
+        destroy: 'deleteAppointmentType',
+        update: 'updateAppointmentType',
+        find: ''
+      },
+      isActive: true,
+      idField: '_id'
     }]);
     let aggregateSM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AggregateStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
     let memorySM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.MemoryBufferStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
     let asyncREST = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AsyncStateManagerWrapper(aggregateSM, restSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
     let asyncQL = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AsyncStateManagerWrapper(aggregateSM, qlSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_4__.isSameMongo);
     aggregateSM.addStateManager(memorySM, [], false);
-    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentPatientSearches], false);
-    aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.workouts], false);
+    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentPatientSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig], false);
+    aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig], false);
     this.stateManager = aggregateSM; // state listener
 
     this.stateChanged = this.stateChanged.bind(this);
@@ -427,6 +440,8 @@ class Controller {
       chatManager.login(); // load the users
 
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig);
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.patientSearch);
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments); // apply any queued changes from being offline
 
@@ -689,9 +704,15 @@ class SocketListenerDelegate {
                   break;
                 }
 
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes, stateObj, true);
+                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, stateObj, true);
+                  break;
+                }
+
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes:
+                {
+                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes, stateObj, true);
                   break;
                 }
             }
@@ -702,9 +723,15 @@ class SocketListenerDelegate {
         case "update":
           {
             switch (message.stateName) {
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes, stateObj, true);
+                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes, stateObj, true);
+                  break;
+                }
+
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments:
+                {
+                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, stateObj, true);
                   break;
                 }
             }
@@ -715,9 +742,15 @@ class SocketListenerDelegate {
         case "delete":
           {
             switch (message.stateName) {
-              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes:
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes:
                 {
-                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.exerciseTypes, stateObj, true);
+                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes, stateObj, true);
+                  break;
+                }
+
+              case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments:
+                {
+                  _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments, stateObj, true);
                   break;
                 }
             }
@@ -973,7 +1006,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_4__.Component {
   }
 
 }
-localStorage.debug = 'state-manager-graphql api-ts app controller-ts appointment-controller';
+localStorage.debug = '*';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_1___default().log) = console.info.bind(console);
 $(function () {

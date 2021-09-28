@@ -249,7 +249,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 }
 
-localStorage.debug = 'state-manager-graphql api-ts app controller-ts appointment-controller';
+localStorage.debug = '*';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

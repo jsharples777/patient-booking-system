@@ -5,18 +5,7 @@ import {STATE_NAMES} from "./AppTypes";
 import Controller from "./Controller";
 
 
-export enum AppointmentType {
-    Urgent = 'Urgent Appointment',
-    Appointment = 'Appointment',
-    Review = 'Review/Recall',
-    Telehealth = 'TeleHealth Call',
-    Consulting = 'Consulting',
-    Fluvax = 'Fluvax',
 
-
-
-
-}
 
 const logger = debug('appointment-controller');
 
@@ -55,9 +44,9 @@ export class AppointmentController {
 
     protected getColourForAppointment(appointment:any) {
         switch (appointment.type) {
-            case AppointmentType.Urgent: {
-                return `rgba(200,100,10,50)`;
-            }
+            // case AppointmentType.Urgent: {
+            //     return `rgba(200,100,10,50)`;
+            // }
             default: {
                 return `rgba(10,100,100,50)`;
             }
