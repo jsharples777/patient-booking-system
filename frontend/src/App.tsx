@@ -42,8 +42,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     private thisEl: HTMLDivElement | null = null;
     private chatNavigationItem: HTMLAnchorElement | null = null;
 
-    private datePicker:Datepicker|null = null;
-    private calendar:Eventcalendar|null = null;
+
 
     public constructor() {
         // @ts-ignore
@@ -75,101 +74,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.setupChatViews();
         this.setupNavigationItemHandling();
 
-        // setup the scheduler
-        // @ts-ignore
-        this.datePicker = datepicker(document.getElementById(VIEW_CONTAINER.calendarControl),{
-            controls: ['calendar'],
-            display: "inline",
-            dateFormat: 'YYYYMMDD',
-            dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            showWeekNumbers:true,
-            onChange: (event:any, inst:any) => {
-                this.calendar?.navigate(event.value);
-                AppointmentController.getInstance().handleNewDatePicked(event.value, inst)
-            }
-        });
-
-
-        // @ts-ignore
-        this.calendar = eventcalendar(document.getElementById(VIEW_CONTAINER.calendarDetail),{
-            clickToCreate:'double',
-            dragTimeStep:5,
-            dragToCreate:true,
-            dragToMove:true,
-            dragToResize:true,
-            min:moment().subtract(3,"months"),
-            controls:['calendar'],
-            showControls:true,
-            view: {
-                schedule: {
-                    type:'day',
-                    startDay:1,
-                    endDay:5,
-                    startTime:'09:00',
-                    endTime:'16:00',
-                    timeCellStep:10,
-                    timeLabelStep:60
-                }
-            },
-            invalidateEvent:'strict',
-            invalid: [{
-                recurring: {
-                    repeat:'weekly',
-                    weekDays:'SA,SU'
-                }
-                },
-                {
-                    start:'12:15',
-                    end:'16:00',
-                    title:'Close Early',
-                    recurring: {
-                        repeat:'weekly',
-                        weekDays:'FR'
-                    }
-                },
-                {
-                    start:'12:00',
-                    end:'13:00',
-                    title:'Lunch Break',
-                    recurring: {
-                        repeat: 'weekly',
-                        weekDays: 'MO,TU,WE,TH'
-                    }
-                }
-            ],
-            onSelectedDateChange:(event: any, inst: any) => {
-                AppointmentController.getInstance().handleNewDatePicked(event.date,inst);
-                this.datePicker?.setVal(event.date);
-            },
-            onPageLoading:(event: any, inst: any) => {
-                AppointmentController.getInstance().onPageLoading(event,inst);
-            },
-            onEventCreated:(event: any, inst: any) => {
-                AppointmentController.getInstance().onAppointmentCreated(event,inst);
-            },
-            onEventDelete:(event: any, inst: any) => {
-                AppointmentController.getInstance().onAppointmentDeleting(event,inst);
-            },
-            onEventDeleted:(event: any, inst: any) => {
-                AppointmentController.getInstance().onAppointmentDeleted(event,inst);
-            },
-            onEventRightClick:(event: any, inst: any) => {
-                AppointmentController.getInstance().onAppointmentContext(event,inst);
-            },
-            onEventUpdated:(event: any, inst: any) => {
-                AppointmentController.getInstance().onAppointmentUpdated(event,inst);
-            },
-            onEventDoubleClick:(event: any, inst: any) => {
-                AppointmentController.getInstance().onAppointmentEditRequested(event,inst);
-            },
-
-
-        });
-
-        if (this.calendar && this.datePicker) AppointmentController.getInstance().setViewObjects(this.datePicker,this.calendar);
-
-
-
+        AppointmentController.getInstance().onDocumentLoaded();
         ContextualInformationHelper.getInstance().onDocumentLoaded();
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         Controller.getInstance().onDocumentLoaded();
@@ -246,7 +151,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 }
 
-localStorage.debug = 'api-ts-results dm-api-ts';
+localStorage.debug = 'api-ts-results appointment-controller';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

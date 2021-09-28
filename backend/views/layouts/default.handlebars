@@ -27,6 +27,46 @@
         </div>
     </div>
 </div>
+<div id="demo-add-delete-event"></div>
+
+<div id="demo-add-popup">
+    <div class="mbsc-form-group">
+        <label>
+            Title
+            <input mbsc-input id="event-title">
+        </label>
+        <label>
+            Description
+            <textarea mbsc-textarea id="event-desc"></textarea>
+        </label>
+    </div>
+    <div class="mbsc-form-group">
+        <label for="event-all-day">
+            All-day
+            <input mbsc-switch id="event-all-day" type="checkbox" />
+        </label>
+        <label for="start-input">
+            Starts
+            <input mbsc-input id="start-input" />
+        </label>
+        <label for="end-input">
+            Ends
+            <input mbsc-input id="end-input" />
+        </label>
+        <div id="event-date"></div>
+        <label>
+            Show as busy
+            <input id="event-status-busy" mbsc-segmented type="radio" name="event-status" value="busy">
+        </label>
+        <label>
+            Show as free
+            <input id="event-status-free" mbsc-segmented type="radio" name="event-status" value="free">
+        </label>
+        <div class="mbsc-button-group">
+            <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">Delete event</button>
+        </div>
+    </div>
+</div>
 <div id="root"></div>
 {{> footers/footer-main }}
 </body>

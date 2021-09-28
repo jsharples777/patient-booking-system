@@ -138,7 +138,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
         let asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
 
         aggregateSM.addStateManager(memorySM, [], false);
-        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.clinicConfig], false);
+        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches], false);
         aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
         this.stateManager = aggregateSM;
 

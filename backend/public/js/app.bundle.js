@@ -140,145 +140,9 @@ let Day;
 /*!******************************************!*\
   !*** ./src/app/AppointmentController.ts ***!
   \******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AppointmentController": () => (/* binding */ AppointmentController)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppTypes */ "./src/app/AppTypes.ts");
-/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Controller */ "./src/app/Controller.ts");
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('appointment-controller');
-class AppointmentController {
-  static getInstance() {
-    if (!AppointmentController._instance) {
-      AppointmentController._instance = new AppointmentController();
-    }
-
-    return AppointmentController._instance;
-  }
-
-  datePicker = null;
-  calendar = null;
-
-  constructor() {
-    this.handleNewDatePicked = this.handleNewDatePicked.bind(this);
-    this.onPageLoading = this.onPageLoading.bind(this);
-    this.onAppointmentEditRequested = this.onAppointmentEditRequested.bind(this);
-    this.onAppointmentDeleting = this.onAppointmentDeleting.bind(this);
-    this.onAppointmentDeleted = this.onAppointmentDeleted.bind(this);
-    this.onAppointmentCreated = this.onAppointmentCreated.bind(this);
-    this.onAppointmentContext = this.onAppointmentContext.bind(this);
-    this.onAppointmentUpdated = this.onAppointmentUpdated.bind(this);
-  }
-
-  handleNewDatePicked(event, inst) {
-    logger(`Handling new date picked`);
-    logger(event);
-  }
-
-  setViewObjects(datePicker, calendar) {
-    this.datePicker = datePicker;
-    this.calendar = calendar;
-  }
-
-  getColourForAppointment(appointment) {
-    switch (appointment.type) {
-      // case AppointmentType.Urgent: {
-      //     return `rgba(200,100,10,50)`;
-      // }
-      default:
-        {
-          return `rgba(10,100,100,50)`;
-        }
-    }
-  }
-
-  onPageLoading(event, inst) {
-    logger(event);
-    const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
-    const loadDate = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()(event.firstDay).format('YYYYMMDD'));
-    logger(`Need to load date ${loadDate}`);
-    let canEdit = loadDate < today;
-    const appointments = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments);
-    let results = [];
-    appointments.forEach(appointment => {
-      if (appointment.start === loadDate) {
-        logger('Found appointment');
-        logger(appointment); // convert the start and end time into the format for the calendar
-
-        const time = parseInt(appointment.time); // HHMMSS as a time
-
-        const duration = appointment.duration; // seconds
-
-        const startTimeHours = Math.floor(appointment.time / 10000);
-        const startTimeMinutes = Math.floor((time - startTimeHours * 10000) / 100);
-        const appointmentDuration = Math.floor(duration / 60);
-        let endTimeHours = startTimeHours;
-        let endTimeMinutes = startTimeMinutes + appointmentDuration;
-
-        if (endTimeMinutes > 60) {
-          endTimeMinutes -= 60;
-          endTimeHours += 1; // 24 hour time
-        }
-
-        let timeString = `${endTimeHours}`;
-        if (endTimeHours < 10) timeString = '0' + timeString;
-        if (endTimeMinutes < 10) timeString += '0';
-        timeString += `${endTimeMinutes}`;
-        let result = {
-          id: appointment._id,
-          start: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
-          end: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
-          title: appointment.name,
-          color: this.getColourForAppointment(appointment),
-          allDay: false,
-          editable: canEdit,
-          resource: appointment.provider
-        };
-        logger('Converted to event');
-        logger(result);
-        results.push(result);
-      }
-    });
-    inst.setEvents(results);
-  }
-
-  onAppointmentEditRequested(event, inst) {
-    logger(event);
-  }
-
-  onAppointmentDeleting(event, inst) {
-    logger(event);
-    return false;
-  }
-
-  onAppointmentDeleted(event, inst) {
-    logger(event);
-  }
-
-  onAppointmentCreated(event, inst) {
-    logger(event);
-  }
-
-  onAppointmentContext(event, inst) {
-    logger(event);
-  }
-
-  onAppointmentUpdated(event, inst) {
-    logger(event);
-  }
-
-}
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /Users/jimsharples/Development/patient-booking-system/frontend/src/app/AppointmentController.ts: Missing semicolon. (275:16)\n\n\u001b[0m \u001b[90m 273 |\u001b[39m             }\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 274 |\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 275 |\u001b[39m         \u001b[36mfunction\u001b[39m createAddPopup(elm) {\u001b[0m\n\u001b[0m \u001b[90m     |\u001b[39m                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 276 |\u001b[39m             \u001b[90m// hide delete button inside add popup\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 277 |\u001b[39m             deleteButton\u001b[33m.\u001b[39mstyle\u001b[33m.\u001b[39mdisplay \u001b[33m=\u001b[39m \u001b[32m'none'\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 278 |\u001b[39m\u001b[0m\n    at Object._raise (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:788:17)\n    at Object.raiseWithData (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:781:17)\n    at Object.raise (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:742:17)\n    at Object.semicolon (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:3220:10)\n    at Object.parseVarStatement (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:13155:10)\n    at Object.parseStatementContent (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:12737:21)\n    at Object.parseStatementContent (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:9170:18)\n    at Object.parseStatement (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:12670:17)\n    at Object.parseBlockOrModuleBlockBody (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:13259:25)\n    at Object.parseBlockBody (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:13250:10)\n    at Object.parseBlock (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:13234:10)\n    at Object.parseFunctionBody (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:12123:24)\n    at Object.parseFunctionBodyAndFinish (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:12107:10)\n    at Object.parseFunctionBodyAndFinish (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:8952:11)\n    at Object.parseMethod (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:12057:10)\n    at Object.parseMethod (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:9832:26)\n    at Object.pushClassMethod (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:13705:30)\n    at Object.pushClassMethod (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:9395:11)\n    at Object.parseClassMemberWithIsStatic (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:13595:12)\n    at Object.parseClassMemberWithIsStatic (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:9247:11)\n    at callParseClassMemberWithIsStatic (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:9201:14)\n    at Object.parseClassMember (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:9208:7)\n    at /Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:13477:14\n    at Object.withTopicForbiddingContext (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:12437:14)\n    at Object.parseClassBody (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:13454:10)\n    at Object.parseClass (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:13428:22)\n    at Object.parseClass (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:9809:20)\n    at Object.parseStatementContent (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:12712:21)\n    at Object.parseStatementContent (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:9170:18)\n    at Object.parseStatement (/Users/jimsharples/Development/patient-booking-system/frontend/node_modules/@babel/parser/lib/index.js:12670:17)");
 
 /***/ }),
 
@@ -429,7 +293,7 @@ class Controller {
     let asyncREST = new _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_8__.AsyncStateManagerWrapper(aggregateSM, restSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     let asyncQL = new _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_8__.AsyncStateManagerWrapper(aggregateSM, qlSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     aggregateSM.addStateManager(memorySM, [], false);
-    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig], false);
+    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches], false);
     aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig], false);
     this.stateManager = aggregateSM; // state listener
 
@@ -9210,16 +9074,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
 /* harmony import */ var _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./app/AppointmentController */ "./src/app/AppointmentController.ts");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "./src/framework/ui/context/ContextualInformationHelper.ts");
-/* harmony import */ var _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./framework/security/SecurityManager */ "./src/framework/security/SecurityManager.ts");
-/* harmony import */ var _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchSidebar */ "./src/framework/ui/chat/UserSearchSidebar.ts");
-/* harmony import */ var _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./framework/ui/chat/ChatRoomsSidebar */ "./src/framework/ui/chat/ChatRoomsSidebar.ts");
+/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "./src/framework/ui/context/ContextualInformationHelper.ts");
+/* harmony import */ var _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./framework/security/SecurityManager */ "./src/framework/security/SecurityManager.ts");
+/* harmony import */ var _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchSidebar */ "./src/framework/ui/chat/UserSearchSidebar.ts");
+/* harmony import */ var _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./framework/ui/chat/ChatRoomsSidebar */ "./src/framework/ui/chat/ChatRoomsSidebar.ts");
 //localStorage.debug = 'linked-controller api-ts exercise-types-view app controller-ts controller-ts-detail api-ts socket-ts user-search user-search-detail list-view-renderer';
 //localStorage.debug = 'collection-view-ts collection-view-ts-detail form-detail-view-renderer linked-controller linked-controller-detail exercise-types-view app validation-manager-rule-failure validation-manager';
 //localStorage.debug = 'validation-manager validation-manager-rule-failure abstract-form-detail-validation';
-
 
 
 
@@ -9238,8 +9099,6 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   // @ts-ignore
   thisEl = null;
   chatNavigationItem = null;
-  datePicker = null;
-  calendar = null;
 
   constructor() {
     // @ts-ignore
@@ -9262,97 +9121,10 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.thisEl = document.getElementById('root');
     this.setupUserSearchViews();
     this.setupChatViews();
-    this.setupNavigationItemHandling(); // setup the scheduler
-    // @ts-ignore
-
-    this.datePicker = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.datepicker)(document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.VIEW_CONTAINER.calendarControl), {
-      controls: ['calendar'],
-      display: "inline",
-      dateFormat: 'YYYYMMDD',
-      dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      showWeekNumbers: true,
-      onChange: (event, inst) => {
-        var _this$calendar;
-
-        (_this$calendar = this.calendar) === null || _this$calendar === void 0 ? void 0 : _this$calendar.navigate(event.value);
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().handleNewDatePicked(event.value, inst);
-      }
-    }); // @ts-ignore
-
-    this.calendar = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.eventcalendar)(document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.VIEW_CONTAINER.calendarDetail), {
-      clickToCreate: 'double',
-      dragTimeStep: 5,
-      dragToCreate: true,
-      dragToMove: true,
-      dragToResize: true,
-      min: moment__WEBPACK_IMPORTED_MODULE_7___default()().subtract(3, "months"),
-      controls: ['calendar'],
-      showControls: true,
-      view: {
-        schedule: {
-          type: 'day',
-          startDay: 1,
-          endDay: 5,
-          startTime: '09:00',
-          endTime: '16:00',
-          timeCellStep: 10,
-          timeLabelStep: 60
-        }
-      },
-      invalidateEvent: 'strict',
-      invalid: [{
-        recurring: {
-          repeat: 'weekly',
-          weekDays: 'SA,SU'
-        }
-      }, {
-        start: '12:15',
-        end: '16:00',
-        title: 'Close Early',
-        recurring: {
-          repeat: 'weekly',
-          weekDays: 'FR'
-        }
-      }, {
-        start: '12:00',
-        end: '13:00',
-        title: 'Lunch Break',
-        recurring: {
-          repeat: 'weekly',
-          weekDays: 'MO,TU,WE,TH'
-        }
-      }],
-      onSelectedDateChange: (event, inst) => {
-        var _this$datePicker;
-
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().handleNewDatePicked(event.date, inst);
-        (_this$datePicker = this.datePicker) === null || _this$datePicker === void 0 ? void 0 : _this$datePicker.setVal(event.date);
-      },
-      onPageLoading: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onPageLoading(event, inst);
-      },
-      onEventCreated: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentCreated(event, inst);
-      },
-      onEventDelete: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentDeleting(event, inst);
-      },
-      onEventDeleted: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentDeleted(event, inst);
-      },
-      onEventRightClick: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentContext(event, inst);
-      },
-      onEventUpdated: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentUpdated(event, inst);
-      },
-      onEventDoubleClick: (event, inst) => {
-        _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onAppointmentEditRequested(event, inst);
-      }
-    });
-    if (this.calendar && this.datePicker) _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().setViewObjects(this.datePicker, this.calendar);
-    _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_8__.ContextualInformationHelper.getInstance().onDocumentLoaded();
-    _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_9__.SecurityManager.getInstance().onDocumentLoaded(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
+    this.setupNavigationItemHandling();
+    _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onDocumentLoaded();
+    _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_7__.ContextualInformationHelper.getInstance().onDocumentLoaded();
+    _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_8__.SecurityManager.getInstance().onDocumentLoaded(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
     _app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
   }
 
@@ -9417,18 +9189,18 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
   setupUserSearchViews() {
     // add the subviews for the user search
-    this.userSearchSidebar = _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.UserSearchSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
+    this.userSearchSidebar = _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_9__.UserSearchSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
     this.userSearchSidebar.onDocumentLoaded();
   }
 
   setupChatViews() {
     // add the views to the chat side bar
-    this.chatSidebar = _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_11__.ChatRoomsSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
+    this.chatSidebar = _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_10__.ChatRoomsSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
     this.chatSidebar.onDocumentLoaded();
   }
 
 }
-localStorage.debug = 'api-ts-results dm-api-ts';
+localStorage.debug = 'api-ts-results appointment-controller';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {
