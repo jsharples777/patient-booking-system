@@ -1,0 +1,52 @@
+{
+  "_id": {
+    "$oid": "61527ec2cb82991cc863b5c6"
+  },
+  "clickToCreate":"double",
+  "dragTimeStep":5,
+  "dragToCreate":true,
+  "dragToMove":true,
+  "dragToResize":true,
+  "min":3,
+  "controls":["calendar"],
+  "showControls":true,
+  "view": {
+    "schedule": {
+      "type":"day",
+      "startDay":1,
+      "endDay":5,
+      "startTime":"09:00",
+      "endTime":"16:00",
+      "timeCellStep":10,
+      "timeLabelStep":60
+    }
+  },
+  "invalidateEvent":"strict",
+  "invalid": [
+    {
+      "recurring":
+      {
+        "repeat":"weekly",
+        "weekDays":"SA,SU"
+      }
+    },
+    {
+      "start":"12:15",
+      "end":"16:00",
+      "title":"Close Early",
+      "recurring": {
+        "repeat":"weekly",
+        "weekDays":"FR"
+      }
+    },
+    {
+      "start":"12:00",
+      "end":"13:00",
+      "title":"Lunch Break",
+      "recurring": {
+        "repeat": "weekly",
+        "weekDays": "MO,TU,WE,TH"
+      }
+    }
+  ]
+}
