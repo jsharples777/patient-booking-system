@@ -156,7 +156,7 @@ debug.log = console.info.bind(console);
 $(function () {
 
     // @ts-ignore
-    mobiscroll4.setOptions = {theme:'ios'};
+    //mobiscroll4.setOptions = {theme:'ios'};
 
     // @ts-ignore
     mobiscroll5.setOptions( {

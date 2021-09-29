@@ -149,12 +149,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AppTypes */ "./src/app/AppTypes.ts");
-/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Controller */ "./src/app/Controller.ts");
-
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppTypes */ "./src/app/AppTypes.ts");
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Controller */ "./src/app/Controller.ts");
 
 
 
@@ -207,8 +205,8 @@ class AppointmentController {
     this.onAppointmentCreated = this.onAppointmentCreated.bind(this);
     this.onAppointmentContext = this.onAppointmentContext.bind(this);
     this.onAppointmentUpdated = this.onAppointmentUpdated.bind(this);
-    _Controller__WEBPACK_IMPORTED_MODULE_4__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig, this);
-    _Controller__WEBPACK_IMPORTED_MODULE_4__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes, this);
+    _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig, this);
+    _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, this);
   }
 
   handleNewDatePicked(event, inst) {
@@ -229,11 +227,11 @@ class AppointmentController {
 
   onPageLoading(event, inst) {
     logger(event);
-    const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_2___default()().format('YYYYMMDD'));
-    const loadDate = parseInt(moment__WEBPACK_IMPORTED_MODULE_2___default()(event.firstDay).format('YYYYMMDD'));
+    const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
+    const loadDate = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()(event.firstDay).format('YYYYMMDD'));
     logger(`Need to load date ${loadDate}`);
     let canEdit = loadDate < today;
-    const appointments = _Controller__WEBPACK_IMPORTED_MODULE_4__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointments);
+    const appointments = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments);
     let results = [];
     appointments.forEach(appointment => {
       if (appointment.start === loadDate) {
@@ -261,8 +259,8 @@ class AppointmentController {
         timeString += `${endTimeMinutes}`;
         let result = {
           id: appointment._id,
-          start: moment__WEBPACK_IMPORTED_MODULE_2___default()(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
-          end: moment__WEBPACK_IMPORTED_MODULE_2___default()(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
+          start: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
+          end: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
           title: appointment.name,
           color: this.getColourForAppointment(appointment),
           allDay: false,
@@ -305,7 +303,7 @@ class AppointmentController {
   onDocumentLoaded() {
     // setup the scheduler
     // @ts-ignore
-    this.datePicker = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.datepicker)(document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.VIEW_CONTAINER.calendarControl), {
+    AppointmentController.datePicker = mobiscroll5.datepicker(document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.VIEW_CONTAINER.calendarControl), {
       controls: ['calendar'],
       display: "inline",
       dateFormat: 'YYYYMMDD',
@@ -328,7 +326,7 @@ class AppointmentController {
         dragToCreate: AppointmentController.clinicConfig.dragToCreate,
         dragToMove: AppointmentController.clinicConfig.dragToMove,
         dragToResize: AppointmentController.clinicConfig.dragToResize,
-        min: moment__WEBPACK_IMPORTED_MODULE_2___default()().subtract(AppointmentController.clinicConfig.min, "months"),
+        min: moment__WEBPACK_IMPORTED_MODULE_1___default()().subtract(AppointmentController.clinicConfig.min, "months"),
         controls: AppointmentController.clinicConfig.controls,
         showControls: AppointmentController.clinicConfig.showControls,
         view: AppointmentController.clinicConfig.view,
@@ -343,7 +341,7 @@ class AppointmentController {
         dragToCreate: true,
         dragToMove: true,
         dragToResize: true,
-        min: moment__WEBPACK_IMPORTED_MODULE_2___default()().subtract(3, "months"),
+        min: moment__WEBPACK_IMPORTED_MODULE_1___default()().subtract(3, "months"),
         controls: ['calendar'],
         showControls: true,
         view: {
@@ -400,8 +398,9 @@ class AppointmentController {
     };
 
     options.onEventDeleted = (event, inst) => {
-      AppointmentController.getInstance().onAppointmentDeleted(event, inst);
-      (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
+      AppointmentController.getInstance().onAppointmentDeleted(event, inst); // @ts-ignore
+
+      mobiscroll5.snackbar({
         button: {
           action: function () {
             // @ts-ignore
@@ -443,8 +442,9 @@ class AppointmentController {
     AppointmentController.allDaySwitch = document.getElementById('event-all-day');
     AppointmentController.freeSegmented = document.getElementById('event-status-free');
     AppointmentController.busySegmented = document.getElementById('event-status-busy');
-    AppointmentController.deleteButton = document.getElementById('event-delete');
-    AppointmentController.popup = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.popup)('#demo-add-popup', {
+    AppointmentController.deleteButton = document.getElementById('event-delete'); // @ts-ignore
+
+    AppointmentController.popup = mobiscroll5.popup('#demo-add-popup', {
       display: 'bottom',
       contentPadding: false,
       fullScreen: true,
@@ -483,8 +483,9 @@ class AppointmentController {
       }); // update current event's allDay property
 
       AppointmentController.tempEvent.allDay = checked;
-    });
-    AppointmentController.range = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.datepicker)('#event-date', {
+    }); // @ts-ignore
+
+    AppointmentController.range = mobiscroll5.datepicker('#event-date', {
       controls: ['date'],
       select: 'range',
       startInput: '#start-input',
@@ -503,7 +504,7 @@ class AppointmentController {
       elm.addEventListener('change', function () {
         // update current event's free property
         // @ts-ignore
-        AppointmentController.tempEvent.free = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.getInst)(AppointmentController.freeSegmented).checked;
+        AppointmentController.tempEvent.free = mobiscroll5.getInst(AppointmentController.freeSegmented).checked;
       });
     });
     AppointmentController.deleteButton.addEventListener('click', function () {
@@ -512,8 +513,9 @@ class AppointmentController {
       AppointmentController.calendar.removeEvent(AppointmentController.tempEvent);
       AppointmentController.popup.close(); // save a local reference to the deleted event
 
-      let deletedEvent = AppointmentController.tempEvent;
-      (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
+      let deletedEvent = AppointmentController.tempEvent; // @ts-ignore
+
+      mobiscroll5.snackbar({
         button: {
           action: function () {
             // @ts-ignore
@@ -525,7 +527,7 @@ class AppointmentController {
       });
     }); // @ts-ignore
 
-    this.calendar = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.eventcalendar)(document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.VIEW_CONTAINER.calendarDetail), options);
+    AppointmentController.calendar = mobiscroll5.eventcalendar(document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.VIEW_CONTAINER.calendarDetail), options);
   }
 
   filterResults(managerName, name, filterResults) {}
@@ -538,13 +540,13 @@ class AppointmentController {
     logger(`Handling state changed ${name}`);
 
     switch (name) {
-      case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTypes:
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes:
         {
           AppointmentController.appointmentTypes = newValue;
           break;
         }
 
-      case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.clinicConfig:
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig:
         {
           AppointmentController.clinicConfig = newValue[0];
 
@@ -556,7 +558,7 @@ class AppointmentController {
               dragToCreate: AppointmentController.clinicConfig.dragToCreate,
               dragToMove: AppointmentController.clinicConfig.dragToMove,
               dragToResize: AppointmentController.clinicConfig.dragToResize,
-              min: moment__WEBPACK_IMPORTED_MODULE_2___default()().subtract(AppointmentController.clinicConfig.min, "months"),
+              min: moment__WEBPACK_IMPORTED_MODULE_1___default()().subtract(AppointmentController.clinicConfig.min, "months"),
               controls: AppointmentController.clinicConfig.controls,
               showControls: AppointmentController.clinicConfig.showControls,
               view: AppointmentController.clinicConfig.view,
@@ -601,22 +603,39 @@ class AppointmentController {
         cssClass: 'mbsc-popup-button-primary'
       }]
     }); // fill popup with a new event data
+    // console.log(AppointmentController.titleInput);
+    // // @ts-ignore
+    // console.log(mobiscroll5.getInst(AppointmentController.titleInput));
+    // AppointmentController.popup.getInst().refresh;
+    // console.log(AppointmentController.popup.getInst());
+    //
+    // AppointmentController.titleInput.value = AppointmentController.tempEvent.title;
+    //
+    // AppointmentController.descriptionTextarea.value = '';
+    // AppointmentController.allDaySwitch.checked = AppointmentController.tempEvent.allDay;
+    // AppointmentController.range.setVal([AppointmentController.tempEvent.start, AppointmentController.tempEvent.end]);
+    // AppointmentController.busySegmented.checked = true;
+    // AppointmentController.range.setOptions({
+    //     controls: AppointmentController.tempEvent.allDay ? ['date'] : ['datetime'],
+    //     responsive: AppointmentController.tempEvent.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
+    // });
+    // @ts-ignore
 
-    console.log(AppointmentController.titleInput);
-    console.log((0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.getInst)(AppointmentController.titleInput));
-    AppointmentController.titleInput.value = AppointmentController.tempEvent.title;
-    AppointmentController.descriptionTextarea.value = '';
-    AppointmentController.allDaySwitch.checked = AppointmentController.tempEvent.allDay;
-    AppointmentController.range.setVal([AppointmentController.tempEvent.start, AppointmentController.tempEvent.end]);
-    AppointmentController.busySegmented.checked = true;
+    mobiscroll5.getInst(AppointmentController.titleInput).value = AppointmentController.tempEvent.title; // @ts-ignore
+
+    mobiscroll5.getInst(AppointmentController.descriptionTextarea).value = ''; // @ts-ignore
+
+    mobiscroll5.getInst(AppointmentController.allDaySwitch).checked = AppointmentController.tempEvent.allDay;
+    AppointmentController.range.setVal([AppointmentController.tempEvent.start, AppointmentController.tempEvent.end]); // @ts-ignore
+
+    mobiscroll5.getInst(AppointmentController.busySegmented).checked = true;
     AppointmentController.range.setOptions({
       controls: AppointmentController.tempEvent.allDay ? ['date'] : ['datetime'],
       responsive: AppointmentController.tempEvent.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
     }); // set anchor for the popup
 
     AppointmentController.popup.setOptions({
-      anchor: elm,
-      theme: 'ios'
+      anchor: elm
     });
     AppointmentController.popup.open();
   }
@@ -637,16 +656,19 @@ class AppointmentController {
           let date = AppointmentController.range.getVal(); // update event with the new properties on save button click
           // @ts-ignore
 
-          AppointmentController.calendar.updateEvent({
+          let updatedEvent = {
             id: ev.id,
-            title: AppointmentController.titleInput.value,
-            description: AppointmentController.descriptionTextarea.value,
-            allDay: AppointmentController.allDaySwitch.checked,
+            title: mobiscroll5.getInst(AppointmentController.titleInput).value,
+            description: mobiscroll5.getInst(AppointmentController.descriptionTextarea).value,
+            allDay: mobiscroll5.getInst(AppointmentController.allDaySwitch).checked,
             start: date[0],
             end: date[1],
-            free: AppointmentController.freeSegmented.checked,
+            free: mobiscroll5.getInst(AppointmentController.freeSegmented).checked,
             color: ev.color
-          }); // navigate the calendar to the correct view
+          };
+          console.log('updated');
+          console.log(updatedEvent);
+          AppointmentController.calendar.updateEvent(updatedEvent); // navigate the calendar to the correct view
           // @ts-ignore
 
           AppointmentController.calendar.navigate(date[0]);
@@ -657,18 +679,26 @@ class AppointmentController {
         cssClass: 'mbsc-popup-button-primary'
       }]
     }); // fill popup with the selected event data
+    // AppointmentController.titleInput.value = ev.title || '';
+    // AppointmentController.descriptionTextarea.value = ev.description || '';
+    // AppointmentController.allDaySwitch.checked = ev.allDay || false;
+    // AppointmentController.range.setVal([ev.start, ev.end]);
+    // fill popup with the selected event data
+    // @ts-ignore
 
-    AppointmentController.titleInput.value = ev.title || '';
-    AppointmentController.descriptionTextarea.value = ev.description || '';
-    AppointmentController.allDaySwitch.checked = ev.allDay || false;
+    mobiscroll5.getInst(AppointmentController.titleInput).value = ev.title || ''; // @ts-ignore
+
+    mobiscroll5.getInst(AppointmentController.descriptionTextarea).value = ev.description || ''; // @ts-ignore
+
+    mobiscroll5.getInst(AppointmentController.allDaySwitch).checked = ev.allDay || false;
     AppointmentController.range.setVal([ev.start, ev.end]);
 
     if (ev.free) {
       // @ts-ignore
-      AppointmentController.freeSegmented.checked = true;
+      mobiscroll5.getInst(AppointmentController.freeSegmented).checked = true;
     } else {
       // @ts-ignore
-      AppointmentController.busySegmented.checked = true;
+      mobiscroll5.getInst(AppointmentController.busySegmented).checked = true;
     } // change range settings based on the allDay
 
 
@@ -9614,16 +9644,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app/AppTypes */ "./src/app/AppTypes.ts");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
-/* harmony import */ var _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./app/AppointmentController */ "./src/app/AppointmentController.ts");
-/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "./src/framework/ui/context/ContextualInformationHelper.ts");
-/* harmony import */ var _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./framework/security/SecurityManager */ "./src/framework/security/SecurityManager.ts");
-/* harmony import */ var _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchSidebar */ "./src/framework/ui/chat/UserSearchSidebar.ts");
-/* harmony import */ var _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./framework/ui/chat/ChatRoomsSidebar */ "./src/framework/ui/chat/ChatRoomsSidebar.ts");
+/* harmony import */ var _app_AppointmentController__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app/AppointmentController */ "./src/app/AppointmentController.ts");
+/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "./src/framework/ui/context/ContextualInformationHelper.ts");
+/* harmony import */ var _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./framework/security/SecurityManager */ "./src/framework/security/SecurityManager.ts");
+/* harmony import */ var _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchSidebar */ "./src/framework/ui/chat/UserSearchSidebar.ts");
+/* harmony import */ var _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./framework/ui/chat/ChatRoomsSidebar */ "./src/framework/ui/chat/ChatRoomsSidebar.ts");
 //localStorage.debug = 'linked-controller api-ts exercise-types-view app controller-ts controller-ts-detail api-ts socket-ts user-search user-search-detail list-view-renderer';
 //localStorage.debug = 'collection-view-ts collection-view-ts-detail form-detail-view-renderer linked-controller linked-controller-detail exercise-types-view app validation-manager-rule-failure validation-manager';
 //localStorage.debug = 'validation-manager validation-manager-rule-failure abstract-form-detail-validation';
-
 
 
 
@@ -9664,9 +9692,9 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.setupUserSearchViews();
     this.setupChatViews();
     this.setupNavigationItemHandling();
-    _app_AppointmentController__WEBPACK_IMPORTED_MODULE_6__.AppointmentController.getInstance().onDocumentLoaded();
-    _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_7__.ContextualInformationHelper.getInstance().onDocumentLoaded();
-    _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_8__.SecurityManager.getInstance().onDocumentLoaded(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
+    _app_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
+    _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_6__.ContextualInformationHelper.getInstance().onDocumentLoaded();
+    _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_7__.SecurityManager.getInstance().onDocumentLoaded(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
     _app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
   }
 
@@ -9731,13 +9759,13 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
   setupUserSearchViews() {
     // add the subviews for the user search
-    this.userSearchSidebar = _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_9__.UserSearchSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
+    this.userSearchSidebar = _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_8__.UserSearchSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
     this.userSearchSidebar.onDocumentLoaded();
   }
 
   setupChatViews() {
     // add the views to the chat side bar
-    this.chatSidebar = _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_10__.ChatRoomsSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
+    this.chatSidebar = _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_9__.ChatRoomsSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
     this.chatSidebar.onDocumentLoaded();
   }
 
@@ -9746,7 +9774,10 @@ localStorage.debug = 'api-ts-results appointment-controller';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {
-  (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.setOptions)({
+  // @ts-ignore
+  //mobiscroll4.setOptions = {theme:'ios'};
+  // @ts-ignore
+  mobiscroll5.setOptions({
     theme: 'ios',
     themeVariant: 'light'
   }); //datepicker("#calendarControl",{display:'inline'});

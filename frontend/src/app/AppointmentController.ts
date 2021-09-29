@@ -537,16 +537,19 @@ export class AppointmentController implements StateChangeListener {
                         let date = AppointmentController.range.getVal();
                         // update event with the new properties on save button click
                         // @ts-ignore
-                        AppointmentController.calendar.updateEvent({
+                        let updatedEvent = {
                             id: ev.id,
-                            title: AppointmentController.titleInput.value,
-                            description: AppointmentController.descriptionTextarea.value,
+                            title: mobiscroll5.getInst(AppointmentController.titleInput).value,
+                            description: mobiscroll5.getInst(AppointmentController.descriptionTextarea).value,
                             allDay: mobiscroll5.getInst(AppointmentController.allDaySwitch).checked,
                             start: date[0],
                             end: date[1],
                             free: mobiscroll5.getInst(AppointmentController.freeSegmented).checked,
                             color: ev.color,
-                        });
+                        };
+                        console.log('updated');
+                        console.log(updatedEvent)
+                        AppointmentController.calendar.updateEvent(updatedEvent);
 
                         // navigate the calendar to the correct view
                         // @ts-ignore
