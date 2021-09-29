@@ -1,5 +1,4 @@
 import debug from "debug";
-import {datepicker, Datepicker, eventcalendar, Eventcalendar, getInst, snackbar,popup} from "@mobiscroll/javascript";
 import moment from "moment";
 import {STATE_NAMES, VIEW_CONTAINER} from "./AppTypes";
 import Controller from "./Controller";
@@ -18,8 +17,8 @@ export class AppointmentController implements StateChangeListener {
         return AppointmentController._instance;
     }
 
-    private static datePicker: Datepicker | null = null;
-    private static calendar: Eventcalendar | null = null;
+    private static datePicker: any | null = null;
+    private static calendar: any | null = null;
     private static appointmentTypes: any[] | null = null;
     private static clinicConfig: any | null = null;
 
@@ -171,7 +170,7 @@ export class AppointmentController implements StateChangeListener {
     public onDocumentLoaded() {
         // setup the scheduler
         // @ts-ignore
-        this.datePicker = datepicker(document.getElementById(VIEW_CONTAINER.calendarControl), {
+        AppointmentController.datePicker = mobiscroll5.datepicker(document.getElementById(VIEW_CONTAINER.calendarControl), {
             controls: ['calendar'],
             display: "inline",
             dateFormat: 'YYYYMMDD',
@@ -261,7 +260,8 @@ export class AppointmentController implements StateChangeListener {
         };
         options.onEventDeleted = (event: any, inst: any) => {
             AppointmentController.getInstance().onAppointmentDeleted(event, inst);
-            snackbar({
+            // @ts-ignore
+            mobiscroll5.snackbar({
                 button: {
                     action: function () {
                         // @ts-ignore
@@ -301,10 +301,8 @@ export class AppointmentController implements StateChangeListener {
         AppointmentController.deleteButton = document.getElementById('event-delete');
 
 
-
-
-
-        AppointmentController.popup = popup('#demo-add-popup', {
+        // @ts-ignore
+        AppointmentController.popup = mobiscroll5.popup('#demo-add-popup', {
             display: 'bottom',
             contentPadding: false,
             fullScreen: true,
@@ -349,7 +347,8 @@ export class AppointmentController implements StateChangeListener {
             AppointmentController.tempEvent.allDay = checked;
         });
 
-        AppointmentController.range = datepicker('#event-date', {
+        // @ts-ignore
+        AppointmentController.range = mobiscroll5.datepicker('#event-date', {
             controls: ['date'],
             select: 'range',
             startInput: '#start-input',
@@ -357,7 +356,7 @@ export class AppointmentController implements StateChangeListener {
             showRangeLabels: false,
             touchUi: true,
             responsive: AppointmentController.datePickerResponsive,
-            onChange: function (args) {
+            onChange: function (args:any) {
                 var date = args.value;
                 // update event's start date
                 AppointmentController.tempEvent.start = date[0];
@@ -369,7 +368,7 @@ export class AppointmentController implements StateChangeListener {
             elm.addEventListener('change', function () {
                 // update current event's free property
                 // @ts-ignore
-                AppointmentController.tempEvent.free = getInst(AppointmentController.freeSegmented).checked;
+                AppointmentController.tempEvent.free = mobiscroll5.getInst(AppointmentController.freeSegmented).checked;
             });
         });
 
@@ -382,7 +381,8 @@ export class AppointmentController implements StateChangeListener {
             // save a local reference to the deleted event
             let deletedEvent = AppointmentController.tempEvent;
 
-            snackbar({
+            // @ts-ignore
+            mobiscroll5.snackbar({
                 button: {
                     action: function () {
                         // @ts-ignore
@@ -395,7 +395,7 @@ export class AppointmentController implements StateChangeListener {
         });
 
         // @ts-ignore
-        this.calendar = eventcalendar(document.getElementById(VIEW_CONTAINER.calendarDetail), options);
+        AppointmentController.calendar = mobiscroll5.eventcalendar(document.getElementById(VIEW_CONTAINER.calendarDetail), options);
 
     }
 
@@ -481,22 +481,37 @@ export class AppointmentController implements StateChangeListener {
         });
 
         // fill popup with a new event data
-        console.log(AppointmentController.titleInput);
-        console.log(getInst(AppointmentController.titleInput));
-
-        AppointmentController.titleInput.value = AppointmentController.tempEvent.title;
-
-        AppointmentController.descriptionTextarea.value = '';
-        AppointmentController.allDaySwitch.checked = AppointmentController.tempEvent.allDay;
+        // console.log(AppointmentController.titleInput);
+        // // @ts-ignore
+        // console.log(mobiscroll5.getInst(AppointmentController.titleInput));
+        // AppointmentController.popup.getInst().refresh;
+        // console.log(AppointmentController.popup.getInst());
+        //
+        // AppointmentController.titleInput.value = AppointmentController.tempEvent.title;
+        //
+        // AppointmentController.descriptionTextarea.value = '';
+        // AppointmentController.allDaySwitch.checked = AppointmentController.tempEvent.allDay;
+        // AppointmentController.range.setVal([AppointmentController.tempEvent.start, AppointmentController.tempEvent.end]);
+        // AppointmentController.busySegmented.checked = true;
+        // AppointmentController.range.setOptions({
+        //     controls: AppointmentController.tempEvent.allDay ? ['date'] : ['datetime'],
+        //     responsive: AppointmentController.tempEvent.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
+        // });
+        // @ts-ignore
+        mobiscroll5.getInst(AppointmentController.titleInput).value = AppointmentController.tempEvent.title;
+        // @ts-ignore
+        mobiscroll5.getInst(AppointmentController.descriptionTextarea).value = '';
+        // @ts-ignore
+        mobiscroll5.getInst(AppointmentController.allDaySwitch).checked = AppointmentController.tempEvent.allDay;
         AppointmentController.range.setVal([AppointmentController.tempEvent.start, AppointmentController.tempEvent.end]);
-        AppointmentController.busySegmented.checked = true;
+        // @ts-ignore
+        mobiscroll5.getInst(AppointmentController.busySegmented).checked = true;
         AppointmentController.range.setOptions({
             controls: AppointmentController.tempEvent.allDay ? ['date'] : ['datetime'],
             responsive: AppointmentController.tempEvent.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
         });
-
         // set anchor for the popup
-        AppointmentController.popup.setOptions({ anchor: elm ,theme: 'ios'});
+        AppointmentController.popup.setOptions({ anchor: elm});
 
         AppointmentController.popup.open();
     }
@@ -526,10 +541,10 @@ export class AppointmentController implements StateChangeListener {
                             id: ev.id,
                             title: AppointmentController.titleInput.value,
                             description: AppointmentController.descriptionTextarea.value,
-                            allDay: AppointmentController.allDaySwitch.checked,
+                            allDay: mobiscroll5.getInst(AppointmentController.allDaySwitch).checked,
                             start: date[0],
                             end: date[1],
-                            free: AppointmentController.freeSegmented.checked,
+                            free: mobiscroll5.getInst(AppointmentController.freeSegmented).checked,
                             color: ev.color,
                         });
 
@@ -547,18 +562,27 @@ export class AppointmentController implements StateChangeListener {
 
         // fill popup with the selected event data
 
-        AppointmentController.titleInput.value = ev.title || '';
-        AppointmentController.descriptionTextarea.value = ev.description || '';
-        AppointmentController.allDaySwitch.checked = ev.allDay || false;
+        // AppointmentController.titleInput.value = ev.title || '';
+        // AppointmentController.descriptionTextarea.value = ev.description || '';
+        // AppointmentController.allDaySwitch.checked = ev.allDay || false;
+        // AppointmentController.range.setVal([ev.start, ev.end]);
+        // fill popup with the selected event data
+        // @ts-ignore
+        mobiscroll5.getInst(AppointmentController.titleInput).value = ev.title || '';
+        // @ts-ignore
+        mobiscroll5.getInst(AppointmentController.descriptionTextarea).value = ev.description || '';
+        // @ts-ignore
+        mobiscroll5.getInst(AppointmentController.allDaySwitch).checked = ev.allDay || false;
         AppointmentController.range.setVal([ev.start, ev.end]);
 
         if (ev.free) {
             // @ts-ignore
-            AppointmentController.freeSegmented.checked = true;
+            mobiscroll5.getInst(AppointmentController.freeSegmented).checked = true;
         } else {
             // @ts-ignore
-            AppointmentController.busySegmented.checked = true;
+            mobiscroll5.getInst(AppointmentController.busySegmented).checked = true;
         }
+
 
         // change range settings based on the allDay
         AppointmentController.range.setOptions({

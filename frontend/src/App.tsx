@@ -10,13 +10,10 @@ import Controller from './app/Controller';
 import {
     API_Config,
     NAVIGATION,
-    VIEW_CONTAINER,
 } from "./app/AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
-import {setOptions, Datepicker, datepicker, eventcalendar, Eventcalendar} from "@mobiscroll/javascript";
 import {AppointmentController} from "./app/AppointmentController";
-import moment from 'moment';
 import {UnreadMessageCountListener} from "./framework/socket/UnreadMessageCountListener";
 import {ContextualInformationHelper} from "./framework/ui/context/ContextualInformationHelper";
 import {SecurityManager} from "./framework/security/SecurityManager";
@@ -158,9 +155,11 @@ debug.log = console.info.bind(console);
 
 $(function () {
 
+    // @ts-ignore
+    mobiscroll4.setOptions = {theme:'ios'};
 
-
-    setOptions( {
+    // @ts-ignore
+    mobiscroll5.setOptions( {
         theme: 'ios',
         themeVariant: 'light'
     });

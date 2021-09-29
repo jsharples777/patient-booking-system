@@ -180,7 +180,13 @@ export class FieldInputElementFactory {
                     labelEl.innerHTML = valueOption.name;
                     containerEl.appendChild(labelEl);
                 } else {
-                    valueEl.innerHTML = valueOption.name;
+                    if (fieldConfig.elementType === UIFieldType.radioGroup) {
+                        containerEl.innerHTML += valueOption.name;
+                    }
+                    else if (fieldConfig.elementType === UIFieldType.select) {
+                        valueEl.innerText = valueOption.name;
+
+                    }
                 }
                 results.push(valueEl);
             }
