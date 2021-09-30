@@ -40,7 +40,8 @@ type Appointment {
     provider:String,
     note:String,
     type:String,
-    name:String
+    name:String,
+    status:String
 }
 
 input AppointmentInput {
@@ -55,7 +56,8 @@ input AppointmentInput {
     provider:String,
     note:String,
     type:String,
-    name:String
+    name:String,
+    status:String
 }
 
 type identifiers {

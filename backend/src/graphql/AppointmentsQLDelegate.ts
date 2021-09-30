@@ -31,6 +31,7 @@ export default class AppointmentsQLDelegate {
                     note:1,
                     type:1,
                     name:1,
+                    status:1
                 }
             };
 

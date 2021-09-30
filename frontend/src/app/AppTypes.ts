@@ -106,28 +106,8 @@ export const  WorkoutSummarySidebarContainers = {
     container: 'workoutSummary',
 }
 
-export enum Day {
-    Monday = 1,
-    Tuesday = 2,
-    Wednesday = 3,
-    Thursday = 4,
-    Friday = 5,
-    Saturday = 6,
-    Sunday = 7
+export const SELECT = {
+    appointmentType : 'event-appt-type',
+    patientSearch : 'event-patient'
 }
-
-export type ClinicDailyPref = {
-    day:Day,
-    startTime:string,
-    endTime:string,
-    lunchStart:string,
-    lunchEnd:string
-}
-
-export type ClinicPrefs = {
-    dailypref:ClinicDailyPref[],
-    timestep:number,
-}
-
-
 

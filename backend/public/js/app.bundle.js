@@ -25,7 +25,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "ExerciseTypesSidebarContainers": () => (/* binding */ ExerciseTypesSidebarContainers),
 /* harmony export */   "WorkoutSummarySidebarPrefs": () => (/* binding */ WorkoutSummarySidebarPrefs),
 /* harmony export */   "WorkoutSummarySidebarContainers": () => (/* binding */ WorkoutSummarySidebarContainers),
-/* harmony export */   "Day": () => (/* binding */ Day)
+/* harmony export */   "SELECT": () => (/* binding */ SELECT)
 /* harmony export */ });
 /* harmony import */ var _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../framework/ui/ConfigurationTypes */ "./src/framework/ui/ConfigurationTypes.ts");
 
@@ -122,17 +122,10 @@ const WorkoutSummarySidebarPrefs = {
 const WorkoutSummarySidebarContainers = {
   container: 'workoutSummary'
 };
-let Day;
-
-(function (Day) {
-  Day[Day["Monday"] = 1] = "Monday";
-  Day[Day["Tuesday"] = 2] = "Tuesday";
-  Day[Day["Wednesday"] = 3] = "Wednesday";
-  Day[Day["Thursday"] = 4] = "Thursday";
-  Day[Day["Friday"] = 5] = "Friday";
-  Day[Day["Saturday"] = 6] = "Saturday";
-  Day[Day["Sunday"] = 7] = "Sunday";
-})(Day || (Day = {}));
+const SELECT = {
+  appointmentType: 'event-appt-type',
+  patientSearch: 'event-patient'
+};
 
 /***/ }),
 
@@ -153,6 +146,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppTypes */ "./src/app/AppTypes.ts");
 /* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Controller */ "./src/app/Controller.ts");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+
 
 
 
@@ -183,6 +178,10 @@ class AppointmentController {
   static freeSegmented = null;
   static busySegmented = null;
   static deleteButton = null;
+  static patientSearchEl = null;
+  static appointmentTypeEl = null;
+  static patientSearchDropdown = null;
+  static appointmentTypeDropdown = null;
   static datePickerResponsive = {
     medium: {
       controls: ['calendar'],
@@ -207,6 +206,7 @@ class AppointmentController {
     this.onAppointmentUpdated = this.onAppointmentUpdated.bind(this);
     _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig, this);
     _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, this);
+    _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, this);
   }
 
   handleNewDatePicked(event, inst) {
@@ -214,15 +214,19 @@ class AppointmentController {
     logger(event);
   }
 
-  getColourForAppointment(appointment) {
+  getColourForAppointmentType(appointmentType) {
     let result = `rgba(10, 100, 100, 50)`;
 
     if (AppointmentController.appointmentTypes) {
-      let foundIndex = AppointmentController.appointmentTypes.findIndex(type => type.name === appointment.type);
+      let foundIndex = AppointmentController.appointmentTypes.findIndex(type => type.name === appointmentType);
       if (foundIndex >= 0) result = AppointmentController.appointmentTypes[foundIndex].colour;
     }
 
     return result;
+  }
+
+  getColourForAppointment(appointment) {
+    return this.getColourForAppointmentType(appointment.type);
   }
 
   onPageLoading(event, inst) {
@@ -265,7 +269,8 @@ class AppointmentController {
           color: this.getColourForAppointment(appointment),
           allDay: false,
           editable: canEdit,
-          resource: appointment.provider
+          resource: appointment.provider,
+          patientId: appointment._patient
         };
         logger('Converted to event');
         logger(result);
@@ -442,7 +447,9 @@ class AppointmentController {
     AppointmentController.allDaySwitch = document.getElementById('event-all-day');
     AppointmentController.freeSegmented = document.getElementById('event-status-free');
     AppointmentController.busySegmented = document.getElementById('event-status-busy');
-    AppointmentController.deleteButton = document.getElementById('event-delete'); // @ts-ignore
+    AppointmentController.deleteButton = document.getElementById('event-delete');
+    AppointmentController.patientSearchEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.SELECT.patientSearch);
+    AppointmentController.appointmentTypeEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.SELECT.appointmentType); // @ts-ignore
 
     AppointmentController.popup = mobiscroll5.popup('#demo-add-popup', {
       display: 'bottom',
@@ -492,6 +499,8 @@ class AppointmentController {
       endInput: '#end-input',
       showRangeLabels: false,
       touchUi: true,
+      stepMinute: 15,
+      maxTime: '17:00',
       responsive: AppointmentController.datePickerResponsive,
       onChange: function (args) {
         var date = args.value; // update event's start date
@@ -540,12 +549,6 @@ class AppointmentController {
     logger(`Handling state changed ${name}`);
 
     switch (name) {
-      case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes:
-        {
-          AppointmentController.appointmentTypes = newValue;
-          break;
-        }
-
       case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig:
         {
           AppointmentController.clinicConfig = newValue[0];
@@ -565,8 +568,54 @@ class AppointmentController {
               invalidateEvent: AppointmentController.clinicConfig.invalidateEvent,
               invalid: AppointmentController.clinicConfig.invalid
             });
+            AppointmentController.range.setOptions({
+              stepMinute: AppointmentController.clinicConfig.dragTimeStep
+            });
           }
 
+          break;
+        }
+
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch:
+        {
+          let patients = [];
+          newValue.forEach(patient => {
+            patients.push({
+              text: `${patient.name.surname}, ${patient.name.firstname}`,
+              value: patient._id
+            });
+          }); // add the patient search values to the data of the select dropdown
+          // @ts-ignore
+
+          AppointmentController.patientSearchDropdown = mobiscroll5.select('#' + _AppTypes__WEBPACK_IMPORTED_MODULE_2__.SELECT.patientSearch, {
+            filter: true,
+            data: patients,
+            onChange: (event, inst) => {
+              // @ts-ignore
+              mobiscroll5.getInst(AppointmentController.titleInput).value = event.valueText;
+              console.log(event.value);
+              AppointmentController.tempEvent.patientId = event.value;
+            }
+          });
+          break;
+        }
+
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes:
+        {
+          AppointmentController.appointmentTypes = newValue;
+          let types = [];
+          newValue.forEach(type => {
+            types.push(type.name);
+          }); // add the patient search values to the data of the select dropdown
+          // @ts-ignore
+
+          AppointmentController.appointmentTypeDropdown = mobiscroll5.select('#' + _AppTypes__WEBPACK_IMPORTED_MODULE_2__.SELECT.appointmentType, {
+            data: types,
+            onChange: (event, inst) => {
+              // @ts-ignore
+              mobiscroll5.getInst(AppointmentController.descriptionTextarea).value = event.valueText;
+            }
+          });
           break;
         }
     }
@@ -580,7 +629,10 @@ class AppointmentController {
 
   createAddPopup(elm) {
     // hide delete button inside add popup
-    AppointmentController.deleteButton.style.display = 'none';
+    AppointmentController.deleteButton.style.display = 'none'; // show the dropdowns
+
+    AppointmentController.patientSearchEl.style.display = 'block';
+    AppointmentController.appointmentTypeEl.style.display = 'block';
     AppointmentController.deleteEvent = true;
     AppointmentController.restoreEvent = false; // set popup header text and buttons for adding
 
@@ -590,35 +642,42 @@ class AppointmentController {
         text: 'Add',
         keyCode: 'enter',
         handler: function () {
+          let date = AppointmentController.range.getVal(); // store the event created by the UI
+
+          let mobiId = AppointmentController.tempEvent.id; // generate a new UUID
+
+          let appointmentId = (0,uuid__WEBPACK_IMPORTED_MODULE_4__["default"])(); // get the colour for the event type
           // @ts-ignore
-          AppointmentController.calendar.updateEvent(AppointmentController.tempEvent); // @ts-ignore
+
+          let colour = AppointmentController.getInstance().getColourForAppointmentType(mobiscroll5.getInst(AppointmentController.descriptionTextarea).value); // @ts-ignore
+
+          let updatedEvent = {
+            id: appointmentId,
+            title: mobiscroll5.getInst(AppointmentController.titleInput).value,
+            description: mobiscroll5.getInst(AppointmentController.descriptionTextarea).value,
+            allDay: mobiscroll5.getInst(AppointmentController.allDaySwitch).checked,
+            start: date[0],
+            end: date[1],
+            free: mobiscroll5.getInst(AppointmentController.freeSegmented).checked,
+            color: colour,
+            patientId: AppointmentController.tempEvent.patientId
+          };
+          console.log('inserting');
+          console.log(updatedEvent); // remove the original event
+
+          AppointmentController.calendar.removeEvent([mobiId]);
+          AppointmentController.calendar.addEvent(updatedEvent); // @ts-ignore
 
           AppointmentController.deleteEvent = false; // navigate the calendar to the correct view
           // @ts-ignore
 
-          AppointmentController.calendar.navigate(AppointmentController.tempEvent.start); // @ts-ignore
+          AppointmentController.calendar.navigate(updatedEvent.start); // @ts-ignore
 
           AppointmentController.popup.close();
         },
         cssClass: 'mbsc-popup-button-primary'
       }]
     }); // fill popup with a new event data
-    // console.log(AppointmentController.titleInput);
-    // // @ts-ignore
-    // console.log(mobiscroll5.getInst(AppointmentController.titleInput));
-    // AppointmentController.popup.getInst().refresh;
-    // console.log(AppointmentController.popup.getInst());
-    //
-    // AppointmentController.titleInput.value = AppointmentController.tempEvent.title;
-    //
-    // AppointmentController.descriptionTextarea.value = '';
-    // AppointmentController.allDaySwitch.checked = AppointmentController.tempEvent.allDay;
-    // AppointmentController.range.setVal([AppointmentController.tempEvent.start, AppointmentController.tempEvent.end]);
-    // AppointmentController.busySegmented.checked = true;
-    // AppointmentController.range.setOptions({
-    //     controls: AppointmentController.tempEvent.allDay ? ['date'] : ['datetime'],
-    //     responsive: AppointmentController.tempEvent.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
-    // });
     // @ts-ignore
 
     mobiscroll5.getInst(AppointmentController.titleInput).value = AppointmentController.tempEvent.title; // @ts-ignore
@@ -641,9 +700,13 @@ class AppointmentController {
   }
 
   createEditPopup(args) {
-    let ev = args.event; // show delete button inside edit popup
+    let ev = args.event;
+    console.log(ev.patientId); // show delete button inside edit popup
 
-    AppointmentController.deleteButton.style.display = 'block';
+    AppointmentController.deleteButton.style.display = 'block'; // show the dropdowns
+
+    AppointmentController.patientSearchEl.style.display = 'none';
+    AppointmentController.appointmentTypeEl.style.display = 'none';
     AppointmentController.deleteEvent = false;
     AppointmentController.restoreEvent = true; // set popup header text and buttons for editing
 
@@ -679,11 +742,6 @@ class AppointmentController {
         cssClass: 'mbsc-popup-button-primary'
       }]
     }); // fill popup with the selected event data
-    // AppointmentController.titleInput.value = ev.title || '';
-    // AppointmentController.descriptionTextarea.value = ev.description || '';
-    // AppointmentController.allDaySwitch.checked = ev.allDay || false;
-    // AppointmentController.range.setVal([ev.start, ev.end]);
-    // fill popup with the selected event data
     // @ts-ignore
 
     mobiscroll5.getInst(AppointmentController.titleInput).value = ev.title || ''; // @ts-ignore

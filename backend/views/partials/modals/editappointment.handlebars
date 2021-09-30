@@ -12,6 +12,14 @@
         </label>
     </div>
     <div class="mbsc-form-group">
+        <label>
+            <select mbsc-dropdown data-label="Type" id="event-appt-type"></select>
+        </label>
+        <label>
+            <select mbsc-dropdown data-label="Find Patient" id="event-patient"></select>
+        </label>
+    </div>
+    <div class="mbsc-form-group">
         <label for="event-all-day">
             All-day
             <input mbsc-switch id="event-all-day" type="checkbox" />
@@ -35,6 +43,8 @@
         </label>
         <div class="mbsc-button-group">
             <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">Delete event</button>
+            <button class="mbsc-button-block" id="event-cancelled" mbsc-button data-color="warning" data-variant="outline">Patient Cancelled</button>
+            <button class="mbsc-button-block" id="event-dna" mbsc-button data-color="info" data-variant="outline">Did Not Arrive</button>
         </div>
     </div>
 </div>
