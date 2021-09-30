@@ -1,4 +1,4 @@
-import {SidebarLocation, SidebarPrefs} from "../framework/ui/ConfigurationTypes";
+import {SidebarLocation, SidebarPrefs} from "ui-framework-jps";
 
 
 export enum Decorator {

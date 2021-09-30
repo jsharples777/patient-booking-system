@@ -2,12 +2,36 @@ import debug from "debug";
 import moment from "moment";
 import {SELECT, STATE_NAMES, VIEW_CONTAINER} from "./AppTypes";
 import Controller from "./Controller";
-import {StateChangeListener} from "../framework/state/StateChangeListener";
 import {v4} from "uuid";
-import App from "../App";
+import {StateChangeListener} from "ui-framework-jps";
 
 
 const logger = debug('appointment-controller');
+
+type AppointmentViewElements = {
+    datePicker: any | null,
+    calendar: any | null,
+    popup:any|null,
+    range:any|null,
+    titleInput:HTMLInputElement|null,
+    descriptionTextarea:HTMLTextAreaElement|null,
+    deleteButton:HTMLButtonElement|null,
+    patientCancelledButton:HTMLButtonElement|null,
+    patientDNAButton:HTMLButtonElement|null,
+    patientSearchEl:HTMLSelectElement|null,
+    appointmentTypeEl:HTMLSelectElement|null
+    patientSearchDropdown:any|null
+    appointmentTypeDropdown:any|null
+}
+
+type AppointmentDataElements = {
+    appointmentTypes: any[] | null,
+    clinicConfig: any | null,
+    oldEvent:any|null,
+    tempEvent:any,
+    isDeletingEvent:boolean,
+    isRestoringEvent:boolean
+}
 
 export class AppointmentController implements StateChangeListener {
     private static _instance: AppointmentController;
@@ -19,31 +43,31 @@ export class AppointmentController implements StateChangeListener {
         return AppointmentController._instance;
     }
 
-    private static datePicker: any | null = null;
-    private static calendar: any | null = null;
-    private static appointmentTypes: any[] | null = null;
-    private static clinicConfig: any | null = null;
+    private viewElements:AppointmentViewElements = {
+        datePicker:  null,
+        calendar: null,
+        popup: null,
+        range: null,
+        titleInput: null,
+        descriptionTextarea:null,
+        deleteButton:null,
+        patientCancelledButton:null,
+        patientDNAButton:null,
+        patientSearchEl:null,
+        appointmentTypeEl:null,
+        appointmentTypeDropdown:null,
+        patientSearchDropdown:null
+    }
 
-    private static popup:any|null = null;
-    private static range:any|null = null;
-    private static oldEvent:any|null = null;
-    private static tempEvent:any = {};
+    private dataElements:AppointmentDataElements = {
+        appointmentTypes: null,
+        clinicConfig: null,
+        oldEvent:null,
+        tempEvent:{},
+        isDeletingEvent:false,
+        isRestoringEvent:false
 
-    private static deleteEvent:boolean = false;
-    private static restoreEvent:boolean = false;
-
-    private static titleInput:any|null = null;
-    private static descriptionTextarea:any|null = null;
-    private static allDaySwitch:any|null = null;
-    private static freeSegmented:any|null = null;
-    private static busySegmented:any|null = null;
-    private static deleteButton:any|null = null;
-    private static patientSearchEl:HTMLSelectElement|null = null;
-    private static appointmentTypeEl:HTMLSelectElement|null = null;
-
-
-    private static patientSearchDropdown:any|null = null;
-    private static appointmentTypeDropdown:any|null = null;
+    }
 
     private static datePickerResponsive = {
         medium: {
@@ -82,9 +106,9 @@ export class AppointmentController implements StateChangeListener {
 
     protected getColourForAppointmentType(appointmentType: string) {
         let result = `rgba(10, 100, 100, 50)`;
-        if (AppointmentController.appointmentTypes) {
-            let foundIndex = AppointmentController.appointmentTypes.findIndex((type) => type.name === appointmentType);
-            if (foundIndex >= 0) result = AppointmentController.appointmentTypes[foundIndex].colour;
+        if (this.dataElements.appointmentTypes) {
+            let foundIndex = this.dataElements.appointmentTypes.findIndex((type) => type.name === appointmentType);
+            if (foundIndex >= 0) result = this.dataElements.appointmentTypes[foundIndex].colour;
         }
         return result;
     }
@@ -134,11 +158,18 @@ export class AppointmentController implements StateChangeListener {
                     start: moment(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
                     end: moment(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
                     title: appointment.name,
+                    description:appointment.note,
                     color: this.getColourForAppointment(appointment),
                     allDay: false,
                     editable: canEdit,
                     resource: appointment.provider,
-                    patientId:appointment._patient
+                    patientId:appointment._patient,
+                    isDNA:appointment.isDNA,
+                    isCancelled:appointment.isCancelled,
+                    createdBy:appointment.createdBy,
+                    createdOn:appointment.created,
+                    modifiedOn:appointment.modified,
+                    arrivalTime:appointment.arrivalTime,
                 }
                 logger('Converted to event');
                 logger(result);
@@ -192,26 +223,26 @@ export class AppointmentController implements StateChangeListener {
             dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             showWeekNumbers: true,
             onChange: (event: any, inst: any) => {
-                AppointmentController.calendar?.navigate(event.value);
+                AppointmentController.getInstance().viewElements.calendar?.navigate(event.value);
                 AppointmentController.getInstance().handleNewDatePicked(event.value, inst)
             }
         });
 
         let options: any;
-        if (AppointmentController.clinicConfig) {
+        if (this.dataElements.clinicConfig) {
             logger('Using clinic config options');
             options = {
-                clickToCreate: AppointmentController.clinicConfig.clickToCreate,
-                dragTimeStep: AppointmentController.clinicConfig.dragTimeStep,
-                dragToCreate: AppointmentController.clinicConfig.dragToCreate,
-                dragToMove: AppointmentController.clinicConfig.dragToMove,
-                dragToResize: AppointmentController.clinicConfig.dragToResize,
-                min: moment().subtract(AppointmentController.clinicConfig.min, "months"),
-                controls: AppointmentController.clinicConfig.controls,
-                showControls: AppointmentController.clinicConfig.showControls,
-                view: AppointmentController.clinicConfig.view,
-                invalidateEvent: AppointmentController.clinicConfig.invalidateEvent,
-                invalid: AppointmentController.clinicConfig.invalid,
+                clickToCreate: this.dataElements.clinicConfig.clickToCreate,
+                dragTimeStep: this.dataElements.clinicConfig.dragTimeStep,
+                dragToCreate: this.dataElements.clinicConfig.dragToCreate,
+                dragToMove: this.dataElements.clinicConfig.dragToMove,
+                dragToResize: this.dataElements.clinicConfig.dragToResize,
+                min: moment().subtract(this.dataElements.clinicConfig.min, "months"),
+                controls: this.dataElements.clinicConfig.controls,
+                showControls: this.dataElements.clinicConfig.showControls,
+                view: this.dataElements.clinicConfig.view,
+                invalidateEvent: this.dataElements.clinicConfig.invalidateEvent,
+                invalid: this.dataElements.clinicConfig.invalid,
             }
         } else {
             logger('Using DEFAULT config options');
@@ -257,17 +288,19 @@ export class AppointmentController implements StateChangeListener {
         }
         options.onSelectedDateChange = (event: any, inst: any) => {
             AppointmentController.getInstance().handleNewDatePicked(event.date, inst);
-            AppointmentController.datePicker?.setVal(event.date);
+            AppointmentController.getInstance().viewElements.datePicker?.setVal(event.date);
         };
         options.onPageLoading = (event: any, inst: any) => {
             AppointmentController.getInstance().onPageLoading(event, inst);
         };
         options.onEventCreated = (event: any, inst: any) => {
             AppointmentController.getInstance().onAppointmentCreated(event, inst);
-            AppointmentController.popup.close();
+            AppointmentController.getInstance().viewElements.popup.close();
             // store temporary event
-            AppointmentController.tempEvent = event.event;
-            console.log(event.event);
+            AppointmentController.getInstance().dataElements.tempEvent = event.event;
+            logger('Creating event');
+            logger(event);
+
             this.createAddPopup(event.target);
         };
         options.onEventDelete = (event: any, inst: any) => {
@@ -280,7 +313,7 @@ export class AppointmentController implements StateChangeListener {
                 button: {
                     action: function () {
                         // @ts-ignore
-                        AppointmentController.calendar.addEvent(event.event);
+                        AppointmentController.getInstance().viewElements.calendar.addEvent(event.event);
                     },
                     text: 'Undo'
                 },
@@ -297,39 +330,36 @@ export class AppointmentController implements StateChangeListener {
             AppointmentController.getInstance().onAppointmentEditRequested(event, inst);
         };
         options.onEventClick = (args:any) => {
-            AppointmentController.oldEvent = Object.assign({}, args.event);
-            AppointmentController.tempEvent = args.event;
+            AppointmentController.getInstance().dataElements.oldEvent = Object.assign({}, args.event);
+            AppointmentController.getInstance().dataElements.tempEvent = args.event;
 
-            if (!AppointmentController.popup.isVisible()) {
-                console.log(args);
+            if (!AppointmentController.getInstance().viewElements.popup.isVisible()) {
+                logger(args);
                 this.createEditPopup(args);
             }
         }
 
-        options.calendar = {labels: true}
-
-        AppointmentController.titleInput = document.getElementById('event-title');
-        AppointmentController.descriptionTextarea = document.getElementById('event-desc');
-        AppointmentController.allDaySwitch = document.getElementById('event-all-day');
-        AppointmentController.freeSegmented = document.getElementById('event-status-free');
-        AppointmentController.busySegmented = document.getElementById('event-status-busy');
-        AppointmentController.deleteButton = document.getElementById('event-delete');
-        AppointmentController.patientSearchEl = <HTMLSelectElement>document.getElementById(SELECT.patientSearch);
-        AppointmentController.appointmentTypeEl =<HTMLSelectElement>document.getElementById(SELECT.appointmentType);
+        this.viewElements.titleInput = <HTMLInputElement>document.getElementById('event-title');
+        this.viewElements.descriptionTextarea = <HTMLTextAreaElement>document.getElementById('event-desc');
+        this.viewElements.deleteButton = <HTMLButtonElement>document.getElementById('event-delete');
+        this.viewElements.patientCancelledButton = <HTMLButtonElement>document.getElementById('event-cancelled');
+        this.viewElements.patientDNAButton = <HTMLButtonElement>document.getElementById('event-dna');
+        this.viewElements.patientSearchEl = <HTMLSelectElement>document.getElementById(SELECT.patientSearch);
+        this.viewElements.appointmentTypeEl =<HTMLSelectElement>document.getElementById(SELECT.appointmentType);
 
 
         // @ts-ignore
-        AppointmentController.popup = mobiscroll5.popup('#demo-add-popup', {
+        this.viewElements.popup = mobiscroll5.popup('#add-appointment-popup', {
             display: 'bottom',
             contentPadding: false,
             fullScreen: true,
             onClose: function () {
-                if (AppointmentController.deleteEvent) {
+                if (AppointmentController.getInstance().dataElements.isDeletingEvent) {
                     // @ts-ignore
-                    AppointmentController.calendar.removeEvent(AppointmentController.tempEvent);
-                } else if (AppointmentController.restoreEvent) {
+                    AppointmentController.getInstance().viewElements.calendar.removeEvent(AppointmentController.getInstance().dataElements.tempEvent);
+                } else if (AppointmentController.getInstance().dataElements.isRestoringEvent) {
                     // @ts-ignore
-                    AppointmentController.calendar.updateEvent(AppointmentController.oldEvent);
+                    AppointmentController.getInstance().viewElements.calendar.updateEvent(AppointmentController.getInstance().dataElements.oldEvent);
                 }
             },
             responsive: {
@@ -342,30 +372,18 @@ export class AppointmentController implements StateChangeListener {
             }
         });
 
-        AppointmentController.titleInput.addEventListener('input', function (ev:any) {
+        this.viewElements.titleInput.addEventListener('input', function (ev:any) {
             // update current event's title
-            AppointmentController.tempEvent.title = ev.target.value;
+            AppointmentController.getInstance().dataElements.tempEvent.title = ev.target.value;
         });
 
-        AppointmentController.descriptionTextarea.addEventListener('change', function (ev:any) {
+        this.viewElements.descriptionTextarea.addEventListener('change', function (ev:any) {
             // update current event's title
-            AppointmentController.tempEvent.description = ev.target.value;
-        });
-
-        AppointmentController.allDaySwitch.addEventListener('change', function () {
-            let checked = AppointmentController.allDaySwitch.checked
-            // change range settings based on the allDay
-            AppointmentController.range.setOptions({
-                controls: checked ? ['date'] : ['datetime'],
-                responsive: checked ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
-            });
-
-            // update current event's allDay property
-            AppointmentController.tempEvent.allDay = checked;
+            AppointmentController.getInstance().dataElements.tempEvent.description = ev.target.value;
         });
 
         // @ts-ignore
-        AppointmentController.range = mobiscroll5.datepicker('#event-date', {
+        this.viewElements.range = mobiscroll5.datepicker('#event-date', {
             controls: ['date'],
             select: 'range',
             startInput: '#start-input',
@@ -378,34 +396,27 @@ export class AppointmentController implements StateChangeListener {
             onChange: function (args:any) {
                 var date = args.value;
                 // update event's start date
-                AppointmentController.tempEvent.start = date[0];
-                AppointmentController.tempEvent.end = date[1];
+                AppointmentController.getInstance().dataElements.tempEvent.start = date[0];
+                AppointmentController.getInstance().dataElements.tempEvent.end = date[1];
             }
         });
 
-        document.querySelectorAll('input[name=event-status]').forEach(function (elm) {
-            elm.addEventListener('change', function () {
-                // update current event's free property
-                // @ts-ignore
-                AppointmentController.tempEvent.free = mobiscroll5.getInst(AppointmentController.freeSegmented).checked;
-            });
-        });
 
-        AppointmentController.deleteButton.addEventListener('click', function () {
+        this.viewElements.deleteButton.addEventListener('click', function () {
             // delete current event on button click
             // @ts-ignore
-            AppointmentController.calendar.removeEvent(AppointmentController.tempEvent);
-            AppointmentController.popup.close();
+            AppointmentController.getInstance().viewElements.calendar.removeEvent(AppointmentController.getInstance().dataElements.tempEvent);
+            AppointmentController.getInstance().viewElements.popup.close();
 
             // save a local reference to the deleted event
-            let deletedEvent = AppointmentController.tempEvent;
+            let deletedEvent = AppointmentController.getInstance().dataElements.tempEvent;
 
             // @ts-ignore
             mobiscroll5.snackbar({
                 button: {
                     action: function () {
                         // @ts-ignore
-                        AppointmentController.calendar.addEvent(deletedEvent);
+                        AppointmentController.getInstance().viewElements.calendar.addEvent(deletedEvent);
                     },
                     text: 'Undo'
                 },
@@ -414,7 +425,7 @@ export class AppointmentController implements StateChangeListener {
         });
 
         // @ts-ignore
-        AppointmentController.calendar = mobiscroll5.eventcalendar(document.getElementById(VIEW_CONTAINER.calendarDetail), options);
+        this.viewElements.calendar = mobiscroll5.eventcalendar(document.getElementById(VIEW_CONTAINER.calendarDetail), options);
 
     }
 
@@ -430,26 +441,26 @@ export class AppointmentController implements StateChangeListener {
 
         switch (name) {
             case STATE_NAMES.clinicConfig: {
-                AppointmentController.clinicConfig = newValue[0];
-                if (AppointmentController.calendar) {
+                this.dataElements.clinicConfig = newValue[0];
+                if (this.viewElements.calendar) {
                     logger('State changed, using clinic config options');
 
-                    AppointmentController.calendar.setOptions({
-                        clickToCreate: AppointmentController.clinicConfig.clickToCreate,
-                        dragTimeStep: AppointmentController.clinicConfig.dragTimeStep,
-                        dragToCreate: AppointmentController.clinicConfig.dragToCreate,
-                        dragToMove: AppointmentController.clinicConfig.dragToMove,
-                        dragToResize: AppointmentController.clinicConfig.dragToResize,
-                        min: moment().subtract(AppointmentController.clinicConfig.min, "months"),
-                        controls: AppointmentController.clinicConfig.controls,
-                        showControls: AppointmentController.clinicConfig.showControls,
-                        view: AppointmentController.clinicConfig.view,
-                        invalidateEvent: AppointmentController.clinicConfig.invalidateEvent,
-                        invalid: AppointmentController.clinicConfig.invalid,
+                    this.viewElements.calendar.setOptions({
+                        clickToCreate: this.dataElements.clinicConfig.clickToCreate,
+                        dragTimeStep: this.dataElements.clinicConfig.dragTimeStep,
+                        dragToCreate: this.dataElements.clinicConfig.dragToCreate,
+                        dragToMove: this.dataElements.clinicConfig.dragToMove,
+                        dragToResize: this.dataElements.clinicConfig.dragToResize,
+                        min: moment().subtract(this.dataElements.clinicConfig.min, "months"),
+                        controls: this.dataElements.clinicConfig.controls,
+                        showControls: this.dataElements.clinicConfig.showControls,
+                        view: this.dataElements.clinicConfig.view,
+                        invalidateEvent: this.dataElements.clinicConfig.invalidateEvent,
+                        invalid: this.dataElements.clinicConfig.invalid,
                     });
 
-                    AppointmentController.range.setOptions( {
-                        stepMinute:AppointmentController.clinicConfig.dragTimeStep
+                    this.viewElements.range.setOptions( {
+                        stepMinute:this.dataElements.clinicConfig.dragTimeStep
                     });
                 }
                 break;
@@ -468,15 +479,15 @@ export class AppointmentController implements StateChangeListener {
                     data: patients,
                     onChange: (event:any, inst:any) => {
                         // @ts-ignore
-                        mobiscroll5.getInst(AppointmentController.titleInput).value = event.valueText;
+                        mobiscroll5.getInst(AppointmentController.getInstance().viewElements.titleInput).value = event.valueText;
                         console.log(event.value);
-                        AppointmentController.tempEvent.patientId = event.value;
+                        AppointmentController.getInstance().dataElements.tempEvent.patientId = event.value;
                     }
                 });
                 break;
             }
             case (STATE_NAMES.appointmentTypes): {
-                AppointmentController.appointmentTypes = newValue;
+                this.dataElements.appointmentTypes = newValue;
 
                 let types:any[] = [];
 
@@ -486,11 +497,11 @@ export class AppointmentController implements StateChangeListener {
 
                 // add the patient search values to the data of the select dropdown
                 // @ts-ignore
-                AppointmentController.appointmentTypeDropdown = mobiscroll5.select('#' + SELECT.appointmentType ,{
+                this.viewElements.appointmentTypeDropdown = mobiscroll5.select('#' + SELECT.appointmentType ,{
                     data: types,
                     onChange: (event:any, inst:any) => {
                         // @ts-ignore
-                        mobiscroll5.getInst(AppointmentController.descriptionTextarea).value = event.valueText;
+                        mobiscroll5.getInst(AppointmentController.getInstance().viewElements.descriptionTextarea).value = event.valueText;
                     }
                 });
                 break;
@@ -511,16 +522,18 @@ export class AppointmentController implements StateChangeListener {
 
     private createAddPopup(elm:HTMLElement) {
         // hide delete button inside add popup
-        AppointmentController.deleteButton.style.display = 'none';
+        this.viewElements.deleteButton.style.display = 'none';
+        this.viewElements.patientCancelledButton.style.display = 'none';
+        this.viewElements.patientDNAButton.style.display = 'none';
         // show the dropdowns
-        AppointmentController.patientSearchEl.style.display = 'block';
-        AppointmentController.appointmentTypeEl.style.display = 'block';
+        this.viewElements.patientSearchEl.style.display = 'block';
+        this.viewElements.appointmentTypeEl.style.display = 'block';
 
-        AppointmentController.deleteEvent = true;
-        AppointmentController.restoreEvent = false;
+        this.dataElements.isDeletingEvent = true;
+        this.dataElements.isRestoringEvent = false;
 
         // set popup header text and buttons for adding
-        AppointmentController.popup.setOptions({
+        this.viewElements.popup.setOptions({
             headerText: 'New event',
             buttons: [
                 'cancel',
@@ -528,32 +541,32 @@ export class AppointmentController implements StateChangeListener {
                     text: 'Add',
                     keyCode: 'enter',
                     handler: function () {
-                        let date = AppointmentController.range.getVal();
+                        let date = AppointmentController.getInstance().viewElements.range.getVal();
                         // store the event created by the UI
-                        let mobiId = AppointmentController.tempEvent.id;
+                        let mobiId = AppointmentController.getInstance().dataElements.tempEvent.id;
                         // generate a new UUID
                         let appointmentId = v4();
                         // get the colour for the event type
                         // @ts-ignore
-                        let colour = AppointmentController.getInstance().getColourForAppointmentType(mobiscroll5.getInst(AppointmentController.descriptionTextarea).value);
+                        let colour = AppointmentController.getInstance().getColourForAppointmentType(mobiscroll5.getInst(AppointmentController.getInstance().viewElements.descriptionTextarea).value);
 
                         // @ts-ignore
-                        let updatedEvent = {id: appointmentId, title: mobiscroll5.getInst(AppointmentController.titleInput).value, description: mobiscroll5.getInst(AppointmentController.descriptionTextarea).value, allDay: mobiscroll5.getInst(AppointmentController.allDaySwitch).checked, start: date[0], end: date[1], free: mobiscroll5.getInst(AppointmentController.freeSegmented).checked, color: colour,patientId:AppointmentController.tempEvent.patientId};
-                        console.log('inserting');
-                        console.log(updatedEvent);
+                        let updatedEvent = {id: appointmentId, title: mobiscroll5.getInst(AppointmentController.getInstance().viewElements.titleInput).value, description: mobiscroll5.getInst(AppointmentController.getInstance().viewElements.descriptionTextarea).value, allDay: false, start: date[0], end: date[1], free: false, color: colour,patientId:AppointmentController.getInstance().dataElements.tempEvent.patientId};
+                        logger('inserting');
+                        logger(updatedEvent);
 
                         // remove the original event
-                        AppointmentController.calendar.removeEvent([mobiId]);
-                        AppointmentController.calendar.addEvent(updatedEvent);
+                        AppointmentController.getInstance().viewElements.calendar.removeEvent([mobiId]);
+                        AppointmentController.getInstance().viewElements.calendar.addEvent(updatedEvent);
                         // @ts-ignore
-                        AppointmentController.deleteEvent = false;
+                        AppointmentController.getInstance().dataElements.isDeletingEvent = false;
 
                         // navigate the calendar to the correct view
                         // @ts-ignore
-                        AppointmentController.calendar.navigate(updatedEvent.start);
+                        AppointmentController.getInstance().viewElements.calendar.navigate(updatedEvent.start);
 
                         // @ts-ignore
-                        AppointmentController.popup.close();
+                        AppointmentController.getInstance().viewElements.popup.close();
                     },
                     cssClass: 'mbsc-popup-button-primary'
                 }
@@ -562,22 +575,19 @@ export class AppointmentController implements StateChangeListener {
 
         // fill popup with a new event data
         // @ts-ignore
-        mobiscroll5.getInst(AppointmentController.titleInput).value = AppointmentController.tempEvent.title;
+        mobiscroll5.getInst(this.viewElements.titleInput).value = this.dataElements.tempEvent.title;
         // @ts-ignore
-        mobiscroll5.getInst(AppointmentController.descriptionTextarea).value = '';
-        // @ts-ignore
-        mobiscroll5.getInst(AppointmentController.allDaySwitch).checked = AppointmentController.tempEvent.allDay;
-        AppointmentController.range.setVal([AppointmentController.tempEvent.start, AppointmentController.tempEvent.end]);
-        // @ts-ignore
-        mobiscroll5.getInst(AppointmentController.busySegmented).checked = true;
-        AppointmentController.range.setOptions({
-            controls: AppointmentController.tempEvent.allDay ? ['date'] : ['datetime'],
-            responsive: AppointmentController.tempEvent.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
+        mobiscroll5.getInst(this.viewElements.descriptionTextarea).value = '';
+
+        this.viewElements.range.setVal([this.dataElements.tempEvent.start, this.dataElements.tempEvent.end]);
+        this.viewElements.range.setOptions({
+            controls: this.dataElements.tempEvent.allDay ? ['date'] : ['datetime'],
+            responsive: this.dataElements.tempEvent.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
         });
         // set anchor for the popup
-        AppointmentController.popup.setOptions({ anchor: elm});
+        this.viewElements.popup.setOptions({ anchor: elm});
 
-        AppointmentController.popup.open();
+        this.viewElements.popup.open();
     }
 
     private createEditPopup(args:any) {
@@ -586,17 +596,19 @@ export class AppointmentController implements StateChangeListener {
         console.log(ev.patientId);
 
         // show delete button inside edit popup
-        AppointmentController.deleteButton.style.display = 'block';
+        this.viewElements.deleteButton.style.display = 'block';
+        this.viewElements.patientCancelledButton.style.display = 'block';
+        this.viewElements.patientDNAButton.style.display = 'block';
         // show the dropdowns
-        AppointmentController.patientSearchEl.style.display = 'none';
-        AppointmentController.appointmentTypeEl.style.display = 'none';
+        this.viewElements.patientSearchEl.style.display = 'none';
+        this.viewElements.appointmentTypeEl.style.display = 'none';
 
 
-        AppointmentController.deleteEvent = false;
-        AppointmentController.restoreEvent = true;
+        this.dataElements.isDeletingEvent = false;
+        this.dataElements.isRestoringEvent = true;
 
         // set popup header text and buttons for editing
-        AppointmentController.popup.setOptions({
+        this.viewElements.popup.setOptions({
             headerText: 'Edit event',
             buttons: [
                 'cancel',
@@ -604,20 +616,20 @@ export class AppointmentController implements StateChangeListener {
                     text: 'Save',
                     keyCode: 'enter',
                     handler: function () {
-                        let date = AppointmentController.range.getVal();
+                        let date = AppointmentController.getInstance().viewElements.range.getVal();
                         // update event with the new properties on save button click
                         // @ts-ignore
-                        let updatedEvent = {id: ev.id, title: mobiscroll5.getInst(AppointmentController.titleInput).value, description: mobiscroll5.getInst(AppointmentController.descriptionTextarea).value, allDay: mobiscroll5.getInst(AppointmentController.allDaySwitch).checked, start: date[0], end: date[1], free: mobiscroll5.getInst(AppointmentController.freeSegmented).checked, color: ev.color,};
-                        console.log('updated');
-                        console.log(updatedEvent)
-                        AppointmentController.calendar.updateEvent(updatedEvent);
+                        let updatedEvent = {id: ev.id, title: mobiscroll5.getInst(AppointmentController.getInstance().viewElements.titleInput).value, description: mobiscroll5.getInst(AppointmentController.getInstance().viewElements.descriptionTextarea).value, allDay: false, start: date[0], end: date[1], free: false,color: ev.color,};
+                        logger('updated');
+                        logger(updatedEvent)
+                        AppointmentController.getInstance().viewElements.calendar.updateEvent(updatedEvent);
 
                         // navigate the calendar to the correct view
                         // @ts-ignore
-                        AppointmentController.calendar.navigate(date[0]);;
+                        AppointmentController.getInstance().viewElements.calendar.navigate(date[0]);
 
-                        AppointmentController.restoreEvent = false;
-                        AppointmentController.popup.close();
+                        AppointmentController.getInstance().dataElements.isRestoringEvent= false;
+                        AppointmentController.getInstance().viewElements.popup.close();
                     },
                     cssClass: 'mbsc-popup-button-primary'
                 }
@@ -626,31 +638,20 @@ export class AppointmentController implements StateChangeListener {
 
         // fill popup with the selected event data
         // @ts-ignore
-        mobiscroll5.getInst(AppointmentController.titleInput).value = ev.title || '';
+        mobiscroll5.getInst(this.viewElements.titleInput).value = ev.title || '';
         // @ts-ignore
-        mobiscroll5.getInst(AppointmentController.descriptionTextarea).value = ev.description || '';
-        // @ts-ignore
-        mobiscroll5.getInst(AppointmentController.allDaySwitch).checked = ev.allDay || false;
-        AppointmentController.range.setVal([ev.start, ev.end]);
-
-        if (ev.free) {
-            // @ts-ignore
-            mobiscroll5.getInst(AppointmentController.freeSegmented).checked = true;
-        } else {
-            // @ts-ignore
-            mobiscroll5.getInst(AppointmentController.busySegmented).checked = true;
-        }
-
+        mobiscroll5.getInst(this.viewElements.descriptionTextarea).value = ev.description || '';
+        this.viewElements.range.setVal([ev.start, ev.end]);
 
         // change range settings based on the allDay
-        AppointmentController.range.setOptions({
+        this.viewElements.range.setOptions({
             controls: ev.allDay ? ['date'] : ['datetime'],
             responsive: ev.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
         });
 
         // set anchor for the popup
-        AppointmentController.popup.setOptions({ anchor: args.domEvent.currentTarget ,theme:'ios'});
-        AppointmentController.popup.open();
+        this.viewElements.popup.setOptions({ anchor: args.domEvent.currentTarget});
+        this.viewElements.popup.open();
     }
 
 

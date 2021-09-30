@@ -14,11 +14,13 @@ import {
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
 import {AppointmentController} from "./app/AppointmentController";
-import {UnreadMessageCountListener} from "./framework/socket/UnreadMessageCountListener";
-import {ContextualInformationHelper} from "./framework/ui/context/ContextualInformationHelper";
-import {SecurityManager} from "./framework/security/SecurityManager";
-import {UserSearchSidebar} from "./framework/ui/chat/UserSearchSidebar";
-import {ChatRoomsSidebar} from "./framework/ui/chat/ChatRoomsSidebar";
+import {
+    ChatRoomsSidebar,
+    ContextualInformationHelper,
+    SecurityManager,
+    UnreadMessageCountListener,
+    UserSearchSidebar
+} from "ui-framework-jps";
 
 
 

@@ -6,8 +6,7 @@ import debug from 'debug';
 import Controller from "./Controller";
 
 import {STATE_NAMES} from "./AppTypes";
-import {SocketListener} from "../framework/socket/SocketListener";
-import {NotificationManager, NotificationType} from "../framework/notification/NotificationManager";
+import {DataChangeType, NotificationManager, NotificationType, SocketListener} from "ui-framework-jps";
 
 const slLogger = debug('socket-listener');
 
@@ -30,7 +29,7 @@ export default class SocketListenerDelegate implements SocketListener {
         // ok lets work out where this change belongs
         try {
             switch (message.type) {
-                case "create": {
+                case DataChangeType.create: {
                     switch (message.stateName) {
                         case STATE_NAMES.users: {
                             Controller.getInstance().getStateManager().addNewItemToState(STATE_NAMES.users, stateObj, true);
@@ -48,7 +47,7 @@ export default class SocketListenerDelegate implements SocketListener {
                     }
                     break;
                 }
-                case "update": {
+                case DataChangeType.update: {
                     switch (message.stateName) {
                         case STATE_NAMES.appointmentTypes: {
                             Controller.getInstance().getStateManager().updateItemInState(STATE_NAMES.appointmentTypes, stateObj, true);
@@ -61,7 +60,7 @@ export default class SocketListenerDelegate implements SocketListener {
                     }
                     break;
                 }
-                case "delete": {
+                case DataChangeType.delete: {
                     switch (message.stateName) {
                         case STATE_NAMES.appointmentTypes: {
                             Controller.getInstance().getStateManager().removeItemFromState(STATE_NAMES.appointmentTypes, stateObj, true);

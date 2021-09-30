@@ -3,24 +3,24 @@ import SocketListenerDelegate from "./SocketListenerDelegate";
 import {API_Config, STATE_NAMES} from "./AppTypes";
 import {v4} from "uuid";
 import {isSameMongo} from "./EqualityFunctions";
-import {StateChangeListener} from "../framework/state/StateChangeListener";
-import {DataObjectListener} from "../framework/model/DataObjectListener";
-import {RESTApiStateManager} from "../framework/state/RESTApiStateManager";
-import {GraphQLApiStateManager} from "../framework/state/GraphQLApiStateManager";
-import {AggregateStateManager} from "../framework/state/AggregateStateManager";
-import {MemoryBufferStateManager} from "../framework/state/MemoryBufferStateManager";
-import {AsyncStateManagerWrapper} from "../framework/state/AsyncStateManagerWrapper";
-import {SocketManager} from "../framework/socket/SocketManager";
-import {ChatManager} from "../framework/socket/ChatManager";
-import { NotificationController } from '../framework/socket/NotificationController';
-import {DownloadManager} from "../framework/network/DownloadManager";
-import {StateManager} from "../framework/state/StateManager";
-import {DataObjectController} from "../framework/model/DataObjectController";
-import {DataObjectDefinition, FieldDefinition, FieldType} from "../framework/model/DataObjectTypeDefs";
-import {ObjectDefinitionRegistry} from "../framework/model/ObjectDefinitionRegistry";
-import {BasicObjectDefinitionFactory} from "../framework/model/BasicObjectDefinitionFactory";
-import {SimpleValueDataSource} from "../framework/ui/helper/SimpleValueDataSource";
-import {KeyType} from "../framework/ui/ConfigurationTypes";
+import {
+    AggregateStateManager,
+    AsyncStateManagerWrapper,
+    BasicObjectDefinitionFactory,
+    ChatManager,
+    DataObjectController,
+    DataObjectDefinition,
+    DataObjectListener,
+    DownloadManager, FieldDefinition, FieldType,
+    GraphQLApiStateManager, KeyType,
+    MemoryBufferStateManager,
+    NotificationController, ObjectDefinitionRegistry,
+    RESTApiStateManager,
+    SimpleValueDataSource,
+    SocketManager,
+    StateChangeListener,
+    StateManager
+} from "ui-framework-jps";
 
 
 const cLogger = debug('controller-ts');

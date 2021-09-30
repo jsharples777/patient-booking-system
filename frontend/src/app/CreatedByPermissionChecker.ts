@@ -1,7 +1,7 @@
 
 
 import Controller from "./Controller";
-import {ObjectPermissionChecker} from "../framework/ui/view/interface/ObjectPermissionChecker";
+import {ObjectPermissionChecker} from "ui-framework-jps";
 
 export class CreatedByPermissionChecker implements ObjectPermissionChecker {
     hasPermissionToUpdateItem(item: any): boolean {
