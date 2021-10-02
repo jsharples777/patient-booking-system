@@ -21,6 +21,7 @@ import {
     UnreadMessageCountListener,
     UserSearchSidebar
 } from "ui-framework-jps";
+import {setOptions} from "@mobiscroll/javascript";
 
 
 
@@ -157,15 +158,11 @@ debug.log = console.info.bind(console);
 
 $(function () {
 
-    // @ts-ignore
-    //mobiscroll4.setOptions = {theme:'ios'};
-
-    // @ts-ignore
-    mobiscroll5.setOptions( {
+    setOptions({
         theme: 'ios',
         themeVariant: 'light'
-    });
-    //datepicker("#calendarControl",{display:'inline'});
+    })
+
     // @ts-ignore
     const element = <App className="container-fluid justify-content-around"/>;
     ReactDOM.render(element, document.getElementById('root'));

@@ -41,7 +41,9 @@ type Appointment {
     note:String,
     type:String,
     name:String,
-    status:String
+    created:Float,
+    modified:Float,
+    arrivalTime:String
 }
 
 input AppointmentInput {
@@ -57,7 +59,9 @@ input AppointmentInput {
     note:String,
     type:String,
     name:String,
-    status:String
+    created:Float,
+    modified:Float,
+    arrivalTime:String
 }
 
 type identifiers {
@@ -84,13 +88,15 @@ type PatientSearchItem {
 type AppointmentType {
     _id:String,
     name:String,
-    colour:String
+    colour:String,
+    icon:String
 }
 
 input AppointmentTypeInput {
     _id:String,
     name:String,
-    colour:String
+    colour:String,
+    icon:String
 }
 
 type Query {

@@ -21,6 +21,7 @@ export default class AppointmentTypesQLDelegate {
                     _id: 1,
                     name:1,
                     colour:1,
+                    icon:1
                 }
             };
 

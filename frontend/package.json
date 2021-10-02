@@ -11,6 +11,7 @@
     "lint": "eslint --ext js,jsx,tsx,ts --fix ."
   },
   "dependencies": {
+    "@mobiscroll/javascript": "^5.10.1",
     "chart.js": "^3.5.1",
     "cryptojs": "^2.5.3",
     "debug": "^4.3.2",
