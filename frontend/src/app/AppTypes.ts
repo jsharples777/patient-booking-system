@@ -18,7 +18,9 @@ export const STATE_NAMES = {
     recentPatientSearches: 'recentPatientSearches',
     appointments: 'appointment',
     appointmentTypes: 'appointmentType',
-    clinicConfig:'clinicConfig'
+    clinicConfig:'clinicConfig',
+    providers:'provider',
+    appointmentTemplates:'appointmentTemplate'
 }
 
 export const API_Config = {

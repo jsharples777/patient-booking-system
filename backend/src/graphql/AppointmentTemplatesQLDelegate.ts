@@ -5,41 +5,33 @@ import {DataMessage} from "../socket/SocketTypes";
 import socketManager from "../socket/SocketManager";
 import moment from "moment";
 
-const logger = debug('data-source-appointments');
+const logger = debug('data-source-appointment-templates');
 
-export default class AppointmentsQLDelegate {
+export default class AppointmentTemplatesQLDelegate {
     private constructor() {
     }
 
-    public static getAppointments() {
-        logger('Getting appointments from up to three months ago');
+    public static getAppointmentTemplates() {
+        logger('Getting appointment templates');
 
         return new Promise((resolve, reject) => {
-            const collection = process.env.DB_COLLECTION_APPOINTMENTS || 'pms-appts';
-            const goBackThreeMonths = parseInt(moment().subtract(3,'month').format('YYYYMMDD'));
+            const collection = process.env.DB_COLLECTION_APPT_TEMPLATES || 'pms-appt-templates';
 
             let projection = { projection: {
                     _id: 1,
-                    _patient:1,
-                    start:1,
+                    day:1,
                     time:1,
                     duration:1,
                     createdBy:1,
-                    isCancelled:1,
-                    isDNA:1,
                     provider:1,
-                    note:1,
                     type:1,
-                    name:1,
-                    status:1,
                     created:1,
-                    modified:1,
-                    arrivalTime:1
+                    modified:1
                 }
             };
 
 
-            MongoDataSource.getInstance().getDatabase().collection(collection).find({start: {$gte:goBackThreeMonths }},projection).sort( { start: 1 } ).toArray().then((results:Document[]) => {
+            MongoDataSource.getInstance().getDatabase().collection(collection).find({},projection).toArray().then((results:Document[]) => {
                 logger(results.length);
                 resolve(results);
             })
@@ -50,14 +42,14 @@ export default class AppointmentsQLDelegate {
         });
     }
 
-    public static addAppointment(_: any, data: any) {
-        logger(`Adding Appointment`);
+    public static addAppointmentTemplate(_: any, data: any) {
+        logger(`Adding Appointment Template`);
         logger(data);
         return new Promise((resolve, reject) => {
-            const collection = process.env.DB_COLLECTION_APPOINTMENTS || 'pms-appts';
-            MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.appt).then((value) => {
+            const collection = process.env.DB_COLLECTION_APPT_TEMPLATES || 'pms-appt-templates';
+            MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.template).then((value) => {
                 logger(value);
-                const message:DataMessage = {type:"create",stateName: "appointment",data:data.appt, user:data.createdBy,}
+                const message:DataMessage = {type:"create",stateName: "appointmentTemplate",data:data.template, user:data.template.createdBy,}
                 socketManager.sendDataMessage(message);
 
                 resolve(data);
@@ -69,14 +61,14 @@ export default class AppointmentsQLDelegate {
         });
     }
 
-    public static updateAppointment(_: any, data: any) {
-        logger(`Updating appointment`);
+    public static updateAppointmentTemplate(_: any, data: any) {
+        logger(`Updating appointment template`);
         logger(data);
         return new Promise((resolve, reject) => {
-            const collection = process.env.DB_COLLECTION_APPOINTMENTS || 'pms-appts';
-            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:data.appt._id},data.appt).then((value) => {
+            const collection = process.env.DB_COLLECTION_APPT_TEMPLATES || 'pms-appt-templates';
+            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:data.template._id},data.appt).then((value) => {
                 logger(value);
-                const message:DataMessage = {type:"update",stateName: "appointment",data:data.appt, user:data.appt.createdBy}
+                const message:DataMessage = {type:"update",stateName: "appointmentTemplate",data:data.template, user:data.template.createdBy}
                 socketManager.sendDataMessage(message);
 
                 resolve(true);
@@ -88,14 +80,14 @@ export default class AppointmentsQLDelegate {
         });
     }
 
-    public static deleteAppointment(_: any, data: any) {
+    public static deleteAppointmentTemplate(_: any, data: any) {
         logger(`Deleting item with identifier`);
         logger(data);
         return new Promise((resolve, reject) => {
-            const collection = process.env.DB_COLLECTION_APPOINTMENTS || 'pms-appts';
+            const collection = process.env.DB_COLLECTION_APPT_TEMPLATES || 'pms-appt-templates';
             MongoDataSource.getInstance().getDatabase().collection(collection).deleteOne({_id:data.id}).then((result:DeleteResult) => {
                 // @ts-ignore
-                const message:DataMessage = {type:"delete",stateName: "appointment",data:{ _id: data.id},user:"-1",}
+                const message:DataMessage = {type:"delete",stateName: "appointmentTemplate",data:{ _id: data.id},user:"-1",}
                 socketManager.sendDataMessage(message);
                 logger(result);
                 resolve(true);

@@ -99,11 +99,54 @@ input AppointmentTypeInput {
     icon:String
 }
 
+type Provider {
+    _id:String,
+    name:String,
+    providerNo:String,
+    isCurrent:Boolean
+}
+
+input ProviderInput {
+    _id:String,
+    name:String,
+    providerNo:String,
+    isCurrent:Boolean
+}
+
+type AppointmentTemplate {
+    _id:String,
+    day:Int,
+    time:String,
+    duration:Int,
+    createdBy:String,
+    provider:String,
+    type:String,
+    created:Float,
+    modified:Float,
+}
+
+input AppointmentTemplateInput {
+    _id:String,
+    day:Int,
+    time:String,
+    duration:Int,
+    createdBy:String,
+    provider:String,
+    type:String,
+    created:Float,
+    modified:Float
+}
+
+
+
+
 type Query {
     getExerciseTypes:[ExerciseType]
     getAppointments:[Appointment]
     getPatientSearchDetails:[PatientSearchItem]
     getAppointmentTypes:[AppointmentType]
+    getProviders:[Provider]
+    getAppointmentTemplates:[AppointmentTemplate]
 }
 
 type Mutation {
@@ -116,4 +159,10 @@ type Mutation {
     addAppointmentType(apptType:AppointmentTypeInput):AppointmentType
     updateAppointmentType(apptType:AppointmentTypeInput):Boolean
     deleteAppointmentType(id:String):Boolean
+    addProvider(provider:ProviderInput):Provider
+    updateProvider(provider:ProviderInput):Boolean
+    deleteProvider(id:String):Boolean
+    addAppointmentTemplate(template:AppointmentTemplateInput):AppointmentTemplate
+    updateAppointmentTemplate(template:AppointmentTemplateInput):Boolean
+    deleteAppointmentTemplate(id:String):Boolean
 }

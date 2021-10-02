@@ -128,6 +128,48 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 isActive: true,
                 idField: '_id'
             },
+            {
+                stateName: STATE_NAMES.providers,
+                serverURL: '',
+                apiURL: API_Config.graphQL,
+                apis: {
+                    findAll: 'query {getProviders {_id,name,providerNo,isCurrent}}',
+                    create: 'mutation addProvider($data: ProviderInput!){addProvider(provider: $data) {_id,name,providerNo,isCurrent}}',
+                    destroy: 'mutation deleteProvider($identifier: String!){deleteProvider(id: $identifier)}',
+                    update: 'mutation updateProvider($data: ProviderInput!){updateProvider(provider: $data)}',
+                    find: '',
+                },
+                data: {
+                    findAll: 'getProviders',
+                    create: 'addProvider',
+                    destroy: 'deleteProvider',
+                    update: 'updateProvider',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
+            },
+            {
+                stateName: STATE_NAMES.appointmentTemplates,
+                serverURL: '',
+                apiURL: API_Config.graphQL,
+                apis: {
+                    findAll: 'query {getAppointmentTemplates {_id,day, time, duration,createdBy,provider,type,created,modified}}',
+                    create: 'mutation addAppointmentTemplate($data: ProviderInput!){addAppointmentTemplate(provider: $data) {_id,day, time, duration,createdBy,provider,type,created,modified}}',
+                    destroy: 'mutation deleteAppointmentTemplate($identifier: String!){deleteAppointmentTemplate(id: $identifier)}',
+                    update: 'mutation updateAppointmentTemplate($data: ProviderInput!){updateAppointmentTemplate(provider: $data)}',
+                    find: '',
+                },
+                data: {
+                    findAll: 'getAppointmentTemplates',
+                    create: 'addAppointmentTemplate',
+                    destroy: 'deleteAppointmentTemplate',
+                    update: 'updateAppointmentTemplate',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
+            },
         ])
 
 
@@ -138,7 +180,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
         let asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
 
         aggregateSM.addStateManager(memorySM, [], false);
-        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches], false);
+        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates], false);
         aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
         this.stateManager = aggregateSM;
 
@@ -181,6 +223,8 @@ export default class Controller implements StateChangeListener, DataObjectListen
             // load the users
             this.getStateManager().getStateByName(STATE_NAMES.users);
             this.getStateManager().getStateByName(STATE_NAMES.appointmentTypes);
+            this.getStateManager().getStateByName(STATE_NAMES.providers);
+            this.getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
             this.getStateManager().getStateByName(STATE_NAMES.clinicConfig);
             this.getStateManager().getStateByName(STATE_NAMES.patientSearch);
             this.getStateManager().getStateByName(STATE_NAMES.appointments);

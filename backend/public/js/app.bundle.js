@@ -48,7 +48,9 @@ const STATE_NAMES = {
   recentPatientSearches: 'recentPatientSearches',
   appointments: 'appointment',
   appointmentTypes: 'appointmentType',
-  clinicConfig: 'clinicConfig'
+  clinicConfig: 'clinicConfig',
+  providers: 'provider',
+  appointmentTemplates: 'appointmentTemplate'
 };
 const API_Config = {
   login: '/login',
@@ -180,11 +182,14 @@ class AppointmentController {
     patientSearchEl: null,
     appointmentTypeEl: null,
     appointmentTypeDropdown: null,
-    patientSearchDropdown: null
+    patientSearchDropdown: null,
+    providersDropdown: null,
+    providersEl: null
   };
   dataElements = {
     appointmentTypes: null,
     clinicConfig: null,
+    providers: null,
     oldEvent: null,
     tempEvent: {},
     isDeletingEvent: false,
@@ -218,6 +223,7 @@ class AppointmentController {
     _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig, this);
     _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, this);
     _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, this);
+    _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.providers, this);
   }
 
   handleNewDatePicked(event, inst) {
@@ -484,7 +490,7 @@ class AppointmentController {
     };
 
     options.onEventClick = args => {
-      console.log(args.event);
+      logger(args.event);
 
       if (args.event.editable) {
         AppointmentController.getInstance().dataElements.oldEvent = Object.assign({}, args.event);
@@ -503,13 +509,12 @@ class AppointmentController {
       const icons = AppointmentController.getInstance().getIconsForEvent(data.original);
       logger(`Applicable icons`);
       logger(icons);
-      let buffer = '<div class="md-custom-event-cont" style="border-left: 5px solid ' + data.color + ';background:' + data.color + '">' + '<div class="md-custom-event-wrapper">' + '<div style="background:' + data.color + '" class="md-custom-event-type">' + data.original.type + '</div>' + // '<div class="md-custom-event-details">' +
-      '<span class="md-custom-event-title">' + data.title + '</span>' + '<span class="md-custom-event-time">' + data.start + ' - ' + data.end + '</span>';
+      let buffer = '' + '<div class="md-custom-event-cont" style="border-left: 5px solid ' + data.color + ';background:' + data.color + '">' + '  <div class="md-custom-event-wrapper">' + '    <div class="container-fluid">' + '    <div class="row ">' + `      <div style="background:${data.color}" class="col-sm-12 col-md-2 md-custom-event-type">${data.original.type}</div>` + `      <div class="col-sm-4 col-md-6 md-custom-event-title">${data.title}</div>` + '      <div class="col-sm-6 col-md-4 d-flex w-100 justify-content-between md-custom-event-time">' + `        <span>${data.start} - ${data.end}</span>`;
 
       if (icons.trim().length > 0) {
-        buffer += '<span class="md-custom-event-img-cont">' + icons + '</span></div></div>';
+        buffer += '' + `        <span class="md-custom-event-img-cont">${icons}</span>` + '      </div>' + '  </div>' + '</div>';
       } else {
-        buffer += '</div></div>';
+        buffer += '' + '  </div>' + '</div>';
       }
 
       return buffer;
@@ -522,14 +527,13 @@ class AppointmentController {
     this.viewElements.patientCancelledButton = document.getElementById('event-cancelled');
     this.viewElements.patientDNAButton = document.getElementById('event-dna');
     this.viewElements.patientSearchEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.SELECT.patientSearch);
-    this.viewElements.appointmentTypeEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.SELECT.appointmentType); // @ts-ignore
+    this.viewElements.appointmentTypeEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.SELECT.appointmentType);
+    this.viewElements.providersEl = document.getElementById('providers'); // @ts-ignore
 
     this.viewElements.popup = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.popup)('#add-appointment-popup', {
       display: 'bottom',
       contentPadding: true,
       fullScreen: true,
-      theme: 'ios',
-      themeVariant: 'light',
       onClose: function () {
         if (AppointmentController.getInstance().dataElements.isDeletingEvent) {
           // @ts-ignore
@@ -671,7 +675,24 @@ class AppointmentController {
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
       AppointmentController.getInstance().dataElements.isRestoringEvent = false;
       AppointmentController.getInstance().viewElements.popup.close();
-    }); // @ts-ignore
+    });
+
+    if (this.dataElements.providers) {
+      let providers = [];
+      this.dataElements.providers.forEach(provider => {
+        if (provider.isCurrent) providers.push({
+          text: provider.name,
+          value: provider.name,
+          id: provider.name,
+          name: provider.name
+        });
+      });
+      if (this.viewElements.calendar) this.viewElements.calendar.setOptions({
+        resources: providers,
+        groupBy: 'date'
+      });
+    } // @ts-ignore
+
 
     this.viewElements.calendar = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.eventcalendar)(document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.VIEW_CONTAINER.calendarDetail), options);
   }
@@ -723,7 +744,7 @@ class AppointmentController {
           }); // add the patient search values to the data of the select dropdown
           // @ts-ignore
 
-          AppointmentController.patientSearchDropdown = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.select)('#' + _AppTypes__WEBPACK_IMPORTED_MODULE_2__.SELECT.patientSearch, {
+          this.viewElements.patientSearchDropdown = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.select)('#' + _AppTypes__WEBPACK_IMPORTED_MODULE_2__.SELECT.patientSearch, {
             filter: true,
             data: patients,
             onChange: (event, inst) => {
@@ -750,6 +771,35 @@ class AppointmentController {
               (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.getInst)(AppointmentController.getInstance().viewElements.descriptionTextarea).value = event.valueText;
               AppointmentController.getInstance().dataElements.tempEvent.type = event.valueText;
             }
+          });
+          break;
+        }
+
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.providers:
+        {
+          this.dataElements.providers = newValue;
+          this.populateProviders();
+          let providers = [];
+          newValue.forEach(provider => {
+            if (provider.isCurrent) providers.push({
+              text: provider.name,
+              value: provider.name,
+              id: provider.name,
+              name: provider.name
+            });
+          }); // add the patient search values to the data of the select dropdown
+          // @ts-ignore
+
+          this.viewElements.providersDropdown = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.select)('#event-provider', {
+            data: providers,
+            onChange: (event, inst) => {
+              AppointmentController.getInstance().dataElements.tempEvent.provider = event.valueText;
+              AppointmentController.getInstance().dataElements.tempEvent.resource = event.value;
+            }
+          });
+          if (this.viewElements.calendar) this.viewElements.calendar.setOptions({
+            resources: providers,
+            groupBy: 'date'
           });
           break;
         }
@@ -811,7 +861,7 @@ class AppointmentController {
           let appointmentId = (0,uuid__WEBPACK_IMPORTED_MODULE_6__["default"])(); // get the colour for the event type
           // @ts-ignore
 
-          let colour = AppointmentController.getInstance().getColourForAppointmentType(mobiscroll5.getInst(AppointmentController.getInstance().viewElements.descriptionTextarea).value);
+          let colour = AppointmentController.getInstance().getColourForAppointmentType((0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_5__.getInst)(AppointmentController.getInstance().viewElements.descriptionTextarea).value);
           let createdOn = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYDDMMHHmmss')); // @ts-ignore
 
           let updatedEvent = {
@@ -833,7 +883,7 @@ class AppointmentController {
             modified: createdOn,
             arrivalTime: '',
             type: AppointmentController.getInstance().dataElements.tempEvent.type,
-            provider: AppointmentController.getInstance().dataElements.provider
+            provider: AppointmentController.getInstance().dataElements.tempEvent.provider
           };
           logger('inserting');
           logger(updatedEvent); // remove the original event
@@ -904,7 +954,7 @@ class AppointmentController {
             color: ev.color,
             patientId: ev.patientId,
             editable: true,
-            resource: ev.provider,
+            resource: ev.resource,
             isDNA: true,
             isCancelled: true,
             createdBy: ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.SecurityManager.getInstance().getLoggedInUsername(),
@@ -936,12 +986,53 @@ class AppointmentController {
     this.viewElements.range.setOptions({
       controls: ev.allDay ? ['date'] : ['datetime'],
       responsive: ev.allDay ? AppointmentController.datePickerResponsive : AppointmentController.datetimePickerResponsive
-    }); // set anchor for the popup
+    }); // set the appointment type and patient
+
+    this.viewElements.appointmentTypeDropdown.setVal(ev.type);
+    this.viewElements.patientSearchDropdown.setVal(ev.patientId);
+    this.viewElements.providersDropdown.setVal(ev.resource); // set anchor for the popup
 
     this.viewElements.popup.setOptions({
       anchor: args.domEvent.currentTarget
     });
     this.viewElements.popup.open();
+  }
+
+  populateProviders() {
+    if (this.dataElements.providers && this.viewElements.providersEl) {
+      this.dataElements.providers.forEach(provider => {
+        let labelEl = document.createElement('label');
+        let inputEl = document.createElement('input');
+        inputEl.setAttribute('type', 'checkbox');
+        inputEl.setAttribute('value', provider.name);
+        inputEl.setAttribute("checked", '');
+        inputEl.setAttribute("mbsc-checkbox", '');
+        inputEl.setAttribute('data-label', provider.name);
+        inputEl.classList.add('provider-checkbox');
+        labelEl.appendChild(inputEl);
+        this.viewElements.providersEl.appendChild(labelEl);
+      }); // @ts-ignore
+
+      mobiscroll5.enhance(this.viewElements.providersEl);
+      let checkboxList = document.querySelectorAll('.provider-checkbox');
+      document.querySelectorAll('.provider-checkbox').forEach(function (elm) {
+        elm.addEventListener('change', function () {
+          let selected = {};
+
+          for (let i = 0; i < checkboxList.length; i++) {
+            let checkbox = checkboxList[i]; // @ts-ignore
+
+            selected[+checkbox.value] = checkbox.checked;
+          }
+
+          AppointmentController.getInstance().viewElements.calendar.setOptions({
+            resources: AppointmentController.getInstance().dataElements.providers.filter(function (r) {
+              return selected[r.id];
+            })
+          });
+        });
+      });
+    }
   }
 
 }
@@ -1063,13 +1154,53 @@ class Controller {
       },
       isActive: true,
       idField: '_id'
+    }, {
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.providers,
+      serverURL: '',
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
+      apis: {
+        findAll: 'query {getProviders {_id,name,providerNo,isCurrent}}',
+        create: 'mutation addProvider($data: ProviderInput!){addProvider(provider: $data) {_id,name,providerNo,isCurrent}}',
+        destroy: 'mutation deleteProvider($identifier: String!){deleteProvider(id: $identifier)}',
+        update: 'mutation updateProvider($data: ProviderInput!){updateProvider(provider: $data)}',
+        find: ''
+      },
+      data: {
+        findAll: 'getProviders',
+        create: 'addProvider',
+        destroy: 'deleteProvider',
+        update: 'updateProvider',
+        find: ''
+      },
+      isActive: true,
+      idField: '_id'
+    }, {
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates,
+      serverURL: '',
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
+      apis: {
+        findAll: 'query {getAppointmentTemplates {_id,day, time, duration,createdBy,provider,type,created,modified}}',
+        create: 'mutation addAppointmentTemplate($data: ProviderInput!){addAppointmentTemplate(provider: $data) {_id,day, time, duration,createdBy,provider,type,created,modified}}',
+        destroy: 'mutation deleteAppointmentTemplate($identifier: String!){deleteAppointmentTemplate(id: $identifier)}',
+        update: 'mutation updateAppointmentTemplate($data: ProviderInput!){updateAppointmentTemplate(provider: $data)}',
+        find: ''
+      },
+      data: {
+        findAll: 'getAppointmentTemplates',
+        create: 'addAppointmentTemplate',
+        destroy: 'deleteAppointmentTemplate',
+        update: 'updateAppointmentTemplate',
+        find: ''
+      },
+      isActive: true,
+      idField: '_id'
     }]);
     let aggregateSM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.AggregateStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     let memorySM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.MemoryBufferStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     let asyncREST = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.AsyncStateManagerWrapper(aggregateSM, restSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     let asyncQL = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.AsyncStateManagerWrapper(aggregateSM, qlSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     aggregateSM.addStateManager(memorySM, [], false);
-    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches], false);
+    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.providers, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates], false);
     aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig], false);
     this.stateManager = aggregateSM; // state listener
 
@@ -1107,6 +1238,8 @@ class Controller {
 
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users);
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.providers);
+      this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates);
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig);
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch);
       this.getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments); // apply any queued changes from being offline
@@ -1461,9 +1594,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_AppointmentController__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app/AppointmentController */ "./src/app/AppointmentController.ts");
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
 /* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
-//localStorage.debug = 'linked-controller api-ts exercise-types-view app controller-ts controller-ts-detail api-ts socket-ts user-search user-search-detail list-view-renderer';
-//localStorage.debug = 'collection-view-ts collection-view-ts-detail form-detail-view-renderer linked-controller linked-controller-detail exercise-types-view app validation-manager-rule-failure validation-manager';
-//localStorage.debug = 'validation-manager validation-manager-rule-failure abstract-form-detail-validation';
 
 
 
@@ -1585,6 +1715,11 @@ localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {
   (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_7__.setOptions)({
+    theme: 'ios',
+    themeVariant: 'light'
+  }); // @ts-ignore
+
+  mobiscroll5.setOptions({
     theme: 'ios',
     themeVariant: 'light'
   }); // @ts-ignore
