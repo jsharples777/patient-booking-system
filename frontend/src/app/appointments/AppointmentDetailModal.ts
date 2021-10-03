@@ -19,6 +19,8 @@ type AppointmentDetailViewElements = {
     patientArrivedButton: HTMLButtonElement | null,
     patientCancelledButton: HTMLButtonElement | null,
     patientDNAButton: HTMLButtonElement | null,
+    readyForBillingButton: HTMLButtonElement | null,
+    billingCompleteButton: HTMLButtonElement | null,
     patientSearchEl: HTMLSelectElement | null,
     appointmentTypeEl: HTMLSelectElement | null,
     patientSearchDropdown: any | null
@@ -38,8 +40,7 @@ export class AppointmentDetailModal {
         return AppointmentDetailModal._instance;
     }
 
-    private static APPOINTMENT_TYPE_PATIENT_CANCELLED = 'Patient Cancelled';
-    private static APPOINTMENT_TYPE_PATIENT_DNA = 'Did Not Arrive';
+
 
 
     private static datePickerResponsive = {
@@ -64,6 +65,8 @@ export class AppointmentDetailModal {
         patientArrivedButton: null,
         patientCancelledButton: null,
         patientDNAButton: null,
+        readyForBillingButton: null,
+        billingCompleteButton: null,
         patientSearchEl: null,
         appointmentTypeEl: null,
         appointmentTypeDropdown: null,
@@ -95,10 +98,14 @@ export class AppointmentDetailModal {
         this.viewElements.deleteButton = <HTMLButtonElement>document.getElementById('event-delete');
         this.viewElements.patientCancelledButton = <HTMLButtonElement>document.getElementById('event-cancelled');
         this.viewElements.patientDNAButton = <HTMLButtonElement>document.getElementById('event-dna');
+        this.viewElements.readyForBillingButton = <HTMLButtonElement>document.getElementById('event-readyforbilling');
+        this.viewElements.billingCompleteButton = <HTMLButtonElement>document.getElementById('event-billingcompleted');
+
         this.viewElements.patientSearchEl = <HTMLSelectElement>document.getElementById(SELECT.patientSearch);
         this.viewElements.appointmentTypeEl = <HTMLSelectElement>document.getElementById(SELECT.appointmentType);
 
 
+        // @ts-ignore
         this.viewElements.popup = popup('#add-appointment-popup', {
             display: 'bottom',
             contentPadding: true,
@@ -167,7 +174,7 @@ export class AppointmentDetailModal {
         let types: any[] = [];
 
         appointmentTypes.forEach((type: any) => {
-            types.push(type.name);
+            if (!(type.isStatus)) types.push(type.name);
         });
 
         // add the patient search values to the data of the select dropdown
@@ -200,6 +207,8 @@ export class AppointmentDetailModal {
         this.viewElements.patientCancelledButton.style.display = 'none';
         this.viewElements.patientDNAButton.style.display = 'none';
         this.viewElements.patientArrivedButton.style.display = 'none';
+        this.viewElements.readyForBillingButton.style.display = 'none';
+        this.viewElements.billingCompleteButton.style.display = 'none';
         // show the dropdowns
         this.viewElements.patientSearchEl.style.display = 'block';
         this.viewElements.appointmentTypeEl.style.display = 'block';
@@ -222,7 +231,7 @@ export class AppointmentDetailModal {
                         // generate a new UUID
                         let appointmentId = v4();
                         // get the colour for the event type
-                        let colour = AppointmentController.getInstance().getColourForAppointmentType(getInst(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value);
+                        let colour = AppointmentController.getInstance().getColourForAppointmentType('Consulting');
 
                         let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
 
@@ -281,6 +290,11 @@ export class AppointmentDetailModal {
             controls: AppointmentController.getInstance().getModel().tempEvent.allDay ? ['date'] : ['datetime'],
             responsive: AppointmentController.getInstance().getModel().tempEvent.allDay ? AppointmentDetailModal.datePickerResponsive : AppointmentDetailModal.datetimePickerResponsive
         });
+
+        this.viewElements.appointmentTypeDropdown.setVal('');
+        this.viewElements.patientSearchDropdown.setVal('');
+        this.viewElements.providersDropdown.setVal('');
+
         // set anchor for the popup
         this.viewElements.popup.setOptions({anchor: elm});
 
@@ -297,6 +311,8 @@ export class AppointmentDetailModal {
         this.viewElements.deleteButton.style.display = 'block';
         this.viewElements.patientCancelledButton.style.display = 'block';
         this.viewElements.patientDNAButton.style.display = 'block';
+        this.viewElements.readyForBillingButton.style.display = 'block';
+        this.viewElements.billingCompleteButton.style.display = 'block';
         // show the dropdowns
         this.viewElements.patientSearchEl.style.display = 'none';
         this.viewElements.appointmentTypeEl.style.display = 'none';
@@ -419,10 +435,10 @@ export class AppointmentDetailModal {
             let originalNote = originalEvent.note;
 
             originalEvent.isCancelled = true;
-            originalEvent.type = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_CANCELLED;
-            originalEvent.note = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_CANCELLED;
+            originalEvent.type = AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED;
+            originalEvent.note = AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED;
             originalEvent.editable = false;
-            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_CANCELLED);
+            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
 
             // 
             AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
@@ -443,8 +459,7 @@ export class AppointmentDetailModal {
                         originalEvent.type = originalType;
                         originalEvent.note = originalNote;
                         originalEvent.editable = true;
-                        originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(originalType);
-                        // 
+                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
                         AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
@@ -463,6 +478,7 @@ export class AppointmentDetailModal {
             let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
 
             originalEvent.arrivalTime = moment().format('HHmmss');
+            originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
 
             // 
             AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
@@ -481,7 +497,7 @@ export class AppointmentDetailModal {
                 button: {
                     action: function () {
                         originalEvent.arrivalTime = '';
-                        // 
+                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
                         AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
@@ -498,12 +514,14 @@ export class AppointmentDetailModal {
             // update the event to cancelled and set to non-editable
             // save a local reference to the deleted event
             let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+            let originalNote = originalEvent.note;
+            let originalType = originalEvent.type;
 
             originalEvent.isDNA = true;
-            originalEvent.type = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_DNA;
-            originalEvent.note = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_DNA;
+            originalEvent.type = AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA;
+            originalEvent.note = AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA;
             originalEvent.editable = false;
-            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_DNA);
+            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
 
             // 
             AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
@@ -514,6 +532,97 @@ export class AppointmentDetailModal {
 
             AppointmentController.getInstance().getModel().isRestoringEvent = false;
             AppointmentDetailModal.getInstance().close();
+
+            snackbar({
+                button: {
+                    action: function () {
+                        originalEvent.isDNA = false;
+                        originalEvent.type = originalType;
+                        originalEvent.note = originalNote;
+                        originalEvent.editable = true;
+                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
+                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        Controller.getInstance().getStateManager().updateItemInState(
+                            STATE_NAMES.appointments,
+                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            false);
+                    },
+                    text: 'Undo'
+                },
+                message: 'Patient DNA'
+            });
+        });
+        this.viewElements.readyForBillingButton.addEventListener('click', function () {
+            // update the event to cancelled and set to non-editable
+            // save a local reference to the deleted event
+            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+
+
+            originalEvent.readyForBilling = true;
+            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
+
+            //
+            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            Controller.getInstance().getStateManager().updateItemInState(
+                STATE_NAMES.appointments,
+                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                false);
+
+            AppointmentController.getInstance().getModel().isRestoringEvent = false;
+            AppointmentDetailModal.getInstance().close();
+
+            snackbar({
+                button: {
+                    action: function () {
+                        originalEvent.readyForBilling = false;
+                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
+                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        Controller.getInstance().getStateManager().updateItemInState(
+                            STATE_NAMES.appointments,
+                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            false);
+                    },
+                    text: 'Undo'
+                },
+                message: 'Ready For Billing'
+            });
+        });
+        this.viewElements.billingCompleteButton.addEventListener('click', function () {
+            // update the event to cancelled and set to non-editable
+            // save a local reference to the deleted event
+            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+
+
+            originalEvent.isBilled = true;
+            originalEvent.editable = false;
+            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
+
+            //
+            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            Controller.getInstance().getStateManager().updateItemInState(
+                STATE_NAMES.appointments,
+                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                false);
+
+            AppointmentController.getInstance().getModel().isRestoringEvent = false;
+            AppointmentDetailModal.getInstance().close();
+
+            snackbar({
+                button: {
+                    action: function () {
+                        originalEvent.isBilled = false;
+                        originalEvent.editable = true;
+                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
+                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        Controller.getInstance().getStateManager().updateItemInState(
+                            STATE_NAMES.appointments,
+                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            false);
+                    },
+                    text: 'Undo'
+                },
+                message: 'Billing Complete'
+            });
         });
     }
 

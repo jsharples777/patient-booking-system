@@ -51,7 +51,9 @@ export class AppointmentFilterView {
 
                     for (let i = 0; i < checkboxList.length; i++) {
                         let checkbox = checkboxList[i];
+                        // @ts-ignore
                         if (checkbox.checked) {
+                            // @ts-ignore
                             selected.push({id:checkbox.value,name:checkbox.value});
                         }
                     }
@@ -64,38 +66,40 @@ export class AppointmentFilterView {
                 });
             });
 
-            document.querySelectorAll('.md-view-change').forEach(function (elm) {
-                elm.addEventListener('change', function (ev) {
-
-                    let config = {...AppointmentController.getInstance().getModel().clinicConfig};
-                     config.view.schedule.type = ev.target.value;
-
-                    let options = {
-                        //clickToCreate: config.clickToCreate,
-                        //dragTimeStep: config.dragTimeStep,
-                        //dragToCreate: config.dragToCreate,
-                        //dragToMove: config.dragToMove,
-                        //dragToResize: config.dragToResize,
-                        //min: moment().subtract(config.min, "months"),
-                        //controls: config.controls,
-                        //showControls: config.showControls,
-                        view: {
-                            schedule: {
-                                type: ev.target.value,
-                                startTime: config.view.schedule.startTime,
-                                endTime: config.view.schedule.endTime
-                            }
-                        },
-                        //invalidateEvent: config.invalidateEvent,
-                        //invalid: config.invalid,
-                    }
-
-                    console.log(options);
-
-                    AppointmentView.getInstance().getCalender().setOptions(options);
-
-                });
-            });
+            // document.querySelectorAll('.md-view-change').forEach(function (elm) {
+            //     elm.addEventListener('change', function (ev) {
+            //
+            //         let config = {...AppointmentController.getInstance().getModel().clinicConfig};
+            //          config.view.schedule.type = ev.target.value;
+            //
+            //         let options = {
+            //             //clickToCreate: config.clickToCreate,
+            //             //dragTimeStep: config.dragTimeStep,
+            //             //dragToCreate: config.dragToCreate,
+            //             //dragToMove: config.dragToMove,
+            //             //dragToResize: config.dragToResize,
+            //             //min: moment().subtract(config.min, "months"),
+            //             //controls: config.controls,
+            //             //showControls: config.showControls,
+            //             view: {
+            //                 schedule: {
+            //                     type: ev.target.value,
+            //                     startTime: config.view.schedule.startTime,
+            //                     endTime: config.view.schedule.endTime,
+            //                     timeCellStep:10,
+            //                     timeLabelStep:60
+            //                 }
+            //             },
+            //             //invalidateEvent: config.invalidateEvent,
+            //             //invalid: config.invalid,
+            //         }
+            //
+            //         console.log(options);
+            //
+            //         AppointmentView.getInstance().getCalender().setOptions(options);
+            //
+            //     });
+            // });
 
 
         }

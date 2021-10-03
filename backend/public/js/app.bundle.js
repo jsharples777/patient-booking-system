@@ -703,6 +703,11 @@ class AppointmentController {
     return AppointmentController._instance;
   }
 
+  static APPOINTMENT_STATUS_ARRIVED = 'Patient Arrived';
+  static APPOINTMENT_STATUS_READY_FOR_BILLING = 'Ready For Billing';
+  static APPOINTMENT_STATUS_BILLING_COMPLETE = 'Billing Complete';
+  static APPOINTMENT_TYPE_PATIENT_CANCELLED = 'Patient Cancelled';
+  static APPOINTMENT_TYPE_PATIENT_DNA = 'Did Not Arrive';
   dataElements = {
     appointmentTypes: null,
     clinicConfig: null,
@@ -753,8 +758,16 @@ class AppointmentController {
 
     if (event.arrivalTime) {
       if (event.arrivalTime.trim().length > 0) {
-        buffer += '<i class="md-custom-event-icon fas fa-chair"></i>';
+        buffer += this.getIconForAppointmentType(AppointmentController.APPOINTMENT_STATUS_ARRIVED);
       }
+    }
+
+    if (event.readyForBilling) {
+      buffer += this.getIconForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
+    }
+
+    if (event.isBilled) {
+      buffer += this.getIconForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
     }
 
     buffer += this.getIconForAppointmentType(event.type);
@@ -773,7 +786,32 @@ class AppointmentController {
   }
 
   getColourForAppointment(appointment) {
-    return this.getColourForAppointmentType(appointment.type);
+    let colour = this.getColourForAppointmentType(appointment.type);
+    ;
+
+    if (appointment.arrivalTime) {
+      if (appointment.arrivalTime.trim().length > 0) {
+        colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_ARRIVED);
+      }
+    }
+
+    if (appointment.readyForBilling) {
+      colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
+    }
+
+    if (appointment.isBilled) {
+      colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
+    }
+
+    if (appointment.isCancelled) {
+      colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
+    }
+
+    if (appointment.isDNA) {
+      colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
+    }
+
+    return colour;
   }
 
   onPageLoading(event, inst) {
@@ -786,7 +824,7 @@ class AppointmentController {
     const appointments = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments);
     let results = [];
     appointments.forEach(appointment => {
-      if (appointment.start >= loadDate && appointment.start <= loadDateFinish) {
+      if (appointment.start >= loadDate && appointment.start < loadDateFinish) {
         logger('Found appointment');
         logger(appointment);
         let canEdit = loadDate >= today && !appointment.isDNA && !appointment.isCancelled; // convert the start and end time into the format for the calendar
@@ -828,7 +866,10 @@ class AppointmentController {
           modified: appointment.modified,
           arrivalTime: appointment.arrivalTime,
           type: appointment.type,
-          provider: appointment.provider
+          provider: appointment.provider,
+          readyForBilling: appointment.readyForBilling,
+          billingItems: appointment.billingItems,
+          isBilled: appointment.isBilled
         };
         this.dataElements.provider = appointment.provider;
         logger('Converted to event');
@@ -904,7 +945,10 @@ class AppointmentController {
       modified: event.modified,
       arrivalTime: event.arrivalTime,
       type: event.type,
-      provider: event.provider
+      provider: event.provider,
+      readyForBilling: event.readyForBilling,
+      isBilled: event.isBilled,
+      billingItems: event.billingItems
     };
     return appointment;
   }
@@ -954,8 +998,6 @@ class AppointmentDetailModal {
     return AppointmentDetailModal._instance;
   }
 
-  static APPOINTMENT_TYPE_PATIENT_CANCELLED = 'Patient Cancelled';
-  static APPOINTMENT_TYPE_PATIENT_DNA = 'Did Not Arrive';
   static datePickerResponsive = {
     medium: {
       controls: ['calendar'],
@@ -977,6 +1019,8 @@ class AppointmentDetailModal {
     patientArrivedButton: null,
     patientCancelledButton: null,
     patientDNAButton: null,
+    readyForBillingButton: null,
+    billingCompleteButton: null,
     patientSearchEl: null,
     appointmentTypeEl: null,
     appointmentTypeDropdown: null,
@@ -1005,8 +1049,11 @@ class AppointmentDetailModal {
     this.viewElements.deleteButton = document.getElementById('event-delete');
     this.viewElements.patientCancelledButton = document.getElementById('event-cancelled');
     this.viewElements.patientDNAButton = document.getElementById('event-dna');
+    this.viewElements.readyForBillingButton = document.getElementById('event-readyforbilling');
+    this.viewElements.billingCompleteButton = document.getElementById('event-billingcompleted');
     this.viewElements.patientSearchEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.SELECT.patientSearch);
-    this.viewElements.appointmentTypeEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.SELECT.appointmentType);
+    this.viewElements.appointmentTypeEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.SELECT.appointmentType); // @ts-ignore
+
     this.viewElements.popup = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.popup)('#add-appointment-popup', {
       display: 'bottom',
       contentPadding: true,
@@ -1062,7 +1109,7 @@ class AppointmentDetailModal {
   setupAppointmentTypeDropDown(appointmentTypes) {
     let types = [];
     appointmentTypes.forEach(type => {
-      types.push(type.name);
+      if (!type.isStatus) types.push(type.name);
     }); // add the patient search values to the data of the select dropdown
 
     this.viewElements.appointmentTypeDropdown = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.select)('#' + _AppTypes__WEBPACK_IMPORTED_MODULE_0__.SELECT.appointmentType, {
@@ -1090,7 +1137,9 @@ class AppointmentDetailModal {
     this.viewElements.deleteButton.style.display = 'none';
     this.viewElements.patientCancelledButton.style.display = 'none';
     this.viewElements.patientDNAButton.style.display = 'none';
-    this.viewElements.patientArrivedButton.style.display = 'none'; // show the dropdowns
+    this.viewElements.patientArrivedButton.style.display = 'none';
+    this.viewElements.readyForBillingButton.style.display = 'none';
+    this.viewElements.billingCompleteButton.style.display = 'none'; // show the dropdowns
 
     this.viewElements.patientSearchEl.style.display = 'block';
     this.viewElements.appointmentTypeEl.style.display = 'block';
@@ -1109,7 +1158,7 @@ class AppointmentDetailModal {
 
           let appointmentId = (0,uuid__WEBPACK_IMPORTED_MODULE_8__["default"])(); // get the colour for the event type
 
-          let colour = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType((0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.getInst)(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value);
+          let colour = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType('Consulting');
           let createdOn = parseInt(moment__WEBPACK_IMPORTED_MODULE_4___default()().format('YYYYDDMMHHmmss'));
           let updatedEvent = {
             id: appointmentId,
@@ -1156,7 +1205,10 @@ class AppointmentDetailModal {
     this.viewElements.range.setOptions({
       controls: _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent.allDay ? ['date'] : ['datetime'],
       responsive: _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent.allDay ? AppointmentDetailModal.datePickerResponsive : AppointmentDetailModal.datetimePickerResponsive
-    }); // set anchor for the popup
+    });
+    this.viewElements.appointmentTypeDropdown.setVal('');
+    this.viewElements.patientSearchDropdown.setVal('');
+    this.viewElements.providersDropdown.setVal(''); // set anchor for the popup
 
     this.viewElements.popup.setOptions({
       anchor: elm
@@ -1171,7 +1223,9 @@ class AppointmentDetailModal {
     this.viewElements.patientArrivedButton.style.display = 'block';
     this.viewElements.deleteButton.style.display = 'block';
     this.viewElements.patientCancelledButton.style.display = 'block';
-    this.viewElements.patientDNAButton.style.display = 'block'; // show the dropdowns
+    this.viewElements.patientDNAButton.style.display = 'block';
+    this.viewElements.readyForBillingButton.style.display = 'block';
+    this.viewElements.billingCompleteButton.style.display = 'block'; // show the dropdowns
 
     this.viewElements.patientSearchEl.style.display = 'none';
     this.viewElements.appointmentTypeEl.style.display = 'none';
@@ -1272,10 +1326,10 @@ class AppointmentDetailModal {
       let originalType = originalEvent.type;
       let originalNote = originalEvent.note;
       originalEvent.isCancelled = true;
-      originalEvent.type = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_CANCELLED;
-      originalEvent.note = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_CANCELLED;
+      originalEvent.type = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED;
+      originalEvent.note = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED;
       originalEvent.editable = false;
-      originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType(AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_CANCELLED); // 
+      originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED); // 
 
       _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
@@ -1289,8 +1343,7 @@ class AppointmentDetailModal {
             originalEvent.type = originalType;
             originalEvent.note = originalNote;
             originalEvent.editable = true;
-            originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType(originalType); // 
-
+            originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointment(originalEvent);
             _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
             _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
           },
@@ -1303,7 +1356,8 @@ class AppointmentDetailModal {
       // update the event to arrived
       // save a local reference to the deleted event
       let originalEvent = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent;
-      originalEvent.arrivalTime = moment__WEBPACK_IMPORTED_MODULE_4___default()().format('HHmmss'); // 
+      originalEvent.arrivalTime = moment__WEBPACK_IMPORTED_MODULE_4___default()().format('HHmmss');
+      originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointment(originalEvent); // 
 
       _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
       console.log(originalEvent);
@@ -1314,8 +1368,8 @@ class AppointmentDetailModal {
       (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
         button: {
           action: function () {
-            originalEvent.arrivalTime = ''; // 
-
+            originalEvent.arrivalTime = '';
+            originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointment(originalEvent);
             _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
             _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
           },
@@ -1328,16 +1382,83 @@ class AppointmentDetailModal {
       // update the event to cancelled and set to non-editable
       // save a local reference to the deleted event
       let originalEvent = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent;
+      let originalNote = originalEvent.note;
+      let originalType = originalEvent.type;
       originalEvent.isDNA = true;
-      originalEvent.type = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_DNA;
-      originalEvent.note = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_DNA;
+      originalEvent.type = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA;
+      originalEvent.note = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA;
       originalEvent.editable = false;
-      originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType(AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_DNA); // 
+      originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA); // 
 
       _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
       _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
       AppointmentDetailModal.getInstance().close();
+      (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
+        button: {
+          action: function () {
+            originalEvent.isDNA = false;
+            originalEvent.type = originalType;
+            originalEvent.note = originalNote;
+            originalEvent.editable = true;
+            originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointment(originalEvent);
+            _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
+          },
+          text: 'Undo'
+        },
+        message: 'Patient DNA'
+      });
+    });
+    this.viewElements.readyForBillingButton.addEventListener('click', function () {
+      // update the event to cancelled and set to non-editable
+      // save a local reference to the deleted event
+      let originalEvent = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent;
+      originalEvent.readyForBilling = true;
+      originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING); //
+
+      _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+      _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
+      _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
+      AppointmentDetailModal.getInstance().close();
+      (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
+        button: {
+          action: function () {
+            originalEvent.readyForBilling = false;
+            originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointment(originalEvent);
+            _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
+          },
+          text: 'Undo'
+        },
+        message: 'Ready For Billing'
+      });
+    });
+    this.viewElements.billingCompleteButton.addEventListener('click', function () {
+      // update the event to cancelled and set to non-editable
+      // save a local reference to the deleted event
+      let originalEvent = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent;
+      originalEvent.isBilled = true;
+      originalEvent.editable = false;
+      originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE); //
+
+      _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+      _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
+      _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
+      AppointmentDetailModal.getInstance().close();
+      (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
+        button: {
+          action: function () {
+            originalEvent.isBilled = false;
+            originalEvent.editable = true;
+            originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointment(originalEvent);
+            _AppointmentView__WEBPACK_IMPORTED_MODULE_5__.AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
+          },
+          text: 'Undo'
+        },
+        message: 'Billing Complete'
+      });
     });
   }
 
@@ -1378,8 +1499,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "AppointmentFilterView": () => (/* binding */ AppointmentFilterView)
 /* harmony export */ });
 /* harmony import */ var _AppointmentView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppointmentView */ "./src/app/appointments/AppointmentView.ts");
-/* harmony import */ var _AppointmentController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentController */ "./src/app/appointments/AppointmentController.ts");
-
 
 class AppointmentFilterView {
   static getInstance() {
@@ -1419,9 +1538,10 @@ class AppointmentFilterView {
           let selected = [];
 
           for (let i = 0; i < checkboxList.length; i++) {
-            let checkbox = checkboxList[i];
+            let checkbox = checkboxList[i]; // @ts-ignore
 
             if (checkbox.checked) {
+              // @ts-ignore
               selected.push({
                 id: checkbox.value,
                 name: checkbox.value
@@ -1434,35 +1554,40 @@ class AppointmentFilterView {
             resources: selected
           });
         });
-      });
-      document.querySelectorAll('.md-view-change').forEach(function (elm) {
-        elm.addEventListener('change', function (ev) {
-          let config = { ..._AppointmentController__WEBPACK_IMPORTED_MODULE_1__.AppointmentController.getInstance().getModel().clinicConfig
-          };
-          config.view.schedule.type = ev.target.value;
-          let options = {
-            //clickToCreate: config.clickToCreate,
-            //dragTimeStep: config.dragTimeStep,
-            //dragToCreate: config.dragToCreate,
-            //dragToMove: config.dragToMove,
-            //dragToResize: config.dragToResize,
-            //min: moment().subtract(config.min, "months"),
-            //controls: config.controls,
-            //showControls: config.showControls,
-            view: {
-              schedule: {
-                type: ev.target.value,
-                startTime: config.view.schedule.startTime,
-                endTime: config.view.schedule.endTime
-              }
-            } //invalidateEvent: config.invalidateEvent,
-            //invalid: config.invalid,
-
-          };
-          console.log(options);
-          _AppointmentView__WEBPACK_IMPORTED_MODULE_0__.AppointmentView.getInstance().getCalender().setOptions(options);
-        });
-      });
+      }); // document.querySelectorAll('.md-view-change').forEach(function (elm) {
+      //     elm.addEventListener('change', function (ev) {
+      //
+      //         let config = {...AppointmentController.getInstance().getModel().clinicConfig};
+      //          config.view.schedule.type = ev.target.value;
+      //
+      //         let options = {
+      //             //clickToCreate: config.clickToCreate,
+      //             //dragTimeStep: config.dragTimeStep,
+      //             //dragToCreate: config.dragToCreate,
+      //             //dragToMove: config.dragToMove,
+      //             //dragToResize: config.dragToResize,
+      //             //min: moment().subtract(config.min, "months"),
+      //             //controls: config.controls,
+      //             //showControls: config.showControls,
+      //             view: {
+      //                 schedule: {
+      //                     type: ev.target.value,
+      //                     startTime: config.view.schedule.startTime,
+      //                     endTime: config.view.schedule.endTime,
+      //                     timeCellStep:10,
+      //                     timeLabelStep:60
+      //                 }
+      //             },
+      //             //invalidateEvent: config.invalidateEvent,
+      //             //invalid: config.invalid,
+      //         }
+      //
+      //         console.log(options);
+      //
+      //         AppointmentView.getInstance().getCalender().setOptions(options);
+      //
+      //     });
+      // });
     }
   }
 

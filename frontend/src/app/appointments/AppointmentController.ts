@@ -33,6 +33,12 @@ export class AppointmentController implements StateChangeListener {
         return AppointmentController._instance;
     }
 
+    public static APPOINTMENT_STATUS_ARRIVED = 'Patient Arrived';
+    public static APPOINTMENT_STATUS_READY_FOR_BILLING = 'Ready For Billing';
+    public static APPOINTMENT_STATUS_BILLING_COMPLETE = 'Billing Complete';
+    public static APPOINTMENT_TYPE_PATIENT_CANCELLED = 'Patient Cancelled';
+    public static APPOINTMENT_TYPE_PATIENT_DNA = 'Did Not Arrive';
+
 
     private dataElements: AppointmentDataElements = {
         appointmentTypes: null,
@@ -85,8 +91,14 @@ export class AppointmentController implements StateChangeListener {
         let buffer = '';
         if (event.arrivalTime) {
             if (event.arrivalTime.trim().length > 0) {
-                buffer += '<i class="md-custom-event-icon fas fa-chair"></i>';
+                buffer += this.getIconForAppointmentType(AppointmentController.APPOINTMENT_STATUS_ARRIVED);
             }
+        }
+        if (event.readyForBilling) {
+            buffer += this.getIconForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
+        }
+        if (event.isBilled) {
+            buffer += this.getIconForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
         }
         buffer += this.getIconForAppointmentType(event.type);
 
@@ -103,8 +115,28 @@ export class AppointmentController implements StateChangeListener {
     }
 
     public getColourForAppointment(appointment: any) {
-        return this.getColourForAppointmentType(appointment.type);
+        let colour = this.getColourForAppointmentType(appointment.type);;
+        if (appointment.arrivalTime) {
+            if (appointment.arrivalTime.trim().length > 0) {
+                colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_ARRIVED);
+            }
+        }
+        if (appointment.readyForBilling) {
+            colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
+        }
+        if (appointment.isBilled) {
+            colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
+        }
+        if (appointment.isCancelled) {
+            colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
+        }
+        if (appointment.isDNA) {
+            colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
+        }
+        return colour;
     }
+
+
 
 
     public onPageLoading(event: any, inst: any): void {  // load the events for the view
@@ -118,7 +150,7 @@ export class AppointmentController implements StateChangeListener {
         const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
         let results: any[] = [];
         appointments.forEach((appointment: any) => {
-            if ((appointment.start >= loadDate) && (appointment.start <= loadDateFinish)) {
+            if ((appointment.start >= loadDate) && (appointment.start < loadDateFinish)) {
                 logger('Found appointment');
                 logger(appointment);
                 let canEdit = ((loadDate >= today) && (!appointment.isDNA && !appointment.isCancelled));
@@ -161,7 +193,10 @@ export class AppointmentController implements StateChangeListener {
                     modified: appointment.modified,
                     arrivalTime: appointment.arrivalTime,
                     type: appointment.type,
-                    provider: appointment.provider
+                    provider: appointment.provider,
+                    readyForBilling: appointment.readyForBilling,
+                    billingItems: appointment.billingItems,
+                    isBilled:appointment.isBilled
                 }
 
                 this.dataElements.provider = appointment.provider;
@@ -248,7 +283,10 @@ export class AppointmentController implements StateChangeListener {
             modified: event.modified,
             arrivalTime: event.arrivalTime,
             type: event.type,
-            provider: event.provider
+            provider: event.provider,
+            readyForBilling: event.readyForBilling,
+            isBilled: event.isBilled,
+            billingItems: event.billingItems
         };
         return appointment;
     }
