@@ -7,7 +7,7 @@ import {
 } from "./app/AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
-import {AppointmentController} from "./app/AppointmentController";
+import {AppointmentController} from "./app/appointments/AppointmentController";
 import {
     ChatRoomsSidebar,
     ContextualInformationHelper,

@@ -34,7 +34,10 @@ export default class AppointmentsQLDelegate {
                     status:1,
                     created:1,
                     modified:1,
-                    arrivalTime:1
+                    arrivalTime:1,
+                    readyForBilling:1,
+                    isBilled:1,
+                    billingItems:1
                 }
             };
 

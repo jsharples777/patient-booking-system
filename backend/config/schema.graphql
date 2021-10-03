@@ -43,7 +43,10 @@ type Appointment {
     name:String,
     created:Float,
     modified:Float,
-    arrivalTime:String
+    arrivalTime:String,
+    readyForBilling:Boolean,
+    isBilled:Boolean,
+    billingItems:String
 }
 
 input AppointmentInput {
@@ -62,6 +65,9 @@ input AppointmentInput {
     created:Float,
     modified:Float,
     arrivalTime:String
+    readyForBilling:Boolean,
+    isBilled:Boolean,
+    billingItems:String
 }
 
 type identifiers {

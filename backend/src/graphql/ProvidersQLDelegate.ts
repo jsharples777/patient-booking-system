@@ -15,17 +15,29 @@ export default class ProvidersQLDelegate {
         logger('Getting providers');
 
         return new Promise((resolve, reject) => {
-            const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-providers';
+            const collection = process.env.DB_COLLECTION_PROVIDERS || 'accounts';
 
-            let projection = { projection: {
-                    _id: 1,
-                    name:1,
-                    providerNo:1,
-                    isCurrent:1
+            const agg = [
+                {
+                    '$match': {
+                        'isCurrent': true,
+                        'providerNo': {
+                            '$exists': ''
+                        }
+                    }
+                }, {
+                    '$project': {
+                        '_id':1,
+                        'name': '$username',
+                        'providerNo': 1,
+                        'isCurrent': 1
+                    }
                 }
-            };
+            ];
 
-            MongoDataSource.getInstance().getDatabase().collection(collection).find({},projection).toArray().then((results:Document[]) => {
+
+
+            MongoDataSource.getInstance().getDatabase().collection(collection).aggregate(agg).toArray().then((results:Document[]) => {
                 logger(results.length);
                 resolve(results);
             })

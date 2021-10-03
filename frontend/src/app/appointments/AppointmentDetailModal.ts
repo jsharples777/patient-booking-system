@@ -1,0 +1,543 @@
+import {SELECT, STATE_NAMES} from "../AppTypes";
+import {datepicker, getInst, Popup, popup, select, snackbar} from "@mobiscroll/javascript";
+import {AppointmentController} from "./AppointmentController";
+import Controller from "../Controller";
+import moment from "moment";
+import {AppointmentView} from "./AppointmentView";
+import {v4} from "uuid";
+import {SecurityManager} from "ui-framework-jps";
+import debug from "debug";
+
+const logger = debug('appointment-detail-view');
+
+type AppointmentDetailViewElements = {
+    popup: Popup | null,
+    range: any | null,
+    titleInput: HTMLInputElement | null,
+    descriptionTextarea: HTMLTextAreaElement | null,
+    deleteButton: HTMLButtonElement | null,
+    patientArrivedButton: HTMLButtonElement | null,
+    patientCancelledButton: HTMLButtonElement | null,
+    patientDNAButton: HTMLButtonElement | null,
+    patientSearchEl: HTMLSelectElement | null,
+    appointmentTypeEl: HTMLSelectElement | null,
+    patientSearchDropdown: any | null
+    appointmentTypeDropdown: any | null,
+    providersDropdown: any | null
+}
+
+
+export class AppointmentDetailModal {
+
+    private static _instance: AppointmentDetailModal;
+
+    public static getInstance(): AppointmentDetailModal {
+        if (!(AppointmentDetailModal._instance)) {
+            AppointmentDetailModal._instance = new AppointmentDetailModal();
+        }
+        return AppointmentDetailModal._instance;
+    }
+
+    private static APPOINTMENT_TYPE_PATIENT_CANCELLED = 'Patient Cancelled';
+    private static APPOINTMENT_TYPE_PATIENT_DNA = 'Did Not Arrive';
+
+
+    private static datePickerResponsive = {
+        medium: {
+            controls: ['calendar'],
+            touchUi: false
+        }
+    }
+    private static datetimePickerResponsive = {
+        medium: {
+            controls: ['calendar', 'time'],
+            touchUi: false
+        }
+    }
+
+    private viewElements: AppointmentDetailViewElements = {
+        popup: null,
+        range: null,
+        titleInput: null,
+        descriptionTextarea: null,
+        deleteButton: null,
+        patientArrivedButton: null,
+        patientCancelledButton: null,
+        patientDNAButton: null,
+        patientSearchEl: null,
+        appointmentTypeEl: null,
+        appointmentTypeDropdown: null,
+        patientSearchDropdown: null,
+        providersDropdown: null
+    }
+
+    public close() {
+        this.viewElements.popup.close();
+    }
+
+    public isVisible() {
+        return this.viewElements.popup.isVisible();
+    }
+
+    public applyClinicConfig(clinicConfig: any) {
+        this.viewElements.range.setOptions({
+            stepMinute: clinicConfig.dragTimeStep
+        });
+
+    }
+
+
+    public onDocumentLoaded() {
+
+        this.viewElements.titleInput = <HTMLInputElement>document.getElementById('event-title');
+        this.viewElements.descriptionTextarea = <HTMLTextAreaElement>document.getElementById('event-desc');
+        this.viewElements.patientArrivedButton = <HTMLButtonElement>document.getElementById('event-arrived');
+        this.viewElements.deleteButton = <HTMLButtonElement>document.getElementById('event-delete');
+        this.viewElements.patientCancelledButton = <HTMLButtonElement>document.getElementById('event-cancelled');
+        this.viewElements.patientDNAButton = <HTMLButtonElement>document.getElementById('event-dna');
+        this.viewElements.patientSearchEl = <HTMLSelectElement>document.getElementById(SELECT.patientSearch);
+        this.viewElements.appointmentTypeEl = <HTMLSelectElement>document.getElementById(SELECT.appointmentType);
+
+
+        this.viewElements.popup = popup('#add-appointment-popup', {
+            display: 'bottom',
+            contentPadding: true,
+            fullScreen: true,
+            onClose: function () {
+                if (AppointmentController.getInstance().getModel().isDeletingEvent) {
+                    // 
+                    AppointmentView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
+                    Controller.getInstance().getStateManager().removeItemFromState(
+                        STATE_NAMES.appointments,
+                        AppointmentController.getInstance().getAppointmentFromEvent(AppointmentController.getInstance().getModel().tempEvent),
+                        false);
+
+                } else if (AppointmentController.getInstance().getModel().isRestoringEvent) {
+                    // 
+                    AppointmentView.getInstance().getCalender().updateEvent(AppointmentController.getInstance().getModel().oldEvent);
+                    Controller.getInstance().getStateManager().updateItemInState(
+                        STATE_NAMES.appointments,
+                        AppointmentController.getInstance().getAppointmentFromEvent(AppointmentController.getInstance().getModel().tempEvent),
+                        false);
+                }
+            },
+            responsive: {
+                medium: {
+                    display: 'anchored',
+                    width: 400,
+                    fullScreen: false,
+                    touchUi: false
+                }
+            }
+        });
+
+        this.viewElements.titleInput.addEventListener('input', function (ev: any) {
+            // update current event's title
+            AppointmentController.getInstance().getModel().tempEvent.title = ev.target.value;
+        });
+
+        this.viewElements.descriptionTextarea.addEventListener('change', function (ev: any) {
+            // update current event's title
+            AppointmentController.getInstance().getModel().tempEvent.description = ev.target.value;
+        });
+
+        this.viewElements.range = datepicker('#event-date', {
+            controls: ['date'],
+            select: 'range',
+            startInput: '#start-input',
+            endInput: '#end-input',
+            showRangeLabels: false,
+            touchUi: true,
+            stepMinute: 15,
+            maxTime: '17:00',
+            responsive: AppointmentDetailModal.datePickerResponsive,
+            onChange: function (args: any) {
+                let date = args.value;
+                // update event's start date
+                AppointmentController.getInstance().getModel().tempEvent.start = date[0];
+                AppointmentController.getInstance().getModel().tempEvent.end = date[1];
+            }
+        });
+
+        this.setupActionButtons();
+    }
+
+    public setupAppointmentTypeDropDown(appointmentTypes: any[]) {
+
+        let types: any[] = [];
+
+        appointmentTypes.forEach((type: any) => {
+            types.push(type.name);
+        });
+
+        // add the patient search values to the data of the select dropdown
+        this.viewElements.appointmentTypeDropdown = select('#' + SELECT.appointmentType, {
+            data: types,
+            onChange: (event: any, inst: any) => {
+
+                getInst(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value = event.valueText;
+                AppointmentController.getInstance().getModel().tempEvent.type = event.valueText;
+            }
+        });
+    }
+
+    public setupProviderDropdown(providers: any[]) {
+        // add the patient search values to the data of the select dropdown
+        this.viewElements.providersDropdown = select('#event-provider', {
+            data: providers,
+            onChange: (event: any, inst: any) => {
+                AppointmentController.getInstance().getModel().tempEvent.provider = event.valueText;
+                AppointmentController.getInstance().getModel().tempEvent.resource = event.value;
+
+            }
+        });
+
+    }
+
+    public startCreateAppointment(elm: HTMLElement) {
+        // hide delete button inside add popup
+        this.viewElements.deleteButton.style.display = 'none';
+        this.viewElements.patientCancelledButton.style.display = 'none';
+        this.viewElements.patientDNAButton.style.display = 'none';
+        this.viewElements.patientArrivedButton.style.display = 'none';
+        // show the dropdowns
+        this.viewElements.patientSearchEl.style.display = 'block';
+        this.viewElements.appointmentTypeEl.style.display = 'block';
+
+        AppointmentController.getInstance().getModel().isDeletingEvent = true;
+        AppointmentController.getInstance().getModel().isRestoringEvent = false;
+
+        // set popup header text and buttons for adding
+        this.viewElements.popup.setOptions({
+            headerText: 'New event',
+            buttons: [
+                'cancel',
+                {
+                    text: 'Add',
+                    keyCode: 'enter',
+                    handler: function () {
+                        let date = AppointmentDetailModal.getInstance().viewElements.range.getVal();
+                        // store the event created by the UI
+                        let mobiId = AppointmentController.getInstance().getModel().tempEvent.id;
+                        // generate a new UUID
+                        let appointmentId = v4();
+                        // get the colour for the event type
+                        let colour = AppointmentController.getInstance().getColourForAppointmentType(getInst(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value);
+
+                        let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
+
+                        let updatedEvent = {
+                            id: appointmentId,
+                            title: getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value,
+                            description: getInst(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value,
+                            allDay: false,
+                            start: date[0],
+                            end: date[1],
+                            free: false,
+                            color: colour,
+                            patientId: AppointmentController.getInstance().getModel().tempEvent.patientId,
+                            editable: true,
+                            resource: AppointmentController.getInstance().getModel().tempEvent.resource,
+                            isDNA: false,
+                            isCancelled: false,
+                            createdBy: SecurityManager.getInstance().getLoggedInUsername(),
+                            created: createdOn,
+                            modified: createdOn,
+                            arrivalTime: '',
+                            type: AppointmentController.getInstance().getModel().tempEvent.type,
+                            provider: AppointmentController.getInstance().getModel().tempEvent.provider
+                        };
+                        logger('inserting');
+                        logger(updatedEvent);
+
+                        // remove the original event
+                        AppointmentView.getInstance().getCalender().removeEvent([mobiId]);
+                        AppointmentView.getInstance().getCalender().addEvent(updatedEvent);
+                        Controller.getInstance().getStateManager().addNewItemToState(
+                            STATE_NAMES.appointments,
+                            AppointmentController.getInstance().getAppointmentFromEvent(updatedEvent),
+                            false);
+                        // 
+                        AppointmentController.getInstance().getModel().isDeletingEvent = false;
+
+                        // navigate the calendar to the correct view
+                        AppointmentView.getInstance().getCalender().navigate(updatedEvent.start);
+                        AppointmentDetailModal.getInstance().close();
+                    },
+                    cssClass: 'mbsc-popup-button-primary'
+                }
+            ]
+        });
+
+        // fill popup with a new event data
+
+        // @ts-ignore
+        mobiscroll5.getInst(this.viewElements.titleInput).value = AppointmentController.getInstance().getModel().tempEvent.title;
+        // @ts-ignore
+        mobiscroll5.getInst(this.viewElements.descriptionTextarea).value = '';
+
+        this.viewElements.range.setVal([AppointmentController.getInstance().getModel().tempEvent.start, AppointmentController.getInstance().getModel().tempEvent.end]);
+        this.viewElements.range.setOptions({
+            controls: AppointmentController.getInstance().getModel().tempEvent.allDay ? ['date'] : ['datetime'],
+            responsive: AppointmentController.getInstance().getModel().tempEvent.allDay ? AppointmentDetailModal.datePickerResponsive : AppointmentDetailModal.datetimePickerResponsive
+        });
+        // set anchor for the popup
+        this.viewElements.popup.setOptions({anchor: elm});
+
+        this.viewElements.popup.open();
+    }
+
+    public updateAppointment(args: any) {
+        let ev = args.event;
+
+        console.log(ev.patientId);
+
+        // show delete button inside edit popup
+        this.viewElements.patientArrivedButton.style.display = 'block';
+        this.viewElements.deleteButton.style.display = 'block';
+        this.viewElements.patientCancelledButton.style.display = 'block';
+        this.viewElements.patientDNAButton.style.display = 'block';
+        // show the dropdowns
+        this.viewElements.patientSearchEl.style.display = 'none';
+        this.viewElements.appointmentTypeEl.style.display = 'none';
+
+
+        AppointmentController.getInstance().getModel().isDeletingEvent = false;
+        AppointmentController.getInstance().getModel().isRestoringEvent = true;
+
+        // set popup header text and buttons for editing
+        this.viewElements.popup.setOptions({
+            headerText: 'Edit event',
+            buttons: [
+                'cancel',
+                {
+                    text: 'Save',
+                    keyCode: 'enter',
+                    handler: function () {
+                        let date = AppointmentDetailModal.getInstance().viewElements.range.getVal();
+                        // update event with the new properties on save button click
+                        let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
+                        // 
+                        let updatedEvent = {
+                            id: ev.id,
+                            title: getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value,
+                            description: getInst(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value,
+                            allDay: false,
+                            start: date[0],
+                            end: date[1],
+                            free: false,
+                            color: ev.color,
+                            patientId: ev.patientId,
+                            editable: true,
+                            resource: ev.resource,
+                            isDNA: true,
+                            isCancelled: true,
+                            createdBy: SecurityManager.getInstance().getLoggedInUsername(),
+                            created: ev.created,
+                            modified: createdOn,
+                            arrivalTime: '',
+                            type: ev.type,
+                            provider: ev.provider
+                        };
+                        logger('updated');
+                        logger(updatedEvent)
+                        AppointmentView.getInstance().getCalender().updateEvent(updatedEvent);
+
+                        // navigate the calendar to the correct view
+
+                        AppointmentView.getInstance().getCalender().navigate(date[0]);
+                        AppointmentController.getInstance().getModel().isRestoringEvent = false;
+                        AppointmentDetailModal.getInstance().close();
+                    },
+                    cssClass: 'mbsc-popup-button-primary'
+                }
+            ]
+        });
+
+        // fill popup with the selected event data
+        // @ts-ignore
+        mobiscroll5.getInst(this.viewElements.titleInput).value = ev.title || '';
+        // @ts-ignore
+        mobiscroll5.getInst(this.viewElements.descriptionTextarea).value = ev.description || '';
+        this.viewElements.range.setVal([ev.start, ev.end]);
+
+        // change range settings based on the allDay
+        this.viewElements.range.setOptions({
+            controls: ev.allDay ? ['date'] : ['datetime'],
+            responsive: ev.allDay ? AppointmentDetailModal.datePickerResponsive : AppointmentDetailModal.datetimePickerResponsive
+        });
+
+        // set the appointment type and patient
+        this.viewElements.appointmentTypeDropdown.setVal(ev.type);
+        this.viewElements.patientSearchDropdown.setVal(ev.patientId);
+        this.viewElements.providersDropdown.setVal(ev.resource);
+
+        // set anchor for the popup
+        this.viewElements.popup.setOptions({anchor: args.domEvent.currentTarget});
+        this.viewElements.popup.open();
+    }
+
+    protected setupActionButtons() {
+        this.viewElements.deleteButton.addEventListener('click', function () {
+            // delete current event on button click
+            // 
+            AppointmentView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
+            Controller.getInstance().getStateManager().removeItemFromState(
+                STATE_NAMES.appointments,
+                AppointmentController.getInstance().getAppointmentFromEvent(AppointmentController.getInstance().getModel().tempEvent),
+                false);
+
+            AppointmentController.getInstance().getModel().isRestoringEvent = false;
+            AppointmentDetailModal.getInstance().close();
+
+            // save a local reference to the deleted event
+            let deletedEvent = AppointmentController.getInstance().getModel().tempEvent;
+
+            // 
+            snackbar({
+                button: {
+                    action: function () {
+                        // 
+                        AppointmentView.getInstance().getCalender().addEvent(deletedEvent);
+                        Controller.getInstance().getStateManager().addNewItemToState(
+                            STATE_NAMES.appointments,
+                            AppointmentController.getInstance().getAppointmentFromEvent(deletedEvent),
+                            false);
+                    },
+                    text: 'Undo'
+                },
+                message: 'Event deleted'
+            });
+        });
+
+        this.viewElements.patientCancelledButton.addEventListener('click', function () {
+            // update the event to cancelled and set to non-editable
+            // save a local reference to the deleted event
+            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+
+            let originalType = originalEvent.type;
+            let originalNote = originalEvent.note;
+
+            originalEvent.isCancelled = true;
+            originalEvent.type = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_CANCELLED;
+            originalEvent.note = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_CANCELLED;
+            originalEvent.editable = false;
+            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_CANCELLED);
+
+            // 
+            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            Controller.getInstance().getStateManager().updateItemInState(
+                STATE_NAMES.appointments,
+                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                false);
+
+            AppointmentController.getInstance().getModel().isRestoringEvent = false;
+            AppointmentDetailModal.getInstance().close();
+
+
+            // 
+            snackbar({
+                button: {
+                    action: function () {
+                        originalEvent.isCancelled = false;
+                        originalEvent.type = originalType;
+                        originalEvent.note = originalNote;
+                        originalEvent.editable = true;
+                        originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(originalType);
+                        // 
+                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        Controller.getInstance().getStateManager().updateItemInState(
+                            STATE_NAMES.appointments,
+                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            false);
+                    },
+                    text: 'Undo'
+                },
+                message: 'Patient Cancelled'
+            });
+        });
+
+        this.viewElements.patientArrivedButton.addEventListener('click', function () {
+            // update the event to arrived
+            // save a local reference to the deleted event
+            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+
+            originalEvent.arrivalTime = moment().format('HHmmss');
+
+            // 
+            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            console.log(originalEvent);
+            Controller.getInstance().getStateManager().updateItemInState(
+                STATE_NAMES.appointments,
+                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                false);
+
+            AppointmentController.getInstance().getModel().isRestoringEvent = false;
+            AppointmentDetailModal.getInstance().close();
+
+
+            // 
+            snackbar({
+                button: {
+                    action: function () {
+                        originalEvent.arrivalTime = '';
+                        // 
+                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        Controller.getInstance().getStateManager().updateItemInState(
+                            STATE_NAMES.appointments,
+                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            false);
+                    },
+                    text: 'Undo'
+                },
+                message: 'Patient Arrived'
+            });
+        });
+
+        this.viewElements.patientDNAButton.addEventListener('click', function () {
+            // update the event to cancelled and set to non-editable
+            // save a local reference to the deleted event
+            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+
+            originalEvent.isDNA = true;
+            originalEvent.type = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_DNA;
+            originalEvent.note = AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_DNA;
+            originalEvent.editable = false;
+            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentDetailModal.APPOINTMENT_TYPE_PATIENT_DNA);
+
+            // 
+            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            Controller.getInstance().getStateManager().updateItemInState(
+                STATE_NAMES.appointments,
+                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                false);
+
+            AppointmentController.getInstance().getModel().isRestoringEvent = false;
+            AppointmentDetailModal.getInstance().close();
+        });
+    }
+
+    public setupPatientSearchDropDown(patientsCollection: any[]) {
+        let patients: any[] = [];
+
+        patientsCollection.forEach((patient: any) => {
+            patients.push({text: `${patient.name.surname}, ${patient.name.firstname}`, value: patient._id});
+        });
+
+        // add the patient search values to the data of the select dropdown
+        // 
+        this.viewElements.patientSearchDropdown = select('#' + SELECT.patientSearch, {
+            filter: true,
+            data: patients,
+            onChange: (event: any, inst: any) => {
+                // 
+                getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value = event.valueText;
+
+                AppointmentController.getInstance().getModel().tempEvent.patientId = event.value;
+            }
+        });
+
+    }
+
+
+}
