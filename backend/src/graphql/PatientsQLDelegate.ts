@@ -31,6 +31,7 @@ export default class PatientsQLDelegate {
                         isInactive: 1,
                         hasWarnings: 1,
                     },
+                    warnings: 1
                 }
             };
             MongoDataSource.getInstance().getDatabase().collection(process.env.DB_COLLECTION_PATIENTS || 'pms-patients').find({}, projection).sort({

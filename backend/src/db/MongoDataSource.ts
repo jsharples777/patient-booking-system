@@ -61,6 +61,7 @@ export class MongoDataSource {
                     isInactive: 1,
                     hasWarnings: 1,
                 },
+                warnings: 1
             }
         };
         let results = await this.db.collection(process.env.DB_COLLECTION_PATIENTS || 'pms-patients').find({},projection).sort({"name.surname":1,"name.firstname":1}).toArray();

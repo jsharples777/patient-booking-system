@@ -84,11 +84,17 @@ type flags {
     hasWarnings: Boolean
 }
 
+type warnings {
+    _id: String,
+    warnings: [String]
+}
+
 type PatientSearchItem {
     _id:String,
     identifiers: identifiers,
     name: name,
-    flags: flags
+    flags: flags,
+    warnings: warnings
 }
 
 type AppointmentType {

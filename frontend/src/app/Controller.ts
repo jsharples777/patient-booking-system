@@ -70,7 +70,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 serverURL: '',
                 apiURL: API_Config.graphQL,
                 apis: {
-                    findAll: 'query {getPatientSearchDetails {_id,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}}}',
+                    findAll: 'query {getPatientSearchDetails {_id,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}}}',
                     create: '',
                     destroy: '',
                     update: '',

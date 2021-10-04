@@ -25,7 +25,8 @@ type AppointmentDetailViewElements = {
     appointmentTypeEl: HTMLSelectElement | null,
     patientSearchDropdown: any | null
     appointmentTypeDropdown: any | null,
-    providersDropdown: any | null
+    providersDropdown: any | null,
+    warningsEl: HTMLTextAreaElement | null
 }
 
 
@@ -71,7 +72,8 @@ export class AppointmentDetailModal {
         appointmentTypeEl: null,
         appointmentTypeDropdown: null,
         patientSearchDropdown: null,
-        providersDropdown: null
+        providersDropdown: null,
+        warningsEl: null
     }
 
     public close() {
@@ -104,6 +106,8 @@ export class AppointmentDetailModal {
         this.viewElements.patientSearchEl = <HTMLSelectElement>document.getElementById(SELECT.patientSearch);
         this.viewElements.appointmentTypeEl = <HTMLSelectElement>document.getElementById(SELECT.appointmentType);
 
+        this.viewElements.warningsEl = <HTMLTextAreaElement>document.getElementById("patient-warning");
+
 
         // @ts-ignore
         this.viewElements.popup = popup('#add-appointment-popup', {
@@ -112,7 +116,7 @@ export class AppointmentDetailModal {
             fullScreen: true,
             onClose: function () {
                 if (AppointmentController.getInstance().getModel().isDeletingEvent) {
-                    // 
+                    //
                     AppointmentView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
                     Controller.getInstance().getStateManager().removeItemFromState(
                         STATE_NAMES.appointments,
@@ -120,7 +124,7 @@ export class AppointmentDetailModal {
                         false);
 
                 } else if (AppointmentController.getInstance().getModel().isRestoringEvent) {
-                    // 
+                    //
                     AppointmentView.getInstance().getCalender().updateEvent(AppointmentController.getInstance().getModel().oldEvent);
                     Controller.getInstance().getStateManager().updateItemInState(
                         STATE_NAMES.appointments,
@@ -266,7 +270,7 @@ export class AppointmentDetailModal {
                             STATE_NAMES.appointments,
                             AppointmentController.getInstance().getAppointmentFromEvent(updatedEvent),
                             false);
-                        // 
+                        //
                         AppointmentController.getInstance().getModel().isDeletingEvent = false;
 
                         // navigate the calendar to the correct view
@@ -333,7 +337,7 @@ export class AppointmentDetailModal {
                         let date = AppointmentDetailModal.getInstance().viewElements.range.getVal();
                         // update event with the new properties on save button click
                         let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
-                        // 
+                        //
                         let updatedEvent = {
                             id: ev.id,
                             title: getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value,
@@ -396,7 +400,7 @@ export class AppointmentDetailModal {
     protected setupActionButtons() {
         this.viewElements.deleteButton.addEventListener('click', function () {
             // delete current event on button click
-            // 
+            //
             AppointmentView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
             Controller.getInstance().getStateManager().removeItemFromState(
                 STATE_NAMES.appointments,
@@ -409,11 +413,11 @@ export class AppointmentDetailModal {
             // save a local reference to the deleted event
             let deletedEvent = AppointmentController.getInstance().getModel().tempEvent;
 
-            // 
+            //
             snackbar({
                 button: {
                     action: function () {
-                        // 
+                        //
                         AppointmentView.getInstance().getCalender().addEvent(deletedEvent);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointments,
@@ -440,7 +444,7 @@ export class AppointmentDetailModal {
             originalEvent.editable = false;
             originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
 
-            // 
+            //
             AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
@@ -451,7 +455,7 @@ export class AppointmentDetailModal {
             AppointmentDetailModal.getInstance().close();
 
 
-            // 
+            //
             snackbar({
                 button: {
                     action: function () {
@@ -480,7 +484,7 @@ export class AppointmentDetailModal {
             originalEvent.arrivalTime = moment().format('HHmmss');
             originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
 
-            // 
+            //
             AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
             console.log(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
@@ -492,7 +496,7 @@ export class AppointmentDetailModal {
             AppointmentDetailModal.getInstance().close();
 
 
-            // 
+            //
             snackbar({
                 button: {
                     action: function () {
@@ -523,7 +527,7 @@ export class AppointmentDetailModal {
             originalEvent.editable = false;
             originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
 
-            // 
+            //
             AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
@@ -630,17 +634,25 @@ export class AppointmentDetailModal {
         let patients: any[] = [];
 
         patientsCollection.forEach((patient: any) => {
-            patients.push({text: `${patient.name.surname}, ${patient.name.firstname}`, value: patient._id});
+            let warningsText = '';
+            if (patient.flags.hasWarnings) {
+                patient.warnings.warnings.forEach((warning:any) => {
+                    warningsText += warning + '\r\n';
+                });
+            }
+            patients.push({text: `${patient.name.surname}, ${patient.name.firstname}`, value: patient._id, hasWarnings: patient.flags.hasWarnings, warnings:warningsText});
         });
 
         // add the patient search values to the data of the select dropdown
-        // 
+        //
         this.viewElements.patientSearchDropdown = select('#' + SELECT.patientSearch, {
             filter: true,
             data: patients,
             onChange: (event: any, inst: any) => {
-                // 
+                console.log(event);
+                //
                 getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value = event.valueText;
+                getInst(AppointmentDetailModal.getInstance().viewElements.warningsEl).value = event.warnings;
 
                 AppointmentController.getInstance().getModel().tempEvent.patientId = event.value;
             }
