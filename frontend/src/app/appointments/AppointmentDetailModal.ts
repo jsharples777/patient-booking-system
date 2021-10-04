@@ -7,6 +7,7 @@ import {AppointmentView} from "./AppointmentView";
 import {v4} from "uuid";
 import {SecurityManager} from "ui-framework-jps";
 import debug from "debug";
+import App from "../../App";
 
 const logger = debug('appointment-detail-view');
 
@@ -55,6 +56,12 @@ export class AppointmentDetailModal {
             controls: ['calendar', 'time'],
             touchUi: false
         }
+    }
+
+    private patients:any[];
+
+    private constructor() {
+        this.patients = [];
     }
 
     private viewElements: AppointmentDetailViewElements = {
@@ -631,7 +638,7 @@ export class AppointmentDetailModal {
     }
 
     public setupPatientSearchDropDown(patientsCollection: any[]) {
-        let patients: any[] = [];
+        this.patients = [];
 
         patientsCollection.forEach((patient: any) => {
             let warningsText = '';
@@ -640,18 +647,20 @@ export class AppointmentDetailModal {
                     warningsText += warning + '\r\n';
                 });
             }
-            patients.push({text: `${patient.name.surname}, ${patient.name.firstname}`, value: patient._id, hasWarnings: patient.flags.hasWarnings, warnings:warningsText});
+            this.patients.push({text: `${patient.name.surname}, ${patient.name.firstname}`, value: patient._id});
         });
 
         // add the patient search values to the data of the select dropdown
         //
         this.viewElements.patientSearchDropdown = select('#' + SELECT.patientSearch, {
             filter: true,
-            data: patients,
+            data: AppointmentDetailModal.getInstance().patients,
             onChange: (event: any, inst: any) => {
                 console.log(event);
                 //
                 getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value = event.valueText;
+
+                get ID and then find patientsCollection
                 getInst(AppointmentDetailModal.getInstance().viewElements.warningsEl).value = event.warnings;
 
                 AppointmentController.getInstance().getModel().tempEvent.patientId = event.value;
