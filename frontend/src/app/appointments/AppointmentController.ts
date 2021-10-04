@@ -2,9 +2,9 @@ import debug from "debug";
 import moment from "moment";
 import {STATE_NAMES} from "../AppTypes";
 import Controller from "../Controller";
-import {StateChangeListener} from "ui-framework-jps";
+import {SecurityManager, StateChangeListener} from "ui-framework-jps";
 
-import {AppointmentView} from "./AppointmentView";
+import {AppointmentBookView} from "./AppointmentBookView";
 import {AppointmentFilterView} from "./AppointmentFilterView";
 import {AppointmentDetailModal} from "./AppointmentDetailModal";
 
@@ -20,7 +20,8 @@ type AppointmentDataElements = {
     tempEvent: any,
     isDeletingEvent: boolean,
     isRestoringEvent: boolean,
-    provider: string
+    loadDate:number,
+    loadDateFinish:number,
 }
 
 export class AppointmentController implements StateChangeListener {
@@ -48,7 +49,8 @@ export class AppointmentController implements StateChangeListener {
         tempEvent: {},
         isDeletingEvent: false,
         isRestoringEvent: false,
-        provider: ''
+        loadDate:0,
+        loadDateFinish:0
     };
 
     public getModel(): AppointmentDataElements {
@@ -56,7 +58,7 @@ export class AppointmentController implements StateChangeListener {
     }
 
     public onDocumentLoaded() {
-        AppointmentView.getInstance().onDocumentLoaded();
+        AppointmentBookView.getInstance().onDocumentLoaded();
         AppointmentFilterView.getInstance().onDocumentLoaded();
     }
 
@@ -68,6 +70,7 @@ export class AppointmentController implements StateChangeListener {
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.appointmentTypes, this);
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.patientSearch, this);
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.providers, this);
+        Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.appointments, this);
 
     }
 
@@ -136,70 +139,78 @@ export class AppointmentController implements StateChangeListener {
         return colour;
     }
 
+    public getEventForAppointment(loadDate:number, appointment:any):any {
+        const today = parseInt(moment().format('YYYYMMDD'));
+
+        let canEdit = ((loadDate >= today) && (!appointment.isDNA && !appointment.isCancelled) && (!appointment.isBilled));
+        // convert the start and end time into the format for the calendar
+        const time = parseInt(appointment.time); // HHMMSS as a time
+        const duration = appointment.duration; // seconds
+
+        const startTimeHours = Math.floor(appointment.time / 10000);
+        const startTimeMinutes = Math.floor((time - (startTimeHours * 10000)) / 100);
+        const appointmentDuration = Math.floor(duration / 60);
+
+        let endTimeHours = startTimeHours;
+        let endTimeMinutes = startTimeMinutes + appointmentDuration;
+
+        if (endTimeMinutes > 60) {
+            endTimeMinutes -= 60;
+            endTimeHours += 1; // 24 hour time
+        }
+
+        let timeString = `${endTimeHours}`;
+        if (endTimeHours < 10) timeString = '0' + timeString;
+        if (endTimeMinutes < 10) timeString += '0';
+        timeString += `${endTimeMinutes}`;
+
+        let result = {
+            id: appointment._id,
+            start: moment(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
+            end: moment(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
+            title: appointment.name,
+            description: appointment.note,
+            color: this.getColourForAppointment(appointment),
+            allDay: false,
+            editable: canEdit,
+            resource: appointment.provider,
+            patientId: appointment._patient,
+            isDNA: appointment.isDNA,
+            isCancelled: appointment.isCancelled,
+            createdBy: appointment.createdBy,
+            created: appointment.created,
+            modified: appointment.modified,
+            arrivalTime: appointment.arrivalTime,
+            type: appointment.type,
+            provider: appointment.provider,
+            readyForBilling: appointment.readyForBilling,
+            billingItems: appointment.billingItems,
+            isBilled:appointment.isBilled
+        }
+
+        return result;
+
+    }
+
 
 
 
     public onPageLoading(event: any, inst: any): void {  // load the events for the view
         logger(event);
-        const today = parseInt(moment().format('YYYYMMDD'));
-        const loadDate = parseInt(moment(event.firstDay).format('YYYYMMDD'));
-        const loadDateFinish = parseInt(moment(event.lastDay).format('YYYYMMDD'));
-        logger(`Need to load date range (${loadDate},${loadDateFinish})`);
+        this.dataElements.loadDate = parseInt(moment(event.firstDay).format('YYYYMMDD'));
+        this.dataElements.loadDateFinish = parseInt(moment(event.lastDay).format('YYYYMMDD'));
+        logger(`Need to load date range (${this.dataElements.loadDate},${this.dataElements.loadDateFinish})`);
 
 
         const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
         let results: any[] = [];
         appointments.forEach((appointment: any) => {
-            if ((appointment.start >= loadDate) && (appointment.start < loadDateFinish)) {
+            if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
                 logger('Found appointment');
                 logger(appointment);
-                let canEdit = ((loadDate >= today) && (!appointment.isDNA && !appointment.isCancelled));
-                // convert the start and end time into the format for the calendar
-                const time = parseInt(appointment.time); // HHMMSS as a time
-                const duration = appointment.duration; // seconds
 
-                const startTimeHours = Math.floor(appointment.time / 10000);
-                const startTimeMinutes = Math.floor((time - (startTimeHours * 10000)) / 100);
-                const appointmentDuration = Math.floor(duration / 60);
+                let result = this.getEventForAppointment(this.dataElements.loadDate,appointment);
 
-                let endTimeHours = startTimeHours;
-                let endTimeMinutes = startTimeMinutes + appointmentDuration;
-
-                if (endTimeMinutes > 60) {
-                    endTimeMinutes -= 60;
-                    endTimeHours += 1; // 24 hour time
-                }
-
-                let timeString = `${endTimeHours}`;
-                if (endTimeHours < 10) timeString = '0' + timeString;
-                if (endTimeMinutes < 10) timeString += '0';
-                timeString += `${endTimeMinutes}`;
-
-                let result = {
-                    id: appointment._id,
-                    start: moment(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
-                    end: moment(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
-                    title: appointment.name,
-                    description: appointment.note,
-                    color: this.getColourForAppointment(appointment),
-                    allDay: false,
-                    editable: canEdit,
-                    resource: appointment.provider,
-                    patientId: appointment._patient,
-                    isDNA: appointment.isDNA,
-                    isCancelled: appointment.isCancelled,
-                    createdBy: appointment.createdBy,
-                    created: appointment.created,
-                    modified: appointment.modified,
-                    arrivalTime: appointment.arrivalTime,
-                    type: appointment.type,
-                    provider: appointment.provider,
-                    readyForBilling: appointment.readyForBilling,
-                    billingItems: appointment.billingItems,
-                    isBilled:appointment.isBilled
-                }
-
-                this.dataElements.provider = appointment.provider;
 
                 logger('Converted to event');
                 logger(result);
@@ -226,7 +237,7 @@ export class AppointmentController implements StateChangeListener {
         switch (name) {
             case STATE_NAMES.clinicConfig: {
                 this.dataElements.clinicConfig = newValue[0];
-                AppointmentView.getInstance().applyClinicConfig(this.dataElements.clinicConfig);
+                AppointmentBookView.getInstance().applyClinicConfig(this.dataElements.clinicConfig);
                 break;
             }
             case (STATE_NAMES.patientSearch): {
@@ -244,7 +255,36 @@ export class AppointmentController implements StateChangeListener {
 
                 AppointmentFilterView.getInstance().populateProviders(newValue);
 
-                AppointmentView.getInstance().setupProviders(newValue);
+                AppointmentBookView.getInstance().setupProviders(newValue);
+
+                break;
+
+            }
+            case (STATE_NAMES.appointments): {
+
+                this.dataElements.loadDate = parseInt(moment().format('YYYYMMDD'));
+                this.dataElements.loadDateFinish = parseInt(moment().add(1,'days').format('YYYYMMDD'));
+                logger(`Need to load date range (${this.dataElements.loadDate},${this.dataElements.loadDateFinish})`);
+
+
+                const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
+                let results: any[] = [];
+                appointments.forEach((appointment: any) => {
+                    if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
+                        logger('Found appointment');
+                        logger(appointment);
+
+                        let result = this.getEventForAppointment(this.dataElements.loadDate,appointment);
+
+
+                        logger('Converted to event');
+                        logger(result);
+                        results.push(result);
+                    }
+
+                });
+
+                AppointmentBookView.getInstance().getCalender().setEvents(results);
 
                 break;
 
@@ -253,13 +293,45 @@ export class AppointmentController implements StateChangeListener {
         }
     }
 
-    stateChangedItemAdded(managerName: string, name: string, itemAdded: any): void {
+    stateChangedItemAdded(managerName: string, name: string, appointment: any): void {
+        if ((name === STATE_NAMES.appointments) && (appointment.createdBy !== SecurityManager.getInstance().getLoggedInUsername())) {
+            logger('New Appointment inserted by another user');
+            logger(appointment);
+
+            if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
+
+                let result = this.getEventForAppointment(this.dataElements.loadDate, appointment);
+                logger('Converted to event');
+                logger(result);
+
+                AppointmentBookView.getInstance().getCalender().addEvent(result);
+            }
+        }
     }
 
-    stateChangedItemRemoved(managerName: string, name: string, itemRemoved: any): void {
+    stateChangedItemRemoved(managerName: string, name: string, appointment: any): void {
+        if (name === STATE_NAMES.appointments) {
+            logger('Appointment deleted by another user');
+            logger(appointment);
+
+            AppointmentBookView.getInstance().getCalender().removeEvent([appointment._id]);
+        }
     }
 
-    stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, itemNewValue: any): void {
+    stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, appointment: any): void {
+        if (name === STATE_NAMES.appointments) {
+            logger('Appointment updated by another user');
+            logger(appointment);
+
+            if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
+
+                let result = this.getEventForAppointment(this.dataElements.loadDate, appointment);
+                logger('Converted to event');
+                logger(result);
+
+                AppointmentBookView.getInstance().getCalender().updateEvent(result);
+            }
+        }
     }
 
     public getAppointmentFromEvent(event: any): any {
@@ -283,7 +355,7 @@ export class AppointmentController implements StateChangeListener {
             modified: event.modified,
             arrivalTime: event.arrivalTime,
             type: event.type,
-            provider: event.provider,
+            provider: event.resource,
             readyForBilling: event.readyForBilling,
             isBilled: event.isBilled,
             billingItems: event.billingItems

@@ -3,7 +3,6 @@ import debug from 'debug';
 import fs from 'fs';
 import {ApolloServer} from 'apollo-server-express';
 import {Express} from 'express';
-import ExampleQLDelegate from "./ExampleQLDelegate";
 import AppointmentsQLDelegate from "./AppointmentsQLDelegate";
 import PatientsQLDelegate from "./PatientsQLDelegate";
 import AppointmentTypesQLDelegate from "./AppointmentTypesQLDelegate";
@@ -22,7 +21,6 @@ export default class DataSource {
 
         let resolvers = {
             Query: {
-                getExerciseTypes:ExampleQLDelegate.getExerciseTypes,
                 getAppointments:AppointmentsQLDelegate.getAppointments,
                 getPatientSearchDetails:PatientsQLDelegate.getPatientSearchDetails,
                 getAppointmentTypes:AppointmentTypesQLDelegate.getAppointmentTypes,
@@ -30,9 +28,6 @@ export default class DataSource {
                 getAppointmentTemplates:AppointmentTemplatesQLDelegate.getAppointmentTemplates
             },
             Mutation: {
-                addExerciseType:ExampleQLDelegate.addExerciseType,
-                updateExerciseType:ExampleQLDelegate.updateExerciseType,
-                deleteExerciseType:ExampleQLDelegate.deleteExerciseType,
                 addAppointment:AppointmentsQLDelegate.addAppointment,
                 updateAppointment:AppointmentsQLDelegate.updateAppointment,
                 deleteAppointment:AppointmentsQLDelegate.deleteAppointment,

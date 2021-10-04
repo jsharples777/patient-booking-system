@@ -13,14 +13,14 @@ type AppointmentViewElements = {
     calendar: Eventcalendar | null,
 }
 
-export class AppointmentView {
-    private static _instance: AppointmentView;
+export class AppointmentBookView {
+    private static _instance: AppointmentBookView;
 
-    public static getInstance(): AppointmentView {
-        if (!(AppointmentView._instance)) {
-            AppointmentView._instance = new AppointmentView();
+    public static getInstance(): AppointmentBookView {
+        if (!(AppointmentBookView._instance)) {
+            AppointmentBookView._instance = new AppointmentBookView();
         }
-        return AppointmentView._instance;
+        return AppointmentBookView._instance;
     }
 
     private constructor() {
@@ -42,7 +42,7 @@ export class AppointmentView {
             dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             showWeekNumbers: true,
             onChange: (event: any, inst: any) => {
-                AppointmentView.getInstance().viewElements.calendar?.navigate(event.value);
+                AppointmentBookView.getInstance().viewElements.calendar?.navigate(event.value);
             }
         });
     }
@@ -149,7 +149,7 @@ export class AppointmentView {
 
 
         options.onSelectedDateChange = (event: any, inst: any) => {
-            AppointmentView.getInstance().viewElements.datePicker?.setVal(event.date);
+            AppointmentBookView.getInstance().viewElements.datePicker?.setVal(event.date);
         };
         options.onPageLoading = (event: any, inst: any) => {
             AppointmentController.getInstance().onPageLoading(event, inst);
@@ -169,7 +169,7 @@ export class AppointmentView {
                 button: {
                     action: function () {
                         // @ts-ignore
-                        AppointmentView.getInstance().viewElements.calendar.addEvent(event.event);
+                        AppointmentBookView.getInstance().viewElements.calendar.addEvent(event.event);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointments,
                             AppointmentController.getInstance().getAppointmentFromEvent(event.event),
@@ -193,7 +193,14 @@ export class AppointmentView {
             }
         }
         options.renderScheduleEvent = this.handleAppointmentRendering;
+        options.onEventUpdated = (args:any) => {
+            // user has dragged event - update the appointment
+            Controller.getInstance().getStateManager().updateItemInState(
+                STATE_NAMES.appointments,
+                AppointmentController.getInstance().getAppointmentFromEvent(args.event),
+                false);
 
+        }
 
         if (AppointmentController.getInstance().getModel().providers) {
             let providers: any[] = [];

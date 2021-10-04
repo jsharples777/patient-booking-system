@@ -1,4 +1,4 @@
-import {AppointmentView} from "./AppointmentView";
+import {AppointmentBookView} from "./AppointmentBookView";
 import {AppointmentController} from "./AppointmentController";
 import App from "../../App";
 import moment from "moment";
@@ -60,7 +60,7 @@ export class AppointmentFilterView {
 
                     console.log(selected);
 
-                     AppointmentView.getInstance().getCalender().setOptions({
+                     AppointmentBookView.getInstance().getCalender().setOptions({
                         resources: selected
                      });
                 });
@@ -96,7 +96,7 @@ export class AppointmentFilterView {
             //
             //         console.log(options);
             //
-            //         AppointmentView.getInstance().getCalender().setOptions(options);
+            //         AppointmentBookView.getInstance().getCalender().setOptions(options);
             //
             //     });
             // });

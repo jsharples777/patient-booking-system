@@ -6,7 +6,7 @@ import debug from 'debug';
 import Controller from "./Controller";
 
 import {STATE_NAMES} from "./AppTypes";
-import {DataChangeType, NotificationManager, NotificationType, SocketListener} from "ui-framework-jps";
+import {DataChangeType, NotificationManager, NotificationType, SecurityManager, SocketListener} from "ui-framework-jps";
 
 const slLogger = debug('socket-listener');
 
@@ -17,15 +17,13 @@ export default class SocketListenerDelegate implements SocketListener {
 
     public handleDataChangedByAnotherUser(message: any) {
         slLogger(`Handling data change ${message.type} on object type ${message.stateName} made by user ${message.user}`);
-        const changeUser = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.users, {_id: message.user});
-        let username = "unknown";
-        if (changeUser) {
-            username = changeUser.username;
-        }
-        slLogger(`Handling data change ${message.type} on object type ${message.stateName} made by user ${username}`);
-
         let stateObj = message.data;
         slLogger(stateObj);
+
+        // are we the same user that made the changes?
+        if (message.user === SecurityManager.getInstance().getLoggedInUsername()) {
+            slLogger(`changes made by the current user, no need to do anything`);
+        }
         // ok lets work out where this change belongs
         try {
             switch (message.type) {
@@ -54,6 +52,7 @@ export default class SocketListenerDelegate implements SocketListener {
                             break;
                         }
                         case STATE_NAMES.appointments: {
+                            console.log(stateObj);
                             Controller.getInstance().getStateManager().updateItemInState(STATE_NAMES.appointments, stateObj, true);
                             break;
                         }

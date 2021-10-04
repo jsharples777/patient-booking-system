@@ -60,7 +60,7 @@ export default class AppointmentsQLDelegate {
             const collection = process.env.DB_COLLECTION_APPOINTMENTS || 'pms-appts';
             MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.appt).then((value) => {
                 logger(value);
-                const message:DataMessage = {type:"create",stateName: "appointment",data:data.appt, user:data.createdBy,}
+                const message:DataMessage = {type:"create",stateName: "appointment",data:data.appt, user:data.appt.createdBy}
                 socketManager.sendDataMessage(message);
 
                 resolve(data);

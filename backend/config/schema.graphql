@@ -1,32 +1,3 @@
-type ExerciseType {
-    _id:String,
-    name:String,
-    type:String,
-    duration:String,
-    sets:Int,
-    reps:Int,
-    weight:Float,
-    distance:Float,
-    createdOn:String,
-    createdBy:String,
-    modifiedOn:String,
-    modifiedBy:String
-}
-
-input ExerciseTypeInput {
-    _id:String,
-    name:String,
-    type:String,
-    duration:String,
-    sets:Int,
-    reps:Int,
-    weight:Float,
-    distance:Float,
-    createdOn:String,
-    createdBy:String,
-    modifiedOn:String,
-    modifiedBy:String
-}
 
 type Appointment {
     _id:String,
@@ -153,7 +124,6 @@ input AppointmentTemplateInput {
 
 
 type Query {
-    getExerciseTypes:[ExerciseType]
     getAppointments:[Appointment]
     getPatientSearchDetails:[PatientSearchItem]
     getAppointmentTypes:[AppointmentType]
@@ -162,9 +132,6 @@ type Query {
 }
 
 type Mutation {
-    addExerciseType(exercise:ExerciseTypeInput):ExerciseType
-    updateExerciseType(exercise:ExerciseTypeInput):Boolean
-    deleteExerciseType(id:String):Boolean
     addAppointment(appt:AppointmentInput):Appointment
     updateAppointment(appt:AppointmentInput):Boolean
     deleteAppointment(id:String):Boolean

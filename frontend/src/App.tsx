@@ -145,7 +145,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 }
 
-localStorage.debug = 'api-ts-results appointment-controller';
+localStorage.debug = 'api-ts-results appointment-controller socket-listener';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

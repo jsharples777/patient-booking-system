@@ -3,7 +3,7 @@ import {datepicker, getInst, Popup, popup, select, snackbar} from "@mobiscroll/j
 import {AppointmentController} from "./AppointmentController";
 import Controller from "../Controller";
 import moment from "moment";
-import {AppointmentView} from "./AppointmentView";
+import {AppointmentBookView} from "./AppointmentBookView";
 import {v4} from "uuid";
 import {SecurityManager} from "ui-framework-jps";
 import debug from "debug";
@@ -43,8 +43,6 @@ export class AppointmentDetailModal {
     }
 
 
-
-
     private static datePickerResponsive = {
         medium: {
             controls: ['calendar'],
@@ -58,7 +56,7 @@ export class AppointmentDetailModal {
         }
     }
 
-    private patients:any[];
+    private patients: any[];
 
     private constructor() {
         this.patients = [];
@@ -124,7 +122,7 @@ export class AppointmentDetailModal {
             onClose: function () {
                 if (AppointmentController.getInstance().getModel().isDeletingEvent) {
                     //
-                    AppointmentView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
+                    AppointmentBookView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
                     Controller.getInstance().getStateManager().removeItemFromState(
                         STATE_NAMES.appointments,
                         AppointmentController.getInstance().getAppointmentFromEvent(AppointmentController.getInstance().getModel().tempEvent),
@@ -132,7 +130,7 @@ export class AppointmentDetailModal {
 
                 } else if (AppointmentController.getInstance().getModel().isRestoringEvent) {
                     //
-                    AppointmentView.getInstance().getCalender().updateEvent(AppointmentController.getInstance().getModel().oldEvent);
+                    AppointmentBookView.getInstance().getCalender().updateEvent(AppointmentController.getInstance().getModel().oldEvent);
                     Controller.getInstance().getStateManager().updateItemInState(
                         STATE_NAMES.appointments,
                         AppointmentController.getInstance().getAppointmentFromEvent(AppointmentController.getInstance().getModel().tempEvent),
@@ -192,7 +190,7 @@ export class AppointmentDetailModal {
         this.viewElements.appointmentTypeDropdown = select('#' + SELECT.appointmentType, {
             data: types,
             onChange: (event: any, inst: any) => {
-
+                // @ts-ignore
                 getInst(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value = event.valueText;
                 AppointmentController.getInstance().getModel().tempEvent.type = event.valueText;
             }
@@ -271,8 +269,8 @@ export class AppointmentDetailModal {
                         logger(updatedEvent);
 
                         // remove the original event
-                        AppointmentView.getInstance().getCalender().removeEvent([mobiId]);
-                        AppointmentView.getInstance().getCalender().addEvent(updatedEvent);
+                        AppointmentBookView.getInstance().getCalender().removeEvent([mobiId]);
+                        AppointmentBookView.getInstance().getCalender().addEvent(updatedEvent);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointments,
                             AppointmentController.getInstance().getAppointmentFromEvent(updatedEvent),
@@ -281,7 +279,7 @@ export class AppointmentDetailModal {
                         AppointmentController.getInstance().getModel().isDeletingEvent = false;
 
                         // navigate the calendar to the correct view
-                        AppointmentView.getInstance().getCalender().navigate(updatedEvent.start);
+                        AppointmentBookView.getInstance().getCalender().navigate(updatedEvent.start);
                         AppointmentDetailModal.getInstance().close();
                     },
                     cssClass: 'mbsc-popup-button-primary'
@@ -314,8 +312,6 @@ export class AppointmentDetailModal {
 
     public updateAppointment(args: any) {
         let ev = args.event;
-
-        console.log(ev.patientId);
 
         // show delete button inside edit popup
         this.viewElements.patientArrivedButton.style.display = 'block';
@@ -353,12 +349,11 @@ export class AppointmentDetailModal {
                             start: date[0],
                             end: date[1],
                             free: false,
-                            color: ev.color,
                             patientId: ev.patientId,
                             editable: true,
                             resource: ev.resource,
-                            isDNA: true,
-                            isCancelled: true,
+                            isDNA: ev.isDNA,
+                            isCancelled: ev.isCancelled,
                             createdBy: SecurityManager.getInstance().getLoggedInUsername(),
                             created: ev.created,
                             modified: createdOn,
@@ -366,13 +361,18 @@ export class AppointmentDetailModal {
                             type: ev.type,
                             provider: ev.provider
                         };
+                        // @ts-ignore
+                        updatedEvent.color = AppointmentController.getInstance().getColourForAppointment(updatedEvent);
                         logger('updated');
                         logger(updatedEvent)
-                        AppointmentView.getInstance().getCalender().updateEvent(updatedEvent);
-
+                        AppointmentBookView.getInstance().getCalender().updateEvent(updatedEvent);
+                        Controller.getInstance().getStateManager().updateItemInState(
+                            STATE_NAMES.appointments,
+                            AppointmentController.getInstance().getAppointmentFromEvent(updatedEvent),
+                            false);
                         // navigate the calendar to the correct view
 
-                        AppointmentView.getInstance().getCalender().navigate(date[0]);
+                        AppointmentBookView.getInstance().getCalender().navigate(date[0]);
                         AppointmentController.getInstance().getModel().isRestoringEvent = false;
                         AppointmentDetailModal.getInstance().close();
                     },
@@ -399,6 +399,10 @@ export class AppointmentDetailModal {
         this.viewElements.patientSearchDropdown.setVal(ev.patientId);
         this.viewElements.providersDropdown.setVal(ev.resource);
 
+        let warningsText = this.getPatientWarnings(ev.patientId);
+        // @ts-ignore
+        mobiscroll5.getInst(AppointmentDetailModal.getInstance().viewElements.warningsEl).value = warningsText;
+
         // set anchor for the popup
         this.viewElements.popup.setOptions({anchor: args.domEvent.currentTarget});
         this.viewElements.popup.open();
@@ -408,7 +412,7 @@ export class AppointmentDetailModal {
         this.viewElements.deleteButton.addEventListener('click', function () {
             // delete current event on button click
             //
-            AppointmentView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
+            AppointmentBookView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
             Controller.getInstance().getStateManager().removeItemFromState(
                 STATE_NAMES.appointments,
                 AppointmentController.getInstance().getAppointmentFromEvent(AppointmentController.getInstance().getModel().tempEvent),
@@ -425,7 +429,7 @@ export class AppointmentDetailModal {
                 button: {
                     action: function () {
                         //
-                        AppointmentView.getInstance().getCalender().addEvent(deletedEvent);
+                        AppointmentBookView.getInstance().getCalender().addEvent(deletedEvent);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointments,
                             AppointmentController.getInstance().getAppointmentFromEvent(deletedEvent),
@@ -452,7 +456,7 @@ export class AppointmentDetailModal {
             originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
 
             //
-            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
                 AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -471,7 +475,7 @@ export class AppointmentDetailModal {
                         originalEvent.note = originalNote;
                         originalEvent.editable = true;
                         originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
-                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
                             AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -491,9 +495,7 @@ export class AppointmentDetailModal {
             originalEvent.arrivalTime = moment().format('HHmmss');
             originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
 
-            //
-            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
-            console.log(originalEvent);
+            AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
                 AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -509,7 +511,7 @@ export class AppointmentDetailModal {
                     action: function () {
                         originalEvent.arrivalTime = '';
                         originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
-                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
                             AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -535,7 +537,7 @@ export class AppointmentDetailModal {
             originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
 
             //
-            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
                 AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -552,7 +554,7 @@ export class AppointmentDetailModal {
                         originalEvent.note = originalNote;
                         originalEvent.editable = true;
                         originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
-                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
                             AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -573,7 +575,7 @@ export class AppointmentDetailModal {
             originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
 
             //
-            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
                 AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -587,7 +589,7 @@ export class AppointmentDetailModal {
                     action: function () {
                         originalEvent.readyForBilling = false;
                         originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
-                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
                             AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -609,7 +611,7 @@ export class AppointmentDetailModal {
             originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
 
             //
-            AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+            AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
                 AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -624,7 +626,7 @@ export class AppointmentDetailModal {
                         originalEvent.isBilled = false;
                         originalEvent.editable = true;
                         originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
-                        AppointmentView.getInstance().getCalender().updateEvent(originalEvent);
+                        AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
                             AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
@@ -637,16 +639,26 @@ export class AppointmentDetailModal {
         });
     }
 
+    private getPatientWarnings(patientId:string) {
+        let patientBasicDetails: any = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch, {_id: patientId});
+        let warningsText = '';
+        if (patientBasicDetails && patientBasicDetails.flags.hasWarnings) {
+            patientBasicDetails.warnings.warnings.forEach((warning: any) => {
+                warningsText += warning + '\r\n';
+            });
+            logger('Patient has warnings');
+            logger(patientBasicDetails);
+            logger(warningsText);
+
+        }
+        return warningsText;
+
+    }
+
     public setupPatientSearchDropDown(patientsCollection: any[]) {
         this.patients = [];
 
         patientsCollection.forEach((patient: any) => {
-            let warningsText = '';
-            if (patient.flags.hasWarnings) {
-                patient.warnings.warnings.forEach((warning:any) => {
-                    warningsText += warning + '\r\n';
-                });
-            }
             this.patients.push({text: `${patient.name.surname}, ${patient.name.firstname}`, value: patient._id});
         });
 
@@ -656,14 +668,15 @@ export class AppointmentDetailModal {
             filter: true,
             data: AppointmentDetailModal.getInstance().patients,
             onChange: (event: any, inst: any) => {
-                console.log(event);
-                //
+                // @ts-ignore
                 getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value = event.valueText;
 
-                get ID and then find patientsCollection
-                getInst(AppointmentDetailModal.getInstance().viewElements.warningsEl).value = event.warnings;
+                let warningsText = this.getPatientWarnings(event.value);
+                // @ts-ignore
+                getInst(AppointmentDetailModal.getInstance().viewElements.warningsEl).value = warningsText;
 
                 AppointmentController.getInstance().getModel().tempEvent.patientId = event.value;
+                AppointmentController.getInstance().getModel().tempEvent.warnings = warningsText;
             }
         });
 
