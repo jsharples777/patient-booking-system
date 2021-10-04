@@ -31,12 +31,11 @@ export const API_Config = {
 };
 
 export const NAVIGATION = {
-    showMyWorkouts: 'navigationItemMyWorkouts',
-    userSearchId: 'navigationItemUserSearch',
-    exerciseTypesId: 'navigationItemExerciseTypes',
-    chatId: 'navigationItemChat',
-    workoutSummary: 'navigationItemWorkoutSummary',
-    currentWorkout: 'navigationItemCurrentWorkout',
+    appointmentBook: 'navigationItemAppointmentBook',
+    patientSearch: 'navigationItemPatientSearch',
+    appointmentTemplates: 'navigationItemAppointmentTemplating',
+    clinicChat: 'navigationItemChat',
+    patientRecords: 'navigationItemPatientRecords',
     logout: 'navigationItemLogout'
 }
 

@@ -302,7 +302,7 @@ export class AppointmentDetailModal {
 
         this.viewElements.appointmentTypeDropdown.setVal('');
         this.viewElements.patientSearchDropdown.setVal('');
-        this.viewElements.providersDropdown.setVal('');
+        this.viewElements.providersDropdown.setVal(AppointmentController.getInstance().getModel().tempEvent.resource);
 
         // set anchor for the popup
         this.viewElements.popup.setOptions({anchor: elm});

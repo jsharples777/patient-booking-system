@@ -59,12 +59,11 @@ const API_Config = {
   clinicConfig: '/api/clinic-config'
 };
 const NAVIGATION = {
-  showMyWorkouts: 'navigationItemMyWorkouts',
-  userSearchId: 'navigationItemUserSearch',
-  exerciseTypesId: 'navigationItemExerciseTypes',
-  chatId: 'navigationItemChat',
-  workoutSummary: 'navigationItemWorkoutSummary',
-  currentWorkout: 'navigationItemCurrentWorkout',
+  appointmentBook: 'navigationItemAppointmentBook',
+  patientSearch: 'navigationItemPatientSearch',
+  appointmentTemplates: 'navigationItemAppointmentTemplating',
+  clinicChat: 'navigationItemChat',
+  patientRecords: 'navigationItemPatientRecords',
   logout: 'navigationItemLogout'
 };
 const DRAGGABLE = {
@@ -1529,7 +1528,7 @@ class AppointmentDetailModal {
     });
     this.viewElements.appointmentTypeDropdown.setVal('');
     this.viewElements.patientSearchDropdown.setVal('');
-    this.viewElements.providersDropdown.setVal(''); // set anchor for the popup
+    this.viewElements.providersDropdown.setVal(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent.resource); // set anchor for the popup
 
     this.viewElements.popup.setOptions({
       anchor: elm
@@ -1972,7 +1971,6 @@ const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('app');
 class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   // @ts-ignore
   // @ts-ignore
-  // @ts-ignore
   thisEl = null;
   chatNavigationItem = null;
 
@@ -1980,8 +1978,11 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     // @ts-ignore
     super(); // event handlers
 
-    this.handleShowUserSearch = this.handleShowUserSearch.bind(this);
     this.handleShowChat = this.handleShowChat.bind(this);
+    this.handleShowAppointmentBook = this.handleShowAppointmentBook.bind(this);
+    this.handleShowAppointmentBook = this.handleShowAppointmentTemplates.bind(this);
+    this.handleShowAppointmentBook = this.handleShowPatientRecords.bind(this);
+    this.handleShowAppointmentBook = this.handleShowPatientSearch.bind(this);
     _app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().connectToApplication(this, window.localStorage);
   }
 
@@ -1995,8 +1996,6 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     logger('document loaded'); // @ts-ignore
 
     this.thisEl = document.getElementById('root');
-    this.setupUserSearchViews();
-    this.setupChatViews();
     this.setupNavigationItemHandling();
     _app_appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.ContextualInformationHelper.getInstance().onDocumentLoaded();
@@ -2010,21 +2009,6 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
   hideAllSideBars() {
     this.chatSidebar.eventHide(null);
-    this.userSearchSidebar.eventHide(null);
-  }
-
-  handleShowUserSearch(event) {
-    logger('Handling Show User Search');
-    event.preventDefault(); //this.hideAllSideBars();
-    // prevent anything from happening if we are not logged in
-
-    if (!_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().isLoggedIn()) {
-      // @ts-ignore
-      window.location.href = _app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.login;
-      return;
-    }
-
-    this.userSearchSidebar.eventShow(event);
   }
 
   handleShowChat(roomName) {
@@ -2054,25 +2038,23 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
   }
 
-  setupNavigationItemHandling() {
-    // @ts-ignore
-    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.userSearchId).addEventListener('click', this.handleShowUserSearch); // @ts-ignore
+  handleShowAppointmentBook(event) {}
 
-    this.chatNavigationItem = document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.chatId); // @ts-ignore
+  handleShowAppointmentTemplates(event) {}
+
+  handleShowPatientRecords(event) {}
+
+  handleShowPatientSearch(event) {}
+
+  setupNavigationItemHandling() {
+    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.appointmentBook).addEventListener('click', this.handleShowAppointmentBook);
+    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.appointmentTemplates).addEventListener('click', this.handleShowAppointmentTemplates);
+    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientRecords).addEventListener('click', this.handleShowPatientRecords);
+    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch); // @ts-ignore
+
+    this.chatNavigationItem = document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.clinicChat); // @ts-ignore
 
     this.chatNavigationItem.addEventListener('click', this.handleShowChat);
-  }
-
-  setupUserSearchViews() {
-    // add the subviews for the user search
-    this.userSearchSidebar = ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.UserSearchSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
-    this.userSearchSidebar.onDocumentLoaded();
-  }
-
-  setupChatViews() {
-    // add the views to the chat side bar
-    this.chatSidebar = ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.ChatRoomsSidebar.getInstance(_app_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager());
-    this.chatSidebar.onDocumentLoaded();
   }
 
 }

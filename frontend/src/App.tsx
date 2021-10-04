@@ -26,8 +26,7 @@ const logger = debug('app');
 
 export default class App extends React.Component implements UnreadMessageCountListener {
 
-    // @ts-ignore
-    private userSearchSidebar: UserSearchSidebar;
+
     // @ts-ignore
     private chatSidebar: ChatRoomsSidebar;
     // @ts-ignore
@@ -42,8 +41,11 @@ export default class App extends React.Component implements UnreadMessageCountLi
         // @ts-ignore
         super();
         // event handlers
-        this.handleShowUserSearch = this.handleShowUserSearch.bind(this);
         this.handleShowChat = this.handleShowChat.bind(this);
+        this.handleShowAppointmentBook = this.handleShowAppointmentBook.bind(this);
+        this.handleShowAppointmentBook = this.handleShowAppointmentTemplates.bind(this);
+        this.handleShowAppointmentBook = this.handleShowPatientRecords.bind(this);
+        this.handleShowAppointmentBook = this.handleShowPatientSearch.bind(this);
 
         Controller.getInstance().connectToApplication(this, window.localStorage);
     }
@@ -64,8 +66,6 @@ export default class App extends React.Component implements UnreadMessageCountLi
         // @ts-ignore
         this.thisEl = document.getElementById('root');
 
-        this.setupUserSearchViews();
-        this.setupChatViews();
         this.setupNavigationItemHandling();
 
         AppointmentController.getInstance().onDocumentLoaded();
@@ -81,21 +81,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     hideAllSideBars() {
         this.chatSidebar.eventHide(null);
-        this.userSearchSidebar.eventHide(null);
     }
 
-    handleShowUserSearch(event: Event) {
-        logger('Handling Show User Search');
-        event.preventDefault();
-        //this.hideAllSideBars();
-        // prevent anything from happening if we are not logged in
-        if (!Controller.getInstance().isLoggedIn()) {
-            // @ts-ignore
-            window.location.href = API_Config.login;
-            return;
-        }
-        this.userSearchSidebar.eventShow(event);
-    }
 
 
     handleShowChat(roomName: string | null) {
@@ -121,28 +108,35 @@ export default class App extends React.Component implements UnreadMessageCountLi
         if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
     }
 
+    protected handleShowAppointmentBook(event:Event):void {
+
+    }
+    protected handleShowAppointmentTemplates(event:Event):void {
+
+    }
+    protected handleShowPatientRecords(event:Event):void {
+
+    }
+    protected handleShowPatientSearch(event:Event):void {
+
+    }
+
 
     private setupNavigationItemHandling() {
+        document.getElementById(NAVIGATION.appointmentBook).addEventListener('click', this.handleShowAppointmentBook);
+        document.getElementById(NAVIGATION.appointmentTemplates).addEventListener('click', this.handleShowAppointmentTemplates);
+        document.getElementById(NAVIGATION.patientRecords).addEventListener('click',this.handleShowPatientRecords);
+        document.getElementById(NAVIGATION.patientSearch).addEventListener('click',this.handleShowPatientSearch);
+
+
         // @ts-ignore
-        document.getElementById(NAVIGATION.userSearchId).addEventListener('click', this.handleShowUserSearch);
-        // @ts-ignore
-        this.chatNavigationItem = document.getElementById(NAVIGATION.chatId);
+        this.chatNavigationItem = document.getElementById(NAVIGATION.clinicChat);
 
         // @ts-ignore
         this.chatNavigationItem.addEventListener('click', this.handleShowChat);
     }
 
-    private setupUserSearchViews() {
-        // add the subviews for the user search
-        this.userSearchSidebar = UserSearchSidebar.getInstance(Controller.getInstance().getStateManager());
-        this.userSearchSidebar.onDocumentLoaded();
-    }
 
-    private setupChatViews() {
-        // add the views to the chat side bar
-        this.chatSidebar = ChatRoomsSidebar.getInstance(Controller.getInstance().getStateManager());
-        this.chatSidebar.onDocumentLoaded();
-    }
 }
 
 localStorage.debug = 'api-ts-results appointment-controller socket-listener';
