@@ -1,9 +1,7 @@
-import SidebarView from './SidebarView.js';
-import stateManager from '../util/StateManagementUtil.js';
-import logger from '../util/SimpleDebug.js';
-import isSamePatient from '../util/EqualityFunctions.js';
+import {AbstractStatefulCollectionView} from "ui-framework-jps";
 
-class PatientSearchSidebarView extends SidebarView {
+
+class PatientSearchSidebarView extends AbstractStatefulCollectionView {
   constructor(applicationView, htmlDocument) {
     super(applicationView, htmlDocument, applicationView.state.ui.patientSearchSideBar, applicationView.state.uiPrefs.patientSearchSideBar);
 

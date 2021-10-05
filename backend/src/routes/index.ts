@@ -25,6 +25,15 @@ router.post('/register', passport.authenticate('local-register', {
     failureFlash: true
 }));
 
+router.get('/change-password', (req, res) => {
+    res.render('change-password', { layout:"login-register",user: req.user, error: req.flash()["error"]});
+});
+
+router.post('/change-password', passport.authenticate('local-change-password', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
 
 router.get('/login', (req, res) => {
     res.render('login', { layout:"login-register",user: req.user, error: req.flash()["error"]});

@@ -33,6 +33,7 @@
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="/register" id="navigationItemRegister">Create User <i class="fas fa-user-plus"></i></a>
                     <a class="dropdown-item {{#if user}}disabled{{/if}}" href="/login" id="navigationItemRegister" >Login <i class="fas fa-sign-in-alt"></i></a>
+                    <a class="dropdown-item {{#if user}}{{else}}disabled{{/if}}" href="/change-password" id="navigationItemChangePassword" >Change Password <i class="fas fa-key"></i></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item {{#if user}}{{else}}disabled{{/if}}" href="/logout" id="navigationItemLogout" >Logout <i class="fas fa-sign-out-alt"></i></a>
                 </div>

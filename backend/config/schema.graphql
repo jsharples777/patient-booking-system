@@ -113,8 +113,8 @@ input AppointmentTemplateInput {
     day:Int,
     time:String,
     duration:Int,
-    createdBy:String,
     provider:String,
+    createdBy:String,
     type:String,
     created:Float,
     modified:Float

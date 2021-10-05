@@ -42,6 +42,13 @@
     padding-right: 10px;
 }
 
+.md-custom-event-template-type {
+    align-content: center;
+    color: #eee;
+    border-radius: 5px;
+}
+
+
 .md-custom-event-details {
     padding-left: 5px;
 }

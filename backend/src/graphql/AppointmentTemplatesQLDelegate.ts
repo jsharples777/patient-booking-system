@@ -66,7 +66,7 @@ export default class AppointmentTemplatesQLDelegate {
         logger(data);
         return new Promise((resolve, reject) => {
             const collection = process.env.DB_COLLECTION_APPT_TEMPLATES || 'pms-appt-templates';
-            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:data.template._id},data.appt).then((value) => {
+            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:data.template._id},data.template).then((value) => {
                 logger(value);
                 const message:DataMessage = {type:"update",stateName: "appointmentTemplate",data:data.template, user:data.template.createdBy}
                 socketManager.sendDataMessage(message);

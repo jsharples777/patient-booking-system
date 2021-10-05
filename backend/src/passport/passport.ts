@@ -9,7 +9,6 @@ import {v4} from "uuid";
 const logger = debug('my-passport');
 
 
-// @ts-ignore
 export function setupPassport(passport: any) {
     const LocalStrategy = require('passport-local').Strategy;
 
@@ -115,6 +114,65 @@ export function setupPassport(passport: any) {
                     });
                 }
                 return done(null, user);
+            }).catch(function (err: Error) {
+                return done(err);
+            });
+        }
+    ));
+
+
+    // Login strategy
+    passport.use('local-change-password', new LocalStrategy(
+        {
+            usernameField: 'username',
+            passwordField: 'password',
+            passReqToCallback: true // allows us to pass back the entire request to the callback
+        },
+        function (req: Request, username: string, password: string, done: any) {
+
+            const isValidPassword = function (hashedPassword: string, password: string): boolean {
+                return bCrypt.compareSync(password, hashedPassword);
+            }
+
+            const db: Db = MongoDataSource.getInstance().getDatabase();
+            const collection = process.env.DB_COLLECTION_USERS || 'pms-users';
+            const projection = {
+                projection: {
+                    _id: 1,
+                    username: 1,
+                    password: 1,
+                    providerNo: 1,
+                    isCurrent: 1,
+                    isAdmin: 1
+                }
+            };
+
+
+            db.collection(collection).findOne({username: username, isCurrent:true}, projection).then((user: Document | null) => {
+                logger(user);
+                if (!user) {
+                    return done(null, false, {
+                        message: 'Username and/or password is incorrect'
+                    });
+                }
+                if (!isValidPassword(user.password, password)) {
+                    return done(null, false, {
+                        message: 'Username and/or password is incorrect'
+                    });
+                }
+
+                const generateHash = function (password: string): string {
+                    return bCrypt.hashSync(password, bCrypt.genSaltSync(8));
+                };
+
+                user.password = generateHash(req.body.newPassword);
+
+                db.collection(collection).replaceOne({_id: user._id},user).then((result) => {
+                    logger(result);
+
+                    return done(null, user);
+                });
+
             }).catch(function (err: Error) {
                 return done(err);
             });

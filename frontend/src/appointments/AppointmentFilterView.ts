@@ -1,6 +1,6 @@
 import {AppointmentBookView} from "./AppointmentBookView";
 import {AppointmentController} from "./AppointmentController";
-import App from "../../App";
+import App from "../App";
 import moment from "moment";
 
 export class AppointmentFilterView {
@@ -69,7 +69,7 @@ export class AppointmentFilterView {
             // document.querySelectorAll('.md-view-change').forEach(function (elm) {
             //     elm.addEventListener('change', function (ev) {
             //
-            //         let config = {...AppointmentController.getInstance().getModel().clinicConfig};
+            //         let config = {...AppointmentTemplateController.getInstance().getModel().clinicConfig};
             //          config.view.schedule.type = ev.target.value;
             //
             //         let options = {
@@ -96,7 +96,7 @@ export class AppointmentFilterView {
             //
             //         console.log(options);
             //
-            //         AppointmentBookView.getInstance().getCalender().setOptions(options);
+            //         AppointmentTemplateView.getInstance().getCalender().setOptions(options);
             //
             //     });
             // });

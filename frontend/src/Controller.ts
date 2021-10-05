@@ -155,9 +155,9 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 apiURL: API_Config.graphQL,
                 apis: {
                     findAll: 'query {getAppointmentTemplates {_id,day, time, duration,createdBy,provider,type,created,modified}}',
-                    create: 'mutation addAppointmentTemplate($data: ProviderInput!){addAppointmentTemplate(provider: $data) {_id,day, time, duration,createdBy,provider,type,created,modified}}',
+                    create: 'mutation addAppointmentTemplate($data: AppointmentTemplateInput!){addAppointmentTemplate(template: $data) {_id,day, time, duration,createdBy,provider,type,created,modified}}',
                     destroy: 'mutation deleteAppointmentTemplate($identifier: String!){deleteAppointmentTemplate(id: $identifier)}',
-                    update: 'mutation updateAppointmentTemplate($data: ProviderInput!){updateAppointmentTemplate(provider: $data)}',
+                    update: 'mutation updateAppointmentTemplate($data: AppointmentTemplateInput!){updateAppointmentTemplate(template: $data)}',
                     find: '',
                 },
                 data: {

@@ -1,13 +1,13 @@
 import debug from 'debug';
-import Controller from './app/Controller';
+import Controller from './Controller';
 
 import {
     API_Config,
     NAVIGATION,
-} from "./app/AppTypes";
+} from "./AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
-import {AppointmentController} from "./app/appointments/AppointmentController";
+import {AppointmentController} from "./appointments/AppointmentController";
 import {
     ChatRoomsSidebar,
     ContextualInformationHelper,
@@ -15,6 +15,7 @@ import {
     UnreadMessageCountListener
 } from "ui-framework-jps";
 import {setOptions} from "@mobiscroll/javascript";
+import {AppointmentTemplateController} from "./appointment-templates/AppointmentTemplateController";
 
 
 
@@ -68,6 +69,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.setupNavigationItemHandling();
 
         AppointmentController.getInstance().onDocumentLoaded();
+        AppointmentTemplateController.getInstance().onDocumentLoaded();
         ContextualInformationHelper.getInstance().onDocumentLoaded();
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         Controller.getInstance().onDocumentLoaded();
@@ -141,7 +143,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'api-ts-results appointment-controller socket-listener appointment-detail-view';
+localStorage.debug = 'api-ts-results appointment-template-controller';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);
