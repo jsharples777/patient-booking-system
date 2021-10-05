@@ -12,8 +12,7 @@ import {
     ChatRoomsSidebar,
     ContextualInformationHelper,
     SecurityManager,
-    UnreadMessageCountListener,
-    UserSearchSidebar
+    UnreadMessageCountListener
 } from "ui-framework-jps";
 import {setOptions} from "@mobiscroll/javascript";
 
@@ -124,7 +123,10 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     private setupNavigationItemHandling() {
         document.getElementById(NAVIGATION.appointmentBook).addEventListener('click', this.handleShowAppointmentBook);
-        document.getElementById(NAVIGATION.appointmentTemplates).addEventListener('click', this.handleShowAppointmentTemplates);
+        let templateEl = document.getElementById(NAVIGATION.appointmentTemplates);
+        if (templateEl) {
+            templateEl.addEventListener('click', this.handleShowAppointmentTemplates);
+        }
         document.getElementById(NAVIGATION.patientRecords).addEventListener('click',this.handleShowPatientRecords);
         document.getElementById(NAVIGATION.patientSearch).addEventListener('click',this.handleShowPatientSearch);
 
@@ -139,7 +141,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'api-ts-results appointment-controller socket-listener';
+localStorage.debug = 'api-ts-results appointment-controller socket-listener appointment-detail-view';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

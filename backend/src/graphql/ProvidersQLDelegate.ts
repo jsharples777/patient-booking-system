@@ -15,7 +15,7 @@ export default class ProvidersQLDelegate {
         logger('Getting providers');
 
         return new Promise((resolve, reject) => {
-            const collection = process.env.DB_COLLECTION_PROVIDERS || 'accounts';
+            const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-users';
 
             const agg = [
                 {
@@ -52,7 +52,7 @@ export default class ProvidersQLDelegate {
         logger(`Adding Provider`);
         logger(data);
         return new Promise((resolve, reject) => {
-            const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-providers';
+            const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-users';
             MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.provider).then((value) => {
                 logger(value);
                 const message:DataMessage = {type:"create",stateName: "provider",data:data.provider, user:"-1",}
@@ -71,7 +71,7 @@ export default class ProvidersQLDelegate {
         logger(`Updating provider`);
         logger(data);
         return new Promise((resolve, reject) => {
-            const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-providers';
+            const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-users';
             MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:data.provider._id},data.provider).then((value) => {
                 logger(value);
                 const message:DataMessage = {type:"update",stateName: "provider",data:data.provider, user:"-1"}
@@ -90,7 +90,7 @@ export default class ProvidersQLDelegate {
         logger(`Deleting provider with identifier`);
         logger(data);
         return new Promise((resolve, reject) => {
-            const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-providers';
+            const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-users';
             MongoDataSource.getInstance().getDatabase().collection(collection).deleteOne({_id:data.id}).then((result:DeleteResult) => {
                 // @ts-ignore
                 const message:DataMessage = {type:"delete",stateName: "provider",data:{ _id: data.id},user:"-1",}

@@ -7,7 +7,6 @@ import {AppointmentBookView} from "./AppointmentBookView";
 import {v4} from "uuid";
 import {SecurityManager} from "ui-framework-jps";
 import debug from "debug";
-import App from "../../App";
 
 const logger = debug('appointment-detail-view');
 
@@ -174,8 +173,10 @@ export class AppointmentDetailModal {
                 AppointmentController.getInstance().getModel().tempEvent.end = date[1];
             }
         });
+        console.log(this.viewElements.range);
 
         this.setupActionButtons();
+        logger('Completed setup of detail modal for appointments');
     }
 
     public setupAppointmentTypeDropDown(appointmentTypes: any[]) {

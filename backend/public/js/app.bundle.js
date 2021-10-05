@@ -1422,7 +1422,9 @@ class AppointmentDetailModal {
         _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent.end = date[1];
       }
     });
+    console.log(this.viewElements.range);
     this.setupActionButtons();
+    logger('Completed setup of detail modal for appointments');
   }
 
   setupAppointmentTypeDropDown(appointmentTypes) {
@@ -2048,7 +2050,12 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
   setupNavigationItemHandling() {
     document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.appointmentBook).addEventListener('click', this.handleShowAppointmentBook);
-    document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.appointmentTemplates).addEventListener('click', this.handleShowAppointmentTemplates);
+    let templateEl = document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.appointmentTemplates);
+
+    if (templateEl) {
+      templateEl.addEventListener('click', this.handleShowAppointmentTemplates);
+    }
+
     document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientRecords).addEventListener('click', this.handleShowPatientRecords);
     document.getElementById(_app_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch); // @ts-ignore
 
@@ -2058,7 +2065,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'api-ts-results appointment-controller socket-listener';
+localStorage.debug = 'api-ts-results appointment-controller socket-listener appointment-detail-view';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {

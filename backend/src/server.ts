@@ -16,7 +16,6 @@ import debug from 'debug';
 
 // HTTP handlers
 import http from 'http';
-import https from 'https';
 import path from 'path';
 
 // Express framework and additional middleware
@@ -34,21 +33,12 @@ import compression from 'compression';
 import socketManager from './socket/SocketManager';
 
 // Authentication middleware
-import mongoose from 'mongoose';
 import passport from 'passport';
-import passportLocal from 'passport-local';
-const LocalStrategy = passportLocal.Strategy;
-import MongoAccount from './models/MongoAccount';
 
 
 
 // WebRTC
 import { ExpressPeerServer } from 'peer';
-
-// HTTPS config
-//const key = fs.readFileSync('./config/key.pem');
-//const cert = fs.readFileSync('./config/cert.pem');
-
 
 
 const serverDebug = debug('server');
@@ -90,25 +80,6 @@ app.engine('handlebars', expressHandlebars({
 serverDebug('setting up templating engine - handlebars');
 app.set('view engine', 'handlebars');
 app.set('view cache', !isDevelopment); // view caching in production
-
-serverDebug('Installing middlewares');
-if (isDevelopment  && (process.env.ENABLE_HMR === "true")) {
-  /* eslint "global_require":"off" */
-  /* eslint "import/no-extraneous-dependencies":"off" */
-  serverDebug("Installing HMR middleware");
-  const webpack = require('webpack');
-  const devMiddleware = require('webpack-dev-middleware');
-  const hotMiddleware = require('webpack-hot-middleware');
-
-  const config = require('../../frontend/webpack.config.server.js');
-  config.entry.app.push('webpack-hot-middleware/client');
-  config.plugins = config.plugin || [];
-  config.plugins.push(new webpack.HotModuleReplacementPlugin());
-
-  const compiler = webpack(config);
-  app.use(devMiddleware(compiler));
-  app.use(hotMiddleware(compiler));
-}
 
 // Express middlewares
 app.use(compression()); // add compression support
@@ -161,6 +132,7 @@ import routes from './routes';
 app.use('/', routes);// add the middleware path routing
 import apiRoutes from './routes/api';
 import DataSource from "./graphql/DataSource";
+import {setupPassport} from "./passport/passport";
 app.use('/api',apiRoutes);
 
 // setup the QL server
@@ -168,20 +140,8 @@ serverDebug('Setting up Graph QL');
 new DataSource(app);
 
 // Setup authentication
-serverDebug('Setting up Account model and authentication with Passport');
-// @ts-ignore
-passport.use(new LocalStrategy(MongoAccount.authenticate()));
-// @ts-ignore
-passport.serializeUser(MongoAccount.serializeUser());
-// @ts-ignore
-passport.deserializeUser(MongoAccount.deserializeUser());
-
-// database connection
-serverDebug('Establishing database connection with Mongoose');
-// @ts-ignore
-mongoose.connect(process.env.DB_URL);
-
-
+serverDebug('Setting up User model and authentication with Passport');
+setupPassport(passport);
 
 // route for the env.js file being served to the client
 serverDebug('Setting the environment variables for the browser to access');
