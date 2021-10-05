@@ -7,6 +7,8 @@ import {SecurityManager, StateChangeListener} from "ui-framework-jps";
 import {AppointmentBookView} from "./AppointmentBookView";
 import {AppointmentFilterView} from "./AppointmentFilterView";
 import {AppointmentDetailModal} from "./AppointmentDetailModal";
+import {AppointmentTemplateController} from "../appointment-templates/AppointmentTemplateController";
+import {v4} from "uuid";
 
 
 const logger = debug('appointment-controller');
@@ -193,34 +195,73 @@ export class AppointmentController implements StateChangeListener {
     }
 
 
+    private addTemplateEvents(day:number, currentAppointments:any[]) {
+        logger('Loading templated events for day ' + day);
+        const appointmentTemplates = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
+        appointmentTemplates.forEach((template:any) => {
+            if (template.day === day) { // only template appointments for the day number
+                // is there already an appointment on display that matches the template?
+                const foundIndex = currentAppointments.findIndex((appt) => appt.time === template.time);
+                if (foundIndex < 0) {
+                    logger(`appointment for time ${template.time} not found, creating new appointment`)
+                    // don't already have an appointment for that time
+                    let templatedAppt = AppointmentTemplateController.getInstance().getEventForAppointmentTemplate(template);
+                    templatedAppt.id = v4();
+                    templatedAppt.title = '';
+                    templatedAppt.description = '';
+                    templatedAppt.patientId = '';
+                    templatedAppt.isDNA = false;
+                    templatedAppt.isCancelled = false;
+                    templatedAppt.readyForBilling = false;
+                    templatedAppt.isBilled = false;
+                    templatedAppt.isDNA = false;
+                    templatedAppt.billingItems = '';
+                    templatedAppt.arrivalTime = '';
+
+                    logger(templatedAppt);
+
+                    // add the templated appointment to the persistence
+                    Controller.getInstance().getStateManager().addNewItemToState(
+                        STATE_NAMES.appointmentTemplates,
+                        AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(templatedAppt),
+                        false);
+
+
+                }
+            }
+
+        });
+
+    }
 
 
     public onPageLoading(event: any, inst: any): void {  // load the events for the view
         logger(event);
         this.dataElements.loadDate = parseInt(moment(event.firstDay).format('YYYYMMDD'));
+        const loadDateDayNumber = parseInt(moment(event.firstDay).format('d'));
         this.dataElements.loadDateFinish = parseInt(moment(event.lastDay).format('YYYYMMDD'));
         logger(`Need to load date range (${this.dataElements.loadDate},${this.dataElements.loadDateFinish})`);
 
 
         const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
         let results: any[] = [];
+        let appointmentsForTheDay:any[] = [];
         appointments.forEach((appointment: any) => {
             if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
-                logger('Found appointment');
-                logger(appointment);
+                appointmentsForTheDay.push(appointment);
 
                 let result = this.getEventForAppointment(this.dataElements.loadDate,appointment);
-
-
-                logger('Converted to event');
-                logger(result);
                 results.push(result);
             }
 
         });
 
+
+
         inst.setEvents(results);
 
+        // add template appointments as events where an appointment doesn't already exist in the same time slot, they will need unique _ids
+        this.addTemplateEvents(loadDateDayNumber, appointmentsForTheDay);
 
     }
 

@@ -133,7 +133,6 @@ export class AppointmentTemplateController implements StateChangeListener {
             color: this.getColourForAppointmentTemplate(appointment),
             allDay: false,
             editable: true,
-            repeat:'weekly',
             resource: appointment.provider,
             createdBy: appointment.createdBy,
             created: appointment.created,

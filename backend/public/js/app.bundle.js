@@ -796,7 +796,6 @@ class AppointmentTemplateController {
       color: this.getColourForAppointmentTemplate(appointment),
       allDay: false,
       editable: true,
-      repeat: 'weekly',
       resource: appointment.provider,
       createdBy: appointment.createdBy,
       created: appointment.created,
@@ -1331,7 +1330,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('appointment-view');
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('appointment-template-view');
 class AppointmentTemplateView {
   static getInstance() {
     if (!AppointmentTemplateView._instance) {
@@ -1503,15 +1502,15 @@ class AppointmentTemplateView {
       };
       config.view.schedule.type = 'week';
       this.viewElements.calendar.setOptions({
-        clickToCreate: clinicConfig.clickToCreate,
-        dragTimeStep: clinicConfig.dragTimeStep,
-        dragToCreate: clinicConfig.dragToCreate,
-        dragToMove: clinicConfig.dragToMove,
-        dragToResize: clinicConfig.dragToResize,
-        showControls: clinicConfig.showControls,
-        view: clinicConfig.view,
-        invalidateEvent: clinicConfig.invalidateEvent,
-        invalid: clinicConfig.invalid
+        clickToCreate: config.clickToCreate,
+        dragTimeStep: config.dragTimeStep,
+        dragToCreate: config.dragToCreate,
+        dragToMove: config.dragToMove,
+        dragToResize: config.dragToResize,
+        showControls: config.showControls,
+        view: config.view,
+        invalidateEvent: config.invalidateEvent,
+        invalid: config.invalid
       });
     }
 
@@ -1818,6 +1817,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./AppointmentBookView */ "./src/appointments/AppointmentBookView.ts");
 /* harmony import */ var _AppointmentFilterView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AppointmentFilterView */ "./src/appointments/AppointmentFilterView.ts");
 /* harmony import */ var _AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AppointmentDetailModal */ "./src/appointments/AppointmentDetailModal.ts");
+/* harmony import */ var _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../appointment-templates/AppointmentTemplateController */ "./src/appointment-templates/AppointmentTemplateController.ts");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+
+
 
 
 
@@ -1998,25 +2001,58 @@ class AppointmentController {
     return result;
   }
 
+  addTemplateEvents(day, currentAppointments) {
+    logger('Loading templated events for day ' + day);
+    const appointmentTemplates = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates);
+    appointmentTemplates.forEach(template => {
+      if (template.day === day) {
+        // only template appointments for the day number
+        // is there already an appointment on display that matches the template?
+        const foundIndex = currentAppointments.findIndex(appt => appt.time === template.time);
+
+        if (foundIndex < 0) {
+          logger(`appointment for time ${template.time} not found, creating new appointment`); // don't already have an appointment for that time
+
+          let templatedAppt = _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().getEventForAppointmentTemplate(template);
+          templatedAppt.id = (0,uuid__WEBPACK_IMPORTED_MODULE_9__["default"])();
+          templatedAppt.title = '';
+          templatedAppt.description = '';
+          templatedAppt.patientId = '';
+          templatedAppt.isDNA = false;
+          templatedAppt.isCancelled = false;
+          templatedAppt.readyForBilling = false;
+          templatedAppt.isBilled = false;
+          templatedAppt.isDNA = false;
+          templatedAppt.billingItems = '';
+          templatedAppt.arrivalTime = '';
+          logger(templatedAppt); // add the templated appointment to the persistence
+
+          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates, _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(templatedAppt), false);
+        }
+      }
+    });
+  }
+
   onPageLoading(event, inst) {
     // load the events for the view
     logger(event);
     this.dataElements.loadDate = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()(event.firstDay).format('YYYYMMDD'));
+    const loadDateDayNumber = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()(event.firstDay).format('d'));
     this.dataElements.loadDateFinish = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()(event.lastDay).format('YYYYMMDD'));
     logger(`Need to load date range (${this.dataElements.loadDate},${this.dataElements.loadDateFinish})`);
     const appointments = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments);
     let results = [];
+    let appointmentsForTheDay = [];
     appointments.forEach(appointment => {
       if (appointment.start >= this.dataElements.loadDate && appointment.start < this.dataElements.loadDateFinish) {
-        logger('Found appointment');
-        logger(appointment);
+        appointmentsForTheDay.push(appointment);
         let result = this.getEventForAppointment(this.dataElements.loadDate, appointment);
-        logger('Converted to event');
-        logger(result);
         results.push(result);
       }
     });
-    inst.setEvents(results);
+    inst.setEvents(results); // add template appointments as events where an appointment doesn't already exist in the same time slot, they will need unique _ids
+
+    this.addTemplateEvents(loadDateDayNumber, appointmentsForTheDay);
   }
 
   filterResults(managerName, name, filterResults) {}
@@ -2839,7 +2875,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./appointments/AppointmentController */ "./src/appointments/AppointmentController.ts");
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
 /* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
-/* harmony import */ var _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./appointment-templates/AppointmentTemplateController */ "./src/appointment-templates/AppointmentTemplateController.ts");
+/* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
 
 
 
@@ -2862,9 +2898,9 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
     this.handleShowChat = this.handleShowChat.bind(this);
     this.handleShowAppointmentBook = this.handleShowAppointmentBook.bind(this);
-    this.handleShowAppointmentBook = this.handleShowAppointmentTemplates.bind(this);
-    this.handleShowAppointmentBook = this.handleShowPatientRecords.bind(this);
-    this.handleShowAppointmentBook = this.handleShowPatientSearch.bind(this);
+    this.handleShowAppointmentTemplates = this.handleShowAppointmentTemplates.bind(this);
+    this.handleShowPatientRecords = this.handleShowPatientRecords.bind(this);
+    this.handleShowPatientSearch = this.handleShowPatientSearch.bind(this);
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().connectToApplication(this, window.localStorage);
   }
 
@@ -2879,8 +2915,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
     this.thisEl = document.getElementById('root');
     this.setupNavigationItemHandling();
-    _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
-    _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
+    _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded(); //AppointmentTemplateController.getInstance().onDocumentLoaded();
+
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.ContextualInformationHelper.getInstance().onDocumentLoaded();
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SecurityManager.getInstance().onDocumentLoaded(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
@@ -2921,9 +2957,17 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
   }
 
-  handleShowAppointmentBook(event) {}
+  handleShowAppointmentBook(event) {
+    logger(`Showing appointment book`);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+  }
 
-  handleShowAppointmentTemplates(event) {}
+  handleShowAppointmentTemplates(event) {
+    logger(`Showing appointment templates`);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
+  }
 
   handleShowPatientRecords(event) {}
 
@@ -2946,7 +2990,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'api-ts-results appointment-template-controller';
+localStorage.debug = 'api api-ts-results appointment-controller';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {

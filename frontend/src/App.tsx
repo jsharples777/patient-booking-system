@@ -16,6 +16,7 @@ import {
 } from "ui-framework-jps";
 import {setOptions} from "@mobiscroll/javascript";
 import {AppointmentTemplateController} from "./appointment-templates/AppointmentTemplateController";
+import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 
 
 
@@ -43,9 +44,9 @@ export default class App extends React.Component implements UnreadMessageCountLi
         // event handlers
         this.handleShowChat = this.handleShowChat.bind(this);
         this.handleShowAppointmentBook = this.handleShowAppointmentBook.bind(this);
-        this.handleShowAppointmentBook = this.handleShowAppointmentTemplates.bind(this);
-        this.handleShowAppointmentBook = this.handleShowPatientRecords.bind(this);
-        this.handleShowAppointmentBook = this.handleShowPatientSearch.bind(this);
+        this.handleShowAppointmentTemplates = this.handleShowAppointmentTemplates.bind(this);
+        this.handleShowPatientRecords = this.handleShowPatientRecords.bind(this);
+        this.handleShowPatientSearch = this.handleShowPatientSearch.bind(this);
 
         Controller.getInstance().connectToApplication(this, window.localStorage);
     }
@@ -69,7 +70,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.setupNavigationItemHandling();
 
         AppointmentController.getInstance().onDocumentLoaded();
-        AppointmentTemplateController.getInstance().onDocumentLoaded();
+        //AppointmentTemplateController.getInstance().onDocumentLoaded();
         ContextualInformationHelper.getInstance().onDocumentLoaded();
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         Controller.getInstance().onDocumentLoaded();
@@ -110,9 +111,15 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 
     protected handleShowAppointmentBook(event:Event):void {
+        logger(`Showing appointment book`);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentBook'),'d-none',false);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'),'d-none',true);
 
     }
     protected handleShowAppointmentTemplates(event:Event):void {
+        logger(`Showing appointment templates`);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentBook'),'d-none',true);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'),'d-none',false);
 
     }
     protected handleShowPatientRecords(event:Event):void {
@@ -143,7 +150,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'api-ts-results appointment-template-controller';
+localStorage.debug = 'api api-ts-results appointment-controller';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

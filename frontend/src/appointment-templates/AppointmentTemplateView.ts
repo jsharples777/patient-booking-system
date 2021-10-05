@@ -1,12 +1,12 @@
 import {AppointmentTemplateController} from "./AppointmentTemplateController";
-import {datepicker, Datepicker, eventcalendar, Eventcalendar, snackbar} from "@mobiscroll/javascript";
+import { eventcalendar, Eventcalendar, snackbar} from "@mobiscroll/javascript";
 import debug from "debug";
 import {STATE_NAMES, VIEW_CONTAINER} from "../AppTypes";
 import moment from "moment";
 import Controller from "../Controller";
 import {AppointmentTemplateDetailModal} from "./AppointmentTemplateDetailModal";
 
-const logger = debug('appointment-view');
+const logger = debug('appointment-template-view');
 
 type AppointmentTemplateViewElements = {
     calendar: Eventcalendar | null,
@@ -214,15 +214,15 @@ export class AppointmentTemplateView {
             config.view.schedule.type = 'week';
 
             this.viewElements.calendar.setOptions({
-                clickToCreate: clinicConfig.clickToCreate,
-                dragTimeStep: clinicConfig.dragTimeStep,
-                dragToCreate: clinicConfig.dragToCreate,
-                dragToMove: clinicConfig.dragToMove,
-                dragToResize: clinicConfig.dragToResize,
-                showControls: clinicConfig.showControls,
-                view: clinicConfig.view,
-                invalidateEvent: clinicConfig.invalidateEvent,
-                invalid: clinicConfig.invalid,
+                clickToCreate: config.clickToCreate,
+                dragTimeStep: config.dragTimeStep,
+                dragToCreate: config.dragToCreate,
+                dragToMove: config.dragToMove,
+                dragToResize: config.dragToResize,
+                showControls: config.showControls,
+                view: config.view,
+                invalidateEvent: config.invalidateEvent,
+                invalid: config.invalid,
             });
 
 
