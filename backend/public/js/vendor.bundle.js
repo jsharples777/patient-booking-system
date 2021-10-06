@@ -55616,7 +55616,7 @@ class GraphQLApiStateManager {
             if (config.idField) {
                 identifier = stateObj[config.idField];
             }
-            _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__.DownloadManager.getInstance().addQLApiRequest(config.serverURL + config.apiURL, config.apis.destroy, { identifier: identifier }, GraphQLApiStateManager.FUNCTION_ID_UPDATE_ITEM, name, false);
+            _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__.DownloadManager.getInstance().addQLApiRequest(config.serverURL + config.apiURL, config.apis.destroy, { identifier: identifier }, GraphQLApiStateManager.FUNCTION_ID_REMOVE_ITEM, name, false);
         }
         else {
             logger(`No configuration for state ${name}`);
@@ -55629,7 +55629,7 @@ class GraphQLApiStateManager {
         logger(stateObj);
         let config = this.getConfigurationForStateName(name);
         if (config.isActive) {
-            _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__.DownloadManager.getInstance().addQLApiRequest(config.serverURL + config.apiURL, config.apis.update, { data: stateObj }, GraphQLApiStateManager.FUNCTION_ID_REMOVE_ITEM, name, false);
+            _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__.DownloadManager.getInstance().addQLApiRequest(config.serverURL + config.apiURL, config.apis.update, { data: stateObj }, GraphQLApiStateManager.FUNCTION_ID_UPDATE_ITEM, name, false);
         }
         else {
             logger(`No configuration for state ${name}`);
@@ -55729,20 +55729,22 @@ class GraphQLApiStateManager {
     }
     callbackForAddItem(data, status, associatedStateName, wasOffline) {
         logger(`callback for add item for state ${associatedStateName} with status ${status} - FORWARDING`);
+        let config = this.getConfigurationForStateName(associatedStateName);
+        let dataAttribute = config.data.create;
         if (status >= 200 && status <= 299) { // do we have any data?
             logger(data);
             if (!wasOffline) {
-                this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
+                this.delegate.informChangeListenersForStateWithName(associatedStateName, data.data[dataAttribute], _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
             }
             else {
                 logger('Item was added offline, update the current data');
-                this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemUpdated, null);
+                this.delegate.informChangeListenersForStateWithName(associatedStateName, data.data[dataAttribute], _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemUpdated, null);
             }
         }
         // did the call fail? (server loss)
         if (status === 500) {
             logger(`Item adding - offline, but will be queued later`);
-            this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
+            this.delegate.informChangeListenersForStateWithName(associatedStateName, data.data[dataAttribute], _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
         }
     }
 }
