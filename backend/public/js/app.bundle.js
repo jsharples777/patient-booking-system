@@ -17,14 +17,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "DRAGGABLE": () => (/* binding */ DRAGGABLE),
 /* harmony export */   "VIEW_NAME": () => (/* binding */ VIEW_NAME),
 /* harmony export */   "VIEW_CONTAINER": () => (/* binding */ VIEW_CONTAINER),
-/* harmony export */   "BUTTON": () => (/* binding */ BUTTON),
-/* harmony export */   "INPUT": () => (/* binding */ INPUT),
-/* harmony export */   "CurrentWorkoutSidebarPrefs": () => (/* binding */ CurrentWorkoutSidebarPrefs),
-/* harmony export */   "CurrentWorkoutContainers": () => (/* binding */ CurrentWorkoutContainers),
-/* harmony export */   "ExerciseTypesSidebarPrefs": () => (/* binding */ ExerciseTypesSidebarPrefs),
-/* harmony export */   "ExerciseTypesSidebarContainers": () => (/* binding */ ExerciseTypesSidebarContainers),
-/* harmony export */   "WorkoutSummarySidebarPrefs": () => (/* binding */ WorkoutSummarySidebarPrefs),
-/* harmony export */   "WorkoutSummarySidebarContainers": () => (/* binding */ WorkoutSummarySidebarContainers),
+/* harmony export */   "PatientSearchSidebarPrefs": () => (/* binding */ PatientSearchSidebarPrefs),
+/* harmony export */   "PatientSearchSidebarContainers": () => (/* binding */ PatientSearchSidebarContainers),
 /* harmony export */   "SELECT": () => (/* binding */ SELECT)
 /* harmony export */ });
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
@@ -68,60 +62,29 @@ const NAVIGATION = {
 };
 const DRAGGABLE = {
   typeUser: 'user',
-  typeExerciseType: 'exerciseType',
   fromUserSearch: 'userSearch',
-  fromFavourites: 'favourites',
-  fromExerciseTypes: 'exerciseTypes'
+  typePatientSummary: 'patientSummary',
+  fromPatientSearch: 'patientSearch'
 };
 const VIEW_NAME = {
   blockedUsers: 'blockedUsers',
   chatLog: 'chatLog',
   chatLogs: 'chatLogs',
   favouriteUsers: 'favouriteUsers',
-  exerciseTypes: 'exerciseTypes',
   userSearch: 'userSearch',
-  workouts: 'workouts',
-  workoutSummary: 'workoutSummary',
-  exercises: 'exercises'
+  patientSearch: 'patientSearch'
 };
 const VIEW_CONTAINER = {
-  exerciseTypeDetail: "exerciseTypeDetail",
-  currentWorkoutDetail: 'workoutDetail',
-  exerciseDropZone: 'exerciseDropZone',
   calendarControl: 'calendarControl',
   calendarDetail: 'calendarDetail'
 };
-const BUTTON = {
-  createNewExerciseType: 'addNewExerciseType',
-  completeWorkout: 'completeWorkout'
-};
-const INPUT = {
-  workoutName: 'workoutName'
-};
-const CurrentWorkoutSidebarPrefs = {
-  id: 'currentWorkoutSidebar',
-  expandedSize: '50%',
-  location: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.right
-};
-const CurrentWorkoutContainers = {
-  list: 'exercises',
-  detail: 'workoutDetail'
-};
-const ExerciseTypesSidebarPrefs = {
-  id: 'exerciseTypesSidebar',
-  expandedSize: '50%',
+const PatientSearchSidebarPrefs = {
+  id: 'patientSearchSideBar',
+  expandedSize: '40%',
   location: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.left
 };
-const ExerciseTypesSidebarContainers = {
-  container: 'exerciseTypesContainer'
-};
-const WorkoutSummarySidebarPrefs = {
-  id: 'workoutSummarySidebar',
-  expandedSize: '100%',
-  location: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.bottom
-};
-const WorkoutSummarySidebarContainers = {
-  container: 'workoutSummary'
+const PatientSearchSidebarContainers = {
+  container: 'recentPatientSearches'
 };
 const SELECT = {
   appointmentType: 'event-appt-type',
@@ -514,6 +477,90 @@ class Controller {
 
 /***/ }),
 
+/***/ "./src/DurationFunctions.ts":
+/*!**********************************!*\
+  !*** ./src/DurationFunctions.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "addDurations": () => (/* binding */ addDurations),
+/* harmony export */   "computeTimeStringFromStartTimeAndDurationInSeconds": () => (/* binding */ computeTimeStringFromStartTimeAndDurationInSeconds)
+/* harmony export */ });
+function addDurations(duration1, duration2) {
+  const durationRegexp = /^(\d+:)?[0-5]?\d:[0-5]\d$/; // check both are valid durations
+
+  const duration1Valid = durationRegexp.test(duration1);
+  const duration2Valid = durationRegexp.test(duration2);
+
+  if (duration1Valid && duration2Valid) {
+    // split them into seconds, minutes, and hours
+    const duration1Components = duration1.split(':');
+    const duration2Components = duration2.split(':');
+    let carry = 0; // add the seconds (last elements in each)
+
+    const duration1Seconds = parseInt(duration1Components[duration1Components.length - 1]);
+    const duration2Seconds = parseInt(duration2Components[duration2Components.length - 1]);
+    let sumSeconds = duration1Seconds + duration2Seconds;
+
+    if (sumSeconds >= 60) {
+      carry = 1;
+      sumSeconds -= 60;
+    }
+
+    const duration1Minutes = parseInt(duration1Components[duration1Components.length - 2]);
+    const duration2Minutes = parseInt(duration2Components[duration2Components.length - 2]);
+    let sumMinutes = duration1Minutes + duration2Minutes + carry;
+
+    if (sumMinutes >= 60) {
+      carry = 1;
+      sumMinutes -= 60;
+    } // do we have hours?
+
+
+    let duration1Hours = 0;
+
+    if (duration1Components.length == 3) {
+      duration1Hours = parseInt(duration1Components[0]);
+    }
+
+    let duration2Hours = 0;
+
+    if (duration2Components.length == 3) {
+      duration2Hours = parseInt(duration2Components[0]);
+    }
+
+    let sumHours = duration1Hours + duration2Hours + carry;
+    return `${sumHours > 0 ? sumHours + ':' : ''}${sumMinutes < 10 ? '0' + sumMinutes : sumMinutes}:${sumSeconds < 10 ? '0' + sumSeconds : sumSeconds}`;
+  } else {
+    return '00:00';
+  }
+}
+function computeTimeStringFromStartTimeAndDurationInSeconds(appointmentTime, duration) {
+  const time = parseInt(appointmentTime); // HHMMSS as a time
+
+  const startTimeHours = Math.floor(time / 10000);
+  const startTimeMinutes = Math.floor((time - startTimeHours * 10000) / 100);
+  const appointmentDuration = Math.floor(duration / 60);
+  let endTimeHours = startTimeHours;
+  let endTimeMinutes = startTimeMinutes + appointmentDuration;
+
+  if (endTimeMinutes >= 60) {
+    endTimeMinutes -= 60;
+    endTimeHours += 1; // 24 hour time
+  }
+
+  let timeString = `${endTimeHours}`;
+  if (endTimeHours < 10) timeString = '0' + timeString;
+  if (endTimeMinutes < 10) timeString += '0';
+  timeString += `${endTimeMinutes}`;
+  return timeString;
+}
+
+/***/ }),
+
 /***/ "./src/EqualityFunctions.ts":
 /*!**********************************!*\
   !*** ./src/EqualityFunctions.ts ***!
@@ -681,6 +728,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./AppointmentTemplateView */ "./src/appointment-templates/AppointmentTemplateView.ts");
 /* harmony import */ var _AppointmentTemplateFilterView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AppointmentTemplateFilterView */ "./src/appointment-templates/AppointmentTemplateFilterView.ts");
 /* harmony import */ var _AppointmentTemplateDetailModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AppointmentTemplateDetailModal */ "./src/appointment-templates/AppointmentTemplateDetailModal.ts");
+/* harmony import */ var _DurationFunctions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../DurationFunctions */ "./src/DurationFunctions.ts");
+
 
 
 
@@ -705,8 +754,6 @@ class AppointmentTemplateController {
     providers: null,
     oldEvent: null,
     tempEvent: {},
-    isDeletingEvent: false,
-    isRestoringEvent: false,
     currentFirstDate: 0,
     currentLastDate: 0,
     currentFirstDateDayNumber: 1
@@ -767,27 +814,11 @@ class AppointmentTemplateController {
   }
 
   getEventForAppointmentTemplate(appointment) {
+    logger(`Creating event for appointment template with first day number of ${this.dataElements.currentFirstDateDayNumber}`);
+    logger(appointment);
     if (appointment.day < this.dataElements.currentFirstDateDayNumber) return null;
     const loadDate = this.dataElements.currentFirstDate + (appointment.day - this.dataElements.currentFirstDateDayNumber);
-    const time = parseInt(appointment.time); // HHMMSS as a time
-
-    const duration = appointment.duration; // seconds
-
-    const startTimeHours = Math.floor(appointment.time / 10000);
-    const startTimeMinutes = Math.floor((time - startTimeHours * 10000) / 100);
-    const appointmentDuration = Math.floor(duration / 60);
-    let endTimeHours = startTimeHours;
-    let endTimeMinutes = startTimeMinutes + appointmentDuration;
-
-    if (endTimeMinutes > 60) {
-      endTimeMinutes -= 60;
-      endTimeHours += 1; // 24 hour time
-    }
-
-    let timeString = `${endTimeHours}`;
-    if (endTimeHours < 10) timeString = '0' + timeString;
-    if (endTimeMinutes < 10) timeString += '0';
-    timeString += `${endTimeMinutes}`;
+    const timeString = (0,_DurationFunctions__WEBPACK_IMPORTED_MODULE_8__.computeTimeStringFromStartTimeAndDurationInSeconds)(appointment.time, appointment.duration);
     let result = {
       id: appointment._id,
       start: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
@@ -802,6 +833,8 @@ class AppointmentTemplateController {
       type: appointment.type,
       provider: appointment.provider
     };
+    logger('Converted to template event');
+    logger(result);
     return result;
   }
 
@@ -818,6 +851,7 @@ class AppointmentTemplateController {
       let result = this.getEventForAppointmentTemplate(appointment);
       if (result) results.push(result);
     });
+    console.log(results);
     inst.setEvents(results);
   }
 
@@ -861,6 +895,7 @@ class AppointmentTemplateController {
             let result = this.getEventForAppointmentTemplate(appointment);
             if (result) results.push(result);
           });
+          console.log(results);
           _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().setEvents(results);
           break;
         }
@@ -1004,17 +1039,6 @@ class AppointmentTemplateDetailModal {
       display: 'bottom',
       contentPadding: true,
       fullScreen: true,
-      onClose: function () {
-        if (_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().isDeletingEvent) {
-          //
-          _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent(_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().tempEvent);
-          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointmentTemplates, _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().tempEvent), false);
-        } else if (_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().isRestoringEvent) {
-          //
-          _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().updateEvent(_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().oldEvent);
-          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointmentTemplates, _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().tempEvent), false);
-        }
-      },
       responsive: {
         medium: {
           display: 'anchored',
@@ -1073,13 +1097,17 @@ class AppointmentTemplateDetailModal {
   startCreateAppointmentTemplate(elm) {
     // hide delete button inside add popup
     this.viewElements.deleteButton.style.display = 'none';
-    this.viewElements.appointmentTypeEl.style.display = 'block';
-    _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().isDeletingEvent = true;
-    _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().isRestoringEvent = false; // set popup header text and buttons for adding
+    this.viewElements.appointmentTypeEl.style.display = 'block'; // set popup header text and buttons for adding
 
     this.viewElements.popup.setOptions({
       headerText: 'New event',
-      buttons: ['cancel', {
+      buttons: [{
+        text: 'Cancel',
+        keyCode: 'esc',
+        handler: function () {
+          _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent(_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().tempEvent);
+        }
+      }, {
         text: 'Add',
         keyCode: 'enter',
         handler: function () {
@@ -1111,9 +1139,7 @@ class AppointmentTemplateDetailModal {
 
           _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent([mobiId]);
           _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().addEvent(updatedEvent);
-          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointmentTemplates, _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(updatedEvent), false); //
-
-          _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().isDeletingEvent = false; // navigate the calendar to the correct view
+          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointmentTemplates, _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(updatedEvent), false); // navigate the calendar to the correct view
 
           _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().navigate(updatedEvent.start);
           AppointmentTemplateDetailModal.getInstance().close();
@@ -1140,13 +1166,17 @@ class AppointmentTemplateDetailModal {
     let ev = args.event; // show delete button inside edit popup
 
     this.viewElements.deleteButton.style.display = 'block';
-    this.viewElements.appointmentTypeEl.style.display = 'none';
-    _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().isDeletingEvent = false;
-    _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().isRestoringEvent = true; // set popup header text and buttons for editing
+    this.viewElements.appointmentTypeEl.style.display = 'none'; // set popup header text and buttons for editing
 
     this.viewElements.popup.setOptions({
       headerText: 'Edit event',
-      buttons: ['cancel', {
+      buttons: [{
+        text: 'Cancel',
+        keyCode: 'esc',
+        handler: function () {
+          _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().updateEvent(_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().oldEvent);
+        }
+      }, {
         text: 'Save',
         keyCode: 'enter',
         handler: function () {
@@ -1176,7 +1206,6 @@ class AppointmentTemplateDetailModal {
           _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointmentTemplates, _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(updatedEvent), false); // navigate the calendar to the correct view
 
           _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().navigate(date[0]);
-          _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().isRestoringEvent = false;
           AppointmentTemplateDetailModal.getInstance().close();
         },
         cssClass: 'mbsc-popup-button-primary'
@@ -1205,7 +1234,6 @@ class AppointmentTemplateDetailModal {
       //
       _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent(_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().tempEvent);
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointmentTemplates, _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().tempEvent), false);
-      _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().isRestoringEvent = false;
       AppointmentTemplateDetailModal.getInstance().close(); // save a local reference to the deleted event
 
       let deletedEvent = _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().tempEvent; //
@@ -1815,7 +1843,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppointmentFilterView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./AppointmentFilterView */ "./src/appointments/AppointmentFilterView.ts");
 /* harmony import */ var _AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AppointmentDetailModal */ "./src/appointments/AppointmentDetailModal.ts");
 /* harmony import */ var _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../appointment-templates/AppointmentTemplateController */ "./src/appointment-templates/AppointmentTemplateController.ts");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var _DurationFunctions__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../DurationFunctions */ "./src/DurationFunctions.ts");
+
 
 
 
@@ -1847,8 +1877,6 @@ class AppointmentController {
     providers: null,
     oldEvent: null,
     tempEvent: {},
-    isDeletingEvent: false,
-    isRestoringEvent: false,
     loadDate: 0,
     loadDateFinish: 0
   };
@@ -1953,27 +1981,8 @@ class AppointmentController {
 
   getEventForAppointment(loadDate, appointment) {
     const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
-    let canEdit = loadDate >= today && !appointment.isDNA && !appointment.isCancelled && !appointment.isBilled; // convert the start and end time into the format for the calendar
-
-    const time = parseInt(appointment.time); // HHMMSS as a time
-
-    const duration = appointment.duration; // seconds
-
-    const startTimeHours = Math.floor(appointment.time / 10000);
-    const startTimeMinutes = Math.floor((time - startTimeHours * 10000) / 100);
-    const appointmentDuration = Math.floor(duration / 60);
-    let endTimeHours = startTimeHours;
-    let endTimeMinutes = startTimeMinutes + appointmentDuration;
-
-    if (endTimeMinutes > 60) {
-      endTimeMinutes -= 60;
-      endTimeHours += 1; // 24 hour time
-    }
-
-    let timeString = `${endTimeHours}`;
-    if (endTimeHours < 10) timeString = '0' + timeString;
-    if (endTimeMinutes < 10) timeString += '0';
-    timeString += `${endTimeMinutes}`;
+    let canEdit = loadDate >= today && !appointment.isDNA && !appointment.isCancelled && !appointment.isBilled;
+    const timeString = (0,_DurationFunctions__WEBPACK_IMPORTED_MODULE_9__.computeTimeStringFromStartTimeAndDurationInSeconds)(appointment.time, appointment.duration);
     let result = {
       id: appointment._id,
       start: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
@@ -2016,7 +2025,7 @@ class AppointmentController {
           logger(`appointment for time ${template.time} not found, creating new appointment`); // don't already have an appointment for that time
 
           let templatedAppt = _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().getEventForAppointmentTemplate(template);
-          templatedAppt.id = (0,uuid__WEBPACK_IMPORTED_MODULE_9__["default"])();
+          templatedAppt.id = (0,uuid__WEBPACK_IMPORTED_MODULE_10__["default"])();
           templatedAppt.title = '';
           templatedAppt.description = '';
           templatedAppt.patientId = '';
@@ -2040,6 +2049,7 @@ class AppointmentController {
   onPageLoading(event, inst) {
     // load the events for the view
     logger(event);
+    const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
     this.dataElements.loadDate = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()(event.firstDay).format('YYYYMMDD'));
     const loadDateDayNumber = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()(event.firstDay).format('d'));
     this.dataElements.loadDateFinish = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()(event.lastDay).format('YYYYMMDD'));
@@ -2056,7 +2066,7 @@ class AppointmentController {
     });
     inst.setEvents(results); // add template appointments as events where an appointment doesn't already exist in the same time slot, they will need unique _ids
 
-    this.addTemplateEvents(loadDateDayNumber, appointmentsForTheDay);
+    if (this.dataElements.loadDate >= today) this.addTemplateEvents(loadDateDayNumber, appointmentsForTheDay);
   }
 
   filterResults(managerName, name, filterResults) {}
@@ -2205,10 +2215,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./AppointmentBookView */ "./src/appointments/AppointmentBookView.ts");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _appointment_templates_AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../appointment-templates/AppointmentTemplateView */ "./src/appointment-templates/AppointmentTemplateView.ts");
+/* harmony import */ var _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../appointment-templates/AppointmentTemplateController */ "./src/appointment-templates/AppointmentTemplateController.ts");
+
+
 
 
 
@@ -2295,17 +2309,6 @@ class AppointmentDetailModal {
       display: 'bottom',
       contentPadding: true,
       fullScreen: true,
-      onClose: function () {
-        if (_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isDeletingEvent) {
-          //
-          _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().removeEvent(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent);
-          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent), false);
-        } else if (_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent) {
-          //
-          _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().updateEvent(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().oldEvent);
-          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent), false);
-        }
-      },
       responsive: {
         medium: {
           display: 'anchored',
@@ -2381,13 +2384,17 @@ class AppointmentDetailModal {
     this.viewElements.billingCompleteButton.style.display = 'none'; // show the dropdowns
 
     this.viewElements.patientSearchEl.style.display = 'block';
-    this.viewElements.appointmentTypeEl.style.display = 'block';
-    _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isDeletingEvent = true;
-    _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false; // set popup header text and buttons for adding
+    this.viewElements.appointmentTypeEl.style.display = 'block'; // set popup header text and buttons for adding
 
     this.viewElements.popup.setOptions({
       headerText: 'New event',
-      buttons: ['cancel', {
+      buttons: [{
+        text: 'Cancel',
+        keyCode: 'esc',
+        handler: function () {
+          _appointment_templates_AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateView.getInstance().getCalender().removeEvent(_appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_9__.AppointmentTemplateController.getInstance().getModel().tempEvent);
+        }
+      }, {
         text: 'Add',
         keyCode: 'enter',
         handler: function () {
@@ -2395,7 +2402,7 @@ class AppointmentDetailModal {
 
           let mobiId = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent.id; // generate a new UUID
 
-          let appointmentId = (0,uuid__WEBPACK_IMPORTED_MODULE_8__["default"])(); // get the colour for the event type
+          let appointmentId = (0,uuid__WEBPACK_IMPORTED_MODULE_10__["default"])(); // get the colour for the event type
 
           let colour = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointmentType('Consulting');
           let createdOn = parseInt(moment__WEBPACK_IMPORTED_MODULE_4___default()().format('YYYYDDMMHHmmss'));
@@ -2425,9 +2432,7 @@ class AppointmentDetailModal {
 
           _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().removeEvent([mobiId]);
           _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().addEvent(updatedEvent);
-          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(updatedEvent), false); //
-
-          _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isDeletingEvent = false; // navigate the calendar to the correct view
+          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(updatedEvent), false); // navigate the calendar to the correct view
 
           _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().navigate(updatedEvent.start);
           AppointmentDetailModal.getInstance().close();
@@ -2466,13 +2471,17 @@ class AppointmentDetailModal {
     this.viewElements.billingCompleteButton.style.display = 'block'; // show the dropdowns
 
     this.viewElements.patientSearchEl.style.display = 'none';
-    this.viewElements.appointmentTypeEl.style.display = 'none';
-    _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isDeletingEvent = false;
-    _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = true; // set popup header text and buttons for editing
+    this.viewElements.appointmentTypeEl.style.display = 'none'; // set popup header text and buttons for editing
 
     this.viewElements.popup.setOptions({
       headerText: 'Edit event',
-      buttons: ['cancel', {
+      buttons: [{
+        text: 'Cancel',
+        keyCode: 'esc',
+        handler: function () {
+          _appointment_templates_AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateView.getInstance().getCalender().updateEvent(_appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_9__.AppointmentTemplateController.getInstance().getModel().oldEvent);
+        }
+      }, {
         text: 'Save',
         keyCode: 'enter',
         handler: function () {
@@ -2508,7 +2517,6 @@ class AppointmentDetailModal {
           _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(updatedEvent), false); // navigate the calendar to the correct view
 
           _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().navigate(date[0]);
-          _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
           AppointmentDetailModal.getInstance().close();
         },
         cssClass: 'mbsc-popup-button-primary'
@@ -2545,7 +2553,6 @@ class AppointmentDetailModal {
       //
       _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().removeEvent(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent);
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent), false);
-      _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
       AppointmentDetailModal.getInstance().close(); // save a local reference to the deleted event
 
       let deletedEvent = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent; //
@@ -2576,7 +2583,6 @@ class AppointmentDetailModal {
 
       _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
-      _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
       AppointmentDetailModal.getInstance().close(); //
 
       (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
@@ -2603,7 +2609,6 @@ class AppointmentDetailModal {
       originalEvent.color = _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getColourForAppointment(originalEvent);
       _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
-      _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
       AppointmentDetailModal.getInstance().close(); //
 
       (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
@@ -2633,7 +2638,6 @@ class AppointmentDetailModal {
 
       _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
-      _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
       AppointmentDetailModal.getInstance().close();
       (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
         button: {
@@ -2660,7 +2664,6 @@ class AppointmentDetailModal {
 
       _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
-      _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
       AppointmentDetailModal.getInstance().close();
       (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
         button: {
@@ -2685,7 +2688,6 @@ class AppointmentDetailModal {
 
       _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
       _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.appointments, _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getAppointmentFromEvent(originalEvent), false);
-      _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().isRestoringEvent = false;
       AppointmentDetailModal.getInstance().close();
       (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.snackbar)({
         button: {
@@ -2998,7 +3000,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app socket-listener state-manager-graphql api-ts-results appointment-controller';
+localStorage.debug = 'app socket-listener api-ts-results appointment-template-controller';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {

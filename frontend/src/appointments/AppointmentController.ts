@@ -9,6 +9,7 @@ import {AppointmentFilterView} from "./AppointmentFilterView";
 import {AppointmentDetailModal} from "./AppointmentDetailModal";
 import {AppointmentTemplateController} from "../appointment-templates/AppointmentTemplateController";
 import {v4} from "uuid";
+import {computeTimeStringFromStartTimeAndDurationInSeconds} from "../DurationFunctions";
 
 
 const logger = debug('appointment-controller');
@@ -20,8 +21,6 @@ type AppointmentDataElements = {
     providers: any[] | null,
     oldEvent: any | null,
     tempEvent: any,
-    isDeletingEvent: boolean,
-    isRestoringEvent: boolean,
     loadDate:number,
     loadDateFinish:number,
 }
@@ -49,8 +48,6 @@ export class AppointmentController implements StateChangeListener {
         providers: null,
         oldEvent: null,
         tempEvent: {},
-        isDeletingEvent: false,
-        isRestoringEvent: false,
         loadDate:0,
         loadDateFinish:0
     };
@@ -147,26 +144,7 @@ export class AppointmentController implements StateChangeListener {
         const today = parseInt(moment().format('YYYYMMDD'));
 
         let canEdit = ((loadDate >= today) && (!appointment.isDNA && !appointment.isCancelled) && (!appointment.isBilled));
-        // convert the start and end time into the format for the calendar
-        const time = parseInt(appointment.time); // HHMMSS as a time
-        const duration = appointment.duration; // seconds
-
-        const startTimeHours = Math.floor(appointment.time / 10000);
-        const startTimeMinutes = Math.floor((time - (startTimeHours * 10000)) / 100);
-        const appointmentDuration = Math.floor(duration / 60);
-
-        let endTimeHours = startTimeHours;
-        let endTimeMinutes = startTimeMinutes + appointmentDuration;
-
-        if (endTimeMinutes > 60) {
-            endTimeMinutes -= 60;
-            endTimeHours += 1; // 24 hour time
-        }
-
-        let timeString = `${endTimeHours}`;
-        if (endTimeHours < 10) timeString = '0' + timeString;
-        if (endTimeMinutes < 10) timeString += '0';
-        timeString += `${endTimeMinutes}`;
+        const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(appointment.time,appointment.duration);
 
         let result = {
             id: appointment._id,
@@ -244,6 +222,7 @@ export class AppointmentController implements StateChangeListener {
 
     public onPageLoading(event: any, inst: any): void {  // load the events for the view
         logger(event);
+        const today = parseInt(moment().format('YYYYMMDD'));
         this.dataElements.loadDate = parseInt(moment(event.firstDay).format('YYYYMMDD'));
         const loadDateDayNumber = parseInt(moment(event.firstDay).format('d'));
         this.dataElements.loadDateFinish = parseInt(moment(event.lastDay).format('YYYYMMDD'));
@@ -268,7 +247,7 @@ export class AppointmentController implements StateChangeListener {
         inst.setEvents(results);
 
         // add template appointments as events where an appointment doesn't already exist in the same time slot, they will need unique _ids
-        this.addTemplateEvents(loadDateDayNumber, appointmentsForTheDay);
+        if (this.dataElements.loadDate >= today) this.addTemplateEvents(loadDateDayNumber, appointmentsForTheDay);
 
     }
 

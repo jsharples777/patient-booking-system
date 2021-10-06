@@ -41,10 +41,9 @@ export const NAVIGATION = {
 
 export const DRAGGABLE = {
     typeUser: 'user',
-    typeExerciseType: 'exerciseType',
     fromUserSearch: 'userSearch',
-    fromFavourites: 'favourites',
-    fromExerciseTypes: 'exerciseTypes',
+    typePatientSummary:'patientSummary',
+    fromPatientSearch: 'patientSearch'
 }
 
 export const VIEW_NAME = {
@@ -52,59 +51,25 @@ export const VIEW_NAME = {
     chatLog: 'chatLog',
     chatLogs: 'chatLogs',
     favouriteUsers: 'favouriteUsers',
-    exerciseTypes: 'exerciseTypes',
     userSearch: 'userSearch',
-    workouts: 'workouts',
-    workoutSummary: 'workoutSummary',
-    exercises: 'exercises'
+    patientSearch: 'patientSearch'
 }
 
 export const VIEW_CONTAINER = {
-    exerciseTypeDetail: "exerciseTypeDetail",
-    currentWorkoutDetail: 'workoutDetail',
-    exerciseDropZone: 'exerciseDropZone',
     calendarControl: 'calendarControl',
     calendarDetail:'calendarDetail'
 }
 
-export const BUTTON = {
-    createNewExerciseType: 'addNewExerciseType',
-    completeWorkout: 'completeWorkout'
-}
 
-export const INPUT = {
-    workoutName: 'workoutName'
-}
 
-export const CurrentWorkoutSidebarPrefs: SidebarPrefs = {
-    id: 'currentWorkoutSidebar',
-    expandedSize: '50%',
-    location: SidebarLocation.right
-}
-
-export const CurrentWorkoutContainers = {
-    list: 'exercises',
-    detail: 'workoutDetail'
-}
-
-export const ExerciseTypesSidebarPrefs: SidebarPrefs = {
-    id: 'exerciseTypesSidebar',
-    expandedSize: '50%',
+export const  PatientSearchSidebarPrefs: SidebarPrefs = {
+    id: 'patientSearchSideBar',
+    expandedSize: '40%',
     location: SidebarLocation.left
 }
 
-export const ExerciseTypesSidebarContainers = {
-    container: 'exerciseTypesContainer',
-}
-
-export const  WorkoutSummarySidebarPrefs: SidebarPrefs = {
-    id: 'workoutSummarySidebar',
-    expandedSize: '100%',
-    location: SidebarLocation.bottom
-}
-
-export const  WorkoutSummarySidebarContainers = {
-    container: 'workoutSummary',
+export const  PatientSearchSidebarContainers = {
+    container: 'recentPatientSearches',
 }
 
 export const SELECT = {

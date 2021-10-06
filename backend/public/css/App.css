@@ -70,6 +70,11 @@ i:hover {
     max-height: 100vh;
     overflow-y: auto;
 }
+.scroll-patient-search {
+    height: 90vh;
+    max-height: 100vh;
+    overflow-y: auto;
+}
 .scroll-favourite-users {
     height: 20vh;
     max-height: 100vh;

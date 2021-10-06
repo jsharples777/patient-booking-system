@@ -51,3 +51,26 @@ export function addDurations(duration1: string, duration2: string): string {
         return '00:00';
     }
 }
+
+export function computeTimeStringFromStartTimeAndDurationInSeconds(appointmentTime:string, duration:number):string{
+    const time = parseInt(appointmentTime); // HHMMSS as a time
+
+
+    const startTimeHours = Math.floor(time / 10000);
+    const startTimeMinutes = Math.floor((time - (startTimeHours * 10000)) / 100);
+    const appointmentDuration = Math.floor(duration / 60);
+
+    let endTimeHours = startTimeHours;
+    let endTimeMinutes = startTimeMinutes + appointmentDuration;
+
+    if (endTimeMinutes >= 60) {
+        endTimeMinutes -= 60;
+        endTimeHours += 1; // 24 hour time
+    }
+
+    let timeString = `${endTimeHours}`;
+    if (endTimeHours < 10) timeString = '0' + timeString;
+    if (endTimeMinutes < 10) timeString += '0';
+    timeString += `${endTimeMinutes}`;
+    return timeString;
+}

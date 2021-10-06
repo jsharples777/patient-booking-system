@@ -7,6 +7,7 @@ import {SecurityManager, StateChangeListener} from "ui-framework-jps";
 import {AppointmentTemplateView} from "./AppointmentTemplateView";
 import {AppointmentTemplateFilterView} from "./AppointmentTemplateFilterView";
 import {AppointmentTemplateDetailModal} from "./AppointmentTemplateDetailModal";
+import {computeTimeStringFromStartTimeAndDurationInSeconds} from "../DurationFunctions";
 
 
 const logger = debug('appointment-template-controller');
@@ -18,8 +19,6 @@ type AppointmentTemplateDataElements = {
     providers: any[] | null,
     oldEvent: any | null,
     tempEvent: any,
-    isDeletingEvent: boolean,
-    isRestoringEvent: boolean,
     currentFirstDate:number,
     currentFirstDateDayNumber:number,
     currentLastDate:number
@@ -43,8 +42,6 @@ export class AppointmentTemplateController implements StateChangeListener {
         providers: null,
         oldEvent: null,
         tempEvent: {},
-        isDeletingEvent: false,
-        isRestoringEvent: false,
         currentFirstDate:0,
         currentLastDate:0,
         currentFirstDateDayNumber:1
@@ -104,27 +101,13 @@ export class AppointmentTemplateController implements StateChangeListener {
     }
 
     public getEventForAppointmentTemplate(appointment:any):any {
+        logger(`Creating event for appointment template with first day number of ${this.dataElements.currentFirstDateDayNumber}`);
+        logger(appointment);
         if (appointment.day < this.dataElements.currentFirstDateDayNumber) return null;
         const loadDate = this.dataElements.currentFirstDate + (appointment.day - this.dataElements.currentFirstDateDayNumber);
-        const time = parseInt(appointment.time); // HHMMSS as a time
-        const duration = appointment.duration; // seconds
 
-        const startTimeHours = Math.floor(appointment.time / 10000);
-        const startTimeMinutes = Math.floor((time - (startTimeHours * 10000)) / 100);
-        const appointmentDuration = Math.floor(duration / 60);
+        const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(appointment.time,appointment.duration);
 
-        let endTimeHours = startTimeHours;
-        let endTimeMinutes = startTimeMinutes + appointmentDuration;
-
-        if (endTimeMinutes > 60) {
-            endTimeMinutes -= 60;
-            endTimeHours += 1; // 24 hour time
-        }
-
-        let timeString = `${endTimeHours}`;
-        if (endTimeHours < 10) timeString = '0' + timeString;
-        if (endTimeMinutes < 10) timeString += '0';
-        timeString += `${endTimeMinutes}`;
 
         let result = {
             id: appointment._id,
@@ -140,6 +123,8 @@ export class AppointmentTemplateController implements StateChangeListener {
             type: appointment.type,
             provider: appointment.provider
         }
+        logger('Converted to template event');
+        logger(result);
 
         return result;
 
@@ -160,6 +145,8 @@ export class AppointmentTemplateController implements StateChangeListener {
             let result = this.getEventForAppointmentTemplate(appointment);
             if (result) results.push(result);
         });
+
+        console.log(results);
 
         inst.setEvents(results);
     }
@@ -204,6 +191,7 @@ export class AppointmentTemplateController implements StateChangeListener {
                     if (result) results.push(result);
                 });
 
+                console.log(results);
                 AppointmentTemplateView.getInstance().getCalender().setEvents(results);
 
                 break;

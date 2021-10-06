@@ -87,24 +87,6 @@ export class AppointmentTemplateDetailModal {
             display: 'bottom',
             contentPadding: true,
             fullScreen: true,
-            onClose: function () {
-                if (AppointmentTemplateController.getInstance().getModel().isDeletingEvent) {
-                    //
-                    AppointmentTemplateView.getInstance().getCalender().removeEvent(AppointmentTemplateController.getInstance().getModel().tempEvent);
-                    Controller.getInstance().getStateManager().removeItemFromState(
-                        STATE_NAMES.appointmentTemplates,
-                        AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(AppointmentTemplateController.getInstance().getModel().tempEvent),
-                        false);
-
-                } else if (AppointmentTemplateController.getInstance().getModel().isRestoringEvent) {
-                    //
-                    AppointmentTemplateView.getInstance().getCalender().updateEvent(AppointmentTemplateController.getInstance().getModel().oldEvent);
-                    Controller.getInstance().getStateManager().updateItemInState(
-                        STATE_NAMES.appointmentTemplates,
-                        AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(AppointmentTemplateController.getInstance().getModel().tempEvent),
-                        false);
-                }
-            },
             responsive: {
                 medium: {
                     display: 'anchored',
@@ -173,14 +155,18 @@ export class AppointmentTemplateDetailModal {
         this.viewElements.deleteButton.style.display = 'none';
         this.viewElements.appointmentTypeEl.style.display = 'block';
 
-        AppointmentTemplateController.getInstance().getModel().isDeletingEvent = true;
-        AppointmentTemplateController.getInstance().getModel().isRestoringEvent = false;
 
         // set popup header text and buttons for adding
         this.viewElements.popup.setOptions({
             headerText: 'New event',
             buttons: [
-                'cancel',
+                {
+                    text: 'Cancel',
+                    keyCode: 'esc',
+                    handler: function() {
+                        AppointmentTemplateView.getInstance().getCalender().removeEvent(AppointmentTemplateController.getInstance().getModel().tempEvent);
+                    }
+                },
                 {
                     text: 'Add',
                     keyCode: 'enter',
@@ -220,8 +206,6 @@ export class AppointmentTemplateDetailModal {
                             STATE_NAMES.appointmentTemplates,
                             AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(updatedEvent),
                             false);
-                        //
-                        AppointmentTemplateController.getInstance().getModel().isDeletingEvent = false;
 
                         // navigate the calendar to the correct view
                         AppointmentTemplateView.getInstance().getCalender().navigate(updatedEvent.start);
@@ -255,14 +239,18 @@ export class AppointmentTemplateDetailModal {
         this.viewElements.deleteButton.style.display = 'block';
         this.viewElements.appointmentTypeEl.style.display = 'none';
 
-        AppointmentTemplateController.getInstance().getModel().isDeletingEvent = false;
-        AppointmentTemplateController.getInstance().getModel().isRestoringEvent = true;
 
         // set popup header text and buttons for editing
         this.viewElements.popup.setOptions({
             headerText: 'Edit event',
             buttons: [
-                'cancel',
+                {
+                    text: 'Cancel',
+                    keyCode: 'esc',
+                    handler: function() {
+                        AppointmentTemplateView.getInstance().getCalender().updateEvent(AppointmentTemplateController.getInstance().getModel().oldEvent);
+                    }
+                },
                 {
                     text: 'Save',
                     keyCode: 'enter',
@@ -298,7 +286,6 @@ export class AppointmentTemplateDetailModal {
                         // navigate the calendar to the correct view
 
                         AppointmentTemplateView.getInstance().getCalender().navigate(date[0]);
-                        AppointmentTemplateController.getInstance().getModel().isRestoringEvent = false;
                         AppointmentTemplateDetailModal.getInstance().close();
                     },
                     cssClass: 'mbsc-popup-button-primary'
@@ -334,7 +321,6 @@ export class AppointmentTemplateDetailModal {
                 AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(AppointmentTemplateController.getInstance().getModel().tempEvent),
                 false);
 
-            AppointmentTemplateController.getInstance().getModel().isRestoringEvent = false;
             AppointmentTemplateDetailModal.getInstance().close();
 
             // save a local reference to the deleted event
