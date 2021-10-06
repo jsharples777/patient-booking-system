@@ -616,7 +616,6 @@ class SocketListenerDelegate {
 
               case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments:
                 {
-                  console.log(stateObj);
                   _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, stateObj, true);
                   break;
                 }
@@ -1470,8 +1469,7 @@ class AppointmentTemplateView {
     options.renderScheduleEvent = this.handleAppointmentTemplateRendering;
 
     options.onEventUpdated = args => {
-      console.log(args); // user has dragged event - update the appointment
-
+      // user has dragged event - update the appointment
       _Controller__WEBPACK_IMPORTED_MODULE_5__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.appointmentTemplates, _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_0__.AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(args.event), false);
     };
 
@@ -1498,8 +1496,7 @@ class AppointmentTemplateView {
   applyClinicConfig(clinicConfig) {
     if (this.viewElements.calendar) {
       logger('State changed, using clinic config options');
-      const config = { ...clinicConfig
-      };
+      const config = JSON.parse(JSON.stringify(clinicConfig));
       config.view.schedule.type = 'week';
       this.viewElements.calendar.setOptions({
         clickToCreate: config.clickToCreate,
@@ -1933,20 +1930,22 @@ class AppointmentController {
       }
     }
 
-    if (appointment.readyForBilling) {
-      colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
-    }
+    if (appointment.readyForBilling || appointment.isBilled || appointment.isCancelled || appointment.isDNA) {
+      if (appointment.readyForBilling) {
+        colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
+      }
 
-    if (appointment.isBilled) {
-      colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
-    }
+      if (appointment.isBilled) {
+        colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
+      }
 
-    if (appointment.isCancelled) {
-      colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
-    }
+      if (appointment.isCancelled) {
+        colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
+      }
 
-    if (appointment.isDNA) {
-      colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
+      if (appointment.isDNA) {
+        colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
+      }
     }
 
     return colour;
@@ -1981,7 +1980,6 @@ class AppointmentController {
       end: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
       title: appointment.name,
       description: appointment.note,
-      color: this.getColourForAppointment(appointment),
       allDay: false,
       editable: canEdit,
       resource: appointment.provider,
@@ -1997,7 +1995,9 @@ class AppointmentController {
       readyForBilling: appointment.readyForBilling,
       billingItems: appointment.billingItems,
       isBilled: appointment.isBilled
-    };
+    }; // @ts-ignore
+
+    result.color = this.getColourForAppointment(appointment);
     return result;
   }
 
@@ -2005,6 +2005,8 @@ class AppointmentController {
     logger('Loading templated events for day ' + day);
     const appointmentTemplates = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates);
     appointmentTemplates.forEach(template => {
+      logger(template);
+
       if (template.day === day) {
         // only template appointments for the day number
         // is there already an appointment on display that matches the template?
@@ -2025,9 +2027,11 @@ class AppointmentController {
           templatedAppt.isDNA = false;
           templatedAppt.billingItems = '';
           templatedAppt.arrivalTime = '';
+          templatedAppt.color = AppointmentController.getInstance().getColourForAppointment(templatedAppt);
           logger(templatedAppt); // add the templated appointment to the persistence
 
-          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates, _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(templatedAppt), false);
+          _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, AppointmentController.getInstance().getAppointmentFromEvent(templatedAppt), false);
+          _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().addEvent(templatedAppt);
         }
       }
     });
@@ -2336,7 +2340,6 @@ class AppointmentDetailModal {
         _AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent.end = date[1];
       }
     });
-    console.log(this.viewElements.range);
     this.setupActionButtons();
     logger('Completed setup of detail modal for appointments');
   }
@@ -2706,13 +2709,15 @@ class AppointmentDetailModal {
     });
     let warningsText = '';
 
-    if (patientBasicDetails && patientBasicDetails.flags.hasWarnings) {
-      patientBasicDetails.warnings.warnings.forEach(warning => {
-        warningsText += warning + '\r\n';
-      });
-      logger('Patient has warnings');
-      logger(patientBasicDetails);
-      logger(warningsText);
+    if (patientBasicDetails && patientBasicDetails.flags) {
+      if (patientBasicDetails.flags.hasWarnings) {
+        patientBasicDetails.warnings.warnings.forEach(warning => {
+          warningsText += warning + '\r\n';
+        });
+        logger('Patient has warnings');
+        logger(patientBasicDetails);
+        logger(warningsText);
+      }
     }
 
     return warningsText;
@@ -2809,7 +2814,6 @@ class AppointmentFilterView {
             }
           }
 
-          console.log(selected);
           _AppointmentBookView__WEBPACK_IMPORTED_MODULE_0__.AppointmentBookView.getInstance().getCalender().setOptions({
             resources: selected
           });
@@ -2875,7 +2879,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./appointments/AppointmentController */ "./src/appointments/AppointmentController.ts");
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
 /* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
-/* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./appointment-templates/AppointmentTemplateController */ "./src/appointment-templates/AppointmentTemplateController.ts");
+/* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+
 
 
 
@@ -2915,8 +2921,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
     this.thisEl = document.getElementById('root');
     this.setupNavigationItemHandling();
-    _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded(); //AppointmentTemplateController.getInstance().onDocumentLoaded();
-
+    _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
+    _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.ContextualInformationHelper.getInstance().onDocumentLoaded();
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SecurityManager.getInstance().onDocumentLoaded(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
@@ -2959,14 +2965,16 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
   handleShowAppointmentBook(event) {
     logger(`Showing appointment book`);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+    logger(_appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().getModel().clinicConfig);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
   }
 
   handleShowAppointmentTemplates(event) {
     logger(`Showing appointment templates`);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_8__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
+    logger(_appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().getModel().clinicConfig);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
   }
 
   handleShowPatientRecords(event) {}
@@ -2990,7 +2998,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'api api-ts-results appointment-controller';
+localStorage.debug = 'app socket-listener state-manager-graphql api-ts-results appointment-controller';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {

@@ -70,7 +70,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.setupNavigationItemHandling();
 
         AppointmentController.getInstance().onDocumentLoaded();
-        //AppointmentTemplateController.getInstance().onDocumentLoaded();
+        AppointmentTemplateController.getInstance().onDocumentLoaded();
         ContextualInformationHelper.getInstance().onDocumentLoaded();
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         Controller.getInstance().onDocumentLoaded();
@@ -112,12 +112,15 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     protected handleShowAppointmentBook(event:Event):void {
         logger(`Showing appointment book`);
+        logger(AppointmentController.getInstance().getModel().clinicConfig);
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'),'d-none',false);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'),'d-none',true);
+
 
     }
     protected handleShowAppointmentTemplates(event:Event):void {
         logger(`Showing appointment templates`);
+        logger(AppointmentController.getInstance().getModel().clinicConfig);
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'),'d-none',true);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'),'d-none',false);
 
@@ -150,7 +153,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'api api-ts-results appointment-controller';
+localStorage.debug = 'app socket-listener state-manager-graphql api-ts-results appointment-controller';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

@@ -173,7 +173,7 @@ export class AppointmentTemplateView {
         }
         options.renderScheduleEvent = this.handleAppointmentTemplateRendering;
         options.onEventUpdated = (args:any) => {
-            console.log(args);
+
             // user has dragged event - update the appointment
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointmentTemplates,
@@ -210,7 +210,7 @@ export class AppointmentTemplateView {
     public applyClinicConfig(clinicConfig: any) {
         if (this.viewElements.calendar) {
             logger('State changed, using clinic config options');
-            const config = {...clinicConfig};
+            const config = JSON.parse(JSON.stringify(clinicConfig));
             config.view.schedule.type = 'week';
 
             this.viewElements.calendar.setOptions({

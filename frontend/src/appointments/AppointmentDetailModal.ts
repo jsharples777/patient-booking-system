@@ -173,7 +173,7 @@ export class AppointmentDetailModal {
                 AppointmentController.getInstance().getModel().tempEvent.end = date[1];
             }
         });
-        console.log(this.viewElements.range);
+
 
         this.setupActionButtons();
         logger('Completed setup of detail modal for appointments');
@@ -643,13 +643,15 @@ export class AppointmentDetailModal {
     private getPatientWarnings(patientId:string) {
         let patientBasicDetails: any = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch, {_id: patientId});
         let warningsText = '';
-        if (patientBasicDetails && patientBasicDetails.flags.hasWarnings) {
-            patientBasicDetails.warnings.warnings.forEach((warning: any) => {
-                warningsText += warning + '\r\n';
-            });
-            logger('Patient has warnings');
-            logger(patientBasicDetails);
-            logger(warningsText);
+        if (patientBasicDetails && patientBasicDetails.flags) {
+            if (patientBasicDetails.flags.hasWarnings) {
+                patientBasicDetails.warnings.warnings.forEach((warning: any) => {
+                    warningsText += warning + '\r\n';
+                });
+                logger('Patient has warnings');
+                logger(patientBasicDetails);
+                logger(warningsText);
+            }
 
         }
         return warningsText;

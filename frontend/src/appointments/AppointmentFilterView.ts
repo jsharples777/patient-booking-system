@@ -58,7 +58,7 @@ export class AppointmentFilterView {
                         }
                     }
 
-                    console.log(selected);
+
 
                      AppointmentBookView.getInstance().getCalender().setOptions({
                         resources: selected

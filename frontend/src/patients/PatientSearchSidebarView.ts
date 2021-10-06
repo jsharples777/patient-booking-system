@@ -73,7 +73,7 @@ class PatientSearchSidebarView extends AbstractStatefulCollectionView {
 
   eventClickItem(event) {
     event.preventDefault();
-    console.log(event.target);
+
     const patientId = event.target.getAttribute(this.uiConfig.dom.resultDataKeyId);
     logger.log(`${this.loggingPrefix} Patient ${event.target.innerText} with id ${patientId} clicked`, 20);
     // get the patient item from the state manager

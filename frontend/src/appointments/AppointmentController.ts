@@ -126,17 +126,19 @@ export class AppointmentController implements StateChangeListener {
                 colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_ARRIVED);
             }
         }
-        if (appointment.readyForBilling) {
-            colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
-        }
-        if (appointment.isBilled) {
-            colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
-        }
-        if (appointment.isCancelled) {
-            colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
-        }
-        if (appointment.isDNA) {
-            colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
+        if (appointment.readyForBilling || appointment.isBilled || appointment.isCancelled || appointment.isDNA) {
+            if (appointment.readyForBilling) {
+                colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
+            }
+            if (appointment.isBilled) {
+                colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
+            }
+            if (appointment.isCancelled) {
+                colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
+            }
+            if (appointment.isDNA) {
+                colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
+            }
         }
         return colour;
     }
@@ -172,7 +174,6 @@ export class AppointmentController implements StateChangeListener {
             end: moment(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
             title: appointment.name,
             description: appointment.note,
-            color: this.getColourForAppointment(appointment),
             allDay: false,
             editable: canEdit,
             resource: appointment.provider,
@@ -189,6 +190,9 @@ export class AppointmentController implements StateChangeListener {
             billingItems: appointment.billingItems,
             isBilled:appointment.isBilled
         }
+        // @ts-ignore
+        result.color = this.getColourForAppointment(appointment);
+
 
         return result;
 
@@ -199,6 +203,7 @@ export class AppointmentController implements StateChangeListener {
         logger('Loading templated events for day ' + day);
         const appointmentTemplates = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
         appointmentTemplates.forEach((template:any) => {
+            logger(template);
             if (template.day === day) { // only template appointments for the day number
                 // is there already an appointment on display that matches the template?
                 const foundIndex = currentAppointments.findIndex((appt) => appt.time === template.time);
@@ -217,14 +222,16 @@ export class AppointmentController implements StateChangeListener {
                     templatedAppt.isDNA = false;
                     templatedAppt.billingItems = '';
                     templatedAppt.arrivalTime = '';
+                    templatedAppt.color = AppointmentController.getInstance().getColourForAppointment(templatedAppt);
 
                     logger(templatedAppt);
 
                     // add the templated appointment to the persistence
                     Controller.getInstance().getStateManager().addNewItemToState(
-                        STATE_NAMES.appointmentTemplates,
-                        AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(templatedAppt),
+                        STATE_NAMES.appointments,
+                        AppointmentController.getInstance().getAppointmentFromEvent(templatedAppt),
                         false);
+                    AppointmentBookView.getInstance().getCalender().addEvent(templatedAppt);
 
 
                 }

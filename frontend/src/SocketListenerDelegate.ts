@@ -52,7 +52,7 @@ export default class SocketListenerDelegate implements SocketListener {
                             break;
                         }
                         case STATE_NAMES.appointments: {
-                            console.log(stateObj);
+
                             Controller.getInstance().getStateManager().updateItemInState(STATE_NAMES.appointments, stateObj, true);
                             break;
                         }

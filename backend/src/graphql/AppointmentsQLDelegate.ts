@@ -63,7 +63,7 @@ export default class AppointmentsQLDelegate {
                 const message:DataMessage = {type:"create",stateName: "appointment",data:data.appt, user:data.appt.createdBy}
                 socketManager.sendDataMessage(message);
 
-                resolve(data);
+                resolve(data.appt);
             })
             .catch((err) => {
                 logger(err);

@@ -52,7 +52,7 @@ export default class AppointmentTemplatesQLDelegate {
                 const message:DataMessage = {type:"create",stateName: "appointmentTemplate",data:data.template, user:data.template.createdBy,}
                 socketManager.sendDataMessage(message);
 
-                resolve(data);
+                resolve(data.template);
             })
             .catch((err) => {
                 logger(err);
