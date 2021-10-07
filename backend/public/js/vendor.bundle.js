@@ -54803,6 +54803,17 @@ class AbstractStateManager {
     addChangeListenerForName(name, listener) {
         this.delegate.addChangeListenerForName(name, listener);
     }
+    _findItemInState(name, item) {
+        let result = {};
+        const state = this.getStateByName(name);
+        const foundIndex = state.findIndex((element) => this.getEqualityFnForName(name)(element, item));
+        smLogger(`Finding item in state ${name} - found index ${foundIndex}`);
+        smLogger(item);
+        if (foundIndex >= 0) {
+            result = state[foundIndex];
+        }
+        return result;
+    }
     _findItemsInState(name, filters) {
         let results = [];
         const state = this._getState(name);
@@ -54907,15 +54918,7 @@ class AbstractStateManager {
     }
     findItemInState(name, item) {
         this._ensureStatePresent(name);
-        let result = {};
-        const state = this.getStateByName(name);
-        const foundIndex = state.findIndex((element) => this.getEqualityFnForName(name)(element, item));
-        smLogger(`Finding item in state ${name} - found index ${foundIndex}`);
-        smLogger(item);
-        if (foundIndex >= 0) {
-            result = state[foundIndex];
-        }
-        return result;
+        return this._findItemInState(name, item);
     }
     isItemInState(name, item) {
         this._ensureStatePresent(name);
@@ -55097,6 +55100,21 @@ class AggregateStateManager extends _AbstractStateManager__WEBPACK_IMPORTED_MODU
         }
         return state.value;
     }
+    _findItemInState(name, item) {
+        let result = {};
+        this.stateManagers.forEach((sm) => {
+            if (!this.stateNameInFilters(name, sm.filters)) {
+                aggLogger(`finding item from state manager for state ${name}`);
+                aggLogger(sm.manager);
+                sm.manager._findItemInState(name, item);
+            }
+        });
+        // assuming the state manager is holding all the values
+        if (this.stateManagers.length > 0) {
+            result = this.stateManagers[0].manager._findItemInState(name, item);
+        }
+        return result;
+    }
     stateNameInFilters(name, filters) {
         let foundIndex = filters.findIndex((filter) => filter === name);
         return (foundIndex >= 0);
@@ -55145,6 +55163,10 @@ class AsyncStateManagerWrapper extends _AbstractStateManager__WEBPACK_IMPORTED_M
     _findItemsInState(name, filters) {
         asyncLogger(`finding items with filters`);
         return this.wrappedSM.findItemsInState(name, filters);
+    }
+    _findItemInState(name, stateObj) {
+        asyncLogger(`finding item `);
+        return this.wrappedSM.findItemInState(name, stateObj);
     }
     _addItemToState(name, stateObj, isPersisted = false) {
         asyncLogger(`adding item to state ${name} - is persisted ${isPersisted}`);
@@ -55512,10 +55534,12 @@ class GraphQLApiStateManager {
         this.callbackForRemoveItem = this.callbackForRemoveItem.bind(this);
         this.callbackForUpdateItem = this.callbackForUpdateItem.bind(this);
         this.callbackForGetItems = this.callbackForGetItems.bind(this);
+        this.callbackForFindItem = this.callbackForFindItem.bind(this);
         _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(GraphQLApiStateManager.FUNCTION_ID_ADD_ITEM, this.callbackForAddItem);
         _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(GraphQLApiStateManager.FUNCTION_ID_REMOVE_ITEM, this.callbackForRemoveItem);
         _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(GraphQLApiStateManager.FUNCTION_ID_UPDATE_ITEM, this.callbackForUpdateItem);
         _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(GraphQLApiStateManager.FUNCTION_ID_GET_ITEMS, this.callbackForGetItems);
+        _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(GraphQLApiStateManager.FUNCTION_ID_FIND_ITEM, this.callbackForFindItem);
     }
     static getInstance() {
         if (!(GraphQLApiStateManager._instance)) {
@@ -55605,6 +55629,21 @@ class GraphQLApiStateManager {
             logger(`No configuration for state ${name}`);
         }
     }
+    _findItemInState(name, stateObj) {
+        logger(`Finding item in ${name}`);
+        logger(stateObj);
+        let config = this.getConfigurationForStateName(name);
+        if (config.isActive) {
+            let identifier = stateObj.id;
+            if (config.idField) {
+                identifier = stateObj[config.idField];
+            }
+            _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__.DownloadManager.getInstance().addQLApiRequest(config.serverURL + config.apiURL, config.apis.find, { identifier: identifier }, GraphQLApiStateManager.FUNCTION_ID_FIND_ITEM, name, true);
+        }
+        else {
+            logger(`No configuration for state ${name}`);
+        }
+    }
     _removeItemFromState(name, stateObj, isPersisted) {
         if (isPersisted)
             return; // dont remove complete objects to the state - they are already processed
@@ -55645,7 +55684,7 @@ class GraphQLApiStateManager {
         this.delegate.emitEvents();
     }
     findItemInState(name, item) {
-        throw Error("not implemented");
+        return this._findItemInState(name, item);
     }
     getStateByName(name) {
         this._getState(name);
@@ -55747,11 +55786,19 @@ class GraphQLApiStateManager {
             this.delegate.informChangeListenersForStateWithName(associatedStateName, data.data[dataAttribute], _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
         }
     }
+    callbackForFindItem(data, status, associatedStateName) {
+        logger(`callback for find item for state ${associatedStateName} with status ${status} - FORWARDING`);
+        if (status >= 200 && status <= 299) { // do we have any data?
+            logger(data);
+            this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
+        }
+    }
 }
 GraphQLApiStateManager.FUNCTION_ID_ADD_ITEM = 'graphql.api.state.manager.add.item';
 GraphQLApiStateManager.FUNCTION_ID_REMOVE_ITEM = 'graphql.api.state.manager.remove.item';
 GraphQLApiStateManager.FUNCTION_ID_UPDATE_ITEM = 'graphql.api.state.manager.update.item';
 GraphQLApiStateManager.FUNCTION_ID_GET_ITEMS = 'graphql.api.state.manager.get.items';
+GraphQLApiStateManager.FUNCTION_ID_FIND_ITEM = 'graphql.api.state.manager.find.item';
 //# sourceMappingURL=GraphQLApiStateManager.js.map
 
 /***/ }),
@@ -56128,6 +56175,8 @@ class IndexedDBStateManager {
             this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_2__.StateEventType.ItemAdded, null);
         });
     }
+    _findItemInState(name, item) {
+    }
 }
 //# sourceMappingURL=IndexedDBStateManager.js.map
 
@@ -56274,10 +56323,12 @@ class RESTApiStateManager {
         this.callbackForRemoveItem = this.callbackForRemoveItem.bind(this);
         this.callbackForUpdateItem = this.callbackForUpdateItem.bind(this);
         this.callbackForGetItems = this.callbackForGetItems.bind(this);
+        this.callbackForFindItem = this.callbackForFindItem.bind(this);
         _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(RESTApiStateManager.FUNCTION_ID_ADD_ITEM, this.callbackForAddItem);
         _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(RESTApiStateManager.FUNCTION_ID_REMOVE_ITEM, this.callbackForRemoveItem);
         _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(RESTApiStateManager.FUNCTION_ID_UPDATE_ITEM, this.callbackForUpdateItem);
         _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(RESTApiStateManager.FUNCTION_ID_GET_ITEMS, this.callbackForGetItems);
+        _network_CallbackRegistry__WEBPACK_IMPORTED_MODULE_5__.CallbackRegistry.getInstance().addRegisterCallback(RESTApiStateManager.FUNCTION_ID_FIND_ITEM, this.callbackForFindItem);
     }
     static getInstance() {
         if (!(RESTApiStateManager._instance)) {
@@ -56428,7 +56479,7 @@ class RESTApiStateManager {
         this.delegate.emitEvents();
     }
     findItemInState(name, item) {
-        throw Error("not implemented");
+        return this._findItemInState(name, item);
     }
     getStateByName(name) {
         this._getState(name);
@@ -56497,6 +56548,13 @@ class RESTApiStateManager {
             this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.StateChanged, null);
         }
     }
+    callbackForFindItem(data, status, associatedStateName) {
+        logger(`callback for find item for state ${associatedStateName} with status ${status} - FORWARDING`);
+        if (status >= 200 && status <= 299) { // do we have any data?
+            logger(data);
+            this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
+        }
+    }
     callbackForAddItem(data, status, associatedStateName, wasOffline) {
         logger(`callback for add item for state ${associatedStateName} with status ${status} - FORWARDING`);
         if (status >= 200 && status <= 299) { // do we have any data?
@@ -56516,11 +56574,36 @@ class RESTApiStateManager {
             this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
         }
     }
+    _findItemInState(name, item) {
+        logger(`Finding item from ${name}`);
+        logger(item);
+        let config = this.getConfigurationForStateName(name);
+        let identifier = item.id;
+        if (config.idField) {
+            identifier = item[config.idField];
+        }
+        if (config.isActive) {
+            const jsonRequest = {
+                url: config.serverURL + config.api,
+                type: _network_Types__WEBPACK_IMPORTED_MODULE_1__.RequestType.GET,
+                params: {
+                    id: identifier
+                },
+                callbackId: RESTApiStateManager.FUNCTION_ID_FIND_ITEM,
+                associatedStateName: name
+            };
+            _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__.DownloadManager.getInstance().addApiRequest(jsonRequest, true);
+        }
+        else {
+            logger(`No configuration for state ${name}`);
+        }
+    }
 }
 RESTApiStateManager.FUNCTION_ID_ADD_ITEM = 'rest.api.state.manager.add.item';
 RESTApiStateManager.FUNCTION_ID_REMOVE_ITEM = 'rest.api.state.manager.remove.item';
 RESTApiStateManager.FUNCTION_ID_UPDATE_ITEM = 'rest.api.state.manager.update.item';
 RESTApiStateManager.FUNCTION_ID_GET_ITEMS = 'rest.api.state.manager.get.items';
+RESTApiStateManager.FUNCTION_ID_FIND_ITEM = 'rest.api.state.manager.find.item';
 //# sourceMappingURL=RESTApiStateManager.js.map
 
 /***/ }),

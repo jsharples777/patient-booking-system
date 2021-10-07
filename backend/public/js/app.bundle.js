@@ -44,13 +44,16 @@ const STATE_NAMES = {
   appointmentTypes: 'appointmentType',
   clinicConfig: 'clinicConfig',
   providers: 'provider',
-  appointmentTemplates: 'appointmentTemplate'
+  appointmentTemplates: 'appointmentTemplate',
+  patientDemographics: 'patientDemographics'
 };
 const API_Config = {
   login: '/login',
   graphQL: '/graphQL',
   users: '/api/users',
-  clinicConfig: '/api/clinic-config'
+  clinicConfig: '/api/clinic-config',
+  patients: '/api/patients',
+  patientDemographics: '/api/demographics'
 };
 const NAVIGATION = {
   appointmentBook: 'navigationItemAppointmentBook',
@@ -146,6 +149,12 @@ class Controller {
       serverURL: '',
       api: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.clinicConfig,
       isActive: true
+    }, {
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientDemographics,
+      serverURL: '',
+      api: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.patientDemographics,
+      isActive: true,
+      idField: '_id'
     }]);
     let qlSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.GraphQLApiStateManager.getInstance();
     qlSM.initialise([{
@@ -248,14 +257,36 @@ class Controller {
       },
       isActive: true,
       idField: '_id'
+    }, {
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientDemographics,
+      serverURL: '',
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
+      apis: {
+        findAll: '',
+        create: '',
+        destroy: '',
+        update: '',
+        find: 'query getPatientDemographics($identifier: String!){getPatientDemographics(id: $identifier) {_id,name {firstname,surname}}}'
+      },
+      data: {
+        findAll: '',
+        create: '',
+        destroy: '',
+        update: '',
+        find: ''
+      },
+      isActive: true,
+      idField: '_id'
     }]);
     let aggregateSM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.AggregateStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     let memorySM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.MemoryBufferStateManager(_EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     let asyncREST = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.AsyncStateManagerWrapper(aggregateSM, restSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     let asyncQL = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.AsyncStateManagerWrapper(aggregateSM, qlSM, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
-    aggregateSM.addStateManager(memorySM, [], false);
-    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.providers, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates], false);
-    aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig], false);
+    aggregateSM.addStateManager(memorySM, [], false); //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patientDemographics], false);
+
+    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.providers, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates], false); //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
+
+    aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientDemographics], false);
     this.stateManager = aggregateSM; // state listener
 
     this.stateChanged = this.stateChanged.bind(this);
@@ -3166,6 +3197,9 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.ContextualInformationHelper.getInstance().onDocumentLoaded();
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SecurityManager.getInstance().onDocumentLoaded(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
+    _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientDemographics, {
+      _id: '2a8665a6-3580-4195-8ed7-0f81df551204'
+    });
   }
 
   getCurrentUser() {
@@ -3242,7 +3276,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app socket-listener api-ts-results appointment-controller';
+localStorage.debug = 'app api-ts-results api-ts state-manager-api';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {

@@ -4,24 +4,8 @@ import {Document} from "mongodb";
 const router = express.Router();
 
 
-router.get("/",function(req,res) {
-    console.log("Starting route GET /patients");
-    try {
-        MongoDataSource.getInstance().getPatientSearchDetails().then((jsonData) => {
-            res.json(jsonData);
-            res.end();
-        });
-    }
-    catch (err) {
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    }
-});
-
-router.get("/demographics/:id",function(req,res) {
-    console.log(`Starting route GET /patient/demographics by id ${req.params.id}`);
+router.get("/:id",function(req,res) {
+    console.log(`Starting route GET /demographics by id ${req.params.id}`);
     const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
 
     let projection = {
@@ -56,21 +40,6 @@ router.get("/demographics/:id",function(req,res) {
 });
 
 
-router.get("/:id",function(req,res) {
-    console.log("Starting route GET /patient by legacy id");
-    try {
-        MongoDataSource.getInstance().getPatientById(req.params.id).then((jsonData) => {
-            res.json(jsonData);
-            res.end();
-        });
-    }
-    catch (err) {
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    }
-});
 
 
 

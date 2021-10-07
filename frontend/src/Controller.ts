@@ -62,6 +62,13 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 api: API_Config.clinicConfig,
                 isActive: true
             },
+            {
+                stateName: STATE_NAMES.patientDemographics,
+                serverURL: '',
+                api: API_Config.patientDemographics,
+                isActive: true,
+                idField: '_id'
+            },
         ]);
         let qlSM = GraphQLApiStateManager.getInstance();
         qlSM.initialise([
@@ -170,6 +177,27 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 isActive: true,
                 idField: '_id'
             },
+            {
+                stateName: STATE_NAMES.patientDemographics,
+                serverURL: '',
+                apiURL: API_Config.graphQL,
+                apis: {
+                    findAll: '',
+                    create: '',
+                    destroy: '',
+                    update: '',
+                    find: 'query getPatientDemographics($identifier: String!){getPatientDemographics(id: $identifier) {_id,name {firstname,surname}}}',
+                },
+                data: {
+                    findAll: '',
+                    create: '',
+                    destroy: '',
+                    update: '',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
+            },
         ])
 
 
@@ -180,8 +208,10 @@ export default class Controller implements StateChangeListener, DataObjectListen
         let asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
 
         aggregateSM.addStateManager(memorySM, [], false);
+        //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patientDemographics], false);
         aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates], false);
-        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
+        //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
+        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig,STATE_NAMES.patientDemographics], false);
         this.stateManager = aggregateSM;
 
         // state listener

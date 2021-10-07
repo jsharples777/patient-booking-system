@@ -41,31 +41,31 @@ input AppointmentInput {
     billingItems:String
 }
 
-type identifiers {
+type IdentifiersPartial {
     legacyId:String
 }
 
-type name {
+type NamePartial {
     firstname:String,
     surname:String
 }
 
-type flags {
+type FlagsPartial {
     isInactive:Boolean,
     hasWarnings: Boolean
 }
 
-type warnings {
+type Warnings {
     _id: String,
     warnings: [String]
 }
 
 type PatientSearchItem {
     _id:String,
-    identifiers: identifiers,
-    name: name,
-    flags: flags,
-    warnings: warnings
+    identifiers: IdentifiersPartial,
+    name: NamePartial,
+    flags: FlagsPartial,
+    warnings: Warnings
 }
 
 type AppointmentType {
@@ -120,7 +120,258 @@ input AppointmentTemplateInput {
     modified:Float
 }
 
+type Name {
+    _id: String,
+    title: String,
+    firstname: String,
+    middlename: String,
+    surname:String,
+    aka: String
+}
 
+type Contact {
+    _id: String,
+    line1: String,
+    line2: String,
+    suburb: String
+    postcode: Int,
+    state: String,
+    country: String,
+    home: String,
+    work: String,
+    mobile:String,
+    nokname:String,
+    nokphone:String
+}
+
+type Identifiers {
+    _id: String,
+    medicare: Float,
+    medicareRef: Int,
+    legacyId: Int,
+    dva: String,
+    dvaColour: String,
+    hcc: String,
+    ihi: Float
+}
+
+type Flags {
+    _id: String,
+    isAcountHolder: Boolean,
+    legacyAccountHolderId: Int,
+    isDeceased: Boolean,
+    isInactive: Boolean,
+    shouldSMS: Boolean,
+    isMarried: Boolean,
+    isCTGRegistered: Boolean,
+    hasWarnings: Boolean
+}
+
+type Allergy {
+    _id: String,
+    name: String,
+    reaction: String,
+    created: Float,
+    modified: Float
+}
+
+type Consult {
+    _id: String,
+    date: Int,
+    time: String,
+    doctor: String,
+    history: String,
+    diagnosis: String,
+    plan: String,
+    findings: String,
+    created: Float,
+    modified: Float
+}
+
+type Result {
+    _id: String,
+    lab: String,
+    labref: String,
+    test: String,
+    orderedBy: String,
+    copies: [String],
+    requested: Int,
+    collected: Int,
+    reported: Int,
+    collectedTime: String,
+    imported: Int,
+    received: Int,
+    result:String,
+    isLinked:Boolean,
+    reviewedBy: String,
+    isNormal: Boolean,
+    isLast:Boolean
+}
+
+type Script {
+    _id:String,
+    by: String,
+    name: String,
+    on:Int,
+    dose:String,
+    frequency:String,
+    instructions: String,
+    repeats:String,
+    quantity:String,
+    drugCode:String,
+    lastPrinted:Int,
+    created:Float,
+    modified:Float
+}
+
+type ScriptHistory {
+    _id:String,
+    changed:Int,
+    dose:String,
+    change:String,
+    reason:String,
+    drugCode:String,
+    name:String
+}
+
+type ScriptArchive {
+    _id:String,
+    medication: String,
+    dose:String,
+    scriptNumber: String,
+    repeats:String,
+    quantity:String,
+    approvalCode:String,
+    drugCode:String,
+    note:String,
+    created:Float,
+    modified:Float
+}
+
+type Task {
+    _id:String,
+    by:String,
+    isUrgent:Boolean,
+    isCompleted:Boolean,
+    isRead:Boolean,
+    title:String,
+    details:String,
+    completed:Int,
+    for:String,
+    created:Float,
+    modified:Float
+}
+
+type Document {
+    _id:String,
+    title: String,
+    type: String,
+    from: String,
+    reviewed: Int,
+    reviewedBy: String,
+    data:String,
+    created:Float,
+    modified:Float
+}
+
+type Letter {
+    _id:String,
+    creator:String,
+    isPrinted:Boolean,
+    isReviewd:Boolean,
+    from:String,
+    type:String,
+    data:String,
+    to:String,
+    created:Float,
+    modified:Float
+}
+
+type Vaccination {
+    _id:String,
+    vaccine:String,
+    on:Int,
+    by:String,
+    providerNum:String,
+    batch:String,
+    expiry:Int,
+    site:String,
+    shouldSendtoAIR:Boolean,
+    airCode:String,
+    created:Float
+}
+
+type WCCContact {
+    line1: String,
+    line2: String,
+    suburb: String,
+    state: String,
+    postCode: String
+}
+
+type WCCClaim {
+    number:String,
+    injuryDate:Int,
+    injuryTime:String,
+    claimDate:Int,
+    injury:String,
+    mechanism:String
+}
+
+type WCCEmployer {
+    name:String,
+    contact: WCCContact,
+    insurer: String
+}
+
+type Workcover {
+    _id:String,
+    employer:WCCEmployer,
+    claim:WCCClaim,
+    date: Int,
+    time: String,
+    reviewed:Int,
+    type:String,
+    diagnosis:String,
+    comment:String,
+    treatment:String,
+    isReturnToNormalDuties:Boolean,
+    returnToNormalDuties:Int,
+    isRestrictedDuties:Boolean,
+    restrictedDutiesFrom:Int,
+    restrictedDutiesTo:Int,
+    isNoCapacity:Boolean,
+    noCapacityFrom:Int,
+    noCapacityTo:Int
+}
+
+type History {
+    _id: String,
+    diagnosis: String,
+    note: String,
+    isConfidential: Boolean,
+    date: Int,
+    created: Float,
+    modified: Float
+}
+
+type PatientDemographics {
+    _id:String,
+    lastSeen: Int,
+    lastSeenBy: String,
+    dob: Int,
+    dod: Int,
+    gender:String,
+    ethnicity: String,
+    countryofbirth: String,
+    created: Float,
+    modified: Float,
+    name:Name,
+    contact:Contact,
+    identifiers:Identifiers,
+    flags:Flags,
+    warnings:Warnings
+}
 
 
 type Query {
@@ -129,6 +380,7 @@ type Query {
     getAppointmentTypes:[AppointmentType]
     getProviders:[Provider]
     getAppointmentTemplates:[AppointmentTemplate]
+    getPatientDemographics(id:String):PatientDemographics
 }
 
 type Mutation {

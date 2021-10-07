@@ -3,7 +3,7 @@ import Controller from './Controller';
 
 import {
     API_Config,
-    NAVIGATION,
+    NAVIGATION, STATE_NAMES,
 } from "./AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
@@ -79,6 +79,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
         ContextualInformationHelper.getInstance().onDocumentLoaded();
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         Controller.getInstance().onDocumentLoaded();
+
+        Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientDemographics,{_id:'2a8665a6-3580-4195-8ed7-0f81df551204'});
 
     }
 
@@ -161,7 +163,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app socket-listener api-ts-results appointment-controller';
+localStorage.debug = 'app api-ts-results api-ts state-manager-api';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

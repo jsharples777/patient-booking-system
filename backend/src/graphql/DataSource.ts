@@ -25,7 +25,8 @@ export default class DataSource {
                 getPatientSearchDetails:PatientsQLDelegate.getPatientSearchDetails,
                 getAppointmentTypes:AppointmentTypesQLDelegate.getAppointmentTypes,
                 getProviders:ProvidersQLDelegate.getProviders,
-                getAppointmentTemplates:AppointmentTemplatesQLDelegate.getAppointmentTemplates
+                getAppointmentTemplates:AppointmentTemplatesQLDelegate.getAppointmentTemplates,
+                getPatientDemographics:PatientsQLDelegate.getPatientDemographics
             },
             Mutation: {
                 addAppointment:AppointmentsQLDelegate.addAppointment,

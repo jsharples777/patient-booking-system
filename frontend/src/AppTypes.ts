@@ -20,14 +20,17 @@ export const STATE_NAMES = {
     appointmentTypes: 'appointmentType',
     clinicConfig:'clinicConfig',
     providers:'provider',
-    appointmentTemplates:'appointmentTemplate'
+    appointmentTemplates:'appointmentTemplate',
+    patientDemographics:'patientDemographics'
 }
 
 export const API_Config = {
     login: '/login',
     graphQL: '/graphQL',
     users: '/api/users',
-    clinicConfig: '/api/clinic-config'
+    clinicConfig: '/api/clinic-config',
+    patients: '/api/patients',
+    patientDemographics: '/api/demographics'
 };
 
 export const NAVIGATION = {
