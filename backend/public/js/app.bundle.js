@@ -813,26 +813,37 @@ class AppointmentTemplateController {
     ;
   }
 
-  getEventForAppointmentTemplate(appointment) {
-    logger(`Creating event for appointment template with first day number of ${this.dataElements.currentFirstDateDayNumber}`);
-    logger(appointment);
-    if (appointment.day < this.dataElements.currentFirstDateDayNumber) return null;
-    const loadDate = this.dataElements.currentFirstDate + (appointment.day - this.dataElements.currentFirstDateDayNumber);
-    const timeString = (0,_DurationFunctions__WEBPACK_IMPORTED_MODULE_8__.computeTimeStringFromStartTimeAndDurationInSeconds)(appointment.time, appointment.duration);
+  getEventForAppointmentTemplateForDate(startDate, dayNumber, template) {
+    logger(`Creating event for appointment template on date ${startDate} with ${dayNumber}`);
+    logger(template);
+    if (template.day < dayNumber) return null;
+    const loadDate = startDate + (template.day - dayNumber);
+    const timeString = (0,_DurationFunctions__WEBPACK_IMPORTED_MODULE_8__.computeTimeStringFromStartTimeAndDurationInSeconds)(template.time, template.duration);
     let result = {
-      id: appointment._id,
-      start: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
-      end: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
-      color: this.getColourForAppointmentTemplate(appointment),
+      id: template._id,
+      start: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${startDate}${template.time}`, 'YYYYMMDDHHmmss'),
+      end: moment__WEBPACK_IMPORTED_MODULE_1___default()(`${startDate}${timeString}`, 'YYYYMMDDHHmm'),
+      color: this.getColourForAppointmentTemplate(template),
       allDay: false,
       editable: true,
-      resource: appointment.provider,
-      createdBy: appointment.createdBy,
-      created: appointment.created,
-      modified: appointment.modified,
-      type: appointment.type,
-      provider: appointment.provider
+      resource: template.provider,
+      createdBy: template.createdBy,
+      created: template.created,
+      modified: template.modified,
+      type: template.type,
+      provider: template.provider
     };
+    logger('Converted to event');
+    logger(result);
+    return result;
+  }
+
+  getEventForAppointmentTemplate(template) {
+    logger(`Creating event for appointment template with first day number of ${this.dataElements.currentFirstDateDayNumber}`);
+    logger(template);
+    if (template.day < this.dataElements.currentFirstDateDayNumber) return null;
+    const loadDate = this.dataElements.currentFirstDate + (template.day - this.dataElements.currentFirstDateDayNumber);
+    let result = this.getEventForAppointmentTemplateForDate(loadDate, template.day, template);
     logger('Converted to template event');
     logger(result);
     return result;
@@ -1294,14 +1305,14 @@ class AppointmentTemplateFilterView {
         inputEl.setAttribute("checked", '');
         inputEl.setAttribute("mbsc-checkbox", '');
         inputEl.setAttribute('data-label', provider.name);
-        inputEl.classList.add('provider-checkbox');
+        inputEl.classList.add('template-provider-checkbox');
         labelEl.appendChild(inputEl);
         this.providersEl.appendChild(labelEl);
       });
       (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.enhance)(this.providersEl);
-      document.querySelectorAll('.provider-checkbox').forEach(function (elm) {
+      document.querySelectorAll('.template-provider-checkbox').forEach(function (elm) {
         elm.addEventListener('change', function () {
-          let checkboxList = document.querySelectorAll('.provider-checkbox');
+          let checkboxList = document.querySelectorAll('.template-provider-checkbox');
           let selected = [];
 
           for (let i = 0; i < checkboxList.length; i++) {
@@ -2008,7 +2019,7 @@ class AppointmentController {
     return result;
   }
 
-  addTemplateEvents(day, currentAppointments) {
+  addTemplateEvents(loadDate, day, currentAppointments) {
     logger('Loading templated events for day ' + day);
     const appointmentTemplates = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates);
     appointmentTemplates.forEach(template => {
@@ -2022,7 +2033,7 @@ class AppointmentController {
         if (foundIndex < 0) {
           logger(`appointment for time ${template.time} not found, creating new appointment`); // don't already have an appointment for that time
 
-          let templatedAppt = _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().getEventForAppointmentTemplate(template);
+          let templatedAppt = _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().getEventForAppointmentTemplateForDate(loadDate, day, template);
           templatedAppt.id = (0,uuid__WEBPACK_IMPORTED_MODULE_10__["default"])();
           templatedAppt.title = '';
           templatedAppt.description = '';
@@ -2064,7 +2075,7 @@ class AppointmentController {
     });
     inst.setEvents(results); // add template appointments as events where an appointment doesn't already exist in the same time slot, they will need unique _ids
 
-    if (this.dataElements.loadDate >= today) this.addTemplateEvents(loadDateDayNumber, appointmentsForTheDay);
+    if (this.dataElements.loadDate >= today) this.addTemplateEvents(this.dataElements.loadDate, loadDateDayNumber, appointmentsForTheDay);
   }
 
   filterResults(managerName, name, filterResults) {}
@@ -3231,7 +3242,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app socket-listener api-ts-results patient-search patient-search-detail';
+localStorage.debug = 'app socket-listener api-ts-results appointment-controller';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {

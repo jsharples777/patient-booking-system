@@ -177,7 +177,7 @@ export class AppointmentController implements StateChangeListener {
     }
 
 
-    private addTemplateEvents(day:number, currentAppointments:any[]) {
+    private addTemplateEvents(loadDate:number, day:number, currentAppointments:any[]) {
         logger('Loading templated events for day ' + day);
         const appointmentTemplates = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
         appointmentTemplates.forEach((template:any) => {
@@ -188,7 +188,7 @@ export class AppointmentController implements StateChangeListener {
                 if (foundIndex < 0) {
                     logger(`appointment for time ${template.time} not found, creating new appointment`)
                     // don't already have an appointment for that time
-                    let templatedAppt = AppointmentTemplateController.getInstance().getEventForAppointmentTemplate(template);
+                    let templatedAppt = AppointmentTemplateController.getInstance().getEventForAppointmentTemplateForDate(loadDate, day, template);
                     templatedAppt.id = v4();
                     templatedAppt.title = '';
                     templatedAppt.description = '';
@@ -247,7 +247,7 @@ export class AppointmentController implements StateChangeListener {
         inst.setEvents(results);
 
         // add template appointments as events where an appointment doesn't already exist in the same time slot, they will need unique _ids
-        if (this.dataElements.loadDate >= today) this.addTemplateEvents(loadDateDayNumber, appointmentsForTheDay);
+        if (this.dataElements.loadDate >= today) this.addTemplateEvents(this.dataElements.loadDate, loadDateDayNumber, appointmentsForTheDay);
 
     }
 

@@ -100,29 +100,46 @@ export class AppointmentTemplateController implements StateChangeListener {
         return this.getColourForAppointmentType(appointment.type);;
     }
 
-    public getEventForAppointmentTemplate(appointment:any):any {
-        logger(`Creating event for appointment template with first day number of ${this.dataElements.currentFirstDateDayNumber}`);
-        logger(appointment);
-        if (appointment.day < this.dataElements.currentFirstDateDayNumber) return null;
-        const loadDate = this.dataElements.currentFirstDate + (appointment.day - this.dataElements.currentFirstDateDayNumber);
+    public getEventForAppointmentTemplateForDate(startDate:number, dayNumber:number, template:any):any {
+        logger(`Creating event for appointment template on date ${startDate} with ${dayNumber}`);
+        logger(template);
+        if (template.day < dayNumber) return null;
+        const loadDate = startDate + (template.day - dayNumber);
 
-        const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(appointment.time,appointment.duration);
+        const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(template.time,template.duration);
 
 
         let result = {
-            id: appointment._id,
-            start: moment(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
-            end: moment(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
-            color: this.getColourForAppointmentTemplate(appointment),
+            id: template._id,
+            start: moment(`${startDate}${template.time}`, 'YYYYMMDDHHmmss'),
+            end: moment(`${startDate}${timeString}`, 'YYYYMMDDHHmm'),
+            color: this.getColourForAppointmentTemplate(template),
             allDay: false,
             editable: true,
-            resource: appointment.provider,
-            createdBy: appointment.createdBy,
-            created: appointment.created,
-            modified: appointment.modified,
-            type: appointment.type,
-            provider: appointment.provider
+            resource: template.provider,
+            createdBy: template.createdBy,
+            created: template.created,
+            modified: template.modified,
+            type: template.type,
+            provider: template.provider
         }
+        logger('Converted to event');
+        logger(result);
+
+        return result;
+
+    }
+
+
+    public getEventForAppointmentTemplate(template:any):any {
+        logger(`Creating event for appointment template with first day number of ${this.dataElements.currentFirstDateDayNumber}`);
+        logger(template);
+        if (template.day < this.dataElements.currentFirstDateDayNumber) return null;
+        const loadDate = this.dataElements.currentFirstDate + (template.day - this.dataElements.currentFirstDateDayNumber);
+
+
+
+        let result = this.getEventForAppointmentTemplateForDate(loadDate,template.day,template);
         logger('Converted to template event');
         logger(result);
 

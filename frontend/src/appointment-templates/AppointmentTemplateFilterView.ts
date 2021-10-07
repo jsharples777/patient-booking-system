@@ -29,7 +29,7 @@ export class AppointmentTemplateFilterView {
                 inputEl.setAttribute("checked",'');
                 inputEl.setAttribute("mbsc-checkbox",'');
                 inputEl.setAttribute('data-label',provider.name);
-                inputEl.classList.add('provider-checkbox');
+                inputEl.classList.add('template-provider-checkbox');
                 labelEl.appendChild(inputEl);
 
                 this.providersEl.appendChild(labelEl);
@@ -39,9 +39,9 @@ export class AppointmentTemplateFilterView {
             enhance(this.providersEl);
 
 
-            document.querySelectorAll('.provider-checkbox').forEach(function (elm) {
+            document.querySelectorAll('.template-provider-checkbox').forEach(function (elm) {
                 elm.addEventListener('change', function () {
-                    let checkboxList = document.querySelectorAll('.provider-checkbox');
+                    let checkboxList = document.querySelectorAll('.template-provider-checkbox');
                     let selected:any[] = [];
 
                     for (let i = 0; i < checkboxList.length; i++) {
