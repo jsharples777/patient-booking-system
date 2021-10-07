@@ -851,7 +851,6 @@ class AppointmentTemplateController {
       let result = this.getEventForAppointmentTemplate(appointment);
       if (result) results.push(result);
     });
-    console.log(results);
     inst.setEvents(results);
   }
 
@@ -895,7 +894,6 @@ class AppointmentTemplateController {
             let result = this.getEventForAppointmentTemplate(appointment);
             if (result) results.push(result);
           });
-          console.log(results);
           _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().setEvents(results);
           break;
         }
@@ -2861,6 +2859,232 @@ class AppointmentFilterView {
 
 /***/ }),
 
+/***/ "./src/patients/PatientSearchSidebar.ts":
+/*!**********************************************!*\
+  !*** ./src/patients/PatientSearchSidebar.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PatientSearchSidebar": () => (/* binding */ PatientSearchSidebar)
+/* harmony export */ });
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _PatientSearchView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PatientSearchView */ "./src/patients/PatientSearchView.ts");
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+
+
+
+
+class PatientSearchSidebar extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.SidebarViewContainer {
+  static getInstance() {
+    if (!PatientSearchSidebar._instance) {
+      PatientSearchSidebar._instance = new PatientSearchSidebar();
+    }
+
+    return PatientSearchSidebar._instance;
+  }
+
+  constructor() {
+    super(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.PatientSearchSidebarPrefs);
+    const recentSearches = new _PatientSearchView__WEBPACK_IMPORTED_MODULE_2__.PatientSearchView(_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager());
+    this.addView(recentSearches, {
+      containerId: _AppTypes__WEBPACK_IMPORTED_MODULE_0__.PatientSearchSidebarContainers.container
+    });
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/patients/PatientSearchView.ts":
+/*!*******************************************!*\
+  !*** ./src/patients/PatientSearchView.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PatientSearchView": () => (/* binding */ PatientSearchView)
+/* harmony export */ });
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../EqualityFunctions */ "./src/EqualityFunctions.ts");
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+
+
+
+
+
+const vLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('patient-search');
+const vLoggerDetail = debug__WEBPACK_IMPORTED_MODULE_0___default()('patient-search-detail');
+class PatientSearchView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.AbstractStatefulCollectionView {
+  static fastSearchInputId = 'fastPatientSearch';
+  static dataLimit = 20;
+  static DOMConfig = {
+    viewConfig: {
+      resultsContainerId: 'recentPatientSearches',
+      dataSourceId: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.VIEW_NAME.patientSearch
+    },
+    resultsElementType: 'a',
+    resultsElementAttributes: [{
+      name: 'href',
+      value: '#'
+    }],
+    resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+    keyId: '_id',
+    keyType: ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.KeyType.string,
+    modifiers: {
+      normal: 'list-group-item-primary',
+      inactive: 'list-group-item-light',
+      active: 'list-group-item-info',
+      warning: 'list-group-item-danger'
+    },
+    icons: {
+      normal: '',
+      inactive: '',
+      active: '',
+      warning: 'fas fa-exclamation-circle'
+    },
+    detail: {
+      containerClasses: 'd-flex w-100 justify-content-between',
+      textElementType: 'span',
+      textElementClasses: 'mb-1',
+      select: true,
+      quickDelete: true,
+      delete: {
+        buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+        iconClasses: 'fas fa-trash-alt'
+      },
+      drag: {
+        type: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.DRAGGABLE.typePatientSummary,
+        from: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.DRAGGABLE.fromPatientSearch
+      }
+    }
+  };
+
+  constructor(stateManager) {
+    super(PatientSearchView.DOMConfig, stateManager, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch);
+    this.loggedInUsers = [];
+    this.renderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ListViewRenderer(this, this); // handler binding
+
+    this.updateViewForNamedCollection = this.updateViewForNamedCollection.bind(this);
+    this.eventPatientSelected = this.eventPatientSelected.bind(this);
+    this.itemDeleted = this.itemDeleted.bind(this); // register state change listening
+
+    this.localisedSM = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.BrowserStorageStateManager(true, true, _EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
+    this.localisedSM.addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, this);
+  }
+
+  onDocumentLoaded() {
+    super.onDocumentLoaded(); // @ts-ignore
+
+    const fastSearchEl = $(`#${PatientSearchView.fastSearchInputId}`); // @ts-ignore
+
+    fastSearchEl.on('autocompleteselect', this.eventPatientSelected);
+    super.updateViewForNamedCollection(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, this.localisedSM.getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches));
+  }
+
+  getIdForItemInNamedCollection(name, item) {
+    return item._id;
+  }
+
+  renderDisplayForItemInNamedCollection(containerEl, name, item) {
+    containerEl.innerHTML = `${item.name.firstname} ${item.name.surname}`;
+  }
+
+  getModifierForItemInNamedCollection(name, item) {
+    let result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal;
+    vLoggerDetail(`Checking for item modifiers`);
+    vLoggerDetail(item);
+    if (item.flags.isInactive) result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.inactive;
+    return result;
+  }
+
+  getSecondaryModifierForItemInNamedCollection(name, item) {
+    let result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal;
+    if (item.flags.hasWarnings) result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning;
+    return result;
+  }
+
+  eventPatientSelected(event, ui) {
+    event.preventDefault();
+    event.stopPropagation();
+    vLogger(`User ${ui.item.label} with id ${ui.item.value} selected`); // @ts-ignore
+
+    event.target.innerText = ''; // add the selected user to the recent user searches
+
+    if (this.localisedSM.isItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, {
+      _id: ui.item.value
+    })) return;
+    const recentUserSearches = this.localisedSM.getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches);
+    vLogger(`saved searches too long? ${_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches}`);
+
+    if (recentUserSearches.length >= PatientSearchView.dataLimit) {
+      vLogger('saved searches too long - removing first'); // remove the first item from recent searches
+
+      const item = recentUserSearches.shift();
+      this.localisedSM.removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, item, true);
+    }
+
+    const patient = _Controller__WEBPACK_IMPORTED_MODULE_4__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, {
+      _id: ui.item.value
+    }); // save the searches
+
+    this.localisedSM.addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, patient, true);
+  }
+
+  updateViewForNamedCollection(name, newState) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches) {
+      vLogger(`Updating for recent searches`);
+      newState = this.localisedSM.getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches);
+      vLogger(newState);
+      super.updateViewForNamedCollection(name, newState);
+    }
+
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch) {
+      vLogger(`Handling patient search results`);
+      vLogger(newState); // load the search names into the search field
+
+      const fastSearchEl = $(`#${PatientSearchView.fastSearchInputId}`); // for each name, construct the patient details to display and the id referenced
+
+      const fastSearchValues = [];
+      newState.forEach(item => {
+        const searchValue = {
+          label: `${item.name.firstname} ${item.name.surname}`,
+          value: item._id
+        };
+        fastSearchValues.push(searchValue);
+      });
+      fastSearchEl.autocomplete({
+        source: fastSearchValues
+      });
+      fastSearchEl.autocomplete('option', {
+        disabled: false,
+        minLength: 1
+      });
+    }
+  }
+
+  compareItemsForEquality(item1, item2) {
+    return (0,_EqualityFunctions__WEBPACK_IMPORTED_MODULE_3__.isSameMongo)(item1, item2);
+  }
+
+  itemDeleted(view, selectedItem) {
+    vLoggerDetail(selectedItem);
+    vLogger(`Recent search patient ${selectedItem.firstname} with id ${selectedItem.id} deleted - removing`);
+    this.localisedSM.removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, selectedItem, true);
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/App.tsx":
 /*!*********************!*\
   !*** ./src/App.tsx ***!
@@ -2883,6 +3107,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
 /* harmony import */ var _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./appointment-templates/AppointmentTemplateController */ "./src/appointment-templates/AppointmentTemplateController.ts");
 /* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./patients/PatientSearchSidebar */ "./src/patients/PatientSearchSidebar.ts");
+
 
 
 
@@ -2922,6 +3148,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     logger('document loaded'); // @ts-ignore
 
     this.thisEl = document.getElementById('root');
+    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().onDocumentLoaded();
     this.setupNavigationItemHandling();
     _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
     _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
@@ -2936,6 +3163,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
   hideAllSideBars() {
     this.chatSidebar.eventHide(null);
+    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().eventHide(null);
   }
 
   handleShowChat(roomName) {
@@ -2981,7 +3209,10 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
   handleShowPatientRecords(event) {}
 
-  handleShowPatientSearch(event) {}
+  handleShowPatientSearch(event) {
+    logger(`Showing patient search`);
+    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().eventShow(null);
+  }
 
   setupNavigationItemHandling() {
     document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.appointmentBook).addEventListener('click', this.handleShowAppointmentBook);
@@ -3000,7 +3231,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app socket-listener api-ts-results appointment-template-controller';
+localStorage.debug = 'app socket-listener api-ts-results patient-search patient-search-detail';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {

@@ -1,25 +1,28 @@
 import debug from 'debug';
 import {
-    AbstractStatefulCollectionView, BrowserStorageStateManager,
+    AbstractStatefulCollectionView,
+    BrowserStorageStateManager,
     CollectionViewDOMConfig,
     KeyType,
-    ListViewRenderer, Modifier,
-    StateManager, View
+    ListViewRenderer,
+    Modifier,
+    StateManager,
+    View
 } from "ui-framework-jps";
 import {DRAGGABLE, STATE_NAMES, VIEW_NAME} from "../AppTypes";
 import {isSameMongo} from "../EqualityFunctions";
 import Controller from "../Controller";
 
 
-const vLogger = debug('user-search');
-const vLoggerDetail = debug('user-search-detail');
+const vLogger = debug('patient-search');
+const vLoggerDetail = debug('patient-search-detail');
 
 export class PatientSearchView extends AbstractStatefulCollectionView  {
-    static fastSearchInputId: string = 'fastSearchUserNames';
-    static dataLimit: number = 10;
+    static fastSearchInputId: string = 'fastPatientSearch';
+    static dataLimit: number = 20;
     static DOMConfig: CollectionViewDOMConfig = {
         viewConfig: {
-            resultsContainerId: 'recentUserSearches',
+            resultsContainerId: 'recentPatientSearches',
             dataSourceId: VIEW_NAME.patientSearch,
         },
         resultsElementType: 'a',
@@ -34,9 +37,9 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
             warning: 'list-group-item-danger'
         },
         icons: {
-            normal: 'fas fa-comment',
-            inactive: 'fas fa-comment',
-            active: 'fas fa-heart',
+            normal: '',
+            inactive: '',
+            active: '',
             warning: 'fas fa-exclamation-circle'
         },
         detail: {
@@ -68,15 +71,12 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
 
         // handler binding
         this.updateViewForNamedCollection = this.updateViewForNamedCollection.bind(this);
-        this.eventUserSelected = this.eventUserSelected.bind(this);
-
+        this.eventPatientSelected = this.eventPatientSelected.bind(this);
         this.itemDeleted = this.itemDeleted.bind(this);
 
         // register state change listening
-        this.localisedSM = new BrowserStorageStateManager(true,false,isSameMongo);
+        this.localisedSM = new BrowserStorageStateManager(true,true,isSameMongo);
         this.localisedSM.addChangeListenerForName(STATE_NAMES.recentPatientSearches, this);
-
-        vLogger(this.localisedSM.getStateByName(STATE_NAMES.recentPatientSearches));
 
     }
 
@@ -85,9 +85,11 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
     onDocumentLoaded() {
         super.onDocumentLoaded();
         // @ts-ignore
-        const fastSearchEl = $(`#${UserSearchView.fastSearchInputId}`);
+        const fastSearchEl = $(`#${PatientSearchView.fastSearchInputId}`);
         // @ts-ignore
-        fastSearchEl.on('autocompleteselect', this.eventUserSelected);
+        fastSearchEl.on('autocompleteselect', this.eventPatientSelected);
+
+        super.updateViewForNamedCollection(STATE_NAMES.patientSearch, this.localisedSM.getStateByName(STATE_NAMES.recentPatientSearches));
 
     }
 
@@ -97,24 +99,26 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
 
 
     renderDisplayForItemInNamedCollection(containerEl: HTMLElement, name: string, item: any): void {
-        containerEl.innerHTML = item.username;
+        containerEl.innerHTML = `${item.name.firstname} ${item.name.surname}`;
     }
 
     getModifierForItemInNamedCollection(name: string, item: any) {
         let result = Modifier.normal;
         vLoggerDetail(`Checking for item modifiers`);
         vLoggerDetail(item);
+        if (item.flags.isInactive) result = Modifier.inactive;
         return result;
     }
 
-    getSecondaryModifierForItemInNamedCollection(name: string, item: any) {
+    getSecondaryModifierForItemInNamedCollection(name: string, item: any): Modifier {
         let result = Modifier.normal;
-        vLoggerDetail(`Checking for item secondary modifiers ${item.username}`);
+        if (item.flags.hasWarnings) result = Modifier.warning;
         return result;
+
     }
 
 
-    eventUserSelected(event: Event, ui: any) {
+    eventPatientSelected(event: Event, ui: any) {
         event.preventDefault();
         event.stopPropagation();
         vLogger(`User ${ui.item.label} with id ${ui.item.value} selected`);
@@ -122,21 +126,20 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
         event.target.innerText = '';
 
         // add the selected user to the recent user searches
-        if (this.localisedSM.isItemInState(STATE_NAMES.recentUserSearches, {_id: ui.item.value})) return;
+        if (this.localisedSM.isItemInState(STATE_NAMES.recentPatientSearches, {_id: ui.item.value})) return;
 
         const recentUserSearches = this.localisedSM.getStateByName(STATE_NAMES.recentPatientSearches);
-        vLogger(`saved searches too long? ${STATE_NAMES.recentUserSearches}`);
+        vLogger(`saved searches too long? ${STATE_NAMES.recentPatientSearches}`);
         if (recentUserSearches.length >= PatientSearchView.dataLimit) {
             vLogger('saved searches too long - removing first');
             // remove the first item from recent searches
             const item = recentUserSearches.shift();
             this.localisedSM.removeItemFromState(STATE_NAMES.recentPatientSearches, item, true);
         }
+
+        const patient = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch,{_id:ui.item.value});
         // save the searches
-        this.localisedSM.addNewItemToState(STATE_NAMES.recentPatientSearches, {
-            _id: ui.item.value,
-            username: ui.item.label
-        }, true);
+        this.localisedSM.addNewItemToState(STATE_NAMES.recentPatientSearches, patient, true);
     }
 
 
@@ -148,19 +151,18 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
             super.updateViewForNamedCollection(name, newState);
         }
         if (name === STATE_NAMES.patientSearch) {
+            vLogger(`Handling patient search results`);
+            vLogger(newState);
             // load the search names into the search field
-            // what is my username?
-            let myUsername = Controller.getInstance().getLoggedInUsername();
-            // @ts-ignore
             const fastSearchEl = $(`#${PatientSearchView.fastSearchInputId}`);
             // for each name, construct the patient details to display and the id referenced
             const fastSearchValues: any = [];
             newState.forEach((item: any) => {
                 const searchValue = {
-                    label: item.username,
+                    label: `${item.name.firstname} ${item.name.surname}`,
                     value: item._id,
                 };
-                if (myUsername !== item.username) fastSearchValues.push(searchValue); // don't search for ourselves
+                fastSearchValues.push(searchValue);
             });
             fastSearchEl.autocomplete({source: fastSearchValues});
             fastSearchEl.autocomplete('option', {disabled: false, minLength: 1});
@@ -168,8 +170,6 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
     }
 
 
-    itemAction(view: View, actionName: string, selectedItem: any): void {
-    }
 
     compareItemsForEquality(item1: any, item2: any): boolean {
         return isSameMongo(item1, item2);
@@ -177,13 +177,12 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
 
     itemDeleted(view: View, selectedItem: any): void {
         vLoggerDetail(selectedItem);
-        vLogger(`Recent search user ${selectedItem.username} with id ${selectedItem.id} deleted - removing`);
+        vLogger(`Recent search patient ${selectedItem.firstname} with id ${selectedItem.id} deleted - removing`);
         this.localisedSM.removeItemFromState(STATE_NAMES.recentPatientSearches, selectedItem, true);
     }
 
 
-    itemSelected(view: View, selectedItem: any): void {
-    }
+
 
 
 }

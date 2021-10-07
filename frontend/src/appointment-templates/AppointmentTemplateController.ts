@@ -146,8 +146,6 @@ export class AppointmentTemplateController implements StateChangeListener {
             if (result) results.push(result);
         });
 
-        console.log(results);
-
         inst.setEvents(results);
     }
 
@@ -191,7 +189,6 @@ export class AppointmentTemplateController implements StateChangeListener {
                     if (result) results.push(result);
                 });
 
-                console.log(results);
                 AppointmentTemplateView.getInstance().getCalender().setEvents(results);
 
                 break;

@@ -17,6 +17,8 @@ import {
 import {setOptions} from "@mobiscroll/javascript";
 import {AppointmentTemplateController} from "./appointment-templates/AppointmentTemplateController";
 import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
+import {PatientSearchSidebar} from "./patients/PatientSearchSidebar";
+import {PatientSearchView} from "./patients/PatientSearchView";
 
 
 
@@ -30,6 +32,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     // @ts-ignore
     private chatSidebar: ChatRoomsSidebar;
+
     // @ts-ignore
     private chatView: ChatLogsView;
 
@@ -67,6 +70,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
         // @ts-ignore
         this.thisEl = document.getElementById('root');
 
+        PatientSearchSidebar.getInstance().onDocumentLoaded();
+
         this.setupNavigationItemHandling();
 
         AppointmentController.getInstance().onDocumentLoaded();
@@ -83,6 +88,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     hideAllSideBars() {
         this.chatSidebar.eventHide(null);
+        PatientSearchSidebar.getInstance().eventHide(null);
     }
 
 
@@ -129,6 +135,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     }
     protected handleShowPatientSearch(event:Event):void {
+        logger(`Showing patient search`);
+        PatientSearchSidebar.getInstance().eventShow(null);
 
     }
 
@@ -153,7 +161,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app socket-listener api-ts-results appointment-template-controller';
+localStorage.debug = 'app socket-listener api-ts-results patient-search patient-search-detail';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

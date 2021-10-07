@@ -1,24 +1,24 @@
-import {PatientSearchSidebarPrefs} from "../AppTypes";
+import {PatientSearchSidebarContainers, PatientSearchSidebarPrefs} from "../AppTypes";
 import {SidebarViewContainer, StateManager} from "ui-framework-jps";
+import {PatientSearchView} from "./PatientSearchView";
+import Controller from "../Controller";
 
 export class PatientSearchSidebar extends SidebarViewContainer {
 
     private static _instance: PatientSearchSidebar;
 
-    public static getInstance(stateManager:StateManager): PatientSearchSidebar {
+    public static getInstance(): PatientSearchSidebar {
         if (!(PatientSearchSidebar._instance)) {
-            PatientSearchSidebar._instance = new PatientSearchSidebar(stateManager);
+            PatientSearchSidebar._instance = new PatientSearchSidebar();
         }
         return PatientSearchSidebar._instance;
     }
 
 
-    private logSB:SidebarViewContainer;
-
-    private constructor(stateManager:StateManager) {
+    private constructor() {
         super(PatientSearchSidebarPrefs);
-        //const recentSearches = UserSearchView.getInstance(stateManager);
-        //this.addView(recentSearches, {containerId: UserSearchSidebar.SidebarContainers.recentSearches});
+        const recentSearches = new PatientSearchView(Controller.getInstance().getStateManager());
+        this.addView(recentSearches, {containerId: PatientSearchSidebarContainers.container});
     }
 }
 
