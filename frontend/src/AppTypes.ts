@@ -21,7 +21,7 @@ export const STATE_NAMES = {
     clinicConfig:'clinicConfig',
     providers:'provider',
     appointmentTemplates:'appointmentTemplate',
-    patientDemographics:'patientDemographics'
+    patients:'patient'
 }
 
 export const API_Config = {

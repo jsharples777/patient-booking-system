@@ -27,6 +27,133 @@ const cLogger = debug('controller-ts');
 const cLoggerDetail = debug('controller-ts-detail');
 
 export default class Controller implements StateChangeListener, DataObjectListener {
+
+
+    private static patientQuery: string = 'query getPatient($identifier: String!){\n' +
+        '  getPatient(id: $identifier) {\n' +
+        '    _id,\n' +
+        '    lastSeen,\n' +
+        '    lastSeenBy,\n' +
+        '    dob,\n' +
+        '    dod,\n' +
+        '    gender,\n' +
+        '    ethnicity,\n' +
+        '    countryofbirth,\n' +
+        '    created,\n' +
+        '    modified,\n' +
+        '    name{\n' +
+        '      _id,\n' +
+        '    \ttitle,\n' +
+        '    \tfirstname,\n' +
+        '    \tmiddlename,\n' +
+        '    \tsurname,\n' +
+        '    \taka\n' +
+        '  \t},\n' +
+        '    contact{\n' +
+        '    \t_id,\n' +
+        '    \tline1,\n' +
+        '    \tline2,\n' +
+        '    \tsuburb,\n' +
+        '    \tpostcode,\n' +
+        '    \tstate,\n' +
+        '    \tcountry,\n' +
+        '    \thome,\n' +
+        '    \twork,\n' +
+        '    \tmobile,\n' +
+        '    \tnokname,\n' +
+        '    \tnokphone\n' +
+        '    },\n' +
+        '    identifiers {\n' +
+        '      _id,\n' +
+        '    \tmedicare,\n' +
+        '    \tmedicareRef,\n' +
+        '    \tlegacyId,\n' +
+        '   \t \tdva,\n' +
+        '   \t \tdvaColour,\n' +
+        '    \thcc,\n' +
+        '    \tihi\n' +
+        '    },\n' +
+        '    flags {\n' +
+        '      _id,\n' +
+        '    \tisAcountHolder,\n' +
+        '    \tlegacyAccountHolderId,\n' +
+        '    \tisDeceased,\n' +
+        '    \tisInactive,\n' +
+        '    \tshouldSMS,\n' +
+        '    \tisMarried,\n' +
+        '    \tisCTGRegistered,\n' +
+        '    \thasWarnings\n' +
+        '    },\n' +
+        '    warnings {\n' +
+        '      _id, warnings\n' +
+        '    },\n' +
+        '    allergies {\n' +
+        '      _id,\n' +
+        '    \tname,\n' +
+        '    \treaction,\n' +
+        '    \tcreated,\n' +
+        '    \tmodified\n' +
+        '    },\n' +
+        '    consults {\n' +
+        '      _id, date, time, doctor, history, diagnosis, plan, findings, created, modified\n' +
+        '    },\n' +
+        '    history {\n' +
+        '      _id, diagnosis, note, isConfidential, date, created, modified\n' +
+        '    },\n' +
+        '    results {\n' +
+        '      _id, lab, labref, test, orderedBy, copies, requested, collected, reported, collectedTime, imported, received, result, isLinked, reviewedBy, isNormal, isLast\n' +
+        '    },\n' +
+        '    scripts {\n' +
+        '      _id, by, name, on, dose, frequency, instructions, repeats, quantity, drugCode, lastPrinted, created, modified\n' +
+        '    },\n' +
+        '    scriptHistory {\n' +
+        '      _id, changed, dose, change, reason, drugCode, name\n' +
+        '    },\n' +
+        '    scriptArchive {\n' +
+        '      _id, medication, dose, scriptNumber, repeats, quantity, approvalCode, drugCode, note, created, modified\n' +
+        '    },\n' +
+        '    recalls{\n' +
+        '      _id, reason, interval, isRecurring, due, isCompleted, created, modified\n' +
+        '    },\n' +
+        '    tasks {\n' +
+        '      _id, by, isUrgent, isCompleted, isRead, title, details, completed, for, created, modified\n' +
+        '    },\n' +
+        '    documents {\n' +
+        '      _id, title, type, from, reviewed, reviewedBy, data, created, modified\n' +
+        '    },\n' +
+        '    letters {\n' +
+        '      _id, creator, isPrinted, isReviewd, from, type, data, to, created, modified\n' +
+        '    },\n' +
+        '    vaccinations {\n' +
+        '      _id, vaccine, on, by, providerNum, batch, expiry, site, shouldSendtoAIR, airCode, created\n' +
+        '    },\n' +
+        '    forms {\n' +
+        '      _id, title, from, category, data, created, modified\n' +
+        '    },\n' +
+        '    wcc {\n' +
+        '      _id,\n' +
+        '      employer {\n' +
+        '        name, \n' +
+        '        contact {\n' +
+        '          line1, line2, suburb, state, postCode\n' +
+        '        },\n' +
+        '        insurer\n' +
+        '      },\n' +
+        '      claim {\n' +
+        '        number, injury, injuryTime, injuryDate, claimDate, mechanism\n' +
+        '      },\n' +
+        '      date,time,reviewed, type, diagnosis, comment, treatment, isReturnToNormalDuties, returnToNormalDuties, isRestrictedDuties, restrictedDutiesFrom, restrictedDutiesTo, isNoCapacity, noCapacityFrom, noCapacityTo\n' +
+        '    },\n' +
+        '    modifiedDates {\n' +
+        '      identifiers, warnings, allergies, consults, history, results, scripts, recalls, documents,letters,vaccinations\n' +
+        '    }\n' +
+        '  }\n' +
+        '}'
+
+
+
+
+
     private static _instance: Controller;
     protected applicationView: any;
     protected clientSideStorage: any;
@@ -63,7 +190,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 isActive: true
             },
             {
-                stateName: STATE_NAMES.patientDemographics,
+                stateName: STATE_NAMES.patients,
                 serverURL: '',
                 api: API_Config.patientDemographics,
                 isActive: true,
@@ -178,7 +305,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 idField: '_id'
             },
             {
-                stateName: STATE_NAMES.patientDemographics,
+                stateName: STATE_NAMES.patients,
                 serverURL: '',
                 apiURL: API_Config.graphQL,
                 apis: {
@@ -186,7 +313,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
                     create: '',
                     destroy: '',
                     update: '',
-                    find: 'query getPatientDemographics($identifier: String!){getPatientDemographics(id: $identifier) {_id,name {firstname,surname}}}',
+                    find: Controller.patientQuery,
                 },
                 data: {
                     findAll: '',
@@ -208,7 +335,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
         let asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
 
         aggregateSM.addStateManager(memorySM, [], false);
-        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patientDemographics], false);
+        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patients], false);
         //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates], false);
         aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
         //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig,STATE_NAMES.patientDemographics], false);

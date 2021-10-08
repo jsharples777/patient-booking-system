@@ -80,7 +80,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         Controller.getInstance().onDocumentLoaded();
 
-        Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientDemographics,{_id:'2a8665a6-3580-4195-8ed7-0f81df551204'});
+        Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patients,{_id:'2a8665a6-3580-4195-8ed7-0f81df551204'});
 
     }
 

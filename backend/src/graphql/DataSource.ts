@@ -26,7 +26,7 @@ export default class DataSource {
                 getAppointmentTypes:AppointmentTypesQLDelegate.getAppointmentTypes,
                 getProviders:ProvidersQLDelegate.getProviders,
                 getAppointmentTemplates:AppointmentTemplatesQLDelegate.getAppointmentTemplates,
-                getPatientDemographics:PatientsQLDelegate.getPatientDemographics
+                getPatient:PatientsQLDelegate.getPatient
             },
             Mutation: {
                 addAppointment:AppointmentsQLDelegate.addAppointment,
@@ -40,7 +40,9 @@ export default class DataSource {
                 deleteProvider:ProvidersQLDelegate.deleteProvider,
                 addAppointmentTemplate:AppointmentTemplatesQLDelegate.addAppointmentTemplate,
                 updateAppointmentTemplate:AppointmentTemplatesQLDelegate.updateAppointmentTemplate,
-                deleteAppointmentTemplate:AppointmentTemplatesQLDelegate.deleteAppointmentTemplate
+                deleteAppointmentTemplate:AppointmentTemplatesQLDelegate.deleteAppointmentTemplate,
+                addPatient:PatientsQLDelegate.addPatient,
+                updatePatient:PatientsQLDelegate.updatePatient,
             }
         };
 
