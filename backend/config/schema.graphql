@@ -355,7 +355,42 @@ type History {
     modified: Float
 }
 
-type PatientDemographics {
+type Form {
+    _id:String,
+    title:String,
+    from:String,
+    category:String,
+    data:String,
+    created:Float,
+    modified:Float
+}
+
+type Recall {
+    _id:String,
+    reason:String,
+    interval:Int,
+    isRecurring:Boolean,
+    due:Int,
+    isCompleted:Boolean,
+    created:Float,
+    modified:Float
+}
+
+type Modified {
+    identifiers:Float,
+    warnings:Float,
+    allergies:Float,
+    consults:Float,
+    history:Float,
+    results:Float,
+    scripts:Float,
+    recalls:Float,
+    documents:Float,
+    letters:Float,
+    vaccinations:Float,
+}
+
+type Patient {
     _id:String,
     lastSeen: Int,
     lastSeenBy: String,
@@ -370,7 +405,22 @@ type PatientDemographics {
     contact:Contact,
     identifiers:Identifiers,
     flags:Flags,
-    warnings:Warnings
+    warnings:Warnings,
+    allergies:[Allergy],
+    consults:[Consult],
+    history:[History],
+    results:[Result],
+    scripts:[Script],
+    scriptHistory:[ScriptHistory],
+    scriptArchive:[ScriptArchive],
+    recalls:[Recall],
+    tasks:[Task],
+    documents:[Document],
+    letters:[Letter],
+    vaccinations:[Vaccination],
+    forms:[Form],
+    wcc:[WCCClaim],
+    modifiedDates:Modified
 }
 
 
@@ -380,7 +430,7 @@ type Query {
     getAppointmentTypes:[AppointmentType]
     getProviders:[Provider]
     getAppointmentTemplates:[AppointmentTemplate]
-    getPatientDemographics(id:String):PatientDemographics
+    getPatientDemographics(id:String):Patient
 }
 
 type Mutation {

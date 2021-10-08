@@ -109,7 +109,7 @@ i:hover {
     height: 100%; /* 100% Full-height */
     width: 0px; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
-    z-index: 2; /* Stay on top */
+    z-index: 999; /* Stay on top */
     top: 50px;
     left: 0;
     overflow-x: hidden; /* Disable horizontal scroll */
@@ -121,7 +121,7 @@ i:hover {
     height: 0px; /* 25% Full-height */
     width: 100%; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
+    z-index: 999; /* Stay on top */
     bottom: 0px;
     right: 0;
     /*overflow-y: hidden;  Disable horizontal scroll */
@@ -133,7 +133,7 @@ i:hover {
     height: 100%; /* 100% Full-height */
     width: 0px; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
-    z-index: 2; /* Stay on top */
+    z-index: 999; /* Stay on top */
     top: 50px;
     right: 0;
     overflow-x: hidden; /* Disable horizontal scroll */
