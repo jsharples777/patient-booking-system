@@ -21,46 +21,26 @@ type AppointmentDataElements = {
     providers: any[] | null,
     oldEvent: any | null,
     tempEvent: any,
-    loadDate:number,
-    loadDateFinish:number,
+    loadDate: number,
+    loadDateFinish: number,
 }
 
 export class AppointmentController implements StateChangeListener {
-    private static _instance: AppointmentController;
-
-    public static getInstance(): AppointmentController {
-        if (!(AppointmentController._instance)) {
-            AppointmentController._instance = new AppointmentController();
-        }
-        return AppointmentController._instance;
-    }
-
     public static APPOINTMENT_STATUS_ARRIVED = 'Patient Arrived';
     public static APPOINTMENT_STATUS_READY_FOR_BILLING = 'Ready For Billing';
     public static APPOINTMENT_STATUS_BILLING_COMPLETE = 'Billing Complete';
     public static APPOINTMENT_TYPE_PATIENT_CANCELLED = 'Patient Cancelled';
     public static APPOINTMENT_TYPE_PATIENT_DNA = 'Did Not Arrive';
-
-
+    private static _instance: AppointmentController;
     private dataElements: AppointmentDataElements = {
         appointmentTypes: null,
         clinicConfig: null,
         providers: null,
         oldEvent: null,
         tempEvent: {},
-        loadDate:0,
-        loadDateFinish:0
+        loadDate: 0,
+        loadDateFinish: 0
     };
-
-    public getModel(): AppointmentDataElements {
-        return this.dataElements;
-    }
-
-    public onDocumentLoaded() {
-        AppointmentBookView.getInstance().onDocumentLoaded();
-        AppointmentFilterView.getInstance().onDocumentLoaded();
-    }
-
 
     private constructor() {
         this.onPageLoading = this.onPageLoading.bind(this);
@@ -71,6 +51,22 @@ export class AppointmentController implements StateChangeListener {
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.providers, this);
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.appointments, this);
 
+    }
+
+    public static getInstance(): AppointmentController {
+        if (!(AppointmentController._instance)) {
+            AppointmentController._instance = new AppointmentController();
+        }
+        return AppointmentController._instance;
+    }
+
+    public getModel(): AppointmentDataElements {
+        return this.dataElements;
+    }
+
+    public onDocumentLoaded() {
+        AppointmentBookView.getInstance().onDocumentLoaded();
+        AppointmentFilterView.getInstance().onDocumentLoaded();
     }
 
     public getIconForAppointmentType(appointmentType: string) {
@@ -117,7 +113,8 @@ export class AppointmentController implements StateChangeListener {
     }
 
     public getColourForAppointment(appointment: any) {
-        let colour = this.getColourForAppointmentType(appointment.type);;
+        let colour = this.getColourForAppointmentType(appointment.type);
+
         if (appointment.arrivalTime) {
             if (appointment.arrivalTime.trim().length > 0) {
                 colour = this.getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_ARRIVED);
@@ -140,11 +137,11 @@ export class AppointmentController implements StateChangeListener {
         return colour;
     }
 
-    public getEventForAppointment(loadDate:number, appointment:any):any {
+    public getEventForAppointment(loadDate: number, appointment: any): any {
         const today = parseInt(moment().format('YYYYMMDD'));
 
         let canEdit = ((loadDate >= today) && (!appointment.isDNA && !appointment.isCancelled) && (!appointment.isBilled));
-        const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(appointment.time,appointment.duration);
+        const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(appointment.time, appointment.duration);
 
         let result = {
             id: appointment._id,
@@ -166,7 +163,7 @@ export class AppointmentController implements StateChangeListener {
             provider: appointment.provider,
             readyForBilling: appointment.readyForBilling,
             billingItems: appointment.billingItems,
-            isBilled:appointment.isBilled
+            isBilled: appointment.isBilled
         }
         // @ts-ignore
         result.color = this.getColourForAppointment(appointment);
@@ -175,50 +172,6 @@ export class AppointmentController implements StateChangeListener {
         return result;
 
     }
-
-
-    private addTemplateEvents(loadDate:number, day:number, currentAppointments:any[]) {
-        logger('Loading templated events for day ' + day);
-        const appointmentTemplates = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
-        appointmentTemplates.forEach((template:any) => {
-            logger(template);
-            if (template.day === day) { // only template appointments for the day number
-                // is there already an appointment on display that matches the template?
-                const foundIndex = currentAppointments.findIndex((appt) => appt.time === template.time);
-                if (foundIndex < 0) {
-                    logger(`appointment for time ${template.time} not found, creating new appointment`)
-                    // don't already have an appointment for that time
-                    let templatedAppt = AppointmentTemplateController.getInstance().getEventForAppointmentTemplateForDate(loadDate, day, template);
-                    templatedAppt.id = v4();
-                    templatedAppt.title = '';
-                    templatedAppt.description = '';
-                    templatedAppt.patientId = '';
-                    templatedAppt.isDNA = false;
-                    templatedAppt.isCancelled = false;
-                    templatedAppt.readyForBilling = false;
-                    templatedAppt.isBilled = false;
-                    templatedAppt.isDNA = false;
-                    templatedAppt.billingItems = '';
-                    templatedAppt.arrivalTime = '';
-                    templatedAppt.color = AppointmentController.getInstance().getColourForAppointment(templatedAppt);
-
-                    logger(templatedAppt);
-
-                    // add the templated appointment to the persistence
-                    Controller.getInstance().getStateManager().addNewItemToState(
-                        STATE_NAMES.appointments,
-                        AppointmentController.getInstance().getAppointmentFromEvent(templatedAppt),
-                        false);
-                    AppointmentBookView.getInstance().getCalender().addEvent(templatedAppt);
-
-
-                }
-            }
-
-        });
-
-    }
-
 
     public onPageLoading(event: any, inst: any): void {  // load the events for the view
         logger(event);
@@ -231,17 +184,16 @@ export class AppointmentController implements StateChangeListener {
 
         const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
         let results: any[] = [];
-        let appointmentsForTheDay:any[] = [];
+        let appointmentsForTheDay: any[] = [];
         appointments.forEach((appointment: any) => {
             if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
                 appointmentsForTheDay.push(appointment);
 
-                let result = this.getEventForAppointment(this.dataElements.loadDate,appointment);
+                let result = this.getEventForAppointment(this.dataElements.loadDate, appointment);
                 results.push(result);
             }
 
         });
-
 
 
         inst.setEvents(results);
@@ -290,7 +242,7 @@ export class AppointmentController implements StateChangeListener {
             case (STATE_NAMES.appointments): {
 
                 this.dataElements.loadDate = parseInt(moment().format('YYYYMMDD'));
-                this.dataElements.loadDateFinish = parseInt(moment().add(1,'days').format('YYYYMMDD'));
+                this.dataElements.loadDateFinish = parseInt(moment().add(1, 'days').format('YYYYMMDD'));
                 logger(`Need to load date range (${this.dataElements.loadDate},${this.dataElements.loadDateFinish})`);
 
 
@@ -301,7 +253,7 @@ export class AppointmentController implements StateChangeListener {
                         logger('Found appointment');
                         logger(appointment);
 
-                        let result = this.getEventForAppointment(this.dataElements.loadDate,appointment);
+                        let result = this.getEventForAppointment(this.dataElements.loadDate, appointment);
 
 
                         logger('Converted to event');
@@ -388,6 +340,48 @@ export class AppointmentController implements StateChangeListener {
             billingItems: event.billingItems
         };
         return appointment;
+    }
+
+    private addTemplateEvents(loadDate: number, day: number, currentAppointments: any[]) {
+        logger('Loading templated events for day ' + day);
+        const appointmentTemplates = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
+        appointmentTemplates.forEach((template: any) => {
+            logger(template);
+            if (template.day === day) { // only template appointments for the day number
+                // is there already an appointment on display that matches the template?
+                const foundIndex = currentAppointments.findIndex((appt) => appt.time === template.time);
+                if (foundIndex < 0) {
+                    logger(`appointment for time ${template.time} not found, creating new appointment`)
+                    // don't already have an appointment for that time
+                    let templatedAppt = AppointmentTemplateController.getInstance().getEventForAppointmentTemplateForDate(loadDate, day, template);
+                    templatedAppt.id = v4();
+                    templatedAppt.title = '';
+                    templatedAppt.description = '';
+                    templatedAppt.patientId = '';
+                    templatedAppt.isDNA = false;
+                    templatedAppt.isCancelled = false;
+                    templatedAppt.readyForBilling = false;
+                    templatedAppt.isBilled = false;
+                    templatedAppt.isDNA = false;
+                    templatedAppt.billingItems = '';
+                    templatedAppt.arrivalTime = '';
+                    templatedAppt.color = AppointmentController.getInstance().getColourForAppointment(templatedAppt);
+
+                    logger(templatedAppt);
+
+                    // add the templated appointment to the persistence
+                    Controller.getInstance().getStateManager().addNewItemToState(
+                        STATE_NAMES.appointments,
+                        AppointmentController.getInstance().getAppointmentFromEvent(templatedAppt),
+                        false);
+                    AppointmentBookView.getInstance().getCalender().addEvent(templatedAppt);
+
+
+                }
+            }
+
+        });
+
     }
 
 

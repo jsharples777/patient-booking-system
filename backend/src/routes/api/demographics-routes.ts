@@ -1,10 +1,11 @@
 import express from 'express';
 import {MongoDataSource} from "../../db/MongoDataSource";
 import {Document} from "mongodb";
+
 const router = express.Router();
 
 
-router.get("/:id",function(req,res) {
+router.get("/:id", function (req, res) {
     console.log(`Starting route GET /demographics by id ${req.params.id}`);
     const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
 
@@ -28,7 +29,7 @@ router.get("/:id",function(req,res) {
     //     }
     // };
     // MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id:req.params.id}, projection).then((result: Document|null) => {
-    MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id:req.params.id}).then((result: Document|null) => {
+    MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id: req.params.id}).then((result: Document | null) => {
         res.json(result);
         res.end();
     })
@@ -39,9 +40,6 @@ router.get("/:id",function(req,res) {
             });
         });
 });
-
-
-
 
 
 export = router;

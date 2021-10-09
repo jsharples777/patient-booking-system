@@ -20,6 +20,10 @@ type UserQueue = {
 
 export default class MessageQueueManager {
     private static _instance: MessageQueueManager;
+    private messageQueue: UserQueue[] = [];
+
+    private constructor() {
+    }
 
     public static getInstance(): MessageQueueManager {
         if (!MessageQueueManager._instance) {
@@ -28,12 +32,7 @@ export default class MessageQueueManager {
         return MessageQueueManager._instance;
     }
 
-    private messageQueue: UserQueue[] = [];
-
-    private constructor() {
-    }
-
-    public roomHasExpired(room:ChatRoom) {
+    public roomHasExpired(room: ChatRoom) {
         // remove all expired invites and messages
         mqLogger(`Removing expired room - ${room.name}`);
         this.messageQueue.forEach((userQueue) => {
@@ -42,7 +41,7 @@ export default class MessageQueueManager {
                 let invite = userQueue.invites[index];
                 if (invite.room === room.name) {
                     mqLogger(`Removing expired room invite for user ${userQueue.username}`);
-                    userQueue.invites.splice(index,1);
+                    userQueue.invites.splice(index, 1);
                 }
                 index--;
             }
@@ -51,7 +50,7 @@ export default class MessageQueueManager {
                 let message = userQueue.messages[index];
                 if (message.room === room.name) {
                     mqLogger(`Removing expired room message for user ${userQueue.username}`);
-                    userQueue.messages.splice(index,1);
+                    userQueue.messages.splice(index, 1);
                 }
                 index--;
             }
@@ -78,9 +77,8 @@ export default class MessageQueueManager {
             // remove the queued items from memory
             queue.invites = [];
             queue.messages = [];
-        }
-        else {
-            let queue:UserQueue = {
+        } else {
+            let queue: UserQueue = {
                 username: username,
                 status: Status.LoggedIn,
                 invites: [],
@@ -101,8 +99,7 @@ export default class MessageQueueManager {
             queue.status = Status.LoggedOut;
             queue.invites = [];
             queue.messages = [];
-        }
-        else {
+        } else {
             queue = {
                 username: username,
                 status: Status.LoggedOut,
@@ -113,7 +110,7 @@ export default class MessageQueueManager {
         }
     }
 
-    public isUserLoggedIn(username:string):boolean {
+    public isUserLoggedIn(username: string): boolean {
         let queue: UserQueue;
         let result = false;
         let index = this.messageQueue.findIndex((queue) => queue.username === username);
@@ -121,8 +118,7 @@ export default class MessageQueueManager {
             queue = this.messageQueue[index];
             mqLogger(`User ${username} is logged in ${queue.status}`);
             result = (queue.status === Status.LoggedIn);
-        }
-        else {
+        } else {
             mqLogger(`User ${username} is NOT logged in`);
             queue = {
                 username: username,
@@ -135,15 +131,14 @@ export default class MessageQueueManager {
         return result;
     }
 
-    public queueInviteForUser(username:string,message:InviteMessage) {
+    public queueInviteForUser(username: string, message: InviteMessage) {
         let index = this.messageQueue.findIndex((queue) => queue.username === username);
         let queue: UserQueue;
         if (index >= 0) {
             queue = this.messageQueue[index];
             if (queue.status === Status.LoggedIn) return;
             queue.invites.push(message);
-        }
-        else {
+        } else {
             queue = {
                 username: username,
                 status: Status.LoggedOut,
@@ -157,15 +152,14 @@ export default class MessageQueueManager {
 
     }
 
-    public queueMessageForUser(username:string,message:ChatMessage) {
+    public queueMessageForUser(username: string, message: ChatMessage) {
         let index = this.messageQueue.findIndex((queue) => queue.username === username);
         let queue: UserQueue;
         if (index >= 0) {
             queue = this.messageQueue[index];
             if (queue.status === Status.LoggedIn) return;
             queue.messages.push(message);
-        }
-        else {
+        } else {
             queue = {
                 username: username,
                 status: Status.LoggedOut,
@@ -177,7 +171,7 @@ export default class MessageQueueManager {
         mqLogger(`Queuing message from ${message.from} to room ${message.room} to user ${username}`);
     }
 
-    public removeAllQueuedItemsForRoom(name:string):void {
+    public removeAllQueuedItemsForRoom(name: string): void {
         mqLogger(`Removing queued items for room ${name}`);
         this.messageQueue.forEach((queue) => {
             let index = queue.invites.length;
@@ -199,26 +193,26 @@ export default class MessageQueueManager {
         });
     }
 
-    public persistQueueAndRooms(rooms:ChatRoom[]) {
+    public persistQueueAndRooms(rooms: ChatRoom[]) {
         let data = {
             rooms: rooms,
             queues: this.messageQueue
         }
         let json = JSON.stringify(data);
         const fileName = process.env.MQ_FILE || './config/queue.json';
-        fs.writeFile(fileName, json,{},(result) => {
-           if (result) {
-               mqLogger(result);
-           }
+        fs.writeFile(fileName, json, {}, (result) => {
+            if (result) {
+                mqLogger(result);
+            }
         });
     }
 
-    public initialise():any|null{
+    public initialise(): any | null {
         mqLogger(`Attempting to load stored queue and rooms`);
         const fileName = process.env.MQ_FILE || './db/queue.json';
-        let dataObj:any|null = null;
+        let dataObj: any | null = null;
         try {
-            let buffer:Buffer = fs.readFileSync(fileName);
+            let buffer: Buffer = fs.readFileSync(fileName);
             dataObj = JSON.parse(buffer.toString());
             mqLogger(dataObj);
             this.messageQueue = dataObj.queues;
@@ -233,19 +227,17 @@ export default class MessageQueueManager {
             if (dataObj.rooms) {
                 let counter = dataObj.rooms.length;
                 while (counter > 0) {
-                    const usersOfRoom = dataObj.rooms[counter-1];
+                    const usersOfRoom = dataObj.rooms[counter - 1];
                     if ((usersOfRoom) || (usersOfRoom.length === 0)) {
-                        mqLogger(`Removing room ${dataObj.rooms[counter-1]} and is empty of users`);
-                        dataObj.rooms.splice(counter-1,1);
+                        mqLogger(`Removing room ${dataObj.rooms[counter - 1]} and is empty of users`);
+                        dataObj.rooms.splice(counter - 1, 1);
                     }
                     counter--;
                 }
             }
 
 
-
-        }
-        catch (error) {
+        } catch (error) {
             mqLogger(error);
             mqLogger(`Invalid format - no queue or rooms restored`);
         }

@@ -3,7 +3,6 @@ import {MongoDataSource} from "../db/MongoDataSource";
 import {DeleteResult, Document} from "mongodb";
 import {DataMessage} from "../socket/SocketTypes";
 import socketManager from "../socket/SocketManager";
-import moment from "moment";
 
 const logger = debug('data-source-providers');
 
@@ -27,7 +26,7 @@ export default class ProvidersQLDelegate {
                     }
                 }, {
                     '$project': {
-                        '_id':1,
+                        '_id': 1,
                         'name': '$username',
                         'providerNo': 1,
                         'isCurrent': 1
@@ -36,15 +35,14 @@ export default class ProvidersQLDelegate {
             ];
 
 
-
-            MongoDataSource.getInstance().getDatabase().collection(collection).aggregate(agg).toArray().then((results:Document[]) => {
+            MongoDataSource.getInstance().getDatabase().collection(collection).aggregate(agg).toArray().then((results: Document[]) => {
                 logger(results.length);
                 resolve(results);
             })
-            .catch((err) => {
-                logger(err);
-                reject(err);
-            });
+                .catch((err) => {
+                    logger(err);
+                    reject(err);
+                });
         });
     }
 
@@ -55,15 +53,15 @@ export default class ProvidersQLDelegate {
             const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-users';
             MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.provider).then((value) => {
                 logger(value);
-                const message:DataMessage = {type:"create",stateName: "provider",data:data.provider, user:"-1",}
+                const message: DataMessage = {type: "create", stateName: "provider", data: data.provider, user: "-1",}
                 socketManager.sendDataMessage(message);
 
                 resolve(data);
             })
-            .catch((err) => {
-                logger(err);
-                reject(err);
-            });
+                .catch((err) => {
+                    logger(err);
+                    reject(err);
+                });
         });
     }
 
@@ -72,9 +70,9 @@ export default class ProvidersQLDelegate {
         logger(data);
         return new Promise((resolve, reject) => {
             const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-users';
-            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:data.provider._id},data.provider).then((value) => {
+            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: data.provider._id}, data.provider).then((value) => {
                 logger(value);
-                const message:DataMessage = {type:"update",stateName: "provider",data:data.provider, user:"-1"}
+                const message: DataMessage = {type: "update", stateName: "provider", data: data.provider, user: "-1"}
                 socketManager.sendDataMessage(message);
 
                 resolve(true);
@@ -91,17 +89,17 @@ export default class ProvidersQLDelegate {
         logger(data);
         return new Promise((resolve, reject) => {
             const collection = process.env.DB_COLLECTION_PROVIDERS || 'pms-users';
-            MongoDataSource.getInstance().getDatabase().collection(collection).deleteOne({_id:data.id}).then((result:DeleteResult) => {
+            MongoDataSource.getInstance().getDatabase().collection(collection).deleteOne({_id: data.id}).then((result: DeleteResult) => {
                 // @ts-ignore
-                const message:DataMessage = {type:"delete",stateName: "provider",data:{ _id: data.id},user:"-1",}
+                const message: DataMessage = {type: "delete", stateName: "provider", data: {_id: data.id}, user: "-1",}
                 socketManager.sendDataMessage(message);
                 logger(result);
                 resolve(true);
             })
-            .catch((err) => {
-                logger(err);
-                reject(err);
-            });
+                .catch((err) => {
+                    logger(err);
+                    reject(err);
+                });
         });
     }
 

@@ -1,12 +1,11 @@
 import express from 'express';
-const router = express.Router();
-
 import passport from 'passport';
 import debug from 'debug';
 import {ensureAuthenticated} from "./auth";
 
-const routeDebug = debug('route');
+const router = express.Router();
 
+const routeDebug = debug('route');
 
 
 /* GET home page. */
@@ -16,7 +15,7 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
 });
 
 router.get('/register', (req, res) => {
-    res.render('register', { layout:"login-register",user: req.user, error: req.flash()["error"]});
+    res.render('register', {layout: "login-register", user: req.user, error: req.flash()["error"]});
 });
 
 router.post('/register', passport.authenticate('local-register', {
@@ -26,7 +25,7 @@ router.post('/register', passport.authenticate('local-register', {
 }));
 
 router.get('/change-password', (req, res) => {
-    res.render('change-password', { layout:"login-register",user: req.user, error: req.flash()["error"]});
+    res.render('change-password', {layout: "login-register", user: req.user, error: req.flash()["error"]});
 });
 
 router.post('/change-password', passport.authenticate('local-change-password', {
@@ -36,7 +35,7 @@ router.post('/change-password', passport.authenticate('local-change-password', {
 }));
 
 router.get('/login', (req, res) => {
-    res.render('login', { layout:"login-register",user: req.user, error: req.flash()["error"]});
+    res.render('login', {layout: "login-register", user: req.user, error: req.flash()["error"]});
 });
 
 router.post('/login', passport.authenticate('local-login', {

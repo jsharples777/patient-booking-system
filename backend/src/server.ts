@@ -4,12 +4,7 @@
 import {MongoDataSource} from "./db/MongoDataSource";
 
 //require('dotenv').config();
-
 import * as dotenv from 'dotenv';
-//dotenv.config({ path: __dirname+'/.env' });
-dotenv.config();
-
-
 import morgan from 'morgan';
 import debug from 'debug';
 
@@ -21,7 +16,7 @@ import path from 'path';
 // Express framework and additional middleware
 import express from 'express';
 import Handlebars from 'handlebars';
-import {allowInsecurePrototypeAccess}  from '@handlebars/allow-prototype-access';
+import {allowInsecurePrototypeAccess} from '@handlebars/allow-prototype-access';
 import expressHandlebars from 'express-handlebars';
 import bodyParser from 'body-parser';
 import session from 'express-session';
@@ -36,9 +31,15 @@ import socketManager from './socket/SocketManager';
 import passport from 'passport';
 
 
-
 // WebRTC
-import { ExpressPeerServer } from 'peer';
+import {ExpressPeerServer} from 'peer';
+// routes
+import routes from './routes';
+import apiRoutes from './routes/api';
+import DataSource from "./graphql/DataSource";
+import {setupPassport} from "./passport/passport";
+//dotenv.config({ path: __dirname+'/.env' });
+dotenv.config();
 
 
 const serverDebug = debug('server');
@@ -50,8 +51,7 @@ const enablePeer = ((process.env.ENABLE_PEER === 'Y') || true);
 
 if (isDevelopment) {
     debug.enable('data-source-appointments server db api route socket mongo-data-source my-passport data-source-appointment-templates data-source-appointment-types');
-}
-else {
+} else {
     debug.enable('server api route');
 }
 
@@ -59,13 +59,12 @@ else {
 serverDebug(`Is development mode ${isDevelopment}`);
 
 
-
 // Create and configure the express app
 const app = express();
 
 // Express view/template engine setup
 serverDebug('setting up templating engine');
-let relPath = (isDevelopment)?process.env.VIEW_RELATIVE_PATH_DEV:process.env.VIEW_RELATIVE_PATH;
+let relPath = (isDevelopment) ? process.env.VIEW_RELATIVE_PATH_DEV : process.env.VIEW_RELATIVE_PATH;
 serverDebug(`Base directory is: ${__dirname}`);
 serverDebug(`Relative path is: ${relPath}`);
 serverDebug(`${__dirname}${relPath}views`);
@@ -93,9 +92,9 @@ app.use(bodyParser.urlencoded({extended: true})); // and POST URL Encoded form s
 app.use(session({
     secret: 'frankie',
     resave: true,
-    saveUninitialized:false,
+    saveUninitialized: false,
     cookie: {
-        maxAge: 24*60*60*1000,
+        maxAge: 24 * 60 * 60 * 1000,
     },
     proxy: true,
 }));
@@ -127,13 +126,10 @@ if (isDevelopment) {
 
 serverDebug('Installing routes');
 MongoDataSource.getInstance();
-// routes
-import routes from './routes';
+
 app.use('/', routes);// add the middleware path routing
-import apiRoutes from './routes/api';
-import DataSource from "./graphql/DataSource";
-import {setupPassport} from "./passport/passport";
-app.use('/api',apiRoutes);
+
+app.use('/api', apiRoutes);
 
 // setup the QL server
 serverDebug('Setting up Graph QL');
@@ -147,7 +143,7 @@ setupPassport(passport);
 serverDebug('Setting the environment variables for the browser to access');
 const port = process.env.PORT || 3000;
 const API_SERVER_URL = process.env.API_SERVER_URL || '';
-let env:any = {serverURL: API_SERVER_URL};
+let env: any = {serverURL: API_SERVER_URL};
 
 app.get('/js/env.js', (req, res) => {
     let session = req.session;

@@ -1,10 +1,9 @@
 import {AppointmentBookView} from "./AppointmentBookView";
-import {AppointmentController} from "./AppointmentController";
-import App from "../App";
-import moment from "moment";
 
 export class AppointmentFilterView {
     private static _instance: AppointmentFilterView;
+    private providersEl: HTMLDivElement | null;
+    private calendarFilterEl: HTMLDivElement | null;
 
     public static getInstance(): AppointmentFilterView {
         if (!(AppointmentFilterView._instance)) {
@@ -13,24 +12,21 @@ export class AppointmentFilterView {
         return AppointmentFilterView._instance;
     }
 
-    private providersEl: HTMLDivElement|null;
-    private calendarFilterEl : HTMLDivElement|null;
-
     public onDocumentLoaded() {
         this.providersEl = <HTMLDivElement>document.getElementById('providers');
         this.calendarFilterEl = <HTMLDivElement>document.getElementById('calendarFilter');
     }
 
-    public populateProviders(providers:any[]): void {
+    public populateProviders(providers: any[]): void {
         if (providers && this.providersEl) {
-            providers.forEach((provider:any) => {
+            providers.forEach((provider: any) => {
                 let labelEl = document.createElement('label');
                 let inputEl = document.createElement('input');
-                inputEl.setAttribute('type','checkbox');
-                inputEl.setAttribute('value',provider.name);
-                inputEl.setAttribute("checked",'');
-                inputEl.setAttribute("mbsc-checkbox",'');
-                inputEl.setAttribute('data-label',provider.name);
+                inputEl.setAttribute('type', 'checkbox');
+                inputEl.setAttribute('value', provider.name);
+                inputEl.setAttribute("checked", '');
+                inputEl.setAttribute("mbsc-checkbox", '');
+                inputEl.setAttribute('data-label', provider.name);
                 inputEl.classList.add('provider-checkbox');
                 labelEl.appendChild(inputEl);
 
@@ -47,22 +43,21 @@ export class AppointmentFilterView {
             document.querySelectorAll('.provider-checkbox').forEach(function (elm) {
                 elm.addEventListener('change', function () {
                     let checkboxList = document.querySelectorAll('.provider-checkbox');
-                    let selected:any[] = [];
+                    let selected: any[] = [];
 
                     for (let i = 0; i < checkboxList.length; i++) {
                         let checkbox = checkboxList[i];
                         // @ts-ignore
                         if (checkbox.checked) {
                             // @ts-ignore
-                            selected.push({id:checkbox.value,name:checkbox.value});
+                            selected.push({id: checkbox.value, name: checkbox.value});
                         }
                     }
 
 
-
-                     AppointmentBookView.getInstance().getCalender().setOptions({
+                    AppointmentBookView.getInstance().getCalender().setOptions({
                         resources: selected
-                     });
+                    });
                 });
             });
 

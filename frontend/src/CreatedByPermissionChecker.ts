@@ -1,5 +1,3 @@
-
-
 import Controller from "./Controller";
 import {ObjectPermissionChecker} from "ui-framework-jps";
 

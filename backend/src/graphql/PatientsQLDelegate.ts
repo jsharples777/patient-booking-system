@@ -1,9 +1,8 @@
 import debug from "debug";
 import {MongoDataSource} from "../db/MongoDataSource";
-import {DeleteResult, Document} from "mongodb";
+import {Document} from "mongodb";
 import {DataMessage} from "../socket/SocketTypes";
 import socketManager from "../socket/SocketManager";
-import moment from "moment";
 
 const logger = debug('data-source-patients');
 
@@ -41,10 +40,10 @@ export default class PatientsQLDelegate {
                 logger(results.length);
                 resolve(results);
             })
-            .catch((err) => {
-                logger(err);
-                reject(err);
-            });
+                .catch((err) => {
+                    logger(err);
+                    reject(err);
+                });
         });
 
     }
@@ -54,10 +53,10 @@ export default class PatientsQLDelegate {
         logger(data);
         return new Promise((resolve, reject) => {
             const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
-            MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id:data.id}).then((result: Document|null) => {
+            MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id: data.id}).then((result: Document | null) => {
                 logger(result);
                 if (result) {
-                    result.results.forEach((pathology:any) => {
+                    result.results.forEach((pathology: any) => {
                         if (isNaN(pathology.received)) {
                             pathology.received = -1;
                         }
@@ -66,10 +65,10 @@ export default class PatientsQLDelegate {
                 }
                 resolve(result);
             })
-            .catch((err) => {
-                logger(err);
-                reject(err);
-            });
+                .catch((err) => {
+                    logger(err);
+                    reject(err);
+                });
         });
 
     }
@@ -81,7 +80,7 @@ export default class PatientsQLDelegate {
             const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
             MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.patient).then((value) => {
                 logger(value);
-                const message:DataMessage = {type:"create",stateName: "patient",data:data.patient, user:"-1",}
+                const message: DataMessage = {type: "create", stateName: "patient", data: data.patient, user: "-1",}
                 socketManager.sendDataMessage(message);
 
                 resolve(data);
@@ -98,9 +97,9 @@ export default class PatientsQLDelegate {
         logger(data);
         return new Promise((resolve, reject) => {
             const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
-            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:data.patient._id},data.patient).then((value) => {
+            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: data.patient._id}, data.patient).then((value) => {
                 logger(value);
-                const message:DataMessage = {type:"update",stateName: "patient",data:data.patient, user:"-1"}
+                const message: DataMessage = {type: "update", stateName: "patient", data: data.patient, user: "-1"}
                 socketManager.sendDataMessage(message);
 
                 resolve(true);
@@ -111,7 +110,6 @@ export default class PatientsQLDelegate {
                 });
         });
     }
-
 
 
 }

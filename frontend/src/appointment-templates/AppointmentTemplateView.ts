@@ -1,7 +1,7 @@
 import {AppointmentTemplateController} from "./AppointmentTemplateController";
-import { eventcalendar, Eventcalendar, snackbar} from "@mobiscroll/javascript";
+import {eventcalendar, Eventcalendar, snackbar} from "@mobiscroll/javascript";
 import debug from "debug";
-import {STATE_NAMES, VIEW_CONTAINER} from "../AppTypes";
+import {STATE_NAMES} from "../AppTypes";
 import moment from "moment";
 import Controller from "../Controller";
 import {AppointmentTemplateDetailModal} from "./AppointmentTemplateDetailModal";
@@ -14,6 +14,13 @@ type AppointmentTemplateViewElements = {
 
 export class AppointmentTemplateView {
     private static _instance: AppointmentTemplateView;
+    private viewElements: AppointmentTemplateViewElements = {
+        calendar: null,
+    }
+
+    private constructor() {
+        this.handleAppointmentTemplateRendering = this.handleAppointmentTemplateRendering.bind(this);
+    }
 
     public static getInstance(): AppointmentTemplateView {
         if (!(AppointmentTemplateView._instance)) {
@@ -21,16 +28,6 @@ export class AppointmentTemplateView {
         }
         return AppointmentTemplateView._instance;
     }
-
-    private constructor() {
-        this.handleAppointmentTemplateRendering = this.handleAppointmentTemplateRendering.bind(this);
-    }
-
-
-    private viewElements: AppointmentTemplateViewElements = {
-        calendar: null,
-    }
-
 
     getCalender(): Eventcalendar {
         return this.viewElements.calendar;
@@ -172,7 +169,7 @@ export class AppointmentTemplateView {
             }
         }
         options.renderScheduleEvent = this.handleAppointmentTemplateRendering;
-        options.onEventUpdated = (args:any) => {
+        options.onEventUpdated = (args: any) => {
 
             // user has dragged event - update the appointment
             Controller.getInstance().getStateManager().updateItemInState(

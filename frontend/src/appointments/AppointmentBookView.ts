@@ -15,36 +15,20 @@ type AppointmentViewElements = {
 
 export class AppointmentBookView {
     private static _instance: AppointmentBookView;
-
-    public static getInstance(): AppointmentBookView {
-        if (!(AppointmentBookView._instance)) {
-            AppointmentBookView._instance = new AppointmentBookView();
-        }
-        return AppointmentBookView._instance;
+    private viewElements: AppointmentViewElements = {
+        datePicker: null,
+        calendar: null,
     }
 
     private constructor() {
         this.handleAppointmentRendering = this.handleAppointmentRendering.bind(this);
     }
 
-
-    private viewElements: AppointmentViewElements = {
-        datePicker: null,
-        calendar: null,
-    }
-
-    protected setupDatePicker() {
-        // @ts-ignore
-        this.viewElements.datePicker = datepicker(document.getElementById(VIEW_CONTAINER.calendarControl), {
-            controls: ['calendar'],
-            display: "inline",
-            dateFormat: 'YYYYMMDD',
-            dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            showWeekNumbers: true,
-            onChange: (event: any, inst: any) => {
-                AppointmentBookView.getInstance().viewElements.calendar?.navigate(event.value);
-            }
-        });
+    public static getInstance(): AppointmentBookView {
+        if (!(AppointmentBookView._instance)) {
+            AppointmentBookView._instance = new AppointmentBookView();
+        }
+        return AppointmentBookView._instance;
     }
 
     getCalender(): Eventcalendar {
@@ -80,7 +64,6 @@ export class AppointmentBookView {
         }
         return buffer;
     }
-
 
     public onDocumentLoaded() {
 
@@ -193,7 +176,7 @@ export class AppointmentBookView {
             }
         }
         options.renderScheduleEvent = this.handleAppointmentRendering;
-        options.onEventUpdated = (args:any) => {
+        options.onEventUpdated = (args: any) => {
             // user has dragged event - update the appointment
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
@@ -227,7 +210,6 @@ export class AppointmentBookView {
         this.viewElements.calendar = eventcalendar(document.getElementById(VIEW_CONTAINER.calendarDetail), options);
     }
 
-
     public applyClinicConfig(clinicConfig: any) {
         if (this.viewElements.calendar) {
             logger('State changed, using clinic config options');
@@ -251,7 +233,6 @@ export class AppointmentBookView {
 
     }
 
-
     public setupProviders(providersCollection: any[]) {
         let providers: any[] = [];
 
@@ -273,6 +254,20 @@ export class AppointmentBookView {
         );
 
         AppointmentDetailModal.getInstance().setupProviderDropdown(providers);
+    }
+
+    protected setupDatePicker() {
+        // @ts-ignore
+        this.viewElements.datePicker = datepicker(document.getElementById(VIEW_CONTAINER.calendarControl), {
+            controls: ['calendar'],
+            display: "inline",
+            dateFormat: 'YYYYMMDD',
+            dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            showWeekNumbers: true,
+            onChange: (event: any, inst: any) => {
+                AppointmentBookView.getInstance().viewElements.calendar?.navigate(event.value);
+            }
+        });
     }
 
 

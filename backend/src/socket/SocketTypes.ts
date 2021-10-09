@@ -1,8 +1,8 @@
 export type DataMessage = {
-    type:string,
+    type: string,
     stateName: string,
-    data:any,
-    user:string,
+    data: any,
+    user: string,
 };
 
 export type ChatMessage = {
@@ -19,13 +19,13 @@ export type ChatMessage = {
 export type InviteMessage = {
     from: string,
     message: string,
-    room:string,
+    room: string,
     created: number,
     requiresAcceptDecline: boolean,
     userList: string[],
     type: InviteType,
-    subject:string,
-    attachment:any
+    subject: string,
+    attachment: any
 }
 
 export enum InviteType {
@@ -47,7 +47,7 @@ export type ChatRoom = {
 }
 
 export type QueuedMessages = {
-    invites:InviteMessage[],
-    messages:ChatMessage[]
+    invites: InviteMessage[],
+    messages: ChatMessage[]
 }
 

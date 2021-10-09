@@ -6,9 +6,9 @@ import demographicsConfig from './demographics-routes';
 
 const router = express.Router();
 
-router.use('/users',userRoutes);
-router.use('/clinic-config',clinicConfig);
-router.use('/patients',patientConfig);
-router.use('/demographics',demographicsConfig);
+router.use('/users', userRoutes);
+router.use('/clinic-config', clinicConfig);
+router.use('/patients', patientConfig);
+router.use('/demographics', demographicsConfig);
 
 export = router;

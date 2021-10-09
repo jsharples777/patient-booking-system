@@ -35,15 +35,6 @@ type AppointmentDetailViewElements = {
 export class AppointmentDetailModal {
 
     private static _instance: AppointmentDetailModal;
-
-    public static getInstance(): AppointmentDetailModal {
-        if (!(AppointmentDetailModal._instance)) {
-            AppointmentDetailModal._instance = new AppointmentDetailModal();
-        }
-        return AppointmentDetailModal._instance;
-    }
-
-
     private static datePickerResponsive = {
         medium: {
             controls: ['calendar'],
@@ -56,13 +47,7 @@ export class AppointmentDetailModal {
             touchUi: false
         }
     }
-
     private patients: any[];
-
-    private constructor() {
-        this.patients = [];
-    }
-
     private viewElements: AppointmentDetailViewElements = {
         popup: null,
         range: null,
@@ -80,6 +65,17 @@ export class AppointmentDetailModal {
         patientSearchDropdown: null,
         providersDropdown: null,
         warningsEl: null
+    }
+
+    private constructor() {
+        this.patients = [];
+    }
+
+    public static getInstance(): AppointmentDetailModal {
+        if (!(AppointmentDetailModal._instance)) {
+            AppointmentDetailModal._instance = new AppointmentDetailModal();
+        }
+        return AppointmentDetailModal._instance;
     }
 
     public close() {
@@ -215,7 +211,7 @@ export class AppointmentDetailModal {
                 {
                     text: 'Cancel',
                     keyCode: 'esc',
-                    handler: function() {
+                    handler: function () {
                         AppointmentTemplateView.getInstance().getCalender().removeEvent(AppointmentTemplateController.getInstance().getModel().tempEvent);
                     }
                 },
@@ -319,7 +315,7 @@ export class AppointmentDetailModal {
                 {
                     text: 'Cancel',
                     keyCode: 'esc',
-                    handler: function() {
+                    handler: function () {
                         AppointmentTemplateView.getInstance().getCalender().updateEvent(AppointmentTemplateController.getInstance().getModel().oldEvent);
                     }
                 },
@@ -395,6 +391,33 @@ export class AppointmentDetailModal {
         // set anchor for the popup
         this.viewElements.popup.setOptions({anchor: args.domEvent.currentTarget});
         this.viewElements.popup.open();
+    }
+
+    public setupPatientSearchDropDown(patientsCollection: any[]) {
+        this.patients = [];
+
+        patientsCollection.forEach((patient: any) => {
+            this.patients.push({text: `${patient.name.surname}, ${patient.name.firstname}`, value: patient._id});
+        });
+
+        // add the patient search values to the data of the select dropdown
+        //
+        this.viewElements.patientSearchDropdown = select('#' + SELECT.patientSearch, {
+            filter: true,
+            data: AppointmentDetailModal.getInstance().patients,
+            onChange: (event: any, inst: any) => {
+                // @ts-ignore
+                getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value = event.valueText;
+
+                let warningsText = this.getPatientWarnings(event.value);
+                // @ts-ignore
+                getInst(AppointmentDetailModal.getInstance().viewElements.warningsEl).value = warningsText;
+
+                AppointmentController.getInstance().getModel().tempEvent.patientId = event.value;
+                AppointmentController.getInstance().getModel().tempEvent.warnings = warningsText;
+            }
+        });
+
     }
 
     protected setupActionButtons() {
@@ -622,7 +645,7 @@ export class AppointmentDetailModal {
         });
     }
 
-    private getPatientWarnings(patientId:string) {
+    private getPatientWarnings(patientId: string) {
         let patientBasicDetails: any = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch, {_id: patientId});
         let warningsText = '';
         if (patientBasicDetails && patientBasicDetails.flags) {
@@ -637,33 +660,6 @@ export class AppointmentDetailModal {
 
         }
         return warningsText;
-
-    }
-
-    public setupPatientSearchDropDown(patientsCollection: any[]) {
-        this.patients = [];
-
-        patientsCollection.forEach((patient: any) => {
-            this.patients.push({text: `${patient.name.surname}, ${patient.name.firstname}`, value: patient._id});
-        });
-
-        // add the patient search values to the data of the select dropdown
-        //
-        this.viewElements.patientSearchDropdown = select('#' + SELECT.patientSearch, {
-            filter: true,
-            data: AppointmentDetailModal.getInstance().patients,
-            onChange: (event: any, inst: any) => {
-                // @ts-ignore
-                getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value = event.valueText;
-
-                let warningsText = this.getPatientWarnings(event.value);
-                // @ts-ignore
-                getInst(AppointmentDetailModal.getInstance().viewElements.warningsEl).value = warningsText;
-
-                AppointmentController.getInstance().getModel().tempEvent.patientId = event.value;
-                AppointmentController.getInstance().getModel().tempEvent.warnings = warningsText;
-            }
-        });
 
     }
 

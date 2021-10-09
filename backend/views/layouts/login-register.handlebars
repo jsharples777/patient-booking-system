@@ -26,11 +26,11 @@
 {{> jsincludes/js-vendors}}
 {{> jsincludes/js-popovers-tooltips}}
 <script>
-    document.getElementById('login').addEventListener('submit',(event) => {
+    document.getElementById('login').addEventListener('submit', (event) => {
         const username = document.getElementById('username').value;
         const password = document.getElementById('pwd').value;
         let hash = CryptoJS.SHA1(password).toString();
-        localStorage.setItem(username,hash);
+        localStorage.setItem(username, hash);
     });
 </script>
 </html>

@@ -9,13 +9,10 @@ $modules: () !default;
 }
 
 
-
-
-
 @include exports("borders.ios") {
 
   @media (-webkit-min-device-pixel-ratio: 2),
-    (min-resolution: 192dpi) {
+  (min-resolution: 192dpi) {
 
     .mbsc-fr-hb.mbsc-ios.mbsc-fr-inline .mbsc-fr-w,
     .mbsc-fr-hb.mbsc-ios.mbsc-fr-inline .mbsc-fr-c,
@@ -23,24 +20,24 @@ $modules: () !default;
     .mbsc-fr-hb.mbsc-ios .mbsc-fr-btn-cont,
     .mbsc-fr-hb.mbsc-ios.mbsc-fr-center .mbsc-fr-btn-w,
     .mbsc-fr-hb.mbsc-ios.mbsc-fr-bottom .mbsc-fr-popup,
-    /* Calendar */
+      /* Calendar */
     .mbsc-fr-hb.mbsc-ios.mbsc-cal-liq.mbsc-fr-center .mbsc-fr-btn-cont,
     .mbsc-fr-hb.mbsc-ios.mbsc-calendar .mbsc-fr-popup .mbsc-fr-btn-cont,
     .mbsc-fr-hb.mbsc-ios .mbsc-cal-day,
     .mbsc-fr-hb.mbsc-ios .mbsc-cal-sc-m-cell,
-    /* Range */
+      /* Range */
     .mbsc-fr-hb.mbsc-ios .mbsc-range-btn-end,
     .mbsc-fr-hb.mbsc-ios .mbsc-range-btn-end .mbsc-range-btn:before,
-    /* Numpad */
+      /* Numpad */
     .mbsc-fr-hb.mbsc-ios .mbsc-np-btn,
-    /* Navigation */
+      /* Navigation */
     .mbsc-fr-hb.mbsc-ios.mbsc-ms-more .mbsc-ms-item:after,
-    /* Listview */
+      /* Listview */
     .mbsc-lv-hb.mbsc-ios .mbsc-lv-item:before,
     .mbsc-lv-hb.mbsc-ios .mbsc-lv-item:after,
     .mbsc-lv-hb.mbsc-ios .mbsc-lv-gr-title,
     .mbsc-lv-hb.mbsc-ios,
-    /* Forms */
+      /* Forms */
     .mbsc-form-hb.mbsc-ios .mbsc-control-w:before,
     .mbsc-form-hb.mbsc-ios .mbsc-control-w:after,
     .mbsc-form-hb.mbsc-ios .mbsc-form-group-inset .mbsc-control-ng .mbsc-control-w:before,
@@ -140,9 +137,7 @@ $mbsc-frame-overlay-dark: null !default;
 @function get-contrast-color($color) {
   @if (lightness($color) > 65%) {
     @return #000;
-  }
-
-  @else {
+  } @else {
     @return #fff;
   }
 }
@@ -168,15 +163,15 @@ $mbsc-ios-info: #5BB7C5 !default;
 $mbsc-ios-light: #fff !default;
 $mbsc-ios-dark: #47494A !default;
 
-$mbsc-ios-colors: ( // Colors map
-  'background': $mbsc-ios-background,
-  'text': $mbsc-ios-text,
-  'accent': $mbsc-ios-accent,
+$mbsc-ios-colors: (// Colors map
+        'background': $mbsc-ios-background,
+        'text': $mbsc-ios-text,
+        'accent': $mbsc-ios-accent,
 );
-$mbsc-ios-dark-colors: ( // Colors map
-  'background': $mbsc-ios-dark-background,
-  'text': $mbsc-ios-dark-text,
-  'accent': $mbsc-ios-dark-accent,
+$mbsc-ios-dark-colors: (// Colors map
+        'background': $mbsc-ios-dark-background,
+        'text': $mbsc-ios-dark-text,
+        'accent': $mbsc-ios-dark-accent,
 );
 
 @function mbsc-ios-colors($params) {
@@ -188,9 +183,7 @@ $mbsc-ios-dark-colors: ( // Colors map
 
   @if (map-get($params, 'button')) {
     $button: map-get($params, 'button');
-  }
-
-  @else {
+  } @else {
     $button: map-get($params, 'accent');
   }
 
@@ -228,7 +221,7 @@ $mbsc-ios-dark-colors: ( // Colors map
     $snackbar-button: hsl(hue($button), saturation($button), max(lightness($button), 80%));
   }
 
-  // Dark background
+    // Dark background
   @else {
     $border-color: lighten($background, 20%);
     $popup-border: lighten($border-color, 13%);
@@ -245,28 +238,27 @@ $mbsc-ios-dark-colors: ( // Colors map
   }
 
 
-
   @return ('cont-background': $cont-background,
-    'border-color': $border-color,
-    'background-alt': $background-alt,
-    'card-shadow': $card-shadow,
-    'popup-border': $popup-border,
-    'background-limited': $background-limited,
-    'label-text': $label-text,
-    'button-disabled': $button-disabled,
-    'switch-background': $switch-background,
-    'snackbar-button': $snackbar-button,
-    'slider-tooltip': $slider-tooltip,
-    'slider-track-step': $slider-track-step,
-    'text-alt': $text-alt,
-    'background-overlay': $background-overlay,
-    'empty-color': $empty-color,
-    'btn-cont-background': $btn-cont-background,
-    'button': $button,
+          'border-color': $border-color,
+          'background-alt': $background-alt,
+          'card-shadow': $card-shadow,
+          'popup-border': $popup-border,
+          'background-limited': $background-limited,
+          'label-text': $label-text,
+          'button-disabled': $button-disabled,
+          'switch-background': $switch-background,
+          'snackbar-button': $snackbar-button,
+          'slider-tooltip': $slider-tooltip,
+          'slider-track-step': $slider-track-step,
+          'text-alt': $text-alt,
+          'background-overlay': $background-overlay,
+          'empty-color': $empty-color,
+          'btn-cont-background': $btn-cont-background,
+          'button': $button,
     /* static colors */
-    'error': #d8332a,
-    'white-text': #fff,
-    'dark-text': #000);
+          'error': #d8332a,
+          'white-text': #fff,
+          'dark-text': #000);
 }
 
 @mixin mbsc-ios-common($theme, $params) {
@@ -299,23 +291,23 @@ $mbsc-ios-frame-overlay: $mbsc-frame-overlay-light !default;
 $mbsc-ios-dark-frame-overlay: $mbsc-frame-overlay-dark !default;
 
 $mbsc-ios-colors: map-merge($mbsc-ios-colors, (
-  'frame-background': $mbsc-ios-frame-background,
-  'frame-text': $mbsc-ios-frame-text,
-  'frame-accent': $mbsc-ios-frame-accent,
-  'frame-overlay': $mbsc-ios-frame-overlay,
+        'frame-background': $mbsc-ios-frame-background,
+        'frame-text': $mbsc-ios-frame-text,
+        'frame-accent': $mbsc-ios-frame-accent,
+        'frame-overlay': $mbsc-ios-frame-overlay,
 ));
 
 $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
-  'frame-background': $mbsc-ios-dark-frame-background,
-  'frame-text': $mbsc-ios-dark-frame-text,
-  'frame-accent': $mbsc-ios-dark-frame-accent,
-  'frame-overlay': $mbsc-ios-dark-frame-overlay,
+        'frame-background': $mbsc-ios-dark-frame-background,
+        'frame-text': $mbsc-ios-dark-frame-text,
+        'frame-accent': $mbsc-ios-dark-frame-accent,
+        'frame-overlay': $mbsc-ios-dark-frame-overlay,
 ));
 
 @mixin mbsc-ios-frame($theme, $params) {
   @include exports("frame.#{$theme}.colors") {
 
-    $background:map-get($params, 'background');
+    $background: map-get($params, 'background');
     $text: map-get($params, 'text');
     $accent: map-get($params, 'accent');
 
@@ -331,8 +323,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     $button: '';
     @if (map-get($params, 'button')) {
       $button: map-get($params, 'button');
-    }
-    @else {
+    } @else {
       $button: $accent;
     }
 
@@ -359,8 +350,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
       $popup-shadow: rgba(0, 0, 0, .3);
       $popup-arrow-shadow: rgba(0, 0, 0, .2);
       $popup-border: darken($background-limited, 17%);
-    }
-    @else {
+    } @else {
       $background-overlay: rgba(#fff, .1);
       $btn-cont-background: lighten($background-limited, 8%);
       $border-color: lighten($background, 20%);
@@ -476,8 +466,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
 @include exports("common") {
   .mbsc-cloak {
     visibility: hidden !important;
@@ -507,7 +495,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     line-height: 1.5;
   }
 }
-
 
 
 @include exports("animation") {
@@ -1141,1447 +1128,1445 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
 $mbsc-font-path: '' !default;
 
 @include exports("icons") {
 
-    @font-face {
-        font-family: 'icons_mobiscroll';
-        src: 
-        url($mbsc-font-path + 'icons_mobiscroll.woff?vetmxn') format('woff'),
-        url($mbsc-font-path + 'icons_mobiscroll.woff') format('woff'),
-        url($mbsc-font-path + 'icons_mobiscroll.ttf?vetmxn') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
+  @font-face {
+    font-family: 'icons_mobiscroll';
+    src: url($mbsc-font-path + 'icons_mobiscroll.woff?vetmxn') format('woff'),
+    url($mbsc-font-path + 'icons_mobiscroll.woff') format('woff'),
+    url($mbsc-font-path + 'icons_mobiscroll.ttf?vetmxn') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
 
-    .mbsc-ic:before {
-        font-family: 'icons_mobiscroll';
-        speak: none;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
+  .mbsc-ic:before {
+    font-family: 'icons_mobiscroll';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-/* Icons */
- 
-.mbsc-ic-IE::before {
+  /* Icons */
+
+  .mbsc-ic-IE::before {
     content: "\ea01";
-} 
-.mbsc-ic-IcoMoon::before {
+  }
+  .mbsc-ic-IcoMoon::before {
     content: "\ea02";
-} 
-.mbsc-ic-accessibility::before {
+  }
+  .mbsc-ic-accessibility::before {
     content: "\ea03";
-} 
-.mbsc-ic-address-book::before {
+  }
+  .mbsc-ic-address-book::before {
     content: "\ea04";
-} 
-.mbsc-ic-aid::before {
+  }
+  .mbsc-ic-aid::before {
     content: "\ea05";
-} 
-.mbsc-ic-airplane::before {
+  }
+  .mbsc-ic-airplane::before {
     content: "\ea06";
-} 
-.mbsc-ic-alarm::before {
+  }
+  .mbsc-ic-alarm::before {
     content: "\ea07";
-} 
-.mbsc-ic-alarm2::before {
+  }
+  .mbsc-ic-alarm2::before {
     content: "\ea08";
-} 
-.mbsc-ic-android::before {
+  }
+  .mbsc-ic-android::before {
     content: "\ea09";
-} 
-.mbsc-ic-angry::before {
+  }
+  .mbsc-ic-angry::before {
     content: "\ea0a";
-} 
-.mbsc-ic-angry2::before {
+  }
+  .mbsc-ic-angry2::before {
     content: "\ea0b";
-} 
-.mbsc-ic-apple::before {
+  }
+  .mbsc-ic-apple::before {
     content: "\ea0c";
-} 
-.mbsc-ic-arrow-down-left::before {
+  }
+  .mbsc-ic-arrow-down-left::before {
     content: "\ea0d";
-} 
-.mbsc-ic-arrow-down-left2::before {
+  }
+  .mbsc-ic-arrow-down-left2::before {
     content: "\ea0e";
-} 
-.mbsc-ic-arrow-down-left3::before {
+  }
+  .mbsc-ic-arrow-down-left3::before {
     content: "\ea0f";
-} 
-.mbsc-ic-arrow-down-right::before {
+  }
+  .mbsc-ic-arrow-down-right::before {
     content: "\ea10";
-} 
-.mbsc-ic-arrow-down-right2::before {
+  }
+  .mbsc-ic-arrow-down-right2::before {
     content: "\ea11";
-} 
-.mbsc-ic-arrow-down-right3::before {
+  }
+  .mbsc-ic-arrow-down-right3::before {
     content: "\ea12";
-} 
-.mbsc-ic-arrow-down::before {
+  }
+  .mbsc-ic-arrow-down::before {
     content: "\ea13";
-} 
-.mbsc-ic-arrow-down2::before {
+  }
+  .mbsc-ic-arrow-down2::before {
     content: "\ea14";
-} 
-.mbsc-ic-arrow-down3::before {
+  }
+  .mbsc-ic-arrow-down3::before {
     content: "\ea15";
-} 
-.mbsc-ic-arrow-down5::before {
+  }
+  .mbsc-ic-arrow-down5::before {
     content: "\ea16";
-} 
-.mbsc-ic-arrow-left::before {
+  }
+  .mbsc-ic-arrow-left::before {
     content: "\ea17";
-} 
-.mbsc-ic-arrow-left2::before {
+  }
+  .mbsc-ic-arrow-left2::before {
     content: "\ea18";
-} 
-.mbsc-ic-arrow-left3::before {
+  }
+  .mbsc-ic-arrow-left3::before {
     content: "\ea19";
-} 
-.mbsc-ic-arrow-left4::before {
+  }
+  .mbsc-ic-arrow-left4::before {
     content: "\ea1a";
-} 
-.mbsc-ic-arrow-left5::before {
+  }
+  .mbsc-ic-arrow-left5::before {
     content: "\ea1b";
-} 
-.mbsc-ic-arrow-left6::before {
+  }
+  .mbsc-ic-arrow-left6::before {
     content: "\ea1c";
-} 
-.mbsc-ic-arrow-right::before {
+  }
+  .mbsc-ic-arrow-right::before {
     content: "\ea1d";
-} 
-.mbsc-ic-arrow-right2::before {
+  }
+  .mbsc-ic-arrow-right2::before {
     content: "\ea1e";
-} 
-.mbsc-ic-arrow-right3::before {
+  }
+  .mbsc-ic-arrow-right3::before {
     content: "\ea1f";
-} 
-.mbsc-ic-arrow-right4::before {
+  }
+  .mbsc-ic-arrow-right4::before {
     content: "\ea20";
-} 
-.mbsc-ic-arrow-right5::before {
+  }
+  .mbsc-ic-arrow-right5::before {
     content: "\ea21";
-} 
-.mbsc-ic-arrow-right6::before {
+  }
+  .mbsc-ic-arrow-right6::before {
     content: "\ea22";
-} 
-.mbsc-ic-arrow-up-left::before {
+  }
+  .mbsc-ic-arrow-up-left::before {
     content: "\ea23";
-} 
-.mbsc-ic-arrow-up-left2::before {
+  }
+  .mbsc-ic-arrow-up-left2::before {
     content: "\ea24";
-} 
-.mbsc-ic-arrow-up-left3::before {
+  }
+  .mbsc-ic-arrow-up-left3::before {
     content: "\ea25";
-} 
-.mbsc-ic-arrow-up-right::before {
+  }
+  .mbsc-ic-arrow-up-right::before {
     content: "\ea26";
-} 
-.mbsc-ic-arrow-up-right2::before {
+  }
+  .mbsc-ic-arrow-up-right2::before {
     content: "\ea27";
-} 
-.mbsc-ic-arrow-up-right3::before {
+  }
+  .mbsc-ic-arrow-up-right3::before {
     content: "\ea28";
-} 
-.mbsc-ic-arrow-up::before {
+  }
+  .mbsc-ic-arrow-up::before {
     content: "\ea29";
-} 
-.mbsc-ic-arrow-up2::before {
+  }
+  .mbsc-ic-arrow-up2::before {
     content: "\ea2a";
-} 
-.mbsc-ic-arrow-up3::before {
+  }
+  .mbsc-ic-arrow-up3::before {
     content: "\ea2b";
-} 
-.mbsc-ic-arrow-up5::before {
+  }
+  .mbsc-ic-arrow-up5::before {
     content: "\ea2c";
-} 
-.mbsc-ic-attachment::before {
+  }
+  .mbsc-ic-attachment::before {
     content: "\ea2d";
-} 
-.mbsc-ic-backspace::before {
+  }
+  .mbsc-ic-backspace::before {
     content: "\ea2e";
-} 
-.mbsc-ic-backspace3::before {
+  }
+  .mbsc-ic-backspace3::before {
     content: "\ea2f";
-} 
-.mbsc-ic-backspace4::before {
+  }
+  .mbsc-ic-backspace4::before {
     content: "\ea30";
-} 
-.mbsc-ic-backward::before {
+  }
+  .mbsc-ic-backward::before {
     content: "\ea31";
-} 
-.mbsc-ic-backward2::before {
+  }
+  .mbsc-ic-backward2::before {
     content: "\ea32";
-} 
-.mbsc-ic-barcode::before {
+  }
+  .mbsc-ic-barcode::before {
     content: "\ea33";
-} 
-.mbsc-ic-bars::before {
+  }
+  .mbsc-ic-bars::before {
     content: "\ea34";
-} 
-.mbsc-ic-bars2::before {
+  }
+  .mbsc-ic-bars2::before {
     content: "\ea35";
-} 
-.mbsc-ic-bell::before {
+  }
+  .mbsc-ic-bell::before {
     content: "\ea36";
-} 
-.mbsc-ic-binoculars::before {
+  }
+  .mbsc-ic-binoculars::before {
     content: "\ea37";
-} 
-.mbsc-ic-blocked::before {
+  }
+  .mbsc-ic-blocked::before {
     content: "\ea38";
-} 
-.mbsc-ic-blog::before {
+  }
+  .mbsc-ic-blog::before {
     content: "\ea39";
-} 
-.mbsc-ic-blogger::before {
+  }
+  .mbsc-ic-blogger::before {
     content: "\ea3a";
-} 
-.mbsc-ic-blogger2::before {
+  }
+  .mbsc-ic-blogger2::before {
     content: "\ea3b";
-} 
-.mbsc-ic-bold::before {
+  }
+  .mbsc-ic-bold::before {
     content: "\ea3c";
-} 
-.mbsc-ic-book::before {
+  }
+  .mbsc-ic-book::before {
     content: "\ea3d";
-} 
-.mbsc-ic-bookmark::before {
+  }
+  .mbsc-ic-bookmark::before {
     content: "\ea3e";
-} 
-.mbsc-ic-bookmarks::before {
+  }
+  .mbsc-ic-bookmarks::before {
     content: "\ea3f";
-} 
-.mbsc-ic-books::before {
+  }
+  .mbsc-ic-books::before {
     content: "\ea40";
-} 
-.mbsc-ic-box-add::before {
+  }
+  .mbsc-ic-box-add::before {
     content: "\ea41";
-} 
-.mbsc-ic-box-remove::before {
+  }
+  .mbsc-ic-box-remove::before {
     content: "\ea42";
-} 
-.mbsc-ic-briefcase::before {
+  }
+  .mbsc-ic-briefcase::before {
     content: "\ea43";
-} 
-.mbsc-ic-brightness-contrast::before {
+  }
+  .mbsc-ic-brightness-contrast::before {
     content: "\ea44";
-} 
-.mbsc-ic-brightness-medium::before {
+  }
+  .mbsc-ic-brightness-medium::before {
     content: "\ea45";
-} 
-.mbsc-ic-bubble::before {
+  }
+  .mbsc-ic-bubble::before {
     content: "\ea46";
-} 
-.mbsc-ic-bubble2::before {
+  }
+  .mbsc-ic-bubble2::before {
     content: "\ea47";
-} 
-.mbsc-ic-bubbles::before {
+  }
+  .mbsc-ic-bubbles::before {
     content: "\ea48";
-} 
-.mbsc-ic-bubbles2::before {
+  }
+  .mbsc-ic-bubbles2::before {
     content: "\ea49";
-} 
-.mbsc-ic-bubbles3::before {
+  }
+  .mbsc-ic-bubbles3::before {
     content: "\ea4a";
-} 
-.mbsc-ic-bubbles4::before {
+  }
+  .mbsc-ic-bubbles4::before {
     content: "\ea4b";
-} 
-.mbsc-ic-bug::before {
+  }
+  .mbsc-ic-bug::before {
     content: "\ea4c";
-} 
-.mbsc-ic-bullhorn::before {
+  }
+  .mbsc-ic-bullhorn::before {
     content: "\ea4d";
-} 
-.mbsc-ic-busy::before {
+  }
+  .mbsc-ic-busy::before {
     content: "\ea4e";
-} 
-.mbsc-ic-cabinet::before {
+  }
+  .mbsc-ic-cabinet::before {
     content: "\ea4f";
-} 
-.mbsc-ic-calculate::before {
+  }
+  .mbsc-ic-calculate::before {
     content: "\ea50";
-} 
-.mbsc-ic-calendar::before {
+  }
+  .mbsc-ic-calendar::before {
     content: "\ea51";
-} 
-.mbsc-ic-calendar2::before {
+  }
+  .mbsc-ic-calendar2::before {
     content: "\ea52";
-} 
-.mbsc-ic-camera::before {
+  }
+  .mbsc-ic-camera::before {
     content: "\ea53";
-} 
-.mbsc-ic-camera2::before {
+  }
+  .mbsc-ic-camera2::before {
     content: "\ea54";
-} 
-.mbsc-ic-cancel-circle::before {
+  }
+  .mbsc-ic-cancel-circle::before {
     content: "\ea55";
-} 
-.mbsc-ic-cart::before {
+  }
+  .mbsc-ic-cart::before {
     content: "\ea56";
-} 
-.mbsc-ic-cart2::before {
+  }
+  .mbsc-ic-cart2::before {
     content: "\ea57";
-} 
-.mbsc-ic-cart3::before {
+  }
+  .mbsc-ic-cart3::before {
     content: "\ea58";
-} 
-.mbsc-ic-checkbox-checked::before {
+  }
+  .mbsc-ic-checkbox-checked::before {
     content: "\ea59";
-} 
-.mbsc-ic-checkbox-partial::before {
+  }
+  .mbsc-ic-checkbox-partial::before {
     content: "\ea5a";
-} 
-.mbsc-ic-checkbox-unchecked::before {
+  }
+  .mbsc-ic-checkbox-unchecked::before {
     content: "\ea5b";
-} 
-.mbsc-ic-checkmark-circle::before {
+  }
+  .mbsc-ic-checkmark-circle::before {
     content: "\ea5c";
-} 
-.mbsc-ic-checkmark::before {
+  }
+  .mbsc-ic-checkmark::before {
     content: "\ea5d";
-} 
-.mbsc-ic-checkmark2::before {
+  }
+  .mbsc-ic-checkmark2::before {
     content: "\ea5e";
-} 
-.mbsc-ic-chrome::before {
+  }
+  .mbsc-ic-chrome::before {
     content: "\ea5f";
-} 
-.mbsc-ic-clock::before {
+  }
+  .mbsc-ic-clock::before {
     content: "\ea60";
-} 
-.mbsc-ic-clock2::before {
+  }
+  .mbsc-ic-clock2::before {
     content: "\ea61";
-} 
-.mbsc-ic-close::before {
+  }
+  .mbsc-ic-close::before {
     content: "\ea62";
-} 
-.mbsc-ic-cloud-download::before {
+  }
+  .mbsc-ic-cloud-download::before {
     content: "\ea63";
-} 
-.mbsc-ic-cloud-upload::before {
+  }
+  .mbsc-ic-cloud-upload::before {
     content: "\ea64";
-} 
-.mbsc-ic-cloud::before {
+  }
+  .mbsc-ic-cloud::before {
     content: "\ea65";
-} 
-.mbsc-ic-clubs::before {
+  }
+  .mbsc-ic-clubs::before {
     content: "\ea66";
-} 
-.mbsc-ic-code::before {
+  }
+  .mbsc-ic-code::before {
     content: "\ea67";
-} 
-.mbsc-ic-cog::before {
+  }
+  .mbsc-ic-cog::before {
     content: "\ea68";
-} 
-.mbsc-ic-cog2::before {
+  }
+  .mbsc-ic-cog2::before {
     content: "\ea69";
-} 
-.mbsc-ic-cogs::before {
+  }
+  .mbsc-ic-cogs::before {
     content: "\ea6a";
-} 
-.mbsc-ic-coin::before {
+  }
+  .mbsc-ic-coin::before {
     content: "\ea6b";
-} 
-.mbsc-ic-compass::before {
+  }
+  .mbsc-ic-compass::before {
     content: "\ea6c";
-} 
-.mbsc-ic-confused::before {
+  }
+  .mbsc-ic-confused::before {
     content: "\ea6d";
-} 
-.mbsc-ic-confused2::before {
+  }
+  .mbsc-ic-confused2::before {
     content: "\ea6e";
-} 
-.mbsc-ic-connection::before {
+  }
+  .mbsc-ic-connection::before {
     content: "\ea6f";
-} 
-.mbsc-ic-console::before {
+  }
+  .mbsc-ic-console::before {
     content: "\ea70";
-} 
-.mbsc-ic-contract::before {
+  }
+  .mbsc-ic-contract::before {
     content: "\ea71";
-} 
-.mbsc-ic-contract2::before {
+  }
+  .mbsc-ic-contract2::before {
     content: "\ea72";
-} 
-.mbsc-ic-contrast::before {
+  }
+  .mbsc-ic-contrast::before {
     content: "\ea73";
-} 
-.mbsc-ic-cool::before {
+  }
+  .mbsc-ic-cool::before {
     content: "\ea74";
-} 
-.mbsc-ic-cool2::before {
+  }
+  .mbsc-ic-cool2::before {
     content: "\ea75";
-} 
-.mbsc-ic-copy::before {
+  }
+  .mbsc-ic-copy::before {
     content: "\ea76";
-} 
-.mbsc-ic-copy2::before {
+  }
+  .mbsc-ic-copy2::before {
     content: "\ea77";
-} 
-.mbsc-ic-copy3::before {
+  }
+  .mbsc-ic-copy3::before {
     content: "\ea78";
-} 
-.mbsc-ic-credit::before {
+  }
+  .mbsc-ic-credit::before {
     content: "\ea79";
-} 
-.mbsc-ic-crop::before {
+  }
+  .mbsc-ic-crop::before {
     content: "\ea7a";
-} 
-.mbsc-ic-css3::before {
+  }
+  .mbsc-ic-css3::before {
     content: "\ea7c";
-} 
-.mbsc-ic-dashboard::before {
+  }
+  .mbsc-ic-dashboard::before {
     content: "\ea7b";
-} 
-.mbsc-ic-delicious::before {
+  }
+  .mbsc-ic-delicious::before {
     content: "\ea7d";
-} 
-.mbsc-ic-deviantart::before {
+  }
+  .mbsc-ic-deviantart::before {
     content: "\ea7e";
-} 
-.mbsc-ic-deviantart2::before {
+  }
+  .mbsc-ic-deviantart2::before {
     content: "\ea7f";
-} 
-.mbsc-ic-diamonds::before {
+  }
+  .mbsc-ic-diamonds::before {
     content: "\ea80";
-} 
-.mbsc-ic-dice::before {
+  }
+  .mbsc-ic-dice::before {
     content: "\ea81";
-} 
-.mbsc-ic-disk::before {
+  }
+  .mbsc-ic-disk::before {
     content: "\ea82";
-} 
-.mbsc-ic-download::before {
+  }
+  .mbsc-ic-download::before {
     content: "\ea83";
-} 
-.mbsc-ic-download2::before {
+  }
+  .mbsc-ic-download2::before {
     content: "\ea84";
-} 
-.mbsc-ic-download3::before {
+  }
+  .mbsc-ic-download3::before {
     content: "\ea85";
-} 
-.mbsc-ic-drawer::before {
+  }
+  .mbsc-ic-drawer::before {
     content: "\ea86";
-} 
-.mbsc-ic-drawer2::before {
+  }
+  .mbsc-ic-drawer2::before {
     content: "\ea87";
-} 
-.mbsc-ic-drawer3::before {
+  }
+  .mbsc-ic-drawer3::before {
     content: "\ea88";
-} 
-.mbsc-ic-dribbble::before {
+  }
+  .mbsc-ic-dribbble::before {
     content: "\ea89";
-} 
-.mbsc-ic-dribbble2::before {
+  }
+  .mbsc-ic-dribbble2::before {
     content: "\ea8a";
-} 
-.mbsc-ic-dribbble3::before {
+  }
+  .mbsc-ic-dribbble3::before {
     content: "\ea8b";
-} 
-.mbsc-ic-droplet::before {
+  }
+  .mbsc-ic-droplet::before {
     content: "\ea8c";
-} 
-.mbsc-ic-earth::before {
+  }
+  .mbsc-ic-earth::before {
     content: "\ea8d";
-} 
-.mbsc-ic-eject::before {
+  }
+  .mbsc-ic-eject::before {
     content: "\ea8e";
-} 
-.mbsc-ic-embed::before {
+  }
+  .mbsc-ic-embed::before {
     content: "\ea8f";
-} 
-.mbsc-ic-enter::before {
+  }
+  .mbsc-ic-enter::before {
     content: "\ea90";
-} 
-.mbsc-ic-envelope::before {
+  }
+  .mbsc-ic-envelope::before {
     content: "\ea91";
-} 
-.mbsc-ic-equalizer::before {
+  }
+  .mbsc-ic-equalizer::before {
     content: "\ea92";
-} 
-.mbsc-ic-evil::before {
+  }
+  .mbsc-ic-evil::before {
     content: "\ea93";
-} 
-.mbsc-ic-evil2::before {
+  }
+  .mbsc-ic-evil2::before {
     content: "\ea94";
-} 
-.mbsc-ic-exit::before {
+  }
+  .mbsc-ic-exit::before {
     content: "\ea95";
-} 
-.mbsc-ic-expand::before {
+  }
+  .mbsc-ic-expand::before {
     content: "\ea96";
-} 
-.mbsc-ic-expand2::before {
+  }
+  .mbsc-ic-expand2::before {
     content: "\ea97";
-} 
-.mbsc-ic-eye-blocked::before {
+  }
+  .mbsc-ic-eye-blocked::before {
     content: "\ea98";
-} 
-.mbsc-ic-eye::before {
+  }
+  .mbsc-ic-eye::before {
     content: "\ea99";
-} 
-.mbsc-ic-eye2::before {
+  }
+  .mbsc-ic-eye2::before {
     content: "\ea9a";
-} 
-.mbsc-ic-facebook::before {
+  }
+  .mbsc-ic-facebook::before {
     content: "\ea9b";
-} 
-.mbsc-ic-facebook2::before {
+  }
+  .mbsc-ic-facebook2::before {
     content: "\ea9c";
-} 
-.mbsc-ic-facebook3::before {
+  }
+  .mbsc-ic-facebook3::before {
     content: "\ea9d";
-} 
-.mbsc-ic-feed::before {
+  }
+  .mbsc-ic-feed::before {
     content: "\ea9e";
-} 
-.mbsc-ic-feed2::before {
+  }
+  .mbsc-ic-feed2::before {
     content: "\ea9f";
-} 
-.mbsc-ic-feed3::before {
+  }
+  .mbsc-ic-feed3::before {
     content: "\eaa0";
-} 
-.mbsc-ic-feed4::before {
+  }
+  .mbsc-ic-feed4::before {
     content: "\eaa1";
-} 
-.mbsc-ic-file-css::before {
+  }
+  .mbsc-ic-file-css::before {
     content: "\eaa2";
-} 
-.mbsc-ic-file-excel::before {
+  }
+  .mbsc-ic-file-excel::before {
     content: "\eaa3";
-} 
-.mbsc-ic-file-openoffice::before {
+  }
+  .mbsc-ic-file-openoffice::before {
     content: "\eaa4";
-} 
-.mbsc-ic-file-pdf::before {
+  }
+  .mbsc-ic-file-pdf::before {
     content: "\eaa5";
-} 
-.mbsc-ic-file-powerpoint::before {
+  }
+  .mbsc-ic-file-powerpoint::before {
     content: "\eaa6";
-} 
-.mbsc-ic-file-word::before {
+  }
+  .mbsc-ic-file-word::before {
     content: "\eaa7";
-} 
-.mbsc-ic-file-xml::before {
+  }
+  .mbsc-ic-file-xml::before {
     content: "\eaa8";
-} 
-.mbsc-ic-file-zip::before {
+  }
+  .mbsc-ic-file-zip::before {
     content: "\eaa9";
-} 
-.mbsc-ic-file::before {
+  }
+  .mbsc-ic-file::before {
     content: "\eaaa";
-} 
-.mbsc-ic-file2::before {
+  }
+  .mbsc-ic-file2::before {
     content: "\eaab";
-} 
-.mbsc-ic-file3::before {
+  }
+  .mbsc-ic-file3::before {
     content: "\eaac";
-} 
-.mbsc-ic-file4::before {
+  }
+  .mbsc-ic-file4::before {
     content: "\eaad";
-} 
-.mbsc-ic-film::before {
+  }
+  .mbsc-ic-film::before {
     content: "\eaae";
-} 
-.mbsc-ic-filter::before {
+  }
+  .mbsc-ic-filter::before {
     content: "\eaaf";
-} 
-.mbsc-ic-filter2::before {
+  }
+  .mbsc-ic-filter2::before {
     content: "\eab0";
-} 
-.mbsc-ic-finder::before {
+  }
+  .mbsc-ic-finder::before {
     content: "\eab1";
-} 
-.mbsc-ic-fire::before {
+  }
+  .mbsc-ic-fire::before {
     content: "\eab2";
-} 
-.mbsc-ic-firefox::before {
+  }
+  .mbsc-ic-firefox::before {
     content: "\eab3";
-} 
-.mbsc-ic-first::before {
+  }
+  .mbsc-ic-first::before {
     content: "\eab4";
-} 
-.mbsc-ic-flag::before {
+  }
+  .mbsc-ic-flag::before {
     content: "\eab5";
-} 
-.mbsc-ic-flattr::before {
+  }
+  .mbsc-ic-flattr::before {
     content: "\eab6";
-} 
-.mbsc-ic-flickr::before {
+  }
+  .mbsc-ic-flickr::before {
     content: "\eab7";
-} 
-.mbsc-ic-flickr2::before {
+  }
+  .mbsc-ic-flickr2::before {
     content: "\eab8";
-} 
-.mbsc-ic-flickr3::before {
+  }
+  .mbsc-ic-flickr3::before {
     content: "\eab9";
-} 
-.mbsc-ic-flickr4::before {
+  }
+  .mbsc-ic-flickr4::before {
     content: "\eaba";
-} 
-.mbsc-ic-flip::before {
+  }
+  .mbsc-ic-flip::before {
     content: "\eabb";
-} 
-.mbsc-ic-flip2::before {
+  }
+  .mbsc-ic-flip2::before {
     content: "\eabc";
-} 
-.mbsc-ic-folder-open::before {
+  }
+  .mbsc-ic-folder-open::before {
     content: "\eabd";
-} 
-.mbsc-ic-folder::before {
+  }
+  .mbsc-ic-folder::before {
     content: "\eabe";
-} 
-.mbsc-ic-font::before {
+  }
+  .mbsc-ic-font::before {
     content: "\eabf";
-} 
-.mbsc-ic-food::before {
+  }
+  .mbsc-ic-food::before {
     content: "\eac0";
-} 
-.mbsc-ic-forrst::before {
+  }
+  .mbsc-ic-forrst::before {
     content: "\eac1";
-} 
-.mbsc-ic-forrst2::before {
+  }
+  .mbsc-ic-forrst2::before {
     content: "\eac2";
-} 
-.mbsc-ic-forward::before {
+  }
+  .mbsc-ic-forward::before {
     content: "\eac3";
-} 
-.mbsc-ic-forward2::before {
+  }
+  .mbsc-ic-forward2::before {
     content: "\eac4";
-} 
-.mbsc-ic-forward3::before {
+  }
+  .mbsc-ic-forward3::before {
     content: "\eac5";
-} 
-.mbsc-ic-foursquare::before {
+  }
+  .mbsc-ic-foursquare::before {
     content: "\eac6";
-} 
-.mbsc-ic-foursquare2::before {
+  }
+  .mbsc-ic-foursquare2::before {
     content: "\eac7";
-} 
-.mbsc-ic-gift::before {
+  }
+  .mbsc-ic-gift::before {
     content: "\eac8";
-} 
-.mbsc-ic-github::before {
+  }
+  .mbsc-ic-github::before {
     content: "\eac9";
-} 
-.mbsc-ic-github2::before {
+  }
+  .mbsc-ic-github2::before {
     content: "\eaca";
-} 
-.mbsc-ic-github3::before {
+  }
+  .mbsc-ic-github3::before {
     content: "\eacb";
-} 
-.mbsc-ic-github4::before {
+  }
+  .mbsc-ic-github4::before {
     content: "\eacc";
-} 
-.mbsc-ic-github5::before {
+  }
+  .mbsc-ic-github5::before {
     content: "\eacd";
-} 
-.mbsc-ic-glass::before {
+  }
+  .mbsc-ic-glass::before {
     content: "\eace";
-} 
-.mbsc-ic-globe::before {
+  }
+  .mbsc-ic-globe::before {
     content: "\eacf";
-} 
-.mbsc-ic-google-drive::before {
+  }
+  .mbsc-ic-google-drive::before {
     content: "\ead0";
-} 
-.mbsc-ic-google-plus::before {
+  }
+  .mbsc-ic-google-plus::before {
     content: "\ead1";
-} 
-.mbsc-ic-google-plus2::before {
+  }
+  .mbsc-ic-google-plus2::before {
     content: "\ead2";
-} 
-.mbsc-ic-google-plus3::before {
+  }
+  .mbsc-ic-google-plus3::before {
     content: "\ead3";
-} 
-.mbsc-ic-google-plus4::before {
+  }
+  .mbsc-ic-google-plus4::before {
     content: "\ead4";
-} 
-.mbsc-ic-google::before {
+  }
+  .mbsc-ic-google::before {
     content: "\ead5";
-} 
-.mbsc-ic-grin::before {
+  }
+  .mbsc-ic-grin::before {
     content: "\ead6";
-} 
-.mbsc-ic-grin2::before {
+  }
+  .mbsc-ic-grin2::before {
     content: "\ead7";
-} 
-.mbsc-ic-hammer::before {
+  }
+  .mbsc-ic-hammer::before {
     content: "\ead8";
-} 
-.mbsc-ic-hammer2::before {
+  }
+  .mbsc-ic-hammer2::before {
     content: "\ead9";
-} 
-.mbsc-ic-happy::before {
+  }
+  .mbsc-ic-happy::before {
     content: "\eada";
-} 
-.mbsc-ic-happy2::before {
+  }
+  .mbsc-ic-happy2::before {
     content: "\eadb";
-} 
-.mbsc-ic-headphones::before {
+  }
+  .mbsc-ic-headphones::before {
     content: "\eadc";
-} 
-.mbsc-ic-heart-broken::before {
+  }
+  .mbsc-ic-heart-broken::before {
     content: "\eadd";
-} 
-.mbsc-ic-heart::before {
+  }
+  .mbsc-ic-heart::before {
     content: "\eade";
-} 
-.mbsc-ic-heart2::before {
+  }
+  .mbsc-ic-heart2::before {
     content: "\eadf";
-} 
-.mbsc-ic-history::before {
+  }
+  .mbsc-ic-history::before {
     content: "\eae0";
-} 
-.mbsc-ic-home::before {
+  }
+  .mbsc-ic-home::before {
     content: "\eae1";
-} 
-.mbsc-ic-home2::before {
+  }
+  .mbsc-ic-home2::before {
     content: "\eae2";
-} 
-.mbsc-ic-home3::before {
+  }
+  .mbsc-ic-home3::before {
     content: "\eae3";
-} 
-.mbsc-ic-html5::before {
+  }
+  .mbsc-ic-html5::before {
     content: "\eae4";
-} 
-.mbsc-ic-html52::before {
+  }
+  .mbsc-ic-html52::before {
     content: "\eae5";
-} 
-.mbsc-ic-image::before {
+  }
+  .mbsc-ic-image::before {
     content: "\eae6";
-} 
-.mbsc-ic-image2::before {
+  }
+  .mbsc-ic-image2::before {
     content: "\eae7";
-} 
-.mbsc-ic-images::before {
+  }
+  .mbsc-ic-images::before {
     content: "\eae8";
-} 
-.mbsc-ic-indent-decrease::before {
+  }
+  .mbsc-ic-indent-decrease::before {
     content: "\eae9";
-} 
-.mbsc-ic-indent-increase::before {
+  }
+  .mbsc-ic-indent-increase::before {
     content: "\eaea";
-} 
-.mbsc-ic-info::before {
+  }
+  .mbsc-ic-info::before {
     content: "\eaeb";
-} 
-.mbsc-ic-info2::before {
+  }
+  .mbsc-ic-info2::before {
     content: "\eaec";
-} 
-.mbsc-ic-insert-template::before {
+  }
+  .mbsc-ic-insert-template::before {
     content: "\eaed";
-} 
-.mbsc-ic-instagram::before {
+  }
+  .mbsc-ic-instagram::before {
     content: "\eaee";
-} 
-.mbsc-ic-ion-close-circled::before {
+  }
+  .mbsc-ic-ion-close-circled::before {
     content: "\eaef";
-} 
-.mbsc-ic-ion-ios7-arrow-back::before {
+  }
+  .mbsc-ic-ion-ios7-arrow-back::before {
     content: "\eaf0";
-} 
-.mbsc-ic-ion-ios7-arrow-forward::before {
+  }
+  .mbsc-ic-ion-ios7-arrow-forward::before {
     content: "\eaf1";
-} 
-.mbsc-ic-ion-ios7-checkmark-empty::before {
+  }
+  .mbsc-ic-ion-ios7-checkmark-empty::before {
     content: "\eaf2";
-} 
-.mbsc-ic-ios-backspace::before {
+  }
+  .mbsc-ic-ios-backspace::before {
     content: "\eaf3";
-} 
-.mbsc-ic-italic::before {
+  }
+  .mbsc-ic-italic::before {
     content: "\eaf4";
-} 
-.mbsc-ic-joomla::before {
+  }
+  .mbsc-ic-joomla::before {
     content: "\eaf5";
-} 
-.mbsc-ic-key::before {
+  }
+  .mbsc-ic-key::before {
     content: "\eaf6";
-} 
-.mbsc-ic-key2::before {
+  }
+  .mbsc-ic-key2::before {
     content: "\eaf7";
-} 
-.mbsc-ic-keyboard::before {
+  }
+  .mbsc-ic-keyboard::before {
     content: "\eaf8";
-} 
-.mbsc-ic-lab::before {
+  }
+  .mbsc-ic-lab::before {
     content: "\eaf9";
-} 
-.mbsc-ic-lanyrd::before {
+  }
+  .mbsc-ic-lanyrd::before {
     content: "\eafa";
-} 
-.mbsc-ic-laptop::before {
+  }
+  .mbsc-ic-laptop::before {
     content: "\eafb";
-} 
-.mbsc-ic-last::before {
+  }
+  .mbsc-ic-last::before {
     content: "\eafc";
-} 
-.mbsc-ic-lastfm::before {
+  }
+  .mbsc-ic-lastfm::before {
     content: "\eafd";
-} 
-.mbsc-ic-lastfm2::before {
+  }
+  .mbsc-ic-lastfm2::before {
     content: "\eafe";
-} 
-.mbsc-ic-leaf::before {
+  }
+  .mbsc-ic-leaf::before {
     content: "\eaff";
-} 
-.mbsc-ic-left-toright::before {
+  }
+  .mbsc-ic-left-toright::before {
     content: "\eb00";
-} 
-.mbsc-ic-library::before {
+  }
+  .mbsc-ic-library::before {
     content: "\eb02";
-} 
-.mbsc-ic-libreoffice::before {
+  }
+  .mbsc-ic-libreoffice::before {
     content: "\eb01";
-} 
-.mbsc-ic-lightning::before {
+  }
+  .mbsc-ic-lightning::before {
     content: "\eb03";
-} 
-.mbsc-ic-link::before {
+  }
+  .mbsc-ic-link::before {
     content: "\eb04";
-} 
-.mbsc-ic-linkedin::before {
+  }
+  .mbsc-ic-linkedin::before {
     content: "\eb05";
-} 
-.mbsc-ic-list::before {
+  }
+  .mbsc-ic-list::before {
     content: "\eb06";
-} 
-.mbsc-ic-list2::before {
+  }
+  .mbsc-ic-list2::before {
     content: "\eb07";
-} 
-.mbsc-ic-location::before {
+  }
+  .mbsc-ic-location::before {
     content: "\eb08";
-} 
-.mbsc-ic-location2::before {
+  }
+  .mbsc-ic-location2::before {
     content: "\eb09";
-} 
-.mbsc-ic-lock::before {
+  }
+  .mbsc-ic-lock::before {
     content: "\eb0a";
-} 
-.mbsc-ic-lock2::before {
+  }
+  .mbsc-ic-lock2::before {
     content: "\eb0b";
-} 
-.mbsc-ic-loop::before {
+  }
+  .mbsc-ic-loop::before {
     content: "\eb0c";
-} 
-.mbsc-ic-loop2::before {
+  }
+  .mbsc-ic-loop2::before {
     content: "\eb0d";
-} 
-.mbsc-ic-loop3::before {
+  }
+  .mbsc-ic-loop3::before {
     content: "\eb0e";
-} 
-.mbsc-ic-magnet::before {
+  }
+  .mbsc-ic-magnet::before {
     content: "\eb0f";
-} 
-.mbsc-ic-mail::before {
+  }
+  .mbsc-ic-mail::before {
     content: "\eb10";
-} 
-.mbsc-ic-mail2::before {
+  }
+  .mbsc-ic-mail2::before {
     content: "\eb11";
-} 
-.mbsc-ic-mail3::before {
+  }
+  .mbsc-ic-mail3::before {
     content: "\eb12";
-} 
-.mbsc-ic-mail4::before {
+  }
+  .mbsc-ic-mail4::before {
     content: "\eb13";
-} 
-.mbsc-ic-map::before {
+  }
+  .mbsc-ic-map::before {
     content: "\eb14";
-} 
-.mbsc-ic-map2::before {
+  }
+  .mbsc-ic-map2::before {
     content: "\eb15";
-} 
-.mbsc-ic-material-check::before {
+  }
+  .mbsc-ic-material-check::before {
     content: "\eb16";
-} 
-.mbsc-ic-material-close::before {
+  }
+  .mbsc-ic-material-close::before {
     content: "\eb17";
-} 
-.mbsc-ic-material-menu::before {
+  }
+  .mbsc-ic-material-menu::before {
     content: "\eb18";
-} 
-.mbsc-ic-material-more-horiz::before {
+  }
+  .mbsc-ic-material-more-horiz::before {
     content: "\eb19";
-} 
-.mbsc-ic-menu::before {
+  }
+  .mbsc-ic-menu::before {
     content: "\eb1a";
-} 
-.mbsc-ic-menu2::before {
+  }
+  .mbsc-ic-menu2::before {
     content: "\eb1b";
-} 
-.mbsc-ic-meter::before {
+  }
+  .mbsc-ic-meter::before {
     content: "\eb1c";
-} 
-.mbsc-ic-meter2::before {
+  }
+  .mbsc-ic-meter2::before {
     content: "\eb1d";
-} 
-.mbsc-ic-minus::before {
+  }
+  .mbsc-ic-minus::before {
     content: "\eb1e";
-} 
-.mbsc-ic-mobile::before {
+  }
+  .mbsc-ic-mobile::before {
     content: "\eb1f";
-} 
-.mbsc-ic-mobile2::before {
+  }
+  .mbsc-ic-mobile2::before {
     content: "\eb20";
-} 
-.mbsc-ic-mug::before {
+  }
+  .mbsc-ic-mug::before {
     content: "\eb21";
-} 
-.mbsc-ic-music::before {
+  }
+  .mbsc-ic-music::before {
     content: "\eb22";
-} 
-.mbsc-ic-neutral::before {
+  }
+  .mbsc-ic-neutral::before {
     content: "\eb23";
-} 
-.mbsc-ic-neutral2::before {
+  }
+  .mbsc-ic-neutral2::before {
     content: "\eb24";
-} 
-.mbsc-ic-new-tab::before {
+  }
+  .mbsc-ic-new-tab::before {
     content: "\eb25";
-} 
-.mbsc-ic-newspaper::before {
+  }
+  .mbsc-ic-newspaper::before {
     content: "\eb26";
-} 
-.mbsc-ic-next::before {
+  }
+  .mbsc-ic-next::before {
     content: "\eb27";
-} 
-.mbsc-ic-notebook::before {
+  }
+  .mbsc-ic-notebook::before {
     content: "\eb28";
-} 
-.mbsc-ic-notification::before {
+  }
+  .mbsc-ic-notification::before {
     content: "\eb29";
-} 
-.mbsc-ic-numbered-list::before {
+  }
+  .mbsc-ic-numbered-list::before {
     content: "\eb2a";
-} 
-.mbsc-ic-office::before {
+  }
+  .mbsc-ic-office::before {
     content: "\eb2b";
-} 
-.mbsc-ic-omega::before {
+  }
+  .mbsc-ic-omega::before {
     content: "\eb2c";
-} 
-.mbsc-ic-opera::before {
+  }
+  .mbsc-ic-opera::before {
     content: "\eb2d";
-} 
-.mbsc-ic-pacman::before {
+  }
+  .mbsc-ic-pacman::before {
     content: "\eb2e";
-} 
-.mbsc-ic-paint-format::before {
+  }
+  .mbsc-ic-paint-format::before {
     content: "\eb2f";
-} 
-.mbsc-ic-paragraph-center::before {
+  }
+  .mbsc-ic-paragraph-center::before {
     content: "\eb30";
-} 
-.mbsc-ic-paragraph-center2::before {
+  }
+  .mbsc-ic-paragraph-center2::before {
     content: "\eb31";
-} 
-.mbsc-ic-paragraph-justify::before {
+  }
+  .mbsc-ic-paragraph-justify::before {
     content: "\eb32";
-} 
-.mbsc-ic-paragraph-justify2::before {
+  }
+  .mbsc-ic-paragraph-justify2::before {
     content: "\eb33";
-} 
-.mbsc-ic-paragraph-left::before {
+  }
+  .mbsc-ic-paragraph-left::before {
     content: "\eb34";
-} 
-.mbsc-ic-paragraph-left2::before {
+  }
+  .mbsc-ic-paragraph-left2::before {
     content: "\eb35";
-} 
-.mbsc-ic-paragraph-right::before {
+  }
+  .mbsc-ic-paragraph-right::before {
     content: "\eb36";
-} 
-.mbsc-ic-paragraph-right2::before {
+  }
+  .mbsc-ic-paragraph-right2::before {
     content: "\eb37";
-} 
-.mbsc-ic-paste::before {
+  }
+  .mbsc-ic-paste::before {
     content: "\eb38";
-} 
-.mbsc-ic-paste2::before {
+  }
+  .mbsc-ic-paste2::before {
     content: "\eb39";
-} 
-.mbsc-ic-paste3::before {
+  }
+  .mbsc-ic-paste3::before {
     content: "\eb3a";
-} 
-.mbsc-ic-pause::before {
+  }
+  .mbsc-ic-pause::before {
     content: "\eb3b";
-} 
-.mbsc-ic-pause2::before {
+  }
+  .mbsc-ic-pause2::before {
     content: "\eb3c";
-} 
-.mbsc-ic-pawn::before {
+  }
+  .mbsc-ic-pawn::before {
     content: "\eb3d";
-} 
-.mbsc-ic-paypal::before {
+  }
+  .mbsc-ic-paypal::before {
     content: "\eb3e";
-} 
-.mbsc-ic-paypal2::before {
+  }
+  .mbsc-ic-paypal2::before {
     content: "\eb3f";
-} 
-.mbsc-ic-paypal3::before {
+  }
+  .mbsc-ic-paypal3::before {
     content: "\eb40";
-} 
-.mbsc-ic-pen::before {
+  }
+  .mbsc-ic-pen::before {
     content: "\eb41";
-} 
-.mbsc-ic-pencil::before {
+  }
+  .mbsc-ic-pencil::before {
     content: "\eb42";
-} 
-.mbsc-ic-pencil2::before {
+  }
+  .mbsc-ic-pencil2::before {
     content: "\eb43";
-} 
-.mbsc-ic-phone-hang-up::before {
+  }
+  .mbsc-ic-phone-hang-up::before {
     content: "\eb44";
-} 
-.mbsc-ic-phone::before {
+  }
+  .mbsc-ic-phone::before {
     content: "\eb45";
-} 
-.mbsc-ic-picassa::before {
+  }
+  .mbsc-ic-picassa::before {
     content: "\eb46";
-} 
-.mbsc-ic-picassa2::before {
+  }
+  .mbsc-ic-picassa2::before {
     content: "\eb47";
-} 
-.mbsc-ic-pie::before {
+  }
+  .mbsc-ic-pie::before {
     content: "\eb48";
-} 
-.mbsc-ic-pilcrow::before {
+  }
+  .mbsc-ic-pilcrow::before {
     content: "\eb49";
-} 
-.mbsc-ic-pinterest::before {
+  }
+  .mbsc-ic-pinterest::before {
     content: "\eb4a";
-} 
-.mbsc-ic-pinterest2::before {
+  }
+  .mbsc-ic-pinterest2::before {
     content: "\eb4b";
-} 
-.mbsc-ic-play::before {
+  }
+  .mbsc-ic-play::before {
     content: "\eb4c";
-} 
-.mbsc-ic-play2::before {
+  }
+  .mbsc-ic-play2::before {
     content: "\eb4d";
-} 
-.mbsc-ic-play3::before {
+  }
+  .mbsc-ic-play3::before {
     content: "\eb4e";
-} 
-.mbsc-ic-plus::before {
+  }
+  .mbsc-ic-plus::before {
     content: "\eb4f";
-} 
-.mbsc-ic-podcast::before {
+  }
+  .mbsc-ic-podcast::before {
     content: "\eb50";
-} 
-.mbsc-ic-point-down::before {
+  }
+  .mbsc-ic-point-down::before {
     content: "\eb51";
-} 
-.mbsc-ic-point-left::before {
+  }
+  .mbsc-ic-point-left::before {
     content: "\eb52";
-} 
-.mbsc-ic-point-right::before {
+  }
+  .mbsc-ic-point-right::before {
     content: "\eb53";
-} 
-.mbsc-ic-point-up::before {
+  }
+  .mbsc-ic-point-up::before {
     content: "\eb54";
-} 
-.mbsc-ic-power-cord::before {
+  }
+  .mbsc-ic-power-cord::before {
     content: "\eb55";
-} 
-.mbsc-ic-previous::before {
+  }
+  .mbsc-ic-previous::before {
     content: "\eb56";
-} 
-.mbsc-ic-print::before {
+  }
+  .mbsc-ic-print::before {
     content: "\eb57";
-} 
-.mbsc-ic-profile::before {
+  }
+  .mbsc-ic-profile::before {
     content: "\eb58";
-} 
-.mbsc-ic-pushpin::before {
+  }
+  .mbsc-ic-pushpin::before {
     content: "\eb59";
-} 
-.mbsc-ic-qrcode::before {
+  }
+  .mbsc-ic-qrcode::before {
     content: "\eb5a";
-} 
-.mbsc-ic-question::before {
+  }
+  .mbsc-ic-question::before {
     content: "\eb5b";
-} 
-.mbsc-ic-quill::before {
+  }
+  .mbsc-ic-quill::before {
     content: "\eb5c";
-} 
-.mbsc-ic-quotes-left::before {
+  }
+  .mbsc-ic-quotes-left::before {
     content: "\eb5d";
-} 
-.mbsc-ic-radio-checked::before {
+  }
+  .mbsc-ic-radio-checked::before {
     content: "\eb5e";
-} 
-.mbsc-ic-radio-unchecked::before {
+  }
+  .mbsc-ic-radio-unchecked::before {
     content: "\eb5f";
-} 
-.mbsc-ic-reddit::before {
+  }
+  .mbsc-ic-reddit::before {
     content: "\eb60";
-} 
-.mbsc-ic-redo::before {
+  }
+  .mbsc-ic-redo::before {
     content: "\eb61";
-} 
-.mbsc-ic-redo2::before {
+  }
+  .mbsc-ic-redo2::before {
     content: "\eb62";
-} 
-.mbsc-ic-remove::before {
+  }
+  .mbsc-ic-remove::before {
     content: "\eb63";
-} 
-.mbsc-ic-remove2::before {
+  }
+  .mbsc-ic-remove2::before {
     content: "\eb64";
-} 
-.mbsc-ic-reply::before {
+  }
+  .mbsc-ic-reply::before {
     content: "\eb65";
-} 
-.mbsc-ic-right-toleft::before {
+  }
+  .mbsc-ic-right-toleft::before {
     content: "\eb66";
-} 
-.mbsc-ic-road::before {
+  }
+  .mbsc-ic-road::before {
     content: "\eb67";
-} 
-.mbsc-ic-rocket::before {
+  }
+  .mbsc-ic-rocket::before {
     content: "\eb68";
-} 
-.mbsc-ic-sad::before {
+  }
+  .mbsc-ic-sad::before {
     content: "\eb69";
-} 
-.mbsc-ic-sad2::before {
+  }
+  .mbsc-ic-sad2::before {
     content: "\eb6a";
-} 
-.mbsc-ic-safari::before {
+  }
+  .mbsc-ic-safari::before {
     content: "\eb6b";
-} 
-.mbsc-ic-scissors::before {
+  }
+  .mbsc-ic-scissors::before {
     content: "\eb6c";
-} 
-.mbsc-ic-screen::before {
+  }
+  .mbsc-ic-screen::before {
     content: "\eb6d";
-} 
-.mbsc-ic-search::before {
+  }
+  .mbsc-ic-search::before {
     content: "\eb6e";
-} 
-.mbsc-ic-settings::before {
+  }
+  .mbsc-ic-settings::before {
     content: "\eb6f";
-} 
-.mbsc-ic-share::before {
+  }
+  .mbsc-ic-share::before {
     content: "\eb70";
-} 
-.mbsc-ic-shield::before {
+  }
+  .mbsc-ic-shield::before {
     content: "\eb71";
-} 
-.mbsc-ic-shocked::before {
+  }
+  .mbsc-ic-shocked::before {
     content: "\eb72";
-} 
-.mbsc-ic-shocked2::before {
+  }
+  .mbsc-ic-shocked2::before {
     content: "\eb73";
-} 
-.mbsc-ic-shuffle::before {
+  }
+  .mbsc-ic-shuffle::before {
     content: "\eb74";
-} 
-.mbsc-ic-sigma::before {
+  }
+  .mbsc-ic-sigma::before {
     content: "\eb75";
-} 
-.mbsc-ic-signup::before {
+  }
+  .mbsc-ic-signup::before {
     content: "\eb76";
-} 
-.mbsc-ic-skype::before {
+  }
+  .mbsc-ic-skype::before {
     content: "\eb77";
-} 
-.mbsc-ic-smiley::before {
+  }
+  .mbsc-ic-smiley::before {
     content: "\eb78";
-} 
-.mbsc-ic-smiley2::before {
+  }
+  .mbsc-ic-smiley2::before {
     content: "\eb79";
-} 
-.mbsc-ic-soundcloud::before {
+  }
+  .mbsc-ic-soundcloud::before {
     content: "\eb7a";
-} 
-.mbsc-ic-soundcloud2::before {
+  }
+  .mbsc-ic-soundcloud2::before {
     content: "\eb7b";
-} 
-.mbsc-ic-spades::before {
+  }
+  .mbsc-ic-spades::before {
     content: "\eb7c";
-} 
-.mbsc-ic-spam::before {
+  }
+  .mbsc-ic-spam::before {
     content: "\eb7d";
-} 
-.mbsc-ic-spell-check::before {
+  }
+  .mbsc-ic-spell-check::before {
     content: "\eb7e";
-} 
-.mbsc-ic-spinner::before {
+  }
+  .mbsc-ic-spinner::before {
     content: "\eb7f";
-} 
-.mbsc-ic-spinner2::before {
+  }
+  .mbsc-ic-spinner2::before {
     content: "\eb80";
-} 
-.mbsc-ic-spinner3::before {
+  }
+  .mbsc-ic-spinner3::before {
     content: "\eb81";
-} 
-.mbsc-ic-spinner4::before {
+  }
+  .mbsc-ic-spinner4::before {
     content: "\eb82";
-} 
-.mbsc-ic-spinner5::before {
+  }
+  .mbsc-ic-spinner5::before {
     content: "\eb83";
-} 
-.mbsc-ic-spinner6::before {
+  }
+  .mbsc-ic-spinner6::before {
     content: "\eb84";
-} 
-.mbsc-ic-stack::before {
+  }
+  .mbsc-ic-stack::before {
     content: "\eb85";
-} 
-.mbsc-ic-stackoverflow::before {
+  }
+  .mbsc-ic-stackoverflow::before {
     content: "\eb86";
-} 
-.mbsc-ic-star::before {
+  }
+  .mbsc-ic-star::before {
     content: "\eb87";
-} 
-.mbsc-ic-star2::before {
+  }
+  .mbsc-ic-star2::before {
     content: "\eb88";
-} 
-.mbsc-ic-star3::before {
+  }
+  .mbsc-ic-star3::before {
     content: "\eb89";
-} 
-.mbsc-ic-stats::before {
+  }
+  .mbsc-ic-stats::before {
     content: "\eb8a";
-} 
-.mbsc-ic-steam::before {
+  }
+  .mbsc-ic-steam::before {
     content: "\eb8b";
-} 
-.mbsc-ic-steam2::before {
+  }
+  .mbsc-ic-steam2::before {
     content: "\eb8c";
-} 
-.mbsc-ic-stop::before {
+  }
+  .mbsc-ic-stop::before {
     content: "\eb8d";
-} 
-.mbsc-ic-stop2::before {
+  }
+  .mbsc-ic-stop2::before {
     content: "\eb8e";
-} 
-.mbsc-ic-stopwatch::before {
+  }
+  .mbsc-ic-stopwatch::before {
     content: "\eb8f";
-} 
-.mbsc-ic-storage::before {
+  }
+  .mbsc-ic-storage::before {
     content: "\eb90";
-} 
-.mbsc-ic-strikethrough::before {
+  }
+  .mbsc-ic-strikethrough::before {
     content: "\eb91";
-} 
-.mbsc-ic-stumbleupon::before {
+  }
+  .mbsc-ic-stumbleupon::before {
     content: "\eb92";
-} 
-.mbsc-ic-stumbleupon2::before {
+  }
+  .mbsc-ic-stumbleupon2::before {
     content: "\eb93";
-} 
-.mbsc-ic-support::before {
+  }
+  .mbsc-ic-support::before {
     content: "\eb94";
-} 
-.mbsc-ic-switch::before {
+  }
+  .mbsc-ic-switch::before {
     content: "\eb95";
-} 
-.mbsc-ic-tab::before {
+  }
+  .mbsc-ic-tab::before {
     content: "\eb96";
-} 
-.mbsc-ic-table::before {
+  }
+  .mbsc-ic-table::before {
     content: "\eb97";
-} 
-.mbsc-ic-table2::before {
+  }
+  .mbsc-ic-table2::before {
     content: "\eb98";
-} 
-.mbsc-ic-tablet::before {
+  }
+  .mbsc-ic-tablet::before {
     content: "\eb99";
-} 
-.mbsc-ic-tag::before {
+  }
+  .mbsc-ic-tag::before {
     content: "\eb9a";
-} 
-.mbsc-ic-tags::before {
+  }
+  .mbsc-ic-tags::before {
     content: "\eb9b";
-} 
-.mbsc-ic-target::before {
+  }
+  .mbsc-ic-target::before {
     content: "\eb9c";
-} 
-.mbsc-ic-text-height::before {
+  }
+  .mbsc-ic-text-height::before {
     content: "\eb9d";
-} 
-.mbsc-ic-text-width::before {
+  }
+  .mbsc-ic-text-width::before {
     content: "\eb9e";
-} 
-.mbsc-ic-thumbs-up::before {
+  }
+  .mbsc-ic-thumbs-up::before {
     content: "\eb9f";
-} 
-.mbsc-ic-thumbs-up2::before {
+  }
+  .mbsc-ic-thumbs-up2::before {
     content: "\eba0";
-} 
-.mbsc-ic-ticket::before {
+  }
+  .mbsc-ic-ticket::before {
     content: "\eba1";
-} 
-.mbsc-ic-tongue::before {
+  }
+  .mbsc-ic-tongue::before {
     content: "\eba2";
-} 
-.mbsc-ic-tongue2::before {
+  }
+  .mbsc-ic-tongue2::before {
     content: "\eba3";
-} 
-.mbsc-ic-tree::before {
+  }
+  .mbsc-ic-tree::before {
     content: "\eba4";
-} 
-.mbsc-ic-trophy::before {
+  }
+  .mbsc-ic-trophy::before {
     content: "\eba5";
-} 
-.mbsc-ic-truck::before {
+  }
+  .mbsc-ic-truck::before {
     content: "\eba6";
-} 
-.mbsc-ic-tumblr::before {
+  }
+  .mbsc-ic-tumblr::before {
     content: "\eba7";
-} 
-.mbsc-ic-tumblr2::before {
+  }
+  .mbsc-ic-tumblr2::before {
     content: "\eba8";
-} 
-.mbsc-ic-tux::before {
+  }
+  .mbsc-ic-tux::before {
     content: "\eba9";
-} 
-.mbsc-ic-tv::before {
+  }
+  .mbsc-ic-tv::before {
     content: "\ebaa";
-} 
-.mbsc-ic-twitter::before {
+  }
+  .mbsc-ic-twitter::before {
     content: "\ebab";
-} 
-.mbsc-ic-twitter2::before {
+  }
+  .mbsc-ic-twitter2::before {
     content: "\ebac";
-} 
-.mbsc-ic-twitter3::before {
+  }
+  .mbsc-ic-twitter3::before {
     content: "\ebad";
-} 
-.mbsc-ic-underline::before {
+  }
+  .mbsc-ic-underline::before {
     content: "\ebae";
-} 
-.mbsc-ic-undo::before {
+  }
+  .mbsc-ic-undo::before {
     content: "\ebaf";
-} 
-.mbsc-ic-undo2::before {
+  }
+  .mbsc-ic-undo2::before {
     content: "\ebb0";
-} 
-.mbsc-ic-unlocked::before {
+  }
+  .mbsc-ic-unlocked::before {
     content: "\ebb1";
-} 
-.mbsc-ic-upload::before {
+  }
+  .mbsc-ic-upload::before {
     content: "\ebb2";
-} 
-.mbsc-ic-upload2::before {
+  }
+  .mbsc-ic-upload2::before {
     content: "\ebb3";
-} 
-.mbsc-ic-upload3::before {
+  }
+  .mbsc-ic-upload3::before {
     content: "\ebb4";
-} 
-.mbsc-ic-user::before {
+  }
+  .mbsc-ic-user::before {
     content: "\ebb5";
-} 
-.mbsc-ic-user2::before {
+  }
+  .mbsc-ic-user2::before {
     content: "\ebb6";
-} 
-.mbsc-ic-user3::before {
+  }
+  .mbsc-ic-user3::before {
     content: "\ebb7";
-} 
-.mbsc-ic-user4::before {
+  }
+  .mbsc-ic-user4::before {
     content: "\ebb8";
-} 
-.mbsc-ic-users::before {
+  }
+  .mbsc-ic-users::before {
     content: "\ebb9";
-} 
-.mbsc-ic-users2::before {
+  }
+  .mbsc-ic-users2::before {
     content: "\ebba";
-} 
-.mbsc-ic-vimeo::before {
+  }
+  .mbsc-ic-vimeo::before {
     content: "\ebbb";
-} 
-.mbsc-ic-vimeo2::before {
+  }
+  .mbsc-ic-vimeo2::before {
     content: "\ebbc";
-} 
-.mbsc-ic-vimeo3::before {
+  }
+  .mbsc-ic-vimeo3::before {
     content: "\ebbd";
-} 
-.mbsc-ic-volume-decrease::before {
+  }
+  .mbsc-ic-volume-decrease::before {
     content: "\ebbe";
-} 
-.mbsc-ic-volume-high::before {
+  }
+  .mbsc-ic-volume-high::before {
     content: "\ebbf";
-} 
-.mbsc-ic-volume-increase::before {
+  }
+  .mbsc-ic-volume-increase::before {
     content: "\ebc0";
-} 
-.mbsc-ic-volume-low::before {
+  }
+  .mbsc-ic-volume-low::before {
     content: "\ebc1";
-} 
-.mbsc-ic-volume-medium::before {
+  }
+  .mbsc-ic-volume-medium::before {
     content: "\ebc2";
-} 
-.mbsc-ic-volume-mute::before {
+  }
+  .mbsc-ic-volume-mute::before {
     content: "\ebc3";
-} 
-.mbsc-ic-volume-mute2::before {
+  }
+  .mbsc-ic-volume-mute2::before {
     content: "\ebc4";
-} 
-.mbsc-ic-wand::before {
+  }
+  .mbsc-ic-wand::before {
     content: "\ebc5";
-} 
-.mbsc-ic-warning::before {
+  }
+  .mbsc-ic-warning::before {
     content: "\ebc6";
-} 
-.mbsc-ic-windows::before {
+  }
+  .mbsc-ic-windows::before {
     content: "\ebc7";
-} 
-.mbsc-ic-windows8::before {
+  }
+  .mbsc-ic-windows8::before {
     content: "\ebc8";
-} 
-.mbsc-ic-wink::before {
+  }
+  .mbsc-ic-wink::before {
     content: "\ebc9";
-} 
-.mbsc-ic-wink2::before {
+  }
+  .mbsc-ic-wink2::before {
     content: "\ebca";
-} 
-.mbsc-ic-wondering::before {
+  }
+  .mbsc-ic-wondering::before {
     content: "\ebcb";
-} 
-.mbsc-ic-wondering2::before {
+  }
+  .mbsc-ic-wondering2::before {
     content: "\ebcc";
-} 
-.mbsc-ic-wordpress::before {
+  }
+  .mbsc-ic-wordpress::before {
     content: "\ebcd";
-} 
-.mbsc-ic-wordpress2::before {
+  }
+  .mbsc-ic-wordpress2::before {
     content: "\ebce";
-} 
-.mbsc-ic-wrench::before {
+  }
+  .mbsc-ic-wrench::before {
     content: "\ebcf";
-} 
-.mbsc-ic-xing::before {
+  }
+  .mbsc-ic-xing::before {
     content: "\ebd0";
-} 
-.mbsc-ic-xing2::before {
+  }
+  .mbsc-ic-xing2::before {
     content: "\ebd1";
-} 
-.mbsc-ic-yahoo::before {
+  }
+  .mbsc-ic-yahoo::before {
     content: "\ebd2";
-} 
-.mbsc-ic-yelp::before {
+  }
+  .mbsc-ic-yelp::before {
     content: "\ebd3";
-} 
-.mbsc-ic-youtube::before {
+  }
+  .mbsc-ic-youtube::before {
     content: "\ebd4";
-} 
-.mbsc-ic-youtube2::before {
+  }
+  .mbsc-ic-youtube2::before {
     content: "\ebd5";
-} 
-.mbsc-ic-zoom-in::before {
+  }
+  .mbsc-ic-zoom-in::before {
     content: "\ebd6";
-} 
-.mbsc-ic-zoom-out::before {
+  }
+  .mbsc-ic-zoom-out::before {
     content: "\ebd7";
-}
+  }
 
 }
 
@@ -3142,9 +3127,6 @@ $mbsc-font-path: '' !default;
 }
 
 
-
-
-
 @mixin mbsc-ios-scroller($theme, $params) {
   @include exports("scroller.#{$theme}.colors") {
 
@@ -3157,8 +3139,7 @@ $mbsc-font-path: '' !default;
     $button: '';
     @if (map-get($params, 'button')) {
       $button: map-get($params, 'button');
-    }
-    @else {
+    } @else {
       $button: $accent;
     }
 
@@ -3191,8 +3172,7 @@ $mbsc-font-path: '' !default;
       $label-text: lighten($text, 67%);
       $button-active: darken($background, 5%);
       $top-bottom-wheel-border: darken($background-limited, 30%);
-    }
-    @else {
+    } @else {
       $top-bottom-frame: $background-limited;
       $border-color: lighten($background, 20%);
       $item-3d: lighten($background-limited, 40%);
@@ -3331,8 +3311,6 @@ $mbsc-font-path: '' !default;
     }
   }
 }
-
-
 
 
 @include exports("scroller") {
@@ -3789,9 +3767,6 @@ $mbsc-font-path: '' !default;
 }
 
 
-
-
-
 // Theme specific variables - inherited from global variables
 
 // Background
@@ -3808,16 +3783,16 @@ $mbsc-ios-input-error: $mbsc-input-error-light !default;
 $mbsc-ios-dark-input-error: $mbsc-input-error-dark !default;
 
 $mbsc-ios-colors: map-merge($mbsc-ios-colors, (
-  'input-background': $mbsc-ios-input-background,
-  'input-border': $mbsc-ios-input-border,
-  'input-text': $mbsc-ios-input-text,
-  'input-error': $mbsc-ios-input-error,
+        'input-background': $mbsc-ios-input-background,
+        'input-border': $mbsc-ios-input-border,
+        'input-text': $mbsc-ios-input-text,
+        'input-error': $mbsc-ios-input-error,
 ));
 $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
-  'input-background': $mbsc-ios-dark-input-background,
-  'input-border': $mbsc-ios-dark-input-border,
-  'input-text': $mbsc-ios-dark-input-text,
-  'input-error': $mbsc-ios-dark-input-error,
+        'input-background': $mbsc-ios-dark-input-background,
+        'input-border': $mbsc-ios-dark-input-border,
+        'input-text': $mbsc-ios-dark-input-text,
+        'input-error': $mbsc-ios-dark-input-error,
 ));
 
 @mixin mbsc-ios-input($theme, $params) {
@@ -3845,13 +3820,12 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     @if (lightness($background) > 50%) {
       $form-text: hsl(hue($text), saturation($text), max(lightness($text), 80%));
       $border-color: darken($background-limited, 17%);
-    }
-    @else {
+    } @else {
       $form-text: hsl(hue($text), saturation($text), min(lightness($text), 80%));
       $border-color: lighten($border-origin, 20%);
     }
     // overwrite colors with custom ones if provided
-    $border-color:if($input-border-param, $input-border-param, $border-color);
+    $border-color: if($input-border-param, $input-border-param, $border-color);
 
     .mbsc-#{$theme} {
       &.mbsc-input {
@@ -3930,7 +3904,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("input") {
@@ -4096,7 +4069,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
       transition: transform .2s;
     }
 
-    .mbsc-label~.mbsc-input-wrap {
+    .mbsc-label ~ .mbsc-input-wrap {
 
       /* WebKit browsers */
       .mbsc-control::-webkit-input-placeholder {
@@ -4119,7 +4092,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
       }
     }
 
-    &.mbsc-label-floating-active .mbsc-label~.mbsc-input-wrap {
+    &.mbsc-label-floating-active .mbsc-label ~ .mbsc-input-wrap {
 
       /* WebKit browsers */
       .mbsc-control::-webkit-input-placeholder {
@@ -4710,10 +4683,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
 @mixin mbsc-ios-select($theme, $params) {
   @include exports("select.#{$theme}.colors") {
 
@@ -4733,8 +4702,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     @if (lightness($background) > 50%) {
       $disabled-color: darken($background, 20%);
       $button-active: darken($background, 5%);
-    }
-    @else {
+    } @else {
       $disabled-color: lighten($background, 23%);
       $button-active: lighten($background, 12%);
     }
@@ -4783,9 +4751,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
-
 
 
 @include exports("select") {
@@ -4949,11 +4914,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
-
 $mbsc-mobiscroll-accent: #4eccc4 !default;
 $mbsc-mobiscroll-background: #f7f7f7 !default;
 $mbsc-mobiscroll-text: #454545 !default;
@@ -4972,15 +4932,15 @@ $mbsc-mobiscroll-info: #5BB7C5 !default;
 $mbsc-mobiscroll-light: darken(#fff, 10%) !default;
 $mbsc-mobiscroll-dark: #47494A !default;
 
-$mbsc-mobiscroll-colors: ( // Colors map
-  'background': $mbsc-mobiscroll-background,
-  'text': $mbsc-mobiscroll-text,
-  'accent': $mbsc-mobiscroll-accent,
+$mbsc-mobiscroll-colors: (// Colors map
+        'background': $mbsc-mobiscroll-background,
+        'text': $mbsc-mobiscroll-text,
+        'accent': $mbsc-mobiscroll-accent,
 );
-$mbsc-mobiscroll-dark-colors: ( // Colors map
-  'background': $mbsc-mobiscroll-dark-background,
-  'text': $mbsc-mobiscroll-dark-text,
-  'accent': $mbsc-mobiscroll-dark-accent,
+$mbsc-mobiscroll-dark-colors: (// Colors map
+        'background': $mbsc-mobiscroll-dark-background,
+        'text': $mbsc-mobiscroll-dark-text,
+        'accent': $mbsc-mobiscroll-dark-accent,
 );
 
 @function mbsc-mobiscroll-colors($params) {
@@ -5004,7 +4964,7 @@ $mbsc-mobiscroll-dark-colors: ( // Colors map
     $tooltip: darken($background, 4%);
   }
 
-  // Dark background
+    // Dark background
   @else {
     $border: lighten($background, 17%);
     $empty-color: $text;
@@ -5014,16 +4974,16 @@ $mbsc-mobiscroll-dark-colors: ( // Colors map
   }
 
   @return ('border': $border,
-  'empty-color': $empty-color,
-  'input-disabled': $input-disabled,
-  'input-box': $input-box,
-  'tooltip': $tooltip,
-  /* static colors */
-  'textarea': #1f1f1f,
-  'notification': #787878,
-  'white-text': #ffffff,
-  'error': #de3226,
-  'dark-text': #000);
+          'empty-color': $empty-color,
+          'input-disabled': $input-disabled,
+          'input-box': $input-box,
+          'tooltip': $tooltip,
+    /* static colors */
+          'textarea': #1f1f1f,
+          'notification': #787878,
+          'white-text': #ffffff,
+          'error': #de3226,
+          'dark-text': #000);
 }
 
 @mixin mbsc-mobiscroll-common($theme, $params) {
@@ -5056,17 +5016,17 @@ $mbsc-mobiscroll-frame-overlay: $mbsc-frame-overlay-light !default;
 $mbsc-mobiscroll-dark-frame-overlay: $mbsc-frame-overlay-dark !default;
 
 $mbsc-mobiscroll-colors: map-merge($mbsc-mobiscroll-colors, (
-  'frame-background': $mbsc-mobiscroll-frame-background,
-  'frame-text': $mbsc-mobiscroll-frame-text,
-  'frame-accent': $mbsc-mobiscroll-frame-accent,
-  'frame-overlay': $mbsc-mobiscroll-frame-overlay,
+        'frame-background': $mbsc-mobiscroll-frame-background,
+        'frame-text': $mbsc-mobiscroll-frame-text,
+        'frame-accent': $mbsc-mobiscroll-frame-accent,
+        'frame-overlay': $mbsc-mobiscroll-frame-overlay,
 ));
 
 $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
-  'frame-background': $mbsc-mobiscroll-dark-frame-background,
-  'frame-text': $mbsc-mobiscroll-dark-frame-text,
-  'frame-accent': $mbsc-mobiscroll-dark-frame-accent,
-  'frame-overlay': $mbsc-mobiscroll-dark-frame-overlay,
+        'frame-background': $mbsc-mobiscroll-dark-frame-background,
+        'frame-text': $mbsc-mobiscroll-dark-frame-text,
+        'frame-accent': $mbsc-mobiscroll-dark-frame-accent,
+        'frame-overlay': $mbsc-mobiscroll-dark-frame-overlay,
 ));
 
 @mixin mbsc-mobiscroll-frame($theme, $params) {
@@ -5112,7 +5072,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("frame.mobiscroll") {
@@ -5182,9 +5141,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
 @mixin mbsc-mobiscroll-scroller($theme, $params) {
   @include exports("scroller.#{$theme}.colors") {
 
@@ -5237,7 +5193,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("scroller.mobiscroll") {
@@ -5335,9 +5290,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
 // Theme specific variables - inherited from global variables
 
 // Background
@@ -5354,16 +5306,16 @@ $mbsc-mobiscroll-input-error: $mbsc-input-error-light !default;
 $mbsc-mobiscroll-dark-input-error: $mbsc-input-error-dark !default;
 
 $mbsc-mobiscroll-colors: map-merge($mbsc-mobiscroll-colors, (
-  'input-background': $mbsc-mobiscroll-input-background,
-  'input-text': $mbsc-mobiscroll-input-text,
-  'input-accent': $mbsc-mobiscroll-input-accent,
-  'input-error': $mbsc-mobiscroll-input-error,
+        'input-background': $mbsc-mobiscroll-input-background,
+        'input-text': $mbsc-mobiscroll-input-text,
+        'input-accent': $mbsc-mobiscroll-input-accent,
+        'input-error': $mbsc-mobiscroll-input-error,
 ));
 $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
-  'input-background': $mbsc-mobiscroll-dark-input-background,
-  'input-text': $mbsc-mobiscroll-dark-input-text,
-  'input-accent': $mbsc-mobiscroll-dark-input-accent,
-  'input-error': $mbsc-mobiscroll-dark-input-error,
+        'input-background': $mbsc-mobiscroll-dark-input-background,
+        'input-text': $mbsc-mobiscroll-dark-input-text,
+        'input-accent': $mbsc-mobiscroll-dark-input-accent,
+        'input-error': $mbsc-mobiscroll-dark-input-error,
 ));
 
 @mixin mbsc-mobiscroll-input($theme, $params) {
@@ -5384,8 +5336,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     $input-box: '';
     @if (lightness($background) > 50%) {
       $input-box: darken($background, 10%);
-    }
-    @else {
+    } @else {
       $input-box: lighten($background, 10%);
     }
 
@@ -5457,7 +5408,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("input.mobiscroll") {
@@ -6184,10 +6134,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
 @mixin mbsc-mobiscroll-select($theme, $params) {
   @include exports("select.#{$theme}.colors") {
 
@@ -6209,7 +6155,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("select.mobiscroll") {
@@ -6259,12 +6204,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 // datetime component
-
-
-
-
 
 
 @mixin mbsc-ios-datetime($theme, $params) {
@@ -6272,9 +6212,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     @include mbsc-ios-scroller($theme, $params);
   }
 }
-
-
-
 
 
 @include exports("datetime.ios") {
@@ -6298,11 +6235,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-mobiscroll-datetime($theme, $params) {
   @include exports("datetime.#{$theme}.colors") {
     @include mbsc-mobiscroll-scroller($theme, $params);
@@ -6310,18 +6242,12 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("datetime.mobiscroll") {
   @include mbsc-mobiscroll-datetime(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
 
 
-
 // image component
-
-
-
-
 
 
 @mixin mbsc-ios-image($theme, $params) {
@@ -6329,8 +6255,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     @include mbsc-ios-scroller($theme, $params);
   }
 }
-
-
 
 
 @include exports("image") {
@@ -6380,11 +6304,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-mobiscroll-image($theme, $params) {
   @include exports("image.#{$theme}.colors") {
     @include mbsc-mobiscroll-scroller($theme, $params);
@@ -6392,18 +6311,12 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("image.mobiscroll") {
   @include mbsc-mobiscroll-image(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
 
 
-
 // treelist component
-
-
-
-
 
 
 @mixin mbsc-ios-treelist($theme, $params) {
@@ -6413,17 +6326,9 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
 @include exports("treelist.ios") {
   @include mbsc-ios-treelist(ios, (background: $mbsc-ios-background, text: $mbsc-ios-text, accent: $mbsc-ios-accent));
 }
-
-
-
-
-
 
 
 @mixin mbsc-mobiscroll-treelist($theme, $params) {
@@ -6433,29 +6338,22 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("treelist.mobiscroll") {
   @include mbsc-mobiscroll-treelist(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
 
 
-
 // calendar component
-
-
-
-
-
 
 
 $mbsc-ios-calendar-mark: $mbsc-calendar-mark-light !default;
 $mbsc-ios-dark-calendar-mark: $mbsc-calendar-mark-dark !default;
 
 $mbsc-ios-colors: map-merge($mbsc-ios-colors, (
-  'calendar-mark': $mbsc-ios-calendar-mark,
+        'calendar-mark': $mbsc-ios-calendar-mark,
 ));
 $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
-  'calendar-mark': $mbsc-ios-dark-calendar-mark,
+        'calendar-mark': $mbsc-ios-dark-calendar-mark,
 ));
 
 @mixin mbsc-ios-calbase($theme, $params) {
@@ -6474,14 +6372,13 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     $mark-param: map-get($params, 'calendar-mark');
 
     $background: if($background-param, $background-param, $background);
-    $text: if($text-param, $text-param, if($background-param, get-contrast-color($background) ,$text));
+    $text: if($text-param, $text-param, if($background-param, get-contrast-color($background), $text));
     $accent: if($accent-param, $accent-param, $accent);
 
     $button: '';
     @if (map-get($params, 'button')) {
       $button: map-get($params, 'button');
-    }
-    @else {
+    } @else {
       $button: $accent;
     }
 
@@ -6496,8 +6393,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
       $top-bottom-frame: adjust-hue(darken(saturate($background, 12%), 13%), 216deg);
       $btn-cont-background: darken($background, 3%);
       $button-active: darken($background, 5%);
-    }
-    @else {
+    } @else {
       $border-color: lighten($background, 20%);
       $top-bottom-frame: $background-limited;
       $btn-cont-background: lighten($background-limited, 8%);
@@ -6510,16 +6406,14 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     @if (lightness($button) > 50%) {
       $button-contrast: #000;
       $cal-text: lighten(saturate($button, 5%), 42%);
-    }
-    @else {
+    } @else {
       $button-contrast: #fff;
       $cal-text: adjust-hue(lighten(desaturate($button, 42%), 35%), 3deg);
     }
 
     @if (lightness($cal-text) > 50%) {
       $cal-text-contrast: #000;
-    }
-    @else {
+    } @else {
       $cal-text-contrast: #fff;
     }
 
@@ -6584,8 +6478,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("calbase") {
@@ -7193,9 +7085,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
 @mixin mbsc-ios-calendar($theme, $params) {
   @include exports("calendar.#{$theme}.colors") {
     @include mbsc-ios-calbase($theme, $params);
@@ -7203,28 +7092,19 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
 @include exports("calendar.ios") {
   @include mbsc-ios-calendar(ios, $mbsc-ios-colors);
 }
-
-
-
-
-
-
 
 
 $mbsc-mobiscroll-calendar-mark: $mbsc-calendar-mark-light !default;
 $mbsc-mobiscroll-dark-calendar-mark: $mbsc-calendar-mark-dark !default;
 
 $mbsc-mobiscroll-colors: map-merge($mbsc-mobiscroll-colors, (
-  'calendar-mark': $mbsc-mobiscroll-calendar-mark,
+        'calendar-mark': $mbsc-mobiscroll-calendar-mark,
 ));
 $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
-  'calendar-mark': $mbsc-mobiscroll-dark-calendar-mark,
+        'calendar-mark': $mbsc-mobiscroll-dark-calendar-mark,
 ));
 
 @mixin mbsc-mobiscroll-calbase($theme, $params) {
@@ -7311,8 +7191,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
 @include exports("calbase.mobiscroll") {
   .mbsc-mobiscroll {
     .mbsc-cal-c {
@@ -7384,9 +7262,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
 @mixin mbsc-mobiscroll-calendar($theme, $params) {
   @include exports("calendar.#{$theme}.colors") {
     @include mbsc-mobiscroll-calbase($theme, $params);
@@ -7394,18 +7269,12 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("calendar.mobiscroll") {
   @include mbsc-mobiscroll-calendar(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
 
 
-
 // timespan component
-
-
-
-
 
 
 @mixin mbsc-ios-timespan($theme, $params) {
@@ -7422,8 +7291,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("timespan") {
@@ -7491,11 +7358,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-mobiscroll-timespan($theme, $params) {
   @include exports("timespan.#{$theme}.colors") {
     @include mbsc-mobiscroll-scroller($theme, $params);
@@ -7503,18 +7365,12 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("timespan.mobiscroll") {
   @include mbsc-mobiscroll-timespan(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
 
 
-
 // timer component
-
-
-
-
 
 
 @mixin mbsc-ios-timer($theme, $params) {
@@ -7530,8 +7386,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("timer") {
@@ -7604,17 +7458,11 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-mobiscroll-timer($theme, $params) {
   @include exports("timer.#{$theme}.colors") {
     @include mbsc-mobiscroll-scroller($theme, $params);
   }
 }
-
 
 
 @include exports("timer.mobiscroll") {
@@ -7649,14 +7497,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 // color component
-
-
-
-
-
-
 
 
 // Theme specific variables - inherited from global variables
@@ -7671,12 +7512,12 @@ $mbsc-ios-dark-page-text: $mbsc-page-text-dark !default;
 
 // add variables to color maps
 $mbsc-ios-colors: map-merge($mbsc-ios-colors, (
-  'page-background': $mbsc-ios-page-background,
-  'page-text': $mbsc-ios-page-text,
+        'page-background': $mbsc-ios-page-background,
+        'page-text': $mbsc-ios-page-text,
 ));
 $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
-  'page-background': $mbsc-ios-dark-page-background,
-  'page-text': $mbsc-ios-dark-page-text,
+        'page-background': $mbsc-ios-dark-page-background,
+        'page-text': $mbsc-ios-dark-page-text,
 ));
 
 @mixin mbsc-ios-page($theme, $params) {
@@ -7690,8 +7531,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 
     @if (lightness($background) > 50%) {
       $background: adjust-hue(darken(saturate($background, 19%), 2%), 240deg);
-    }
-    @else {
+    } @else {
       $background: adjust-hue(lighten(desaturate($background, 19%), 10%), 240deg);
     }
 
@@ -7714,8 +7554,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("page") {
@@ -8082,10 +7920,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
 @mixin mbsc-ios-progress($theme, $params) {
   @include exports("progress.#{$theme}.colors") {
 
@@ -8119,8 +7953,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("progress") {
@@ -8466,10 +8298,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
 @mixin mbsc-ios-slider($theme, $params) {
   @include exports("slider.#{$theme}.colors") {
 
@@ -8497,9 +8325,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
-
 
 
 @include exports("slider") {
@@ -8654,10 +8479,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
 @mixin mbsc-ios-color($theme, $params) {
   @include exports("color.#{$theme}.colors") {
     @include mbsc-ios-frame($theme, $params);
@@ -8675,8 +8496,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("color") {
@@ -9059,13 +8878,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
-
-
-
 // Theme specific variables - inherited from global variables
 
 // background
@@ -9078,12 +8890,12 @@ $mbsc-mobiscroll-dark-page-text: $mbsc-page-text-dark !default;
 
 // add variables to color maps
 $mbsc-mobiscroll-colors: map-merge($mbsc-mobiscroll-colors, (
-  'page-background': $mbsc-mobiscroll-page-background,
-  'page-text': $mbsc-mobiscroll-page-text,
+        'page-background': $mbsc-mobiscroll-page-background,
+        'page-text': $mbsc-mobiscroll-page-text,
 ));
 $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
-  'page-background': $mbsc-mobiscroll-dark-page-background,
-  'page-text': $mbsc-mobiscroll-dark-page-text,
+        'page-background': $mbsc-mobiscroll-dark-page-background,
+        'page-text': $mbsc-mobiscroll-dark-page-text,
 ));
 
 @mixin mbsc-mobiscroll-page($theme, $params) {
@@ -9112,7 +8924,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("page.mobiscroll") {
@@ -9169,10 +8980,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
 @mixin mbsc-mobiscroll-progress($theme, $params) {
   @include exports("progress.#{$theme}.colors") {
 
@@ -9187,7 +8994,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     @if (lightness($background) > 50%) {
       $track: darken($background, 10%);
     }
-    // Dark background
+      // Dark background
     @else {
       $track: lighten($background, 8%);
     }
@@ -9207,7 +9014,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("progress.mobiscroll") {
@@ -9322,10 +9128,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
 @mixin mbsc-mobiscroll-slider($theme, $params) {
   @include exports("slider.#{$theme}.colors") {
 
@@ -9354,7 +9156,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("slider.mobiscroll") {
@@ -9476,10 +9277,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
 @mixin mbsc-mobiscroll-color($theme, $params) {
   @include exports("color.#{$theme}.colors") {
 
@@ -9506,7 +9303,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("color.mobiscroll") {
@@ -9550,12 +9346,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 // range component
-
-
-
-
 
 
 @mixin mbsc-ios-range($theme, $params) {
@@ -9575,8 +9366,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     $button: '';
     @if (map-get($params, 'button')) {
       $button: map-get($params, 'button');
-    }
-    @else {
+    } @else {
       $button: $accent;
     }
 
@@ -9584,8 +9374,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     $border-color: '';
     @if (lightness($background) > 50%) {
       $border-color: darken($background-limited, 17%);
-    }
-    @else {
+    } @else {
       $border-color: lighten($background, 20%);
     }
 
@@ -9609,8 +9398,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("range") {
@@ -9759,11 +9546,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-mobiscroll-range($theme, $params) {
   @include exports("range.#{$theme}.colors") {
 
@@ -9811,7 +9593,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("range.mobiscroll") {
@@ -9889,17 +9670,10 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 // scroller component
 
 
-
-
 // listview component
-
-
-
-
 
 
 // Theme specific variables - inherited from global variables
@@ -9922,18 +9696,18 @@ $mbsc-ios-dark-listview-header-text: $mbsc-listview-header-text-dark !default;
 
 // add variables to the color maps
 $mbsc-ios-colors: map-merge($mbsc-ios-colors, (
-  'listview-background': $mbsc-ios-listview-background,
-  'listview-text': $mbsc-ios-listview-text,
-  'listview-accent': $mbsc-ios-listview-accent,
-  'listview-header-background': $mbsc-ios-listview-header-background,
-  'listview-header-text': $mbsc-ios-listview-header-text,
+        'listview-background': $mbsc-ios-listview-background,
+        'listview-text': $mbsc-ios-listview-text,
+        'listview-accent': $mbsc-ios-listview-accent,
+        'listview-header-background': $mbsc-ios-listview-header-background,
+        'listview-header-text': $mbsc-ios-listview-header-text,
 ));
 $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
-  'listview-background': $mbsc-ios-dark-listview-background,
-  'listview-text': $mbsc-ios-dark-listview-text,
-  'listview-accent': $mbsc-ios-dark-listview-accent,
-  'listview-header-background': $mbsc-ios-dark-listview-header-background,
-  'listview-header-text': $mbsc-ios-dark-listview-header-text,
+        'listview-background': $mbsc-ios-dark-listview-background,
+        'listview-text': $mbsc-ios-dark-listview-text,
+        'listview-accent': $mbsc-ios-dark-listview-accent,
+        'listview-header-background': $mbsc-ios-dark-listview-header-background,
+        'listview-header-text': $mbsc-ios-dark-listview-header-text,
 ));
 
 @mixin mbsc-ios-listview-base($theme, $params) {
@@ -9951,11 +9725,10 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 
     // overwrite variables with custom ones when provided
     $li-background: '';
-    @if($background-param) {
+    @if ($background-param) {
       $li-background: $background-param;
       $background: darken($background-param, 6%);
-    }
-    @else {
+    } @else {
       $li-background: lighten($background, 6%);
     }
     $text: if($text-param, $text-param, if($background-param, get-contrast-color($background-param), $text));
@@ -9970,8 +9743,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
       $title-color: adjust-hue(lighten(saturate($text, 2%), 44%), 240deg);
       $border-color: darken($background-limited, 17%);
       $background-contrast: #000;
-    }
-    @else {
+    } @else {
       $header-background: adjust-hue(lighten(desaturate($background, 19%), 10%), 240deg);
       $title-color: adjust-hue(darken(desaturate($text, 2%), 44%), 240deg);
       $border-color: lighten($background, 20%);
@@ -10015,7 +9787,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("listview-base") {
@@ -10181,9 +9952,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
 @mixin mbsc-ios-listview($theme, $params) {
   @include exports("listview.#{$theme}.colors") {
 
@@ -10193,7 +9961,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     $text: map-get($params, 'text');
     $background: map-get($params, 'background');
     $accent: map-get($params, 'accent');
-    
+
     // get custom variables
     $background-param: map-get($params, 'listview-background');
     $text-param: map-get($params, 'listview-text');
@@ -10215,8 +9983,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
       $lv-icon: lighten($text, 47%);
       $item-active: darken($background, 12%);
       $item-selected: rgba($accent, .1);
-    }
-    @else {
+    } @else {
       $lv-handle: lighten($background, 43%);
       $lv-item: lighten($background, 13%);
       $item-active: lighten($background, 12%);
@@ -10263,10 +10030,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
 @include exports("listview") {
   /* Animations */
 
@@ -10283,7 +10046,8 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
   }
 
   @-webkit-keyframes mbsc-lv-remove-right {
-    from {}
+    from {
+    }
 
     /* Needed by Android 2.3 */
     to {
@@ -10292,7 +10056,8 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
   }
 
   @-webkit-keyframes mbsc-lv-remove-left {
-    from {}
+    from {
+    }
 
     /* Needed by Android 2.3 */
     to {
@@ -11255,10 +11020,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
 // Theme specific variables - inherited from global variables
 
 // background
@@ -11279,18 +11040,18 @@ $mbsc-mobiscroll-dark-listview-header-text: $mbsc-listview-header-text-dark !def
 
 // add variables to the color maps
 $mbsc-mobiscroll-colors: map-merge($mbsc-mobiscroll-colors, (
-  'listview-background': $mbsc-mobiscroll-listview-background,
-  'listview-text': $mbsc-mobiscroll-listview-text,
-  'listview-accent': $mbsc-mobiscroll-listview-accent,
-  'listview-header-background': $mbsc-mobiscroll-listview-header-background,
-  'listview-header-text': $mbsc-mobiscroll-listview-header-text,
+        'listview-background': $mbsc-mobiscroll-listview-background,
+        'listview-text': $mbsc-mobiscroll-listview-text,
+        'listview-accent': $mbsc-mobiscroll-listview-accent,
+        'listview-header-background': $mbsc-mobiscroll-listview-header-background,
+        'listview-header-text': $mbsc-mobiscroll-listview-header-text,
 ));
 $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
-  'listview-background': $mbsc-mobiscroll-dark-listview-background,
-  'listview-text': $mbsc-mobiscroll-dark-listview-text,
-  'listview-accent': $mbsc-mobiscroll-dark-listview-accent,
-  'listview-header-background': $mbsc-mobiscroll-dark-listview-header-background,
-  'listview-header-text': $mbsc-mobiscroll-dark-listview-header-text,
+        'listview-background': $mbsc-mobiscroll-dark-listview-background,
+        'listview-text': $mbsc-mobiscroll-dark-listview-text,
+        'listview-accent': $mbsc-mobiscroll-dark-listview-accent,
+        'listview-header-background': $mbsc-mobiscroll-dark-listview-header-background,
+        'listview-header-text': $mbsc-mobiscroll-dark-listview-header-text,
 ));
 
 @mixin mbsc-mobiscroll-listview-base($theme, $params) {
@@ -11318,7 +11079,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     @if (lightness($background) > 50%) {
       $lv-background: darken($background, 19%);
     }
-    // Dark background
+      // Dark background
     @else {
       $lv-background: lighten($background, 14%);
     }
@@ -11348,7 +11109,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("listview-base.mobiscroll") {
   .mbsc-mobiscroll {
     &.mbsc-lv-cont {
@@ -11372,9 +11132,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 
   @include mbsc-mobiscroll-listview-base(mobiscroll, $mbsc-mobiscroll-colors);
 }
-
-
-
 
 
 @mixin mbsc-mobiscroll-listview($theme, $params) {
@@ -11448,7 +11205,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("listview.mobiscroll") {
   .mbsc-mobiscroll {
     .mbsc-lv-item.mbsc-lv-item-dragging {
@@ -11469,12 +11225,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 // number component
-
-
-
-
 
 
 @mixin mbsc-ios-number($theme, $params) {
@@ -11484,17 +11235,9 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
 @include exports("number.ios") {
   @include mbsc-ios-number(ios, (background: $mbsc-ios-background, text: $mbsc-ios-text, accent: $mbsc-ios-accent));
 }
-
-
-
-
-
 
 
 @mixin mbsc-mobiscroll-number($theme, $params) {
@@ -11504,18 +11247,12 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("number.mobiscroll") {
   @include mbsc-mobiscroll-number(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
 
 
-
 // numpad component
-
-
-
-
 
 
 @mixin mbsc-ios-numpad($theme, $params) {
@@ -11536,8 +11273,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
       $top-bottom-frame: adjust-hue(darken(saturate($background, 12%), 13%), 216deg);
       $button-disabled: darken($background, 13%);
       $border-color: darken($background-limited, 17%);
-    }
-    @else {
+    } @else {
       $top-bottom-frame: $background-limited;
       $button-disabled: lighten($background, 13%);
       $border-color: lighten($background, 20%);
@@ -11561,8 +11297,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("numpad") {
@@ -11690,11 +11424,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-mobiscroll-numpad($theme, $params) {
   @include exports("numpad.#{$theme}.colors") {
 
@@ -11713,7 +11442,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("numpad.mobiscroll") {
   .mbsc-mobiscroll {
     .mbsc-np-tbl-c {
@@ -11729,11 +11457,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 // forms component
-
-
-
 
 
 @include exports("collapsible") {
@@ -11814,15 +11538,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
-
-
-
-
 @mixin mbsc-ios-rating($theme, $params) {
   @include exports("rating.#{$theme}.colors") {
 
@@ -11837,8 +11552,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("rating") {
@@ -11932,20 +11645,12 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
-
 @mixin mbsc-ios-popup($theme, $params) {
   @include exports("popup.#{$theme}.colors") {
 
     @include mbsc-ios-frame($theme, $params);
   }
 }
-
-
 
 
 @include exports("popup") {
@@ -11982,9 +11687,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 @include exports("popup.ios") {
   @include mbsc-ios-popup(ios, (background: $mbsc-ios-background, text: $mbsc-ios-text, accent: $mbsc-ios-accent));
 }
-
-
-
 
 
 @mixin mbsc-ios-notifications($theme, $params) {
@@ -12045,8 +11747,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
-
 
 
 @include exports("notifications") {
@@ -12226,13 +11926,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
-
-
 // Theme specific variables - inherited from global variables
 
 // General colors for the form
@@ -12261,20 +11954,20 @@ $mbsc-ios-dark-form-group-title-text: $mbsc-form-group-title-text-dark !default;
 
 // add variables to light and dark color maps
 $mbsc-ios-colors: map-merge($mbsc-ios-colors, (
-  'form-background': $mbsc-ios-form-background,
-  'form-text': $mbsc-ios-form-text,
-  'form-accent': $mbsc-ios-form-accent,
-  'button-color': $mbsc-ios-button-color,
-  'button-text': $mbsc-ios-button-text,
-  'form-group-title-text': $mbsc-ios-form-group-title-text,
+        'form-background': $mbsc-ios-form-background,
+        'form-text': $mbsc-ios-form-text,
+        'form-accent': $mbsc-ios-form-accent,
+        'button-color': $mbsc-ios-button-color,
+        'button-text': $mbsc-ios-button-text,
+        'form-group-title-text': $mbsc-ios-form-group-title-text,
 ));
 $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
-  'form-background': $mbsc-ios-dark-form-background,
-  'form-text': $mbsc-ios-dark-form-text,
-  'form-accent': $mbsc-ios-dark-form-accent,
-  'button-color': $mbsc-ios-dark-button-color,
-  'button-text': $mbsc-ios-dark-button-text,
-  'form-group-title-text': $mbsc-ios-dark-form-group-title-text,
+        'form-background': $mbsc-ios-dark-form-background,
+        'form-text': $mbsc-ios-dark-form-text,
+        'form-accent': $mbsc-ios-dark-form-accent,
+        'button-color': $mbsc-ios-dark-button-color,
+        'button-text': $mbsc-ios-dark-button-text,
+        'form-group-title-text': $mbsc-ios-dark-form-group-title-text,
 ));
 
 @mixin mbsc-ios-forms($theme, $params) {
@@ -12303,8 +11996,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     // default background color
     @if (lightness($background) > 50%) {
       $background: adjust-hue(darken(saturate($background, 19%), 2%), 240deg);
-    }
-    @else {
+    } @else {
       $background: adjust-hue(lighten(desaturate($background, 19%), 10%), 240deg);
     }
 
@@ -12316,8 +12008,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     $button: '';
     @if (map-get($params, 'button')) {
       $button: map-get($params, 'button');
-    }
-    @else {
+    } @else {
       $button: $accent;
     }
 
@@ -12329,8 +12020,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     $form-selection: '';
     @if (lightness($button) > 50%) {
       $form-selection: lighten(saturate($accent, 15%), 3%);
-    }
-    @else {
+    } @else {
       $form-selection: darken(desaturate($accent, 15%), 3%);
     }
     $background-limited: hsl(hue($background), saturation($background), max(lightness($background), 3%));
@@ -12353,8 +12043,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
       $title-color: lighten(saturate($text, 2%), 44%);
       $track-background: darken($background, 7%);
       $track-border: darken($background, 7%);
-    }
-    @else {
+    } @else {
       $border-color: lighten($background, 20%);
       $button-background: lighten($background, 23%);
       $disabled-background: lighten($background, 13%);
@@ -12567,15 +12256,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 @include exports("forms") {
@@ -13900,10 +13580,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
 @include exports("collapsible.mobiscroll") {
   .mbsc-mobiscroll .mbsc-collapsible {
     .mbsc-form-group-title {
@@ -13915,14 +13591,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
-
-
-
-
-
-
 
 
 @mixin mbsc-mobiscroll-rating($theme, $params) {
@@ -13939,7 +13607,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("rating.mobiscroll") {
@@ -13981,12 +13648,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
-
-
 @mixin mbsc-mobiscroll-popup($theme, $params) {
   @include exports("popup.#{$theme}.colors") {
 
@@ -13995,13 +13656,9 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
 @include exports("popup.mobiscroll") {
   @include mbsc-mobiscroll-popup(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
-
-
-
 
 
 @mixin mbsc-mobiscroll-notifications($theme, $params) {
@@ -14049,7 +13706,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
 @include exports("notifications.mobiscroll") {
   .mbsc-mobiscroll {
     &.mbsc-toast .mbsc-toast-msg {
@@ -14093,13 +13749,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
-
-
-
 // Theme specific variables - inherited from global variables
 
 // General colors for the form
@@ -14128,20 +13777,20 @@ $mbsc-mobiscroll-dark-form-group-title-text: $mbsc-form-group-title-text-dark !d
 
 // add variables to light and dark color maps
 $mbsc-mobiscroll-colors: map-merge($mbsc-mobiscroll-colors, (
-  'form-background': $mbsc-mobiscroll-form-background,
-  'form-text': $mbsc-mobiscroll-form-text,
-  'form-accent': $mbsc-mobiscroll-form-accent,
-  'button-color': $mbsc-mobiscroll-button-color,
-  'button-text': $mbsc-mobiscroll-button-text,
-  'form-group-title-text': $mbsc-mobiscroll-form-group-title-text,
+        'form-background': $mbsc-mobiscroll-form-background,
+        'form-text': $mbsc-mobiscroll-form-text,
+        'form-accent': $mbsc-mobiscroll-form-accent,
+        'button-color': $mbsc-mobiscroll-button-color,
+        'button-text': $mbsc-mobiscroll-button-text,
+        'form-group-title-text': $mbsc-mobiscroll-form-group-title-text,
 ));
 $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
-  'form-background': $mbsc-mobiscroll-dark-form-background,
-  'form-text': $mbsc-mobiscroll-dark-form-text,
-  'form-accent': $mbsc-mobiscroll-dark-form-accent,
-  'button-color': $mbsc-mobiscroll-dark-button-color,
-  'button-text': $mbsc-mobiscroll-dark-button-text,
-  'form-group-title-text': $mbsc-mobiscroll-dark-form-group-title-text,
+        'form-background': $mbsc-mobiscroll-dark-form-background,
+        'form-text': $mbsc-mobiscroll-dark-form-text,
+        'form-accent': $mbsc-mobiscroll-dark-form-accent,
+        'button-color': $mbsc-mobiscroll-dark-button-color,
+        'button-text': $mbsc-mobiscroll-dark-button-text,
+        'form-group-title-text': $mbsc-mobiscroll-dark-form-group-title-text,
 ));
 
 @mixin mbsc-mobiscroll-forms($theme, $params) {
@@ -14193,7 +13842,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
       $handle: darken($background, 8%);
       $checkbox: lighten($background, 3%);
     }
-    // Dark background
+      // Dark background
     @else {
       $btn-light: $background;
       $btn-disabled: lighten($background, 8%);
@@ -14248,7 +13897,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
         border-left: .125em solid $checkbox;
       }
 
-      &.mbsc-checkbox input:disabled+.mbsc-checkbox-box {
+      &.mbsc-checkbox input:disabled + .mbsc-checkbox-box {
         background: $input-disabled;
       }
 
@@ -14261,15 +13910,15 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
         background: $accent;
       }
 
-      &.mbsc-radio input:checked+.mbsc-radio-box {
+      &.mbsc-radio input:checked + .mbsc-radio-box {
         background: transparent;
       }
 
-      &.mbsc-radio input:disabled+.mbsc-radio-box {
+      &.mbsc-radio input:disabled + .mbsc-radio-box {
         border-color: $input-disabled;
       }
 
-      &.mbsc-radio input:disabled+.mbsc-radio-box:after {
+      &.mbsc-radio input:disabled + .mbsc-radio-box:after {
         background: $input-disabled;
       }
 
@@ -14342,19 +13991,19 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
         background: $switch;
       }
 
-      &.mbsc-switch input:checked+.mbsc-switch-track {
+      &.mbsc-switch input:checked + .mbsc-switch-track {
         background: $checked;
       }
 
-      &.mbsc-switch input:checked+.mbsc-switch-track .mbsc-switch-handle {
+      &.mbsc-switch input:checked + .mbsc-switch-track .mbsc-switch-handle {
         background: $accent;
       }
 
-      &.mbsc-switch input:disabled+.mbsc-switch-track {
+      &.mbsc-switch input:disabled + .mbsc-switch-track {
         background: $input-disabled;
       }
 
-      &.mbsc-switch input:disabled+.mbsc-switch-track .mbsc-switch-handle {
+      &.mbsc-switch input:disabled + .mbsc-switch-track .mbsc-switch-handle {
         background: $handle;
       }
 
@@ -14369,18 +14018,18 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
       }
 
       &.mbsc-segmented .mbsc-segmented-item.mbsc-stepper-control.mbsc-active .mbsc-segmented-content,
-      &.mbsc-segmented .mbsc-segmented-item input:checked+.mbsc-segmented-content {
+      &.mbsc-segmented .mbsc-segmented-item input:checked + .mbsc-segmented-content {
         background: $accent;
         color: $background;
       }
 
-      &.mbsc-segmented .mbsc-segmented-item input.mbsc-active+.mbsc-segmented-content {
+      &.mbsc-segmented .mbsc-segmented-item input.mbsc-active + .mbsc-segmented-content {
         background: rgba($accent, .3);
       }
 
-      &.mbsc-segmented input:disabled~.mbsc-segmented-item .mbsc-segmented-content,
+      &.mbsc-segmented input:disabled ~ .mbsc-segmented-item .mbsc-segmented-content,
       &.mbsc-segmented .mbsc-segmented-item.mbsc-stepper-control.mbsc-disabled .mbsc-segmented-content,
-      &.mbsc-segmented .mbsc-segmented-item input:disabled+.mbsc-segmented-content {
+      &.mbsc-segmented .mbsc-segmented-item input:disabled + .mbsc-segmented-content {
         color: $input-disabled;
         border-color: $input-disabled;
       }
@@ -14390,7 +14039,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
         -webkit-text-fill-color: $input-disabled;
       }
 
-      &.mbsc-segmented input:disabled:checked+.mbsc-segmented-content {
+      &.mbsc-segmented input:disabled:checked + .mbsc-segmented-content {
         border-color: $btn-disabled;
         background: $btn-disabled;
         color: $btn-light;
@@ -15259,14 +14908,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 // eventcalendar component
-
-
-
-
-
-
 
 
 @mixin mbsc-ios-eventcalendar($theme, $params) {
@@ -15296,8 +14938,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
       $list-background: adjust-hue(darken(saturate($background, 19%), 2%), 240deg);
       $popup-shadow: rgba(0, 0, 0, .3);
       $popup-background: $background-alt;
-    }
-    @else {
+    } @else {
       $border-color: lighten($background, 20%);
       $popup-border: lighten($border-color, 13%);
       $list-background: adjust-hue(lighten(desaturate($background, 19%), 10%), 240deg);
@@ -15355,9 +14996,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
-
-
 
 
 @include exports("eventcalendar") {
@@ -15684,13 +15322,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
-
-
 @mixin mbsc-mobiscroll-eventcalendar($theme, $params) {
   @include exports("eventcalendar.#{$theme}.colors") {
 
@@ -15716,7 +15347,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     @if (lightness($background) > 50%) {
       $table-border: darken($background, 10%);
     }
-    // Dark background
+      // Dark background
     @else {
       $table-border: lighten($background, 8%);
     }
@@ -15765,7 +15396,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     }
   }
 }
-
 
 
 @include exports("eventcalendar.mobiscroll") {
@@ -15840,12 +15470,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 // measurement component
-
-
-
-
 
 
 @mixin mbsc-ios-measurement($theme, $params) {
@@ -15853,8 +15478,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     @include mbsc-ios-scroller($theme, $params);
   }
 }
-
-
 
 
 @include exports("measurement") {
@@ -15883,11 +15506,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-mobiscroll-measurement($theme, $params) {
   @include exports("measurement.#{$theme}.colors") {
     @include mbsc-mobiscroll-scroller($theme, $params);
@@ -15895,25 +15513,18 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("measurement.mobiscroll") {
   @include mbsc-mobiscroll-measurement(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
 
 
-
 // navigation component
 
 
-
-
-
-
 @mixin mbsc-ios-scrollview($theme, $params) {
-  @include exports("scrollview.#{$theme}.colors") {}
+  @include exports("scrollview.#{$theme}.colors") {
+  }
 }
-
-
 
 
 @include exports("scrollview") {
@@ -16006,9 +15617,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
 // Theme specific variables declaration - inherited from global variables
 
 // background
@@ -16023,14 +15631,14 @@ $mbsc-ios-dark-nav-accent: $mbsc-nav-accent-dark !default;
 
 // add variables to light and dark color maps
 $mbsc-ios-colors: map-merge($mbsc-ios-colors, (
-  'nav-background': $mbsc-ios-nav-background,
-  'nav-text': $mbsc-ios-nav-text,
-  'nav-accent': $mbsc-ios-nav-accent,
+        'nav-background': $mbsc-ios-nav-background,
+        'nav-text': $mbsc-ios-nav-text,
+        'nav-accent': $mbsc-ios-nav-accent,
 ));
 $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
-  'nav-background': $mbsc-ios-dark-nav-background,
-  'nav-text': $mbsc-ios-dark-nav-text,
-  'nav-accent': $mbsc-ios-dark-nav-accent,
+        'nav-background': $mbsc-ios-dark-nav-background,
+        'nav-text': $mbsc-ios-dark-nav-text,
+        'nav-accent': $mbsc-ios-dark-nav-accent,
 ));
 
 @mixin mbsc-ios-navigation-base($theme, $params) {
@@ -16061,8 +15669,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     @if (lightness($background) > 50%) {
       $border-color: darken($background-limited, 17%);
       $text-alt: lighten($text, 53%);
-    }
-    @else {
+    } @else {
       $border-color: lighten($background, 20%);
       $text-alt: darken($text, 33%);
     }
@@ -16092,9 +15699,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
-
 
 
 @include exports("navigation-base") {
@@ -16236,11 +15840,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-ios-navigation($theme, $params) {
   @include exports("navigation.#{$theme}.colors") {
     @include mbsc-ios-navigation-base($theme, $params);
@@ -16256,8 +15855,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     $border-color: '';
     @if (lightness($background) > 50%) {
       $border-color: darken($background-limited, 17%);
-    }
-    @else {
+    } @else {
       $border-color: lighten($background, 20%);
     }
 
@@ -16268,9 +15866,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
-
 
 
 @include exports("navigation") {
@@ -16474,23 +16069,15 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-mobiscroll-scrollview($theme, $params) {
-  @include exports("scrollview.#{$theme}.colors") {}
+  @include exports("scrollview.#{$theme}.colors") {
+  }
 }
-
 
 
 @include exports("scrollview.mobiscroll") {
   @include mbsc-mobiscroll-scrollview(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
-
-
-
 
 
 // Theme specific variables - inherited from global variables
@@ -16507,14 +16094,14 @@ $mbsc-mobiscroll-dark-nav-accent: $mbsc-nav-accent-dark !default;
 
 // add variables to the light and dark color maps
 $mbsc-mobiscroll-colors: map-merge($mbsc-mobiscroll-colors, (
-  'nav-background': $mbsc-mobiscroll-nav-background,
-  'nav-text': $mbsc-mobiscroll-nav-text,
-  'nav-accent': $mbsc-mobiscroll-nav-accent,
+        'nav-background': $mbsc-mobiscroll-nav-background,
+        'nav-text': $mbsc-mobiscroll-nav-text,
+        'nav-accent': $mbsc-mobiscroll-nav-accent,
 ));
 $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
-  'nav-background': $mbsc-mobiscroll-dark-nav-background,
-  'nav-text': $mbsc-mobiscroll-dark-nav-text,
-  'nav-accent': $mbsc-mobiscroll-dark-nav-accent,
+        'nav-background': $mbsc-mobiscroll-dark-nav-background,
+        'nav-text': $mbsc-mobiscroll-dark-nav-text,
+        'nav-accent': $mbsc-mobiscroll-dark-nav-accent,
 ));
 
 @mixin mbsc-mobiscroll-navigation-base($theme, $params) {
@@ -16537,8 +16124,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     $border: '';
     @if (lightness($background) > 50%) {
       $border: darken($background, 17%);
-    }
-    @else {
+    } @else {
       $border: lighten($background, 17%);
     }
 
@@ -16596,7 +16182,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("navigation-base.mobiscroll") {
   .mbsc-mobiscroll {
     &.mbsc-ms-b {
@@ -16611,11 +16196,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
 @mixin mbsc-mobiscroll-navigation($theme, $params) {
   @include exports("navigation.#{$theme}.colors") {
     @include mbsc-mobiscroll-navigation-base($theme, $params);
@@ -16624,23 +16204,15 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("navigation.mobiscroll") {
   @include mbsc-mobiscroll-navigation(mobiscroll, $mbsc-mobiscroll-colors);
 }
 
 
-
 // scrollview component
 
 
-
-
 // optionlist component
-
-
-
-
 
 
 @mixin mbsc-ios-optionlist($theme, $params) {
@@ -16650,17 +16222,9 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
 @include exports("optionlist.ios") {
   @include mbsc-ios-optionlist(ios, (background: $mbsc-ios-background, text: $mbsc-ios-text, accent: $mbsc-ios-accent));
 }
-
-
-
-
-
 
 
 @mixin mbsc-mobiscroll-optionlist($theme, $params) {
@@ -16670,18 +16234,12 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("optionlist.mobiscroll") {
   @include mbsc-mobiscroll-optionlist(mobiscroll, (background: $mbsc-mobiscroll-background, text: $mbsc-mobiscroll-text, accent: $mbsc-mobiscroll-accent));
 }
 
 
-
 // cards component
-
-
-
-
 
 
 // Theme specific variables - inherited from global
@@ -16695,12 +16253,12 @@ $mbsc-ios-dark-card-text: $mbsc-card-text-dark !default;
 
 // add variables to color maps
 $mbsc-ios-colors: map-merge($mbsc-ios-colors, (
-  'card-background': $mbsc-ios-card-background,
-  'card-text': $mbsc-ios-card-text,
+        'card-background': $mbsc-ios-card-background,
+        'card-text': $mbsc-ios-card-text,
 ));
 $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
-  'card-background': $mbsc-ios-dark-card-background,
-  'card-text': $mbsc-ios-dark-card-text,
+        'card-background': $mbsc-ios-dark-card-background,
+        'card-text': $mbsc-ios-dark-card-text,
 ));
 
 @mixin mbsc-ios-cards($theme, $params) {
@@ -16723,8 +16281,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
       $card-background: $background-param;
       // recalc dependent color
       $background-limited: hsl(hue($background), saturation($background), max(lightness($background), 3%));
-    }
-    @else {
+    } @else {
       $card-background: lighten($background-limited, 3%);
     }
 
@@ -16736,16 +16293,15 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     $border-color: '';
     @if (lightness($background) > 50%) {
       $border-color: darken($background-limited, 17%);
-    }
-    @else {
+    } @else {
       $border-color: lighten($background, 20%);
     }
 
 
     .mbsc-#{$theme} {
       &.mbsc-card.mbsc-form
-      // &.mbsc-card .mbsc-input,
-      // &.mbsc-card .mbsc-progress
+        // &.mbsc-card .mbsc-input,
+        // &.mbsc-card .mbsc-progress
       {
         color: $text;
         background: $card-background;
@@ -16774,9 +16330,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
     }
   }
 }
-
-
-
 
 
 @include exports("cards") {
@@ -16962,11 +16515,6 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, (
 }
 
 
-
-
-
-
-
 // Theme specific variables - inherited from global
 
 // background
@@ -16978,12 +16526,12 @@ $mbsc-mobiscroll-dark-card-text: $mbsc-card-text-dark !default;
 
 // add variables to color maps
 $mbsc-mobiscroll-colors: map-merge($mbsc-mobiscroll-colors, (
-  'card-background': $mbsc-mobiscroll-card-background,
-  'card-text': $mbsc-mobiscroll-card-text,
+        'card-background': $mbsc-mobiscroll-card-background,
+        'card-text': $mbsc-mobiscroll-card-text,
 ));
 $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
-  'card-background': $mbsc-mobiscroll-dark-card-background,
-  'card-text': $mbsc-mobiscroll-dark-card-text,
+        'card-background': $mbsc-mobiscroll-dark-card-background,
+        'card-text': $mbsc-mobiscroll-dark-card-text,
 ));
 
 @mixin mbsc-mobiscroll-cards($theme, $params) {
@@ -17004,8 +16552,7 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
     $border: '';
     @if (lightness($background) > 50%) {
       $border: darken($background, 17%);
-    }
-    @else {
+    } @else {
       $border: lighten($background, 17%);
     }
 
@@ -17040,7 +16587,6 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 @include exports("cards.mobiscroll") {
   .mbsc-mobiscroll {
     &.mbsc-card.mbsc-form {
@@ -17052,14 +16598,10 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
 // popup component
 
 
-
-
 // grid-layout component
-
 
 
 @mixin mbsc-grid-sm() {
@@ -18382,70 +17924,65 @@ $mbsc-mobiscroll-dark-colors: map-merge($mbsc-mobiscroll-dark-colors, (
 }
 
 
-
-
-
-
-
 // Theme builder function for ios theme
 
 @mixin mbsc-ios-theme($theme, $colors) {
-    @include mbsc-ios-select($theme, $colors);
-    @include mbsc-ios-datetime($theme, $colors);
-    @include mbsc-ios-image($theme, $colors);
-    @include mbsc-ios-treelist($theme, $colors);
-    @include mbsc-ios-calendar($theme, $colors);
-    @include mbsc-ios-timespan($theme, $colors);
-    @include mbsc-ios-timer($theme, $colors);
-    @include mbsc-ios-color($theme, $colors);
-    @include mbsc-ios-range($theme, $colors);
-    @include mbsc-ios-scroller($theme, $colors);
-    @include mbsc-ios-listview($theme, $colors);
-    @include mbsc-ios-number($theme, $colors);
-    @include mbsc-ios-numpad($theme, $colors);
-    @include mbsc-ios-forms($theme, $colors);
-    @include mbsc-ios-eventcalendar($theme, $colors);
-    @include mbsc-ios-measurement($theme, $colors);
-    @include mbsc-ios-navigation($theme, $colors);
-    @include mbsc-ios-scrollview($theme, $colors);
-    @include mbsc-ios-optionlist($theme, $colors);
-    @include mbsc-ios-cards($theme, $colors);
-    @include mbsc-ios-popup($theme, $colors);
+  @include mbsc-ios-select($theme, $colors);
+  @include mbsc-ios-datetime($theme, $colors);
+  @include mbsc-ios-image($theme, $colors);
+  @include mbsc-ios-treelist($theme, $colors);
+  @include mbsc-ios-calendar($theme, $colors);
+  @include mbsc-ios-timespan($theme, $colors);
+  @include mbsc-ios-timer($theme, $colors);
+  @include mbsc-ios-color($theme, $colors);
+  @include mbsc-ios-range($theme, $colors);
+  @include mbsc-ios-scroller($theme, $colors);
+  @include mbsc-ios-listview($theme, $colors);
+  @include mbsc-ios-number($theme, $colors);
+  @include mbsc-ios-numpad($theme, $colors);
+  @include mbsc-ios-forms($theme, $colors);
+  @include mbsc-ios-eventcalendar($theme, $colors);
+  @include mbsc-ios-measurement($theme, $colors);
+  @include mbsc-ios-navigation($theme, $colors);
+  @include mbsc-ios-scrollview($theme, $colors);
+  @include mbsc-ios-optionlist($theme, $colors);
+  @include mbsc-ios-cards($theme, $colors);
+  @include mbsc-ios-popup($theme, $colors);
 }
 
 // Theme builder function for mobiscroll theme
 
 @mixin mbsc-mobiscroll-theme($theme, $colors) {
-    @include mbsc-mobiscroll-select($theme, $colors);
-    @include mbsc-mobiscroll-datetime($theme, $colors);
-    @include mbsc-mobiscroll-image($theme, $colors);
-    @include mbsc-mobiscroll-treelist($theme, $colors);
-    @include mbsc-mobiscroll-calendar($theme, $colors);
-    @include mbsc-mobiscroll-timespan($theme, $colors);
-    @include mbsc-mobiscroll-timer($theme, $colors);
-    @include mbsc-mobiscroll-color($theme, $colors);
-    @include mbsc-mobiscroll-range($theme, $colors);
-    @include mbsc-mobiscroll-scroller($theme, $colors);
-    @include mbsc-mobiscroll-listview($theme, $colors);
-    @include mbsc-mobiscroll-number($theme, $colors);
-    @include mbsc-mobiscroll-numpad($theme, $colors);
-    @include mbsc-mobiscroll-forms($theme, $colors);
-    @include mbsc-mobiscroll-eventcalendar($theme, $colors);
-    @include mbsc-mobiscroll-measurement($theme, $colors);
-    @include mbsc-mobiscroll-navigation($theme, $colors);
-    @include mbsc-mobiscroll-scrollview($theme, $colors);
-    @include mbsc-mobiscroll-optionlist($theme, $colors);
-    @include mbsc-mobiscroll-cards($theme, $colors);
-    @include mbsc-mobiscroll-popup($theme, $colors);
+  @include mbsc-mobiscroll-select($theme, $colors);
+  @include mbsc-mobiscroll-datetime($theme, $colors);
+  @include mbsc-mobiscroll-image($theme, $colors);
+  @include mbsc-mobiscroll-treelist($theme, $colors);
+  @include mbsc-mobiscroll-calendar($theme, $colors);
+  @include mbsc-mobiscroll-timespan($theme, $colors);
+  @include mbsc-mobiscroll-timer($theme, $colors);
+  @include mbsc-mobiscroll-color($theme, $colors);
+  @include mbsc-mobiscroll-range($theme, $colors);
+  @include mbsc-mobiscroll-scroller($theme, $colors);
+  @include mbsc-mobiscroll-listview($theme, $colors);
+  @include mbsc-mobiscroll-number($theme, $colors);
+  @include mbsc-mobiscroll-numpad($theme, $colors);
+  @include mbsc-mobiscroll-forms($theme, $colors);
+  @include mbsc-mobiscroll-eventcalendar($theme, $colors);
+  @include mbsc-mobiscroll-measurement($theme, $colors);
+  @include mbsc-mobiscroll-navigation($theme, $colors);
+  @include mbsc-mobiscroll-scrollview($theme, $colors);
+  @include mbsc-mobiscroll-optionlist($theme, $colors);
+  @include mbsc-mobiscroll-cards($theme, $colors);
+  @include mbsc-mobiscroll-popup($theme, $colors);
 }
 
 @mixin mbsc-custom-theme($theme, $base-theme, $colors) {
-    @if $base-theme==ios {
-        @include mbsc-ios-theme($theme, $colors);
-    }
-    @if $base-theme==mobiscroll {
-        @include mbsc-mobiscroll-theme($theme, $colors);
-    }
+  @if $base-theme==ios {
+    @include mbsc-ios-theme($theme, $colors);
+  }
+  @if $base-theme==mobiscroll {
+    @include mbsc-mobiscroll-theme($theme, $colors);
+  }
 }
 
 @include mbsc-mobiscroll-theme(mobiscroll-dark, $mbsc-mobiscroll-dark-colors);

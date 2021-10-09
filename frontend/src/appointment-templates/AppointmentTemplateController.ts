@@ -19,43 +19,23 @@ type AppointmentTemplateDataElements = {
     providers: any[] | null,
     oldEvent: any | null,
     tempEvent: any,
-    currentFirstDate:number,
-    currentFirstDateDayNumber:number,
-    currentLastDate:number
+    currentFirstDate: number,
+    currentFirstDateDayNumber: number,
+    currentLastDate: number
 }
 
 export class AppointmentTemplateController implements StateChangeListener {
     private static _instance: AppointmentTemplateController;
-
-    public static getInstance(): AppointmentTemplateController {
-        if (!(AppointmentTemplateController._instance)) {
-            AppointmentTemplateController._instance = new AppointmentTemplateController();
-        }
-        return AppointmentTemplateController._instance;
-    }
-
-
-
     private dataElements: AppointmentTemplateDataElements = {
         appointmentTypes: null,
         clinicConfig: null,
         providers: null,
         oldEvent: null,
         tempEvent: {},
-        currentFirstDate:0,
-        currentLastDate:0,
-        currentFirstDateDayNumber:1
+        currentFirstDate: 0,
+        currentLastDate: 0,
+        currentFirstDateDayNumber: 1
     };
-
-    public getModel(): AppointmentTemplateDataElements {
-        return this.dataElements;
-    }
-
-    public onDocumentLoaded() {
-        AppointmentTemplateView.getInstance().onDocumentLoaded();
-        AppointmentTemplateFilterView.getInstance().onDocumentLoaded();
-    }
-
 
     private constructor() {
         this.onPageLoading = this.onPageLoading.bind(this);
@@ -65,6 +45,22 @@ export class AppointmentTemplateController implements StateChangeListener {
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.providers, this);
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.appointmentTemplates, this);
 
+    }
+
+    public static getInstance(): AppointmentTemplateController {
+        if (!(AppointmentTemplateController._instance)) {
+            AppointmentTemplateController._instance = new AppointmentTemplateController();
+        }
+        return AppointmentTemplateController._instance;
+    }
+
+    public getModel(): AppointmentTemplateDataElements {
+        return this.dataElements;
+    }
+
+    public onDocumentLoaded() {
+        AppointmentTemplateView.getInstance().onDocumentLoaded();
+        AppointmentTemplateFilterView.getInstance().onDocumentLoaded();
     }
 
     public getIconForAppointmentType(appointmentType: string) {
@@ -97,16 +93,17 @@ export class AppointmentTemplateController implements StateChangeListener {
     }
 
     public getColourForAppointmentTemplate(appointment: any) {
-        return this.getColourForAppointmentType(appointment.type);;
+        return this.getColourForAppointmentType(appointment.type);
+
     }
 
-    public getEventForAppointmentTemplateForDate(startDate:number, dayNumber:number, template:any):any {
+    public getEventForAppointmentTemplateForDate(startDate: number, dayNumber: number, template: any): any {
         logger(`Creating event for appointment template on date ${startDate} with ${dayNumber}`);
         logger(template);
         if (template.day < dayNumber) return null;
         const loadDate = startDate + (template.day - dayNumber);
 
-        const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(template.time,template.duration);
+        const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(template.time, template.duration);
 
 
         let result = {
@@ -131,15 +128,14 @@ export class AppointmentTemplateController implements StateChangeListener {
     }
 
 
-    public getEventForAppointmentTemplate(template:any):any {
+    public getEventForAppointmentTemplate(template: any): any {
         logger(`Creating event for appointment template with first day number of ${this.dataElements.currentFirstDateDayNumber}`);
         logger(template);
         if (template.day < this.dataElements.currentFirstDateDayNumber) return null;
         const loadDate = this.dataElements.currentFirstDate + (template.day - this.dataElements.currentFirstDateDayNumber);
 
 
-
-        let result = this.getEventForAppointmentTemplateForDate(loadDate,template.day,template);
+        let result = this.getEventForAppointmentTemplateForDate(loadDate, template.day, template);
         logger('Converted to template event');
         logger(result);
 
@@ -153,7 +149,7 @@ export class AppointmentTemplateController implements StateChangeListener {
         this.dataElements.currentFirstDate = parseInt(moment(event.firstDay).format('YYYYMMDD'));
         this.dataElements.currentFirstDateDayNumber = parseInt(moment(event.firstDay).format('d'));
         this.dataElements.currentLastDate = parseInt(moment(event.lastDay).format('YYYYMMDD')) - 1;
-        logger(`Need to load date range (${this.dataElements.currentFirstDate},${this.dataElements.currentLastDate }) starting with day ${this.dataElements.currentFirstDateDayNumber}`);
+        logger(`Need to load date range (${this.dataElements.currentFirstDate},${this.dataElements.currentLastDate}) starting with day ${this.dataElements.currentFirstDateDayNumber}`);
 
 
         const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);

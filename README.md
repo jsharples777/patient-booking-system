@@ -1,10 +1,12 @@
 # Fitness Tracker     [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
         include: [
           path.join(__dirname, '../src'), // + any other paths that need to be transpiled
           /\/node_modules\/ui-framework-jps/,
         ],
 
 # Table of Contents
+
 - [Project Description](#project-description)
 - [Installation Instructions](#installation-instructions)
 - [Configuration Variables](#configuration-variables)
@@ -16,26 +18,33 @@
 - [Questions](#questions)
 - [License](#license)
 
-
 # Project Description
-This [web application](https://fitness-tracker-jps.herokuapp.com/) allows the user to register and start tracking their workouts.
+
+This [web application](https://fitness-tracker-jps.herokuapp.com/) allows the user to register and start tracking their
+workouts.
 
 The user is presented with:
+
 1. A dashboard carousel showing their latest current workout and can scroll through and see their previous workouts.
-2. Through the navigation, and buttons on their workouts, they can access all types of exercise (cardio/strength) created by any user;
-3. Add their own named exercise, delete their own exercises, and edit the details on an exercise (distance and duration for cardio, sets/reps/weight and duration for strength based);
+2. Through the navigation, and buttons on their workouts, they can access all types of exercise (cardio/strength)
+   created by any user;
+3. Add their own named exercise, delete their own exercises, and edit the details on an exercise (distance and duration
+   for cardio, sets/reps/weight and duration for strength based);
 4. They can easily add exercises to the current active workout by:
     - clicking on the "transfer" button from the exercise type list;
     - dragging an exercise type to the current workout if open;
-    - copying the exercises from a previous workout in the their dashboard in one easy click, or access the right click menu
-5. View a graphical summary of their last seven workouts to track their progress.   
+    - copying the exercises from a previous workout in the their dashboard in one easy click, or access the right click
+      menu
+5. View a graphical summary of their last seven workouts to track their progress.
 
 A logged in user also has access to:
-1.  A user search function (by username) to find other users of the website
-2.  The ability to create chat sessions with users, including group chats
-3.  A user can leave a chat at any time
-4.  A user can note some users as favourites, and will be notified if a user in their favourite list logs in/out
-5.  A user can note some users as blocked, preventing those users from invite them to chat rooms and sending them messages
+
+1. A user search function (by username) to find other users of the website
+2. The ability to create chat sessions with users, including group chats
+3. A user can leave a chat at any time
+4. A user can note some users as favourites, and will be notified if a user in their favourite list logs in/out
+5. A user can note some users as blocked, preventing those users from invite them to chat rooms and sending them
+   messages
 
 As a technical note, the chat sessions are persisted and offline messages are received on login.
 
@@ -43,17 +52,21 @@ If the user is idle, the session expires in 24 hours.
 
 # Installation Instructions
 
-1.  Install [node.js](http://nodejs.org)
-2.  Using the installed Node Package Manager `npm`, execute `npm install`  in the `frontend` directory, and again in the `backend` directory.
-3.  In the `frontend` directory, execute `npm run build.prod`, to build the webpacks for the backend `public/js` directory.
-4.  In the `backend` directory, execute `npm run build`, to build the `.js` files from the Typescript, which are compiled to the `dist` directory.
-5.  Configure the `.env` file with the specifics of your database, configuration files, and other parameters (message queue persistence, room timeouts):
+1. Install [node.js](http://nodejs.org)
+2. Using the installed Node Package Manager `npm`, execute `npm install`  in the `frontend` directory, and again in
+   the `backend` directory.
+3. In the `frontend` directory, execute `npm run build.prod`, to build the webpacks for the backend `public/js`
+   directory.
+4. In the `backend` directory, execute `npm run build`, to build the `.js` files from the Typescript, which are compiled
+   to the `dist` directory.
+5. Configure the `.env` file with the specifics of your database, configuration files, and other parameters (message
+   queue persistence, room timeouts):
 
 # Configuration Variables
 
 `API_SERVER_URL` - URL of the server completing the API calls (default `blank`)
 
-`DB_URL` - address and access to the Mongo server machine 
+`DB_URL` - address and access to the Mongo server machine
 
 `DEBUG` - activate debug output (sub-options are space separated names (e.g. `server socket db api route message-queue`)
 
@@ -94,8 +107,8 @@ FROM non-Blocked users when I log back in, with notifications telling me what I 
 
 ## How to contribute
 
-Please access the [Questions](#questions) section to send me an email, or access the repository link if you wish to help contribute to this project.
-
+Please access the [Questions](#questions) section to send me an email, or access the repository link if you wish to help
+contribute to this project.
 
 # Technology
 
@@ -121,10 +134,9 @@ Please access the [Questions](#questions) section to send me an email, or access
 21. [Chart.js](https://www.chartjs.org/)
 22. [Bootstrap 4 Round Buttons](https://www.geeksforgeeks.org/how-to-get-circular-buttons-in-bootstrap-4/)
 
-
 # Questions
 
->  **Direct your questions about this project to:**
+> **Direct your questions about this project to:**
 >
 >  *GitHub:* [Github Project Link](https://github.com/jsharples777/fitness-tracker)
 >
@@ -133,4 +145,6 @@ Please access the [Questions](#questions) section to send me an email, or access
 # License
 
 ### [MIT License](https://opensource.org/licenses/MIT)
-A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.
+
+A short and simple permissive license with conditions only requiring preservation of copyright and license notices.
+Licensed works, modifications, and larger works may be distributed under different terms and without source code.

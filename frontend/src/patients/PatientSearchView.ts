@@ -3,6 +3,7 @@ import {
     AbstractStatefulCollectionView,
     BrowserStorageStateManager,
     CollectionViewDOMConfig,
+    isSameMongo,
     KeyType,
     ListViewRenderer,
     Modifier,
@@ -10,14 +11,13 @@ import {
     View
 } from "ui-framework-jps";
 import {DRAGGABLE, STATE_NAMES, VIEW_NAME} from "../AppTypes";
-import {isSameMongo} from "../EqualityFunctions";
 import Controller from "../Controller";
 
 
 const vLogger = debug('patient-search');
 const vLoggerDetail = debug('patient-search-detail');
 
-export class PatientSearchView extends AbstractStatefulCollectionView  {
+export class PatientSearchView extends AbstractStatefulCollectionView {
     static fastSearchInputId: string = 'fastPatientSearch';
     static dataLimit: number = 20;
     static DOMConfig: CollectionViewDOMConfig = {
@@ -48,7 +48,7 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
             containerClasses: 'd-flex w-100 justify-content-between',
             textElement: {
                 classes: 'mb-1',
-                type:'span',
+                type: 'span',
             },
             select: true,
             quickDelete: true,
@@ -79,11 +79,10 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
         this.itemDeleted = this.itemDeleted.bind(this);
 
         // register state change listening
-        this.localisedSM = new BrowserStorageStateManager(true,true,isSameMongo);
+        this.localisedSM = new BrowserStorageStateManager(true, true, isSameMongo);
         this.localisedSM.addChangeListenerForName(STATE_NAMES.recentPatientSearches, this);
 
     }
-
 
 
     onDocumentLoaded() {
@@ -141,7 +140,7 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
             this.localisedSM.removeItemFromState(STATE_NAMES.recentPatientSearches, item, true);
         }
 
-        const patient = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch,{_id:ui.item.value});
+        const patient = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch, {_id: ui.item.value});
         // save the searches
         this.localisedSM.addNewItemToState(STATE_NAMES.recentPatientSearches, patient, true);
     }
@@ -174,7 +173,6 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
     }
 
 
-
     compareItemsForEquality(item1: any, item2: any): boolean {
         return isSameMongo(item1, item2);
     }
@@ -184,9 +182,6 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
         vLogger(`Recent search patient ${selectedItem.firstname} with id ${selectedItem.id} deleted - removing`);
         this.localisedSM.removeItemFromState(STATE_NAMES.recentPatientSearches, selectedItem, true);
     }
-
-
-
 
 
 }

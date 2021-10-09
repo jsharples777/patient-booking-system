@@ -101,7 +101,10 @@ export function setupPassport(passport: any) {
             };
 
 
-            db.collection(collection).findOne({username: username, isCurrent:true}, projection).then((user: Document | null) => {
+            db.collection(collection).findOne({
+                username: username,
+                isCurrent: true
+            }, projection).then((user: Document | null) => {
                 logger(user);
                 if (!user) {
                     return done(null, false, {
@@ -148,7 +151,10 @@ export function setupPassport(passport: any) {
             };
 
 
-            db.collection(collection).findOne({username: username, isCurrent:true}, projection).then((user: Document | null) => {
+            db.collection(collection).findOne({
+                username: username,
+                isCurrent: true
+            }, projection).then((user: Document | null) => {
                 logger(user);
                 if (!user) {
                     return done(null, false, {
@@ -167,7 +173,7 @@ export function setupPassport(passport: any) {
 
                 user.password = generateHash(req.body.newPassword);
 
-                db.collection(collection).replaceOne({_id: user._id},user).then((result) => {
+                db.collection(collection).replaceOne({_id: user._id}, user).then((result) => {
                     logger(result);
 
                     return done(null, user);
@@ -199,7 +205,7 @@ export function setupPassport(passport: any) {
                 isAdmin: 1
             }
         };
-        db.collection(collection).findOne({_id:id},projection).then((user) => {
+        db.collection(collection).findOne({_id: id}, projection).then((user) => {
             if (user) {
                 done(null, user);
             } else {

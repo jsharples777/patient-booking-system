@@ -1,6 +1,6 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+    return (mod && mod.__esModule) ? mod : {"default": mod};
 };
 const express_1 = __importDefault(require("express"));
 const MongoDataSource_1 = require("../../db/MongoDataSource");
@@ -11,7 +11,8 @@ const logger = debug_1.default('api-users');
 router.get('/', (req, res) => {
     // find all exercise types
     const collection = process.env.DB_COLLECTION_ACCOUNTS || 'accounts';
-    const projection = { projection: {
+    const projection = {
+        projection: {
             _id: 1,
             username: 1,
         }
@@ -21,9 +22,9 @@ router.get('/', (req, res) => {
         res.json(results);
     })
         .catch((err) => {
-        logger(err);
-        res.status(400).json(err);
-    });
+            logger(err);
+            res.status(400).json(err);
+        });
 });
 module.exports = router;
 //# sourceMappingURL=user-routes.js.map

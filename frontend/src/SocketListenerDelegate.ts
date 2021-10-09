@@ -1,5 +1,3 @@
-
-
 import debug from 'debug';
 
 

@@ -18,10 +18,10 @@ export const STATE_NAMES = {
     recentPatientSearches: 'recentPatientSearches',
     appointments: 'appointment',
     appointmentTypes: 'appointmentType',
-    clinicConfig:'clinicConfig',
-    providers:'provider',
-    appointmentTemplates:'appointmentTemplate',
-    patients:'patient'
+    clinicConfig: 'clinicConfig',
+    providers: 'provider',
+    appointmentTemplates: 'appointmentTemplate',
+    patients: 'patient'
 }
 
 export const API_Config = {
@@ -46,7 +46,7 @@ export const NAVIGATION = {
 export const DRAGGABLE = {
     typeUser: 'user',
     fromUserSearch: 'userSearch',
-    typePatientSummary:'patientSummary',
+    typePatientSummary: 'patientSummary',
     fromPatientSearch: 'patientSearch'
 }
 
@@ -63,36 +63,35 @@ export const VIEW_NAME = {
 
 export const VIEW_CONTAINER = {
     calendarControl: 'calendarControl',
-    calendarDetail:'calendarDetail'
+    calendarDetail: 'calendarDetail'
 }
 
 
-
-export const  PatientSearchSidebarPrefs: SidebarPrefs = {
+export const PatientSearchSidebarPrefs: SidebarPrefs = {
     id: 'patientSearchSideBar',
     expandedSize: '40%',
     location: SidebarLocation.left
 }
 
-export const  PatientSearchSidebarContainers = {
+export const PatientSearchSidebarContainers = {
     container: 'recentPatientSearches',
 }
 
-export const  AppointmentTypesSidebarPrefs: SidebarPrefs = {
+export const AppointmentTypesSidebarPrefs: SidebarPrefs = {
     id: 'appointmentTypesSideBar',
     expandedSize: '50%',
     location: SidebarLocation.left
 }
 
-export const  AppointmentTypesSidebarContainers = {
+export const AppointmentTypesSidebarContainers = {
     list: 'appointmentTypes',
     detail: 'appointmentTypeDetail',
-    colourPicker:'appointmentTypeColour'
+    colourPicker: 'appointmentTypeColour'
 }
 
 
 export const SELECT = {
-    appointmentType : 'event-appt-type',
-    patientSearch : 'event-patient'
+    appointmentType: 'event-appt-type',
+    patientSearch: 'event-patient'
 }
 

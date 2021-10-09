@@ -1,5 +1,5 @@
-import {SELECT, STATE_NAMES} from "../AppTypes";
-import {datepicker, getInst, Popup, popup, select, snackbar} from "@mobiscroll/javascript";
+import {STATE_NAMES} from "../AppTypes";
+import {datepicker, Popup, popup, select, snackbar} from "@mobiscroll/javascript";
 import {AppointmentTemplateController} from "./AppointmentTemplateController";
 import Controller from "../Controller";
 import moment from "moment";
@@ -23,15 +23,6 @@ type AppointmentTemplateDetailViewElements = {
 export class AppointmentTemplateDetailModal {
 
     private static _instance: AppointmentTemplateDetailModal;
-
-    public static getInstance(): AppointmentTemplateDetailModal {
-        if (!(AppointmentTemplateDetailModal._instance)) {
-            AppointmentTemplateDetailModal._instance = new AppointmentTemplateDetailModal();
-        }
-        return AppointmentTemplateDetailModal._instance;
-    }
-
-
     private static datePickerResponsive = {
         medium: {
             controls: ['calendar'],
@@ -44,13 +35,7 @@ export class AppointmentTemplateDetailModal {
             touchUi: false
         }
     }
-
     private patients: any[];
-
-    private constructor() {
-        this.patients = [];
-    }
-
     private viewElements: AppointmentTemplateDetailViewElements = {
         popup: null,
         range: null,
@@ -58,6 +43,17 @@ export class AppointmentTemplateDetailModal {
         appointmentTypeEl: null,
         appointmentTypeDropdown: null,
         providersDropdown: null
+    }
+
+    private constructor() {
+        this.patients = [];
+    }
+
+    public static getInstance(): AppointmentTemplateDetailModal {
+        if (!(AppointmentTemplateDetailModal._instance)) {
+            AppointmentTemplateDetailModal._instance = new AppointmentTemplateDetailModal();
+        }
+        return AppointmentTemplateDetailModal._instance;
     }
 
     public close() {
@@ -81,7 +77,7 @@ export class AppointmentTemplateDetailModal {
         this.viewElements.deleteButton = <HTMLButtonElement>document.getElementById('event-delete-template');
         this.viewElements.appointmentTypeEl = <HTMLSelectElement>document.getElementById('event-appt-type-template');
 
-        
+
         // @ts-ignore
         this.viewElements.popup = popup('#add-appointment-template-popup', {
             display: 'bottom',
@@ -163,7 +159,7 @@ export class AppointmentTemplateDetailModal {
                 {
                     text: 'Cancel',
                     keyCode: 'esc',
-                    handler: function() {
+                    handler: function () {
                         AppointmentTemplateView.getInstance().getCalender().removeEvent(AppointmentTemplateController.getInstance().getModel().tempEvent);
                     }
                 },
@@ -247,7 +243,7 @@ export class AppointmentTemplateDetailModal {
                 {
                     text: 'Cancel',
                     keyCode: 'esc',
-                    handler: function() {
+                    handler: function () {
                         AppointmentTemplateView.getInstance().getCalender().updateEvent(AppointmentTemplateController.getInstance().getModel().oldEvent);
                     }
                 },
@@ -273,7 +269,7 @@ export class AppointmentTemplateDetailModal {
                             type: ev.type,
                             provider: ev.provider
                         };
-                        
+
                         // @ts-ignore
                         updatedEvent.color = AppointmentTemplateController.getInstance().getColourForAppointmentTemplate(updatedEvent);
                         logger('updated');

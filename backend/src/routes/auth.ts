@@ -1,7 +1,7 @@
-import {Request,Response} from "express";
+import {Request, Response} from "express";
 
-export function ensureAuthenticated(req:Request, res:Response
-                             , next: () => any) {
+export function ensureAuthenticated(req: Request, res: Response
+    , next: () => any) {
     if (req.isAuthenticated()) {
         return next();
     }

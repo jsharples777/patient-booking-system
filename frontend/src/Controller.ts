@@ -2,7 +2,6 @@ import debug from 'debug';
 import SocketListenerDelegate from "./SocketListenerDelegate";
 import {API_Config, STATE_NAMES} from "./AppTypes";
 import {v4} from "uuid";
-import {isSameMongo} from "./EqualityFunctions";
 import {
     AggregateStateManager,
     AsyncStateManagerWrapper,
@@ -11,12 +10,14 @@ import {
     DataObjectController,
     DataObjectDefinition,
     DataObjectListener,
-    DownloadManager, FieldDefinition, FieldType,
-    GraphQLApiStateManager, KeyType,
+    DownloadManager,
+    FieldType,
+    GraphQLApiStateManager,
+    isSameMongo,
     MemoryBufferStateManager,
-    NotificationController, ObjectDefinitionRegistry,
+    NotificationController,
+    ObjectDefinitionRegistry,
     RESTApiStateManager,
-    SimpleValueDataSource,
     SocketManager,
     StateChangeListener,
     StateManager
@@ -149,9 +150,6 @@ export default class Controller implements StateChangeListener, DataObjectListen
         '    }\n' +
         '  }\n' +
         '}'
-
-
-
 
 
     private static _instance: Controller;
@@ -336,9 +334,9 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
         aggregateSM.addStateManager(memorySM, [], false);
         //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patients], false);
-        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates], false);
+        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments, STATE_NAMES.patientSearch, STATE_NAMES.recentPatientSearches, STATE_NAMES.appointmentTypes, STATE_NAMES.providers, STATE_NAMES.appointmentTemplates], false);
         //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
-        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig,STATE_NAMES.patients], false);
+        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users, STATE_NAMES.clinicConfig, STATE_NAMES.patients], false);
         this.stateManager = aggregateSM;
 
         // state listener
@@ -510,6 +508,9 @@ export default class Controller implements StateChangeListener, DataObjectListen
         }
     }
 
+    filterResults(managerName: string, name: string, filterResults: any): void {
+    }
+
     private setupDataObjectDefinitions() {
         // create the object definitions for the exercise type and workout
         let apptTypeDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.appointmentTypes, 'Appointment Type', true, true, false, '_id');
@@ -521,9 +522,6 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
         cLogger(`Appointment type data object definition`);
         cLogger(apptTypeDef);
-
-
-
 
 
         // let workoutDefinition: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.workouts, 'Workout', true, true, true, '_id');
@@ -553,9 +551,6 @@ export default class Controller implements StateChangeListener, DataObjectListen
             result = window.ENV.serverURL;
         }
         return result;
-    }
-
-    filterResults(managerName: string, name: string, filterResults: any): void {
     }
 
 }

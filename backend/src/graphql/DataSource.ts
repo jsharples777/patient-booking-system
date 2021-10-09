@@ -1,4 +1,3 @@
-
 import debug from 'debug';
 import fs from 'fs';
 import {ApolloServer} from 'apollo-server-express';
@@ -16,38 +15,37 @@ export default class DataSource {
     protected apolloServer: ApolloServer;
 
 
-
-    constructor(serverApp:Express) {
+    constructor(serverApp: Express) {
 
         let resolvers = {
             Query: {
-                getAppointments:AppointmentsQLDelegate.getAppointments,
-                getPatientSearchDetails:PatientsQLDelegate.getPatientSearchDetails,
-                getAppointmentTypes:AppointmentTypesQLDelegate.getAppointmentTypes,
-                getProviders:ProvidersQLDelegate.getProviders,
-                getAppointmentTemplates:AppointmentTemplatesQLDelegate.getAppointmentTemplates,
-                getPatient:PatientsQLDelegate.getPatient
+                getAppointments: AppointmentsQLDelegate.getAppointments,
+                getPatientSearchDetails: PatientsQLDelegate.getPatientSearchDetails,
+                getAppointmentTypes: AppointmentTypesQLDelegate.getAppointmentTypes,
+                getProviders: ProvidersQLDelegate.getProviders,
+                getAppointmentTemplates: AppointmentTemplatesQLDelegate.getAppointmentTemplates,
+                getPatient: PatientsQLDelegate.getPatient
             },
             Mutation: {
-                addAppointment:AppointmentsQLDelegate.addAppointment,
-                updateAppointment:AppointmentsQLDelegate.updateAppointment,
-                deleteAppointment:AppointmentsQLDelegate.deleteAppointment,
-                addAppointmentType:AppointmentTypesQLDelegate.addAppointmentType,
-                updateAppointmentType:AppointmentTypesQLDelegate.updateAppointmentType,
-                deleteAppointmentType:AppointmentTypesQLDelegate.deleteAppointmentType,
-                addProvider:ProvidersQLDelegate.addProvider,
-                updateProvider:ProvidersQLDelegate.updateProvider,
-                deleteProvider:ProvidersQLDelegate.deleteProvider,
-                addAppointmentTemplate:AppointmentTemplatesQLDelegate.addAppointmentTemplate,
-                updateAppointmentTemplate:AppointmentTemplatesQLDelegate.updateAppointmentTemplate,
-                deleteAppointmentTemplate:AppointmentTemplatesQLDelegate.deleteAppointmentTemplate,
-                addPatient:PatientsQLDelegate.addPatient,
-                updatePatient:PatientsQLDelegate.updatePatient,
+                addAppointment: AppointmentsQLDelegate.addAppointment,
+                updateAppointment: AppointmentsQLDelegate.updateAppointment,
+                deleteAppointment: AppointmentsQLDelegate.deleteAppointment,
+                addAppointmentType: AppointmentTypesQLDelegate.addAppointmentType,
+                updateAppointmentType: AppointmentTypesQLDelegate.updateAppointmentType,
+                deleteAppointmentType: AppointmentTypesQLDelegate.deleteAppointmentType,
+                addProvider: ProvidersQLDelegate.addProvider,
+                updateProvider: ProvidersQLDelegate.updateProvider,
+                deleteProvider: ProvidersQLDelegate.deleteProvider,
+                addAppointmentTemplate: AppointmentTemplatesQLDelegate.addAppointmentTemplate,
+                updateAppointmentTemplate: AppointmentTemplatesQLDelegate.updateAppointmentTemplate,
+                deleteAppointmentTemplate: AppointmentTemplatesQLDelegate.deleteAppointmentTemplate,
+                addPatient: PatientsQLDelegate.addPatient,
+                updatePatient: PatientsQLDelegate.updatePatient,
             }
         };
 
         // @ts-ignore
-        const typeDefBuffer:Buffer = fs.readFileSync(process.env.QL_SCHEMA, "utf-8");
+        const typeDefBuffer: Buffer = fs.readFileSync(process.env.QL_SCHEMA, "utf-8");
         dsLogger(typeDefBuffer);
         const isDevelopment = (process.env.MODE === 'Development');
 

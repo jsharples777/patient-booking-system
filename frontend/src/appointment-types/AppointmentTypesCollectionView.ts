@@ -11,6 +11,7 @@ import {
     ContextualInformationHelper,
     DataObjectDefinition,
     DisplayOrder,
+    isSameMongo,
     KeyType,
     Modifier,
     ObjectDefinitionRegistry,
@@ -19,7 +20,6 @@ import {
     TabularViewRendererUsingContext,
     View
 } from "ui-framework-jps";
-import {isSameMongo} from "../EqualityFunctions";
 
 
 const logger = debug('appointment-types-view');
@@ -64,8 +64,8 @@ export class AppointmentTypesCollectionView extends AbstractStatefulCollectionVi
                 return [];
             },
         },
+        sorter: AppointmentTypesCollectionView.sortAppointmentTypes
     };
-
 
     constructor(stateManager: StateManager) {
         super(AppointmentTypesCollectionView.DOMConfig, stateManager, STATE_NAMES.appointmentTypes);
@@ -93,6 +93,11 @@ export class AppointmentTypesCollectionView extends AbstractStatefulCollectionVi
         }
     }
 
+    private static sortAppointmentTypes(item1: any, item2: any) {
+        let result = -1;
+        if (item1.name > item2.name) result = 1;
+        return result;
+    }
 
     getItemDescription(from: string, item: any): string {
         let buffer = '';

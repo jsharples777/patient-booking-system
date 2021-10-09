@@ -1,37 +1,44 @@
-[{
-  "_id": {
-    "$oid": "61527d20cb82991cc863b5be"
+[
+  {
+    "_id": {
+      "$oid": "61527d20cb82991cc863b5be"
+    },
+    "name": "Urgent Appointment",
+    "colour": "rgba(200,100,10,50)"
   },
-  "name": "Urgent Appointment",
-  "colour": "rgba(200,100,10,50)"
-},{
-  "_id": {
-    "$oid": "61527e3ecb82991cc863b5bf"
+  {
+    "_id": {
+      "$oid": "61527e3ecb82991cc863b5bf"
+    },
+    "name": "Appointment",
+    "colour": "rgba(10,100,100,50)"
   },
-  "name": "Appointment",
-  "colour": "rgba(10,100,100,50)"
-},{
-  "_id": {
-    "$oid": "61527e6bcb82991cc863b5c0"
+  {
+    "_id": {
+      "$oid": "61527e6bcb82991cc863b5c0"
+    },
+    "name": "Review/Recall",
+    "colour": "rgba(10,150,100,50)"
   },
-  "name": "Review/Recall",
-  "colour": "rgba(10,150,100,50)"
-},{
-  "_id": {
-    "$oid": "61527e90cb82991cc863b5c1"
+  {
+    "_id": {
+      "$oid": "61527e90cb82991cc863b5c1"
+    },
+    "name": "Telehealth Call",
+    "colour": "rgba(100,100,0,50)"
   },
-  "name": "Telehealth Call",
-  "colour": "rgba(100,100,0,50)"
-},{
-  "_id": {
-    "$oid": "61527ea2cb82991cc863b5c2"
+  {
+    "_id": {
+      "$oid": "61527ea2cb82991cc863b5c2"
+    },
+    "name": "Consulting",
+    "colour": "rgba(100,100,200,50)"
   },
-  "name": "Consulting",
-  "colour": "rgba(100,100,200,50)"
-},{
-  "_id": {
-    "$oid": "61527eb4cb82991cc863b5c3"
-  },
-  "name": "Fluvax",
-  "colour": "rgba(100,100,100,50)"
-}]
+  {
+    "_id": {
+      "$oid": "61527eb4cb82991cc863b5c3"
+    },
+    "name": "Fluvax",
+    "colour": "rgba(100,100,100,50)"
+  }
+]

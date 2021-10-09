@@ -1,8 +1,8 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+    return (mod && mod.__esModule) ? mod : {"default": mod};
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", {value: true});
 const debug_1 = __importDefault(require("debug"));
 const fs_1 = __importDefault(require("fs"));
 const mqLogger = debug_1.default('message-queue');
@@ -11,16 +11,19 @@ var Status;
     Status[Status["LoggedOut"] = 0] = "LoggedOut";
     Status[Status["LoggedIn"] = 1] = "LoggedIn";
 })(Status || (Status = {}));
+
 class MessageQueueManager {
     constructor() {
         this.messageQueue = [];
     }
+
     static getInstance() {
         if (!MessageQueueManager._instance) {
             MessageQueueManager._instance = new MessageQueueManager();
         }
         return MessageQueueManager._instance;
     }
+
     roomHasExpired(room) {
         // remove all expired invites and messages
         mqLogger(`Removing expired room - ${room.name}`);
@@ -45,6 +48,7 @@ class MessageQueueManager {
             }
         });
     }
+
     setUserHasLoggedInAndReturnQueuedItems(username) {
         // find the user queue if any
         let queueItems = null;
@@ -62,8 +66,7 @@ class MessageQueueManager {
             // remove the queued items from memory
             queue.invites = [];
             queue.messages = [];
-        }
-        else {
+        } else {
             let queue = {
                 username: username,
                 status: Status.LoggedIn,
@@ -74,6 +77,7 @@ class MessageQueueManager {
         }
         return queueItems;
     }
+
     setUserHasLoggedOut(username) {
         // create a new queue for the user
         let queue;
@@ -84,8 +88,7 @@ class MessageQueueManager {
             queue.status = Status.LoggedOut;
             queue.invites = [];
             queue.messages = [];
-        }
-        else {
+        } else {
             queue = {
                 username: username,
                 status: Status.LoggedOut,
@@ -95,6 +98,7 @@ class MessageQueueManager {
             this.messageQueue.push(queue);
         }
     }
+
     isUserLoggedIn(username) {
         let queue;
         let result = false;
@@ -103,8 +107,7 @@ class MessageQueueManager {
             queue = this.messageQueue[index];
             mqLogger(`User ${username} is logged in ${queue.status}`);
             result = (queue.status === Status.LoggedIn);
-        }
-        else {
+        } else {
             mqLogger(`User ${username} is NOT logged in`);
             queue = {
                 username: username,
@@ -116,6 +119,7 @@ class MessageQueueManager {
         }
         return result;
     }
+
     queueInviteForUser(username, message) {
         let index = this.messageQueue.findIndex((queue) => queue.username === username);
         let queue;
@@ -124,8 +128,7 @@ class MessageQueueManager {
             if (queue.status === Status.LoggedIn)
                 return;
             queue.invites.push(message);
-        }
-        else {
+        } else {
             queue = {
                 username: username,
                 status: Status.LoggedOut,
@@ -137,6 +140,7 @@ class MessageQueueManager {
         mqLogger(`Queuing invite from ${message.from} to room ${message.room} to user ${username}`);
         queue.invites.push(message);
     }
+
     queueMessageForUser(username, message) {
         let index = this.messageQueue.findIndex((queue) => queue.username === username);
         let queue;
@@ -145,8 +149,7 @@ class MessageQueueManager {
             if (queue.status === Status.LoggedIn)
                 return;
             queue.messages.push(message);
-        }
-        else {
+        } else {
             queue = {
                 username: username,
                 status: Status.LoggedOut,
@@ -157,6 +160,7 @@ class MessageQueueManager {
         }
         mqLogger(`Queuing message from ${message.from} to room ${message.room} to user ${username}`);
     }
+
     removeAllQueuedItemsForRoom(name) {
         mqLogger(`Removing queued items for room ${name}`);
         this.messageQueue.forEach((queue) => {
@@ -178,6 +182,7 @@ class MessageQueueManager {
             }
         });
     }
+
     persistQueueAndRooms(rooms) {
         let data = {
             rooms: rooms,
@@ -191,6 +196,7 @@ class MessageQueueManager {
             }
         });
     }
+
     initialise() {
         mqLogger(`Attempting to load stored queue and rooms`);
         const fileName = process.env.MQ_FILE || './db/queue.json';
@@ -217,13 +223,13 @@ class MessageQueueManager {
                     counter--;
                 }
             }
-        }
-        catch (error) {
+        } catch (error) {
             mqLogger(error);
             mqLogger(`Invalid format - no queue or rooms restored`);
         }
         return dataObj;
     }
 }
+
 exports.default = MessageQueueManager;
 //# sourceMappingURL=MessageQueueManager.js.map

@@ -1,40 +1,47 @@
 import Controller from "../Controller";
 import debug from "debug";
 import {
-    BasicObjectDefinitionFactory, BootstrapFormConfigHelper, DataObjectController,
-    DataObjectDefinition, DataObjectListener,
+    BasicObjectDefinitionFactory,
+    DataObjectController,
+    DataObjectDefinition,
+    DataObjectListener,
     DetailView,
     DetailViewImplementation,
+    Field,
     FormDetailViewRenderer,
+    FormFieldPermissionChecker,
     LinkedCollectionDetailController,
     ObjectDefinitionRegistry,
-    ObjectPermissionChecker,
     SidebarViewContainer
 } from "ui-framework-jps";
 import {AppointmentTypesSidebarContainers, STATE_NAMES, VIEW_NAME} from "../AppTypes";
 import {AppointmentTypesCollectionView} from "./AppointmentTypesCollectionView";
-import {AppointmentTypesFormConfigHelper} from "./AppointmentTypesFormConfigHelper";
+import {BootstrapFormConfigHelper} from "ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper";
 
 
 const logger = debug('exercise-types-composite-view');
 
-export class ApptTypePermissionChecker implements ObjectPermissionChecker {
+export class ApptTypePermissionChecker implements FormFieldPermissionChecker {
     hasPermissionToUpdateItem(item: any): boolean {
-        if (item.isStatus) {
-            return false;
-        }
         return true;
     }
 
     hasPermissionToDeleteItem(item: any): boolean {
-        if (item.isStatus) {
-            return false;
+        return false;
+    }
+
+    hasPermissionToEditField(dataObj: any, field: Field): boolean {
+        let result = true;
+        if (dataObj.isStatus) {
+            if (field.getFieldDefinition().id === 'name') {
+                result = false; // cannot edit the names of the default status items
+            }
         }
-        return true;
+        return result;
     }
 }
 
-export class AppointmentTypesCompositeView implements DataObjectListener{
+export class AppointmentTypesCompositeView implements DataObjectListener {
     private sideBar: SidebarViewContainer;
 
     constructor(sideBar: SidebarViewContainer) {
@@ -48,7 +55,7 @@ export class AppointmentTypesCompositeView implements DataObjectListener{
         const apptTypeDefinition: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.appointmentTypes);
 
         if (apptTypeDefinition) {
-            let apptTypeDetailRenderer: FormDetailViewRenderer = new FormDetailViewRenderer(AppointmentTypesSidebarContainers.detail, apptTypeDefinition, new ApptTypePermissionChecker(),new AppointmentTypesFormConfigHelper(),false);
+            let apptTypeDetailRenderer: FormDetailViewRenderer = new FormDetailViewRenderer(AppointmentTypesSidebarContainers.detail, apptTypeDefinition, new ApptTypePermissionChecker(), BootstrapFormConfigHelper.getInstance(), false);
 
             let apptTypeDetailView: DetailView = new DetailViewImplementation(
                 {

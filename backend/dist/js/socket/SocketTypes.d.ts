@@ -24,10 +24,12 @@ export declare type InviteMessage = {
     subject: string;
     attachment: any;
 };
+
 export declare enum InviteType {
     ChatRoom = 0,
     ScoreSheet = 1
 }
+
 export declare type ChatUser = {
     socketId: any;
     username: string;

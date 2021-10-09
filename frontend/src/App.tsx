@@ -1,10 +1,7 @@
 import debug from 'debug';
 import Controller from './Controller';
 
-import {
-    API_Config,
-    NAVIGATION, STATE_NAMES,
-} from "./AppTypes";
+import {API_Config, NAVIGATION, STATE_NAMES,} from "./AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
 import {AppointmentController} from "./appointments/AppointmentController";
@@ -18,13 +15,8 @@ import {setOptions} from "@mobiscroll/javascript";
 import {AppointmentTemplateController} from "./appointment-templates/AppointmentTemplateController";
 import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 import {PatientSearchSidebar} from "./patients/PatientSearchSidebar";
-import {PatientSearchView} from "./patients/PatientSearchView";
 import {AppointmentTypesCompositeView} from "./appointment-types/AppointmentTypesCompositeView";
 import {AppointmentTypesSidebar} from "./appointment-types/AppointmentTypesSidebar";
-
-
-
-
 
 
 const logger = debug('app');
@@ -40,7 +32,6 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     private thisEl: HTMLDivElement | null = null;
     private chatNavigationItem: HTMLAnchorElement | null = null;
-
 
 
     public constructor() {
@@ -65,8 +56,6 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 
 
-
-
     componentDidMount(): void {
         logger('component Did Mount');
         logger('document loaded');
@@ -86,7 +75,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         Controller.getInstance().onDocumentLoaded();
 
-        Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patients,{_id:'2a8665a6-3580-4195-8ed7-0f81df551204'});
+        Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patients, {_id: '2a8665a6-3580-4195-8ed7-0f81df551204'});
 
     }
 
@@ -98,7 +87,6 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.chatSidebar.eventHide(null);
         PatientSearchSidebar.getInstance().eventHide(null);
     }
-
 
 
     handleShowChat(roomName: string | null) {
@@ -124,30 +112,34 @@ export default class App extends React.Component implements UnreadMessageCountLi
         if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
     }
 
-    protected handleShowAppointmentBook(event:Event):void {
+    protected handleShowAppointmentBook(event: Event): void {
         logger(`Showing appointment book`);
         logger(AppointmentController.getInstance().getModel().clinicConfig);
-        browserUtil.addRemoveClasses(document.getElementById('appointmentBook'),'d-none',false);
-        browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'),'d-none',true);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
 
 
     }
-    protected handleShowAppointmentTemplates(event:Event):void {
+
+    protected handleShowAppointmentTemplates(event: Event): void {
         logger(`Showing appointment templates`);
         logger(AppointmentController.getInstance().getModel().clinicConfig);
-        browserUtil.addRemoveClasses(document.getElementById('appointmentBook'),'d-none',true);
-        browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'),'d-none',false);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
 
     }
-    protected handleShowPatientRecords(event:Event):void {
+
+    protected handleShowPatientRecords(event: Event): void {
 
     }
-    protected handleShowPatientSearch(event:Event):void {
+
+    protected handleShowPatientSearch(event: Event): void {
         logger(`Showing patient search`);
         PatientSearchSidebar.getInstance().eventShow(null);
 
     }
-    protected handleShowAppointmentTypes(event:Event):void {
+
+    protected handleShowAppointmentTypes(event: Event): void {
         logger(`Showing patient search`);
         AppointmentTypesSidebar.getInstance().eventShow(null);
 
@@ -164,8 +156,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
         if (apptTypesEl) {
             apptTypesEl.addEventListener('click', this.handleShowAppointmentTypes);
         }
-        document.getElementById(NAVIGATION.patientRecords).addEventListener('click',this.handleShowPatientRecords);
-        document.getElementById(NAVIGATION.patientSearch).addEventListener('click',this.handleShowPatientSearch);
+        document.getElementById(NAVIGATION.patientRecords).addEventListener('click', this.handleShowPatientRecords);
+        document.getElementById(NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch);
 
 
         // @ts-ignore

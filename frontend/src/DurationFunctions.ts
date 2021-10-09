@@ -52,7 +52,7 @@ export function addDurations(duration1: string, duration2: string): string {
     }
 }
 
-export function computeTimeStringFromStartTimeAndDurationInSeconds(appointmentTime:string, duration:number):string{
+export function computeTimeStringFromStartTimeAndDurationInSeconds(appointmentTime: string, duration: number): string {
     const time = parseInt(appointmentTime); // HHMMSS as a time
 
 

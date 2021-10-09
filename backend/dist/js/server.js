@@ -1,14 +1,18 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
+    Object.defineProperty(o, k2, {
+        enumerable: true, get: function () {
+            return m[k];
+        }
+    });
+}) : (function (o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+    Object.defineProperty(o, "default", {enumerable: true, value: v});
+}) : function (o, v) {
     o["default"] = v;
 });
 var __importStar = (this && this.__importStar) || function (mod) {
@@ -19,9 +23,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+    return (mod && mod.__esModule) ? mod : {"default": mod};
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", {value: true});
 // Configuration and Logging handlers
 /* eslint-disable import/first */
 //@ts-ignore
@@ -100,7 +104,7 @@ app.use('/', express_1.default.static('./public')); // root directory of static 
 app.use('/dist', express_1.default.static('./dist')); // root directory of static content
 app.use(cookie_parser_1.default()); // add cookie support
 app.use(body_parser_1.default.json()); // add POST JSON support
-app.use(body_parser_1.default.urlencoded({ extended: true })); // and POST URL Encoded form support
+app.use(body_parser_1.default.urlencoded({extended: true})); // and POST URL Encoded form support
 app.use(express_session_1.default({
     secret: 'frankie',
     resave: true,
@@ -126,8 +130,7 @@ if (isDevelopment) {
         }
         next();
     });
-}
-else {
+} else {
     app.use(morgan_1.default('combined')); /* log server calls per standard combined Apache combined format */
 }
 // ensure the user is logged in with a path
@@ -154,7 +157,7 @@ mongoose_1.default.connect(process.env.DB_URL);
 serverDebug('Setting the environment variables for the browser to access');
 const port = process.env.PORT || 3000;
 const API_SERVER_URL = process.env.API_SERVER_URL || '';
-let env = { serverURL: API_SERVER_URL };
+let env = {serverURL: API_SERVER_URL};
 app.get('/js/env.js', (req, res) => {
     let session = req.session;
     if (session.id) {
@@ -174,7 +177,7 @@ serverDebug('Setting up Socket manager');
 SocketManager_1.default.connectToServer(httpServer);
 // setup the WebRTC peer server
 // @ts-ignore
-const peerServer = peer_1.ExpressPeerServer(httpServer, { debug: 2, allow_discovery: true });
+const peerServer = peer_1.ExpressPeerServer(httpServer, {debug: 2, allow_discovery: true});
 app.use('/peerjs', peerServer);
 // catch 404 and forward to error handler
 serverDebug('Setting up 404 handler');
@@ -197,8 +200,7 @@ if (isDevelopment) {
             error: err,
         });
     });
-}
-else {
+} else {
     serverDebug('Production 500 handler');
     // @ts-ignore
     app.use((err, req, res, next) => {
