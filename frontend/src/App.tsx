@@ -19,6 +19,8 @@ import {AppointmentTemplateController} from "./appointment-templates/Appointment
 import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 import {PatientSearchSidebar} from "./patients/PatientSearchSidebar";
 import {PatientSearchView} from "./patients/PatientSearchView";
+import {AppointmentTypesCompositeView} from "./appointment-types/AppointmentTypesCompositeView";
+import {AppointmentTypesSidebar} from "./appointment-types/AppointmentTypesSidebar";
 
 
 
@@ -50,6 +52,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.handleShowAppointmentTemplates = this.handleShowAppointmentTemplates.bind(this);
         this.handleShowPatientRecords = this.handleShowPatientRecords.bind(this);
         this.handleShowPatientSearch = this.handleShowPatientSearch.bind(this);
+        this.handleShowAppointmentTypes = this.handleShowAppointmentTypes.bind(this);
 
         Controller.getInstance().connectToApplication(this, window.localStorage);
     }
@@ -71,6 +74,9 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.thisEl = document.getElementById('root');
 
         PatientSearchSidebar.getInstance().onDocumentLoaded();
+
+        new AppointmentTypesCompositeView(AppointmentTypesSidebar.getInstance()).onDocumentLoaded();
+
 
         this.setupNavigationItemHandling();
 
@@ -141,6 +147,11 @@ export default class App extends React.Component implements UnreadMessageCountLi
         PatientSearchSidebar.getInstance().eventShow(null);
 
     }
+    protected handleShowAppointmentTypes(event:Event):void {
+        logger(`Showing patient search`);
+        AppointmentTypesSidebar.getInstance().eventShow(null);
+
+    }
 
 
     private setupNavigationItemHandling() {
@@ -148,6 +159,10 @@ export default class App extends React.Component implements UnreadMessageCountLi
         let templateEl = document.getElementById(NAVIGATION.appointmentTemplates);
         if (templateEl) {
             templateEl.addEventListener('click', this.handleShowAppointmentTemplates);
+        }
+        let apptTypesEl = document.getElementById(NAVIGATION.appointmentTypes);
+        if (apptTypesEl) {
+            apptTypesEl.addEventListener('click', this.handleShowAppointmentTypes);
         }
         document.getElementById(NAVIGATION.patientRecords).addEventListener('click',this.handleShowPatientRecords);
         document.getElementById(NAVIGATION.patientSearch).addEventListener('click',this.handleShowPatientSearch);
@@ -163,7 +178,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results api-ts state-manager-api';
+//localStorage.debug = 'app api-ts-results bootstrap-form-config-helper';
+localStorage.debug = 'api-ts colour-input-field socket-ts';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

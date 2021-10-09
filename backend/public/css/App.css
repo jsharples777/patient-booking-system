@@ -1,3 +1,15 @@
+.floating-box {
+    position:absolute;
+    top: 100px;
+    left: 100px;
+    height:100%;
+    width:100%;
+    border-right:2px solid black;
+    border-bottom:2px solid black;
+    z-index:50;
+}
+
+
 
 /*.mbsc-card-content {*/
 /*    padding: 1em;*/
@@ -92,13 +104,13 @@ i:hover {
     overflow-y: auto;
 }
 
-.scroll-exercise-type-detail {
+.scroll-appointment-type-detail {
     height: 40vh;
     max-height: 40vh;
     overflow-y: auto;
 }
 
-.scroll-exercise-type-list {
+.scroll-appointment-type-list {
     height: 30vh;
     max-height: 30vh;
     overflow-y: auto;
@@ -109,7 +121,7 @@ i:hover {
     height: 100%; /* 100% Full-height */
     width: 0px; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
-    z-index: 999; /* Stay on top */
+    z-index: 10; /* Stay on top */
     top: 50px;
     left: 0;
     overflow-x: hidden; /* Disable horizontal scroll */
@@ -121,7 +133,7 @@ i:hover {
     height: 0px; /* 25% Full-height */
     width: 100%; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
-    z-index: 999; /* Stay on top */
+    z-index: 10; /* Stay on top */
     bottom: 0px;
     right: 0;
     /*overflow-y: hidden;  Disable horizontal scroll */
@@ -133,7 +145,7 @@ i:hover {
     height: 100%; /* 100% Full-height */
     width: 0px; /* 0 width - change this with JavaScript */
     position: fixed; /* Stay in place */
-    z-index: 999; /* Stay on top */
+    z-index: 10; /* Stay on top */
     top: 50px;
     right: 0;
     overflow-x: hidden; /* Disable horizontal scroll */

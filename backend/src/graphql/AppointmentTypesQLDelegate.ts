@@ -1,6 +1,6 @@
 import debug from "debug";
 import {MongoDataSource} from "../db/MongoDataSource";
-import {DeleteResult, Document} from "mongodb";
+import {DeleteResult, Document, ObjectId} from "mongodb";
 import {DataMessage} from "../socket/SocketTypes";
 import socketManager from "../socket/SocketManager";
 import moment from "moment";
@@ -21,7 +21,8 @@ export default class AppointmentTypesQLDelegate {
                     _id: 1,
                     name:1,
                     colour:1,
-                    icon:1
+                    icon:1,
+                    isStatus:1
                 }
             };
 
@@ -65,6 +66,11 @@ export default class AppointmentTypesQLDelegate {
                 const message:DataMessage = {type:"update",stateName: "appointmentType",data:data.apptType, user:"-1"}
                 socketManager.sendDataMessage(message);
 
+                if (value.modifiedCount === 0) {
+                    const objId = new ObjectId(data.apptType._id);
+                    data.apptType._id = objId;
+                    MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:objId},data.apptType)
+                }
                 resolve(true);
             })
                 .catch((err) => {

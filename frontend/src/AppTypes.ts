@@ -39,7 +39,8 @@ export const NAVIGATION = {
     appointmentTemplates: 'navigationItemAppointmentTemplating',
     clinicChat: 'navigationItemChat',
     patientRecords: 'navigationItemPatientRecords',
-    logout: 'navigationItemLogout'
+    logout: 'navigationItemLogout',
+    appointmentTypes: 'navigationItemAppointmentTypes'
 }
 
 export const DRAGGABLE = {
@@ -55,7 +56,9 @@ export const VIEW_NAME = {
     chatLogs: 'chatLogs',
     favouriteUsers: 'favouriteUsers',
     userSearch: 'userSearch',
-    patientSearch: 'patientSearch'
+    patientSearch: 'patientSearch',
+    appointmentTypes: 'appointmentTypes',
+    appointmentTypeDetail: 'appointmentTypeDetail'
 }
 
 export const VIEW_CONTAINER = {
@@ -74,6 +77,19 @@ export const  PatientSearchSidebarPrefs: SidebarPrefs = {
 export const  PatientSearchSidebarContainers = {
     container: 'recentPatientSearches',
 }
+
+export const  AppointmentTypesSidebarPrefs: SidebarPrefs = {
+    id: 'appointmentTypesSideBar',
+    expandedSize: '50%',
+    location: SidebarLocation.left
+}
+
+export const  AppointmentTypesSidebarContainers = {
+    list: 'appointmentTypes',
+    detail: 'appointmentTypeDetail',
+    colourPicker:'appointmentTypeColour'
+}
+
 
 export const SELECT = {
     appointmentType : 'event-appt-type',

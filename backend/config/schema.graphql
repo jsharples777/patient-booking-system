@@ -77,14 +77,16 @@ type AppointmentType {
     _id:String,
     name:String,
     colour:String,
-    icon:String
+    icon:String,
+    isStatus:Boolean
 }
 
 input AppointmentTypeInput {
     _id:String,
     name:String,
     colour:String,
-    icon:String
+    icon:String,
+    isStatus:Boolean
 }
 
 type Provider {
@@ -729,6 +731,11 @@ input PatientInput {
     forms:[FormInput],
     wcc:[WorkcoverInput],
     modifiedDates:ModifiedInput
+}
+
+type User {
+    _id:String,
+
 }
 
 

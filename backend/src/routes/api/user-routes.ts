@@ -14,6 +14,8 @@ router.get('/', (req, res) => {
     const projection = { projection: {
             _id: 1,
             username:1,
+            isCurrent:1,
+
         }
     };
 

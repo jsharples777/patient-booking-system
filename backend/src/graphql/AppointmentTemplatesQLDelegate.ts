@@ -3,7 +3,7 @@ import {MongoDataSource} from "../db/MongoDataSource";
 import {DeleteResult, Document} from "mongodb";
 import {DataMessage} from "../socket/SocketTypes";
 import socketManager from "../socket/SocketManager";
-import moment from "moment";
+
 
 const logger = debug('data-source-appointment-templates');
 

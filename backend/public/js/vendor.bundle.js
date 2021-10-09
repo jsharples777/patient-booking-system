@@ -52372,13 +52372,20 @@ class BasicFieldOperations {
                     }
                     break;
                 }
+                case (_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.colour): {
+                    response.isValid = BasicFieldOperations.colourRegexp.test(currentValue);
+                    if (!response.isValid) {
+                        response.message = `${field.displayName} must be a hex colour value #ffffff`;
+                    }
+                    break;
+                }
             }
         }
         vlogger(`Handling is valid value for field ${field.displayName} with value ${currentValue} - is valid is ${response.isValid} with message ${response.message}`);
         return response;
     }
-    renderValue(field, currentValue) {
-        rlogger(`Rendering value for field ${field.displayName} with new value ${currentValue}`);
+    renderValue(field, fieldDef, currentValue) {
+        rlogger(`Rendering value for field ${fieldDef.displayName} with new value ${currentValue}`);
         // ensure we don't end up in an endless loop
         // if the value hasn't changed return null
         // let index = this.previousFieldValues.findIndex((fieldValue) => fieldValue.id === field.id);
@@ -52391,7 +52398,7 @@ class BasicFieldOperations {
         // either not yet seen or value has changed from previous
         if (currentValue) { // only attempt to render non-empty dates
             let newValue = currentValue;
-            switch (field.type) {
+            switch (fieldDef.type) {
                 case (_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.date): {
                     newValue = moment__WEBPACK_IMPORTED_MODULE_0___default()(currentValue, 'YYYYMMDD').format('DD/MM/YYYY');
                     break;
@@ -52402,13 +52409,13 @@ class BasicFieldOperations {
                 }
             }
             // store the previous value
-            this.setPreviousValue(field, newValue);
-            rlogger(`Rendering value for field ${field.displayName} with new value ${currentValue} - rendered to ${newValue}`);
+            this.setPreviousValue(fieldDef, newValue);
+            rlogger(`Rendering value for field ${fieldDef.displayName} with new value ${currentValue} - rendered to ${newValue}`);
             return newValue;
         }
         else {
             // empty value, no rendering required
-            rlogger(`Rendering value for field ${field.displayName} with new value is empty - no rendering required`);
+            rlogger(`Rendering value for field ${fieldDef.displayName} with new value is empty - no rendering required`);
             return null;
         }
     }
@@ -52508,6 +52515,10 @@ class BasicFieldOperations {
                 result = `${_security_SecurityManager__WEBPACK_IMPORTED_MODULE_4__.SecurityManager.getInstance().getLoggedInUsername()}`;
                 break;
             }
+            case (_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.colour): {
+                result = `#ffffff`;
+                break;
+            }
         }
         return result;
     }
@@ -52522,6 +52533,7 @@ BasicFieldOperations.integerRegex = /^[+-]?\d+$/;
 BasicFieldOperations.floatRegexp = /^[+-]?\d+(\.\d+)?$/;
 BasicFieldOperations.booleanRegexp = /^true|false$/;
 BasicFieldOperations.durationRegexp = /^(\d+:)?[0-5]?\d:[0-5]\d$/;
+BasicFieldOperations.colourRegexp = /^#[0-9a-f]{6}$/;
 //# sourceMappingURL=BasicFieldOperations.js.map
 
 /***/ }),
@@ -52789,6 +52801,8 @@ var FieldType;
     FieldType["largeText"] = "TextArea";
     FieldType["collection"] = "Collection";
     FieldType["duration"] = "Duration";
+    FieldType["colour"] = "Colour";
+    FieldType["subObject"] = "Sub Object";
 })(FieldType || (FieldType = {}));
 //# sourceMappingURL=DataObjectTypeDefs.js.map
 
@@ -55633,7 +55647,7 @@ class GraphQLApiStateManager {
         logger(`Finding item in ${name}`);
         logger(stateObj);
         let config = this.getConfigurationForStateName(name);
-        if (config.isActive) {
+        if (config.isActive && (config.apis.find.trim().length > 0)) {
             let identifier = stateObj.id;
             if (config.idField) {
                 identifier = stateObj[config.idField];
@@ -57026,9 +57040,11 @@ BlockedUserView.DOMConfig = {
             acceptTypes: [_ChatTypes__WEBPACK_IMPORTED_MODULE_6__.DRAGGABLE.typeUser],
         }
     },
-    resultsElementType: 'a',
-    resultsElementAttributes: [{ name: 'href', value: '#' }],
-    resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+    resultsElement: {
+        type: 'a',
+        attributes: [{ name: 'href', value: '#' }],
+        classes: 'list-group-item my-list-item truncate-notification list-group-item-action'
+    },
     keyId: '_id',
     keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__.KeyType.string,
     modifiers: {
@@ -57045,12 +57061,14 @@ BlockedUserView.DOMConfig = {
     },
     detail: {
         containerClasses: 'd-flex w-100 justify-content-between',
-        textElementType: 'span',
-        textElementClasses: 'mb-1',
+        textElement: {
+            type: 'span',
+            classes: 'mb-1'
+        },
         select: true,
         quickDelete: true,
         delete: {
-            buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+            classes: 'btn bg-danger text-white btn-circle btn-sm',
             iconClasses: 'fas fa-trash-alt',
         },
     },
@@ -57618,9 +57636,11 @@ ChatLogsView.DOMConfig = {
         resultsContainerId: 'chatLogs',
         dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.VIEW_NAME.chatLogs,
     },
-    resultsElementType: 'a',
-    resultsElementAttributes: [{ name: 'href', value: '#' }],
-    resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+    resultsElement: {
+        type: 'a',
+        attributes: [{ name: 'href', value: '#' }],
+        classes: 'list-group-item my-list-item truncate-notification list-group-item-action'
+    },
     keyId: 'roomName',
     keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__.KeyType.string,
     modifiers: {
@@ -57631,16 +57651,18 @@ ChatLogsView.DOMConfig = {
     },
     detail: {
         containerClasses: 'd-flex w-100 justify-content-between',
-        textElementType: 'span',
-        textElementClasses: 'mb-1',
+        textElement: {
+            type: 'span',
+            classes: 'mb-1'
+        },
         select: true,
         delete: {
-            buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+            classes: 'btn bg-danger text-white btn-circle btn-sm',
             iconClasses: 'text-black fas fa-sign-out-alt',
         },
         badge: {
-            elementType: 'span',
-            elementClasses: 'badge badge-pill badge-primary mr-1',
+            type: 'span',
+            classes: 'badge badge-pill badge-primary mr-1',
         }
     },
 };
@@ -57894,9 +57916,11 @@ FavouriteUserView.DOMConfig = {
         },
         dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_6__.VIEW_NAME.favouriteUsers,
     },
-    resultsElementType: 'a',
-    resultsElementAttributes: [{ name: 'href', value: '#' }],
-    resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+    resultsElement: {
+        type: 'a',
+        attributes: [{ name: 'href', value: '#' }],
+        classes: 'list-group-item my-list-item truncate-notification list-group-item-action'
+    },
     keyId: '_id',
     keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_4__.KeyType.string,
     modifiers: {
@@ -57913,12 +57937,14 @@ FavouriteUserView.DOMConfig = {
     },
     detail: {
         containerClasses: 'd-flex w-100 justify-content-between',
-        textElementType: 'span',
-        textElementClasses: 'mb-1',
+        textElement: {
+            type: 'span',
+            classes: 'mb-1'
+        },
         select: true,
         quickDelete: true,
         delete: {
-            buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+            classes: 'btn bg-danger text-white btn-circle btn-sm',
             iconClasses: 'fas fa-trash-alt',
         },
         drag: {
@@ -57929,8 +57955,10 @@ FavouriteUserView.DOMConfig = {
     extraActions: [
         {
             name: 'block',
-            buttonClasses: 'btn bg-warning text-white btn-circle btn-sm mr-1',
-            iconClasses: 'fas fa-user-slash'
+            button: {
+                classes: 'btn bg-warning text-white btn-circle btn-sm mr-1',
+                iconClasses: 'fas fa-user-slash'
+            },
         }
     ]
 };
@@ -58207,9 +58235,11 @@ UserSearchView.DOMConfig = {
         resultsContainerId: 'recentUserSearches',
         dataSourceId: _ChatTypes__WEBPACK_IMPORTED_MODULE_8__.VIEW_NAME.userSearch,
     },
-    resultsElementType: 'a',
-    resultsElementAttributes: [{ name: 'href', value: '#' }],
-    resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+    resultsElement: {
+        type: 'a',
+        attributes: [{ name: 'href', value: '#' }],
+        classes: 'list-group-item my-list-item truncate-notification list-group-item-action'
+    },
     keyId: '_id',
     keyType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_5__.KeyType.string,
     modifiers: {
@@ -58226,12 +58256,14 @@ UserSearchView.DOMConfig = {
     },
     detail: {
         containerClasses: 'd-flex w-100 justify-content-between',
-        textElementType: 'span',
-        textElementClasses: 'mb-1',
+        textElement: {
+            type: 'span',
+            classes: 'mb-1'
+        },
         select: true,
         quickDelete: true,
         delete: {
-            buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+            classes: 'btn bg-danger text-white btn-circle btn-sm',
             iconClasses: 'fas fa-trash-alt',
         },
         drag: {
@@ -58242,13 +58274,17 @@ UserSearchView.DOMConfig = {
     extraActions: [
         {
             name: 'favourite',
-            buttonClasses: 'btn bg-info text-white btn-circle btn-sm mr-1',
-            iconClasses: 'fas fa-user-plus',
+            button: {
+                classes: 'btn bg-info text-white btn-circle btn-sm mr-1',
+                iconClasses: 'fas fa-user-plus'
+            },
         },
         {
             name: 'block',
-            buttonClasses: 'btn bg-warning text-white btn-circle btn-sm mr-1',
-            iconClasses: 'fas fa-user-slash'
+            button: {
+                classes: 'btn bg-warning text-white btn-circle btn-sm mr-1',
+                iconClasses: 'fas fa-user-slash'
+            },
         }
     ]
 };
@@ -58316,10 +58352,10 @@ class SidebarViewContainer {
     }
     eventShow(event) {
         let size = this.prefs.expandedSize;
-        if (window.innerWidth < 769) {
+        if (window.outerWidth < 769) {
             size = '50%';
         }
-        if (window.innerWidth < 415) {
+        if (window.outerWidth < 415) {
             size = '100%';
         }
         this.showHide(size);
@@ -58490,9 +58526,9 @@ class ContextualInformationHelper {
             handler: handler,
             hasPermission: permissionCheck,
             elementDefinition: {
-                elementType: 'a',
-                elementAttributes: [{ name: 'href', value: '#' }],
-                elementClasses: 'list-group-item list-group-item-action bg-dark text-white',
+                type: 'a',
+                attributes: [{ name: 'href', value: '#' }],
+                classes: 'list-group-item list-group-item-action bg-dark text-white',
             },
             iconClasses: icon
         };
@@ -58610,10 +58646,10 @@ class ContextualInformationHelper {
                     logger(action);
                     if ((selectedItem && action.hasPermission && action.hasPermission(action.actionName, contextDef.defaultType.internalType, selectedItem)) ||
                         !(action.hasPermission)) {
-                        let itemEl = document.createElement(action.elementDefinition.elementType);
+                        let itemEl = document.createElement(action.elementDefinition.type);
                         if (itemEl && this.menuContentEl) {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(itemEl, action.elementDefinition.elementAttributes);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(itemEl, action.elementDefinition.elementClasses);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(itemEl, action.elementDefinition.attributes);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(itemEl, action.elementDefinition.classes);
                             itemEl.setAttribute(ContextualInformationHelper.SOURCE, context.source);
                             itemEl.setAttribute(ContextualInformationHelper.TYPE, context.internalType);
                             itemEl.setAttribute(ContextualInformationHelper.DISPLAYNAME, context.displayName);
@@ -58693,7 +58729,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../alert/AlertListener */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertListener.js");
 /* harmony import */ var _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../alert/AlertManager */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertManager.js");
 /* harmony import */ var _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./factory/FieldInputElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/form/factory/FieldInputElementFactory.js");
+
 
 
 
@@ -58705,7 +58743,7 @@ const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form');
 const dlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail');
 const vlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail-validation');
 class AbstractForm {
-    constructor(containerId, dataObjDef) {
+    constructor(containerId, dataObjDef, configHelper, hasExternalControl = false) {
         this.formListeners = [];
         this.fieldListeners = [];
         this.uiDef = null;
@@ -58719,11 +58757,43 @@ class AbstractForm {
             throw new Error(`container ${containerId} for form ${dataObjDef.id} does not exist`);
         this.map = [];
         this.dataObjDef = dataObjDef;
+        this.configHelper = configHelper;
+        this.hasExternalControl = hasExternalControl;
         this.currentDataObj = {};
-        this.id = (0,uuid__WEBPACK_IMPORTED_MODULE_6__["default"])();
+        this.id = (0,uuid__WEBPACK_IMPORTED_MODULE_7__["default"])();
         // sub-classes need to create the form and it's fields
         // listen to ourselves
         this.addFormListener(this);
+    }
+    cancel() {
+        if (this.uiDef) {
+            let formEvent = {
+                target: this,
+                formId: this.uiDef.id,
+                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING
+            };
+            this.formChanged(formEvent);
+        }
+    }
+    delete() {
+        if (this.uiDef && !this.isReadOnly()) {
+            let formEvent = {
+                target: this,
+                formId: this.uiDef.id,
+                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING
+            };
+            this.formChanged(formEvent);
+        }
+    }
+    save() {
+        if (this.uiDef && !this.isReadOnly()) {
+            let formEvent = {
+                target: this,
+                formId: this.uiDef.id,
+                eventType: _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.SAVING
+            };
+            this.formChanged(formEvent);
+        }
     }
     hasChanged() {
         return this.hasChangedBoolean;
@@ -58731,7 +58801,7 @@ class AbstractForm {
     getName() {
         return this.dataObjDef.displayName;
     }
-    valueChanged(formId, field, newValue) {
+    valueChanged(formId, field, fieldDef, newValue) {
         this.hasChangedBoolean = true;
         this.setUnsavedMessage();
         logger(`Form has changed`);
@@ -59112,6 +59182,9 @@ class AbstractForm {
             }
         });
     }
+    getElementIdForField(fieldId) {
+        return _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_6__.FieldInputElementFactory.getElementIdForFieldId(this, fieldId);
+    }
 }
 //# sourceMappingURL=AbstractForm.js.map
 
@@ -59130,7 +59203,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
 /* harmony import */ var _AbstractForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractForm */ "./node_modules/ui-framework-jps/dist/framework/ui/form/AbstractForm.js");
-/* harmony import */ var _helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
+/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
 /* harmony import */ var _factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./factory/FormElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/form/factory/FormElementFactory.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_4__);
@@ -59139,6 +59212,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./field/RadioButtonGroupField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/RadioButtonGroupField.js");
 /* harmony import */ var _field_SelectField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./field/SelectField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/SelectField.js");
 /* harmony import */ var _field_InputField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./field/InputField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/InputField.js");
+/* harmony import */ var _field_ColourInputField__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./field/ColourInputField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/ColourInputField.js");
+
 
 
 
@@ -59152,8 +59227,8 @@ __webpack_require__.r(__webpack_exports__);
 const logger = debug__WEBPACK_IMPORTED_MODULE_4___default()('basic-form');
 const dlogger = debug__WEBPACK_IMPORTED_MODULE_4___default()('basic-form-detail');
 class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__.AbstractForm {
-    constructor(containerId, dataObjDef) {
-        super(containerId, dataObjDef);
+    constructor(containerId, dataObjDef, configHelper, hasExternalControl = false) {
+        super(containerId, dataObjDef, configHelper, hasExternalControl);
         this.factoryElements = null;
     }
     getFormattedDataObject() {
@@ -59212,7 +59287,12 @@ class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__
                                 break;
                             }
                             default: {
-                                field = new _field_InputField__WEBPACK_IMPORTED_MODULE_9__.InputField(this.id, fieldUIConfig, fieldDef, fieldEl);
+                                if (fieldDef.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.colour) {
+                                    field = new _field_ColourInputField__WEBPACK_IMPORTED_MODULE_10__.ColourInputField(this.id, fieldUIConfig, fieldDef, fieldEl);
+                                }
+                                else {
+                                    field = new _field_InputField__WEBPACK_IMPORTED_MODULE_9__.InputField(this.id, fieldUIConfig, fieldDef, fieldEl);
+                                }
                                 break;
                             }
                         }
@@ -59242,7 +59322,7 @@ class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__
     _initialise(displayOrder, hasDeleteButton, hideModifierFields = false) {
         logger(`Initialising`);
         // ok, so given a Data Object definition we are going to create the form ui config
-        this.uiDef = _helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_2__.BootstrapFormConfigHelper.getInstance().generateFormConfig(this.dataObjDef, displayOrder, hasDeleteButton, hideModifierFields);
+        this.uiDef = this.configHelper.generateFormConfig(this.dataObjDef, displayOrder, hasDeleteButton, hideModifierFields, this.hasExternalControl);
         logger(this.uiDef);
         // now we need to create all the form elements from the ui definition
         this.factoryElements = _factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_3__.FormElementFactory.getInstance().createFormElements(this, this.formListeners, this.uiDef, this.fieldListeners);
@@ -59439,10 +59519,14 @@ class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__
             if (this.factoryElements.deleteButton) {
                 this.factoryElements.deleteButton.removeAttribute('disabled');
             }
-            this.factoryElements.cancelButton.removeAttribute('disabled');
-            this.factoryElements.submitButton.removeAttribute('disabled');
-            // @ts-ignore
-            this.factoryElements.submitButton.innerHTML = this.uiDef.submitButton.buttonText;
+            if (this.factoryElements.cancelButton)
+                this.factoryElements.cancelButton.removeAttribute('disabled');
+            if (this.factoryElements.submitButton) {
+                this.factoryElements.submitButton.removeAttribute('disabled');
+                // if (this.uiDef.submitButton) { // @ts-ignore
+                //     this.factoryElements.submitButton.innerText = this.uiDef.submitButton.text;
+                // }
+            }
         }
     }
     disableButtons() {
@@ -59450,8 +59534,10 @@ class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__
             if (this.factoryElements.deleteButton) {
                 this.factoryElements.deleteButton.setAttribute('disabled', 'true');
             }
-            this.factoryElements.cancelButton.setAttribute('disabled', 'true');
-            this.factoryElements.submitButton.setAttribute('disabled', 'true');
+            if (this.factoryElements.cancelButton)
+                this.factoryElements.cancelButton.setAttribute('disabled', 'true');
+            if (this.factoryElements.submitButton)
+                this.factoryElements.submitButton.setAttribute('disabled', 'true');
         }
     }
     _saveFinishedOrAborted() {
@@ -59463,10 +59549,9 @@ class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__
         dlogger(`save is active`);
         this.disableButtons();
         if (this.factoryElements && this.uiDef) {
-            if (this.uiDef.activeSave) {
+            if (this.uiDef.activeSave && this.uiDef.submitButton && this.factoryElements.submitButton) {
                 dlogger(`save is active ${this.uiDef.activeSave}`);
-                // @ts-ignore
-                this.factoryElements.submitButton.innerHTML = this.uiDef.activeSave + this.uiDef.submitButton.buttonText;
+                // this.factoryElements.submitButton.innerHTML = this.uiDef.activeSave + this.uiDef.submitButton.text;
             }
         }
     }
@@ -59537,7 +59622,7 @@ var UIFieldType;
 const defaultGetValue = (fieldUIConfig, currentValue) => {
     let result = currentValue;
     if (fieldUIConfig.renderer) {
-        let value = fieldUIConfig.renderer.renderValue(fieldUIConfig.field, currentValue);
+        let value = fieldUIConfig.renderer.renderValue(null, fieldUIConfig.field, currentValue);
         if (value)
             result = value;
     }
@@ -59566,25 +59651,35 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "EditingEventListener": () => (/* binding */ EditingEventListener)
 /* harmony export */ });
 class EditingEventListener {
-    constructor(formId, fieldConfig, listeners) {
+    constructor(formId, field, fieldConfig, listeners) {
         this.formId = formId;
+        this.field = field;
         this.fieldConfig = fieldConfig;
         this.listeners = listeners;
-        this.handleEvent = this.handleEvent.bind(this);
+        this.handleEditEvent = this.handleEditEvent.bind(this);
+        this.handleEditCompletedEvent = this.handleEditCompletedEvent.bind(this);
     }
-    handleEvent(event) {
+    handleEditEvent(event) {
         event.preventDefault();
         event.stopPropagation();
         // @ts-ignore
         const fieldElement = event.target;
         if (this.fieldConfig.editor) {
-            const field = this.fieldConfig.field;
+            const fieldDef = this.fieldConfig.field;
             const value = fieldElement.value;
-            const newValue = this.fieldConfig.editor.editValue(field, value);
-            if (newValue) {
+            const newValue = this.fieldConfig.editor.editValue(this.field, fieldDef, value);
+            if (newValue && (newValue !== value)) {
                 fieldElement.value = newValue;
-                this.listeners.forEach((listener) => listener.valueChanged(this.formId, field, newValue));
+                this.listeners.forEach((listener) => listener.valueChanged(this.formId, this.field, fieldDef, newValue));
             }
+        }
+    }
+    handleEditCompletedEvent(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.fieldConfig.editor) {
+            const fieldDef = this.fieldConfig.field;
+            this.fieldConfig.editor.editCompleted(this.field, fieldDef);
         }
     }
 }
@@ -59604,8 +59699,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "RenderingEventListener": () => (/* binding */ RenderingEventListener)
 /* harmony export */ });
 class RenderingEventListener {
-    constructor(formId, fieldConfig, listeners, subElements = null) {
+    constructor(formId, field, fieldConfig, listeners, subElements = null) {
         this.formId = formId;
+        this.field = field;
         this.fieldConfig = fieldConfig;
         this.listeners = listeners;
         this.subElements = subElements;
@@ -59614,15 +59710,14 @@ class RenderingEventListener {
     processRendering(fieldElement) {
         let newValue = '';
         if (this.fieldConfig.renderer) {
-            const field = this.fieldConfig.field;
+            const fieldDef = this.fieldConfig.field;
             const value = fieldElement.value;
             if (this.subElements)
                 this.fieldConfig.renderer.setSubElements(this.subElements);
-            newValue = this.fieldConfig.renderer.renderValue(field, value);
+            newValue = this.fieldConfig.renderer.renderValue(this.field, fieldDef, value);
             if (newValue) {
                 fieldElement.value = newValue;
-                // @ts-ignore
-                this.listeners.forEach((listener) => listener.valueChanged(field, newValue));
+                this.listeners.forEach((listener) => listener.valueChanged(this.formId, this.field, fieldDef, newValue));
             }
         }
         if (newValue) {
@@ -59786,9 +59881,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
 /* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
 /* harmony import */ var _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../event-handlers/ValidationEventHandler */ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/ValidationEventHandler.js");
-/* harmony import */ var _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../event-handlers/EditingEventListener */ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/EditingEventListener.js");
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
-
+/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
 
 
 
@@ -59812,6 +59905,9 @@ class FieldInputElementFactory {
             FieldInputElementFactory._instance = new FieldInputElementFactory();
         }
         return FieldInputElementFactory._instance;
+    }
+    static getElementIdForFieldId(form, fieldId) {
+        return `${form.getId()}.field.${fieldId}`;
     }
     static initialiseFieldElementAndEventHandlers(fieldElement, formId, fieldConfig, listeners, subElements = null) {
         fieldElement.setAttribute('id', `${formId}.field.${fieldConfig.field.id}`);
@@ -59842,11 +59938,11 @@ class FieldInputElementFactory {
                 fieldElement.addEventListener('blur', eventHandler);
             }
         }
-        if (fieldConfig.editor) { // render the value when the field gains focus
-            fieldElement.addEventListener('focus', new _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_3__.EditingEventListener(formId, fieldConfig, listeners));
-        } // care for endless loops here, renderer needs to return null if no changes
+        // if (fieldConfig.editor) { // render the value when the field gains focus
+        //     fieldElement.addEventListener('focus', new EditingEventListener(formId, fieldConfig, listeners));
+        // } // care for endless loops here, renderer needs to return null if no changes
         // date picker for date fields
-        if (fieldConfig.field.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__.FieldType.date) {
+        if (fieldConfig.field.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_3__.FieldType.date) {
             $(fieldElement).datepicker();
             $(fieldElement).datepicker("option", "dateFormat", 'dd/mm/yy');
         }
@@ -59858,24 +59954,24 @@ class FieldInputElementFactory {
             errorMessageDivEl = document.createElement('div');
             errorMessageDivEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.error`);
             errorMessageDivEl.setAttribute('style', 'display: none'); // default to not visible
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(errorMessageDivEl, fieldConfig.validator.messageDisplay.elementClasses);
-            let messageEl = document.createElement(fieldConfig.validator.messageDisplay.elementType);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(errorMessageDivEl, fieldConfig.validator.messageDisplay.classes);
+            let messageEl = document.createElement(fieldConfig.validator.messageDisplay.type);
             if (messageEl) {
                 messageEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.error.message`);
-                if (fieldConfig.validator.messageDisplay.elementAttributes)
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(messageEl, fieldConfig.validator.messageDisplay.elementAttributes);
+                if (fieldConfig.validator.messageDisplay.attributes)
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(messageEl, fieldConfig.validator.messageDisplay.attributes);
                 errorMessageDivEl.appendChild(messageEl);
             }
         }
         // ok, so is the field contained?
         if (fieldConfig.containedBy) {
             // we need to create a container for the field and option label and description text
-            let containedByEl = document.createElement(fieldConfig.containedBy.elementType);
+            let containedByEl = document.createElement(fieldConfig.containedBy.type);
             if (containedByEl) {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containedByEl, fieldConfig.containedBy.elementClasses);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containedByEl, fieldConfig.containedBy.classes);
                 containedByEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.container`);
-                if (fieldConfig.containedBy.elementAttributes)
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, fieldConfig.containedBy.elementAttributes);
+                if (fieldConfig.containedBy.attributes)
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, fieldConfig.containedBy.attributes);
                 // do we have a label also?
                 if (fieldConfig.label) {
                     let labelEl = document.createElement('label');
@@ -59934,19 +60030,19 @@ class FieldInputElementFactory {
                 let containerEl = parentEl;
                 // is there a container?
                 if (fieldConfig.subElement.container) {
-                    containerEl = document.createElement(fieldConfig.subElement.container.elementType);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containerEl, fieldConfig.subElement.container.elementClasses);
-                    if (fieldConfig.subElement.container.elementAttributes)
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, fieldConfig.subElement.container.elementAttributes);
+                    containerEl = document.createElement(fieldConfig.subElement.container.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containerEl, fieldConfig.subElement.container.classes);
+                    if (fieldConfig.subElement.container.attributes)
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, fieldConfig.subElement.container.attributes);
                     parentEl.appendChild(containerEl);
                 }
-                let valueEl = document.createElement(fieldConfig.subElement.element.elementType);
+                let valueEl = document.createElement(fieldConfig.subElement.element.type);
                 valueEl.setAttribute('value', valueOption.value);
                 valueEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.${index}`);
                 valueEl.setAttribute('name', `${formId}.field.${fieldConfig.field.id}`);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(valueEl, fieldConfig.subElement.element.elementClasses);
-                if (fieldConfig.subElement.element.elementAttributes)
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(valueEl, fieldConfig.subElement.element.elementAttributes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(valueEl, fieldConfig.subElement.element.classes);
+                if (fieldConfig.subElement.element.attributes)
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(valueEl, fieldConfig.subElement.element.attributes);
                 containerEl.appendChild(valueEl);
                 if (fieldConfig.subElement.label) {
                     let labelEl = document.createElement('label');
@@ -60099,22 +60195,22 @@ class FormElementFactory {
         let formTAElements = [];
         let formRBGElements = [];
         let formSelectElements = [];
-        let unsavedMessage = document.createElement(formConfig.unsavedChanges.elementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(unsavedMessage, formConfig.unsavedChanges.elementClasses);
-        if (formConfig.unsavedChanges.elementAttributes)
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(unsavedMessage, formConfig.unsavedChanges.elementAttributes);
+        let unsavedMessage = document.createElement(formConfig.unsavedChanges.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(unsavedMessage, formConfig.unsavedChanges.classes);
+        if (formConfig.unsavedChanges.attributes)
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(unsavedMessage, formConfig.unsavedChanges.attributes);
         formEl.appendChild(unsavedMessage);
         formConfig.fieldGroups.forEach((group) => {
             // if the group has a container make that, otherwise the form is the container
             let containerEl = formEl;
             if (group.containedBy) {
                 // @ts-ignore
-                containerEl = document.createElement(group.containedBy.elementType);
+                containerEl = document.createElement(group.containedBy.type);
                 if (containerEl) {
-                    if (group.containedBy.elementAttributes)
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, group.containedBy.elementAttributes);
-                    if (group.containedBy.elementClasses)
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containerEl, group.containedBy.elementClasses);
+                    if (group.containedBy.attributes)
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, group.containedBy.attributes);
+                    if (group.containedBy.classes)
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containerEl, group.containedBy.classes);
                     formEl.appendChild(containerEl);
                 }
             }
@@ -60145,11 +60241,11 @@ class FormElementFactory {
         /* setup the buttons */
         let buttonContainer = formEl;
         if (formConfig.buttonsContainedBy) {
-            buttonContainer = document.createElement(formConfig.buttonsContainedBy.elementType);
+            buttonContainer = document.createElement(formConfig.buttonsContainedBy.type);
             if (buttonContainer) {
-                if (formConfig.buttonsContainedBy.elementAttributes)
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(buttonContainer, formConfig.buttonsContainedBy.elementAttributes);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(buttonContainer, formConfig.buttonsContainedBy.elementClasses);
+                if (formConfig.buttonsContainedBy.attributes)
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(buttonContainer, formConfig.buttonsContainedBy.attributes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(buttonContainer, formConfig.buttonsContainedBy.classes);
                 formEl.appendChild(buttonContainer);
             }
             else {
@@ -60161,10 +60257,16 @@ class FormElementFactory {
             deleteButtonEl = this.createFormButton(form, formConfig, formListeners, formConfig.deleteButton, _FormListener__WEBPACK_IMPORTED_MODULE_3__.FormEventType.DELETING);
             buttonContainer.appendChild(deleteButtonEl);
         }
-        let cancelButtonEl = this.createFormButton(form, formConfig, formListeners, formConfig.cancelButton, _FormListener__WEBPACK_IMPORTED_MODULE_3__.FormEventType.CANCELLING);
-        buttonContainer.appendChild(cancelButtonEl);
-        let submitButtonEl = this.createFormButton(form, formConfig, formListeners, formConfig.submitButton, _FormListener__WEBPACK_IMPORTED_MODULE_3__.FormEventType.SAVING);
-        buttonContainer.appendChild(submitButtonEl);
+        let cancelButtonEl = undefined;
+        if (formConfig.cancelButton) {
+            cancelButtonEl = this.createFormButton(form, formConfig, formListeners, formConfig.cancelButton, _FormListener__WEBPACK_IMPORTED_MODULE_3__.FormEventType.CANCELLING);
+            buttonContainer.appendChild(cancelButtonEl);
+        }
+        let submitButtonEl = undefined;
+        if (formConfig.submitButton) {
+            submitButtonEl = this.createFormButton(form, formConfig, formListeners, formConfig.submitButton, _FormListener__WEBPACK_IMPORTED_MODULE_3__.FormEventType.SAVING);
+            buttonContainer.appendChild(submitButtonEl);
+        }
         let result = {
             form: formEl,
             unsavedMessage: unsavedMessage,
@@ -60180,10 +60282,10 @@ class FormElementFactory {
     }
     createFormButton(form, formConfig, formListeners, buttonDef, eventType) {
         let buttonEl = document.createElement('button');
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(buttonEl, buttonDef.buttonClasses);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(buttonEl, buttonDef.classes);
         buttonEl.setAttribute('id', `${formConfig.id}.${eventType}`);
-        if (buttonDef.buttonText) {
-            buttonEl.innerText = buttonDef.buttonText;
+        if (buttonDef.text) {
+            buttonEl.innerText = buttonDef.text;
         }
         if (buttonDef.iconClasses) {
             let iconEl = document.createElement('i');
@@ -60227,6 +60329,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../event-handlers/RenderingEventListener */ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/RenderingEventListener.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../event-handlers/EditingEventListener */ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/EditingEventListener.js");
+
 
 
 
@@ -60246,7 +60350,12 @@ class AbstractField {
         if (subElements)
             this.subElements = subElements;
         this.validationHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(formId, config, [this], subElements);
-        this.renderingHandler = new _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__.RenderingEventListener(formId, config, [this], subElements);
+        this.renderingHandler = new _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__.RenderingEventListener(formId, this, config, [this], subElements);
+        const editingHandler = new _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_5__.EditingEventListener(formId, this, config, [this]);
+        if (config.editor) { // render the value when the field gains focus
+            this.element.addEventListener('focus', editingHandler.handleEditEvent);
+            this.element.addEventListener('blur', editingHandler.handleEditCompletedEvent);
+        }
         // listen for our own change events
         this.handleChangeEvent = this.handleChangeEvent.bind(this);
         if (this.subElements) {
@@ -60438,7 +60547,7 @@ class AbstractField {
         var _a;
         let result = currentValue;
         if ((_a = this.config) === null || _a === void 0 ? void 0 : _a.renderer) {
-            let value = this.config.renderer.renderValue(this.definition, currentValue);
+            let value = this.config.renderer.renderValue(this, this.definition, currentValue);
             if (value)
                 result = value;
         }
@@ -60446,7 +60555,7 @@ class AbstractField {
     }
     failedValidation(formId, field, currentValue, message) {
     }
-    valueChanged(formId, field, newValue) {
+    valueChanged(formId, field, fieldDef, newValue) {
     }
     getName() {
         return this.definition.displayName;
@@ -60519,11 +60628,53 @@ class AbstractField {
         if (this.config) {
             let value = this.getValue();
             logger(`Handling change event - informing listeners`);
-            this.listeners.forEach((listener) => listener.valueChanged(this.formId, this.definition, value));
+            this.listeners.forEach((listener) => listener.valueChanged(this.formId, this, this.definition, value));
         }
     }
 }
 //# sourceMappingURL=AbstractField.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/ColourInputField.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/field/ColourInputField.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ColourInputField": () => (/* binding */ ColourInputField)
+/* harmony export */ });
+/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
+/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _util_MiscFunctions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('colour-input-field');
+class ColourInputField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
+    constructor(formId, config, fieldDef, element) {
+        super(formId, config, fieldDef, element);
+        this.setValue = this.setValue.bind(this);
+    }
+    setValue(newValue) {
+        logger(`Setting background style to colour ${newValue}`);
+        super.setValue(newValue);
+        // special case of colour types
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAttributes(this.element, ["style"]);
+        let styleOptions = [{ name: "style", value: `background-color:${newValue};colour:black` }];
+        if ((0,_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_3__.isHexValueDark)(newValue)) {
+            styleOptions = [{ name: "style", value: `background-color:${newValue};color:white` }];
+        }
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(this.element, styleOptions);
+    }
+}
+//# sourceMappingURL=ColourInputField.js.map
 
 /***/ }),
 
@@ -60806,11 +60957,11 @@ class ValidationManager {
         });
         return result;
     }
-    valueChanged(formId, field, newValue) {
-        logger(`Handling field change - form ${formId}, data field ${field.id}, value ${newValue}`);
+    valueChanged(formId, field, fieldDef, newValue) {
+        logger(`Handling field change - form ${formId}, data field ${fieldDef.id}, value ${newValue}`);
         // a field we are listening to has changed
         // which rules apply?
-        const rules = this.getRulesForFieldChange(formId, field.id, true);
+        const rules = this.getRulesForFieldChange(formId, fieldDef.id, true);
         // execute each rule and collect the responses
         let failedResponses = [];
         rules.forEach((rule) => {
@@ -61184,7 +61335,7 @@ class BootstrapFormConfigHelper {
         }
         return BootstrapFormConfigHelper._instance;
     }
-    generateFormConfig(dataObjDef, displayOrders, hasDeleteButton, hideModifierFields = false) {
+    generateFormConfig(dataObjDef, displayOrders, hasDeleteButton, hideModifierFields = false, hasExternalControl = false) {
         let fieldOperations = new _model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_0__.BasicFieldOperations();
         let rbgFieldOperation = new _RBGFieldOperations__WEBPACK_IMPORTED_MODULE_4__.RBGFieldOperations();
         // create the Field UI config for each field
@@ -61196,6 +61347,7 @@ class BootstrapFormConfigHelper {
                 case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.text):
                 case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.date):
                 case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.shortTime):
+                case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.colour):
                 case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.duration): {
                     break;
                 }
@@ -61273,8 +61425,8 @@ class BootstrapFormConfigHelper {
             };
             if ((fieldDef.type !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.id) && (fieldDef.type !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.uuid) && (fieldType !== _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.hidden)) { // no labels, descriptions, container for id,uuid
                 fieldUIConfig.containedBy = {
-                    elementType: 'div',
-                    elementClasses: 'form-group row'
+                    type: 'div',
+                    classes: 'form-group row'
                 };
                 fieldUIConfig.label = {
                     label: fieldDef.displayName,
@@ -61291,8 +61443,8 @@ class BootstrapFormConfigHelper {
                     fieldUIConfig.validator = {
                         validator: fieldOperations,
                         messageDisplay: {
-                            elementType: 'div',
-                            elementClasses: 'invalid-feedback col-md-12 col-lg-9 offset-lg-3'
+                            type: 'div',
+                            classes: 'invalid-feedback col-md-12 col-lg-9 offset-lg-3'
                         },
                         validClasses: 'is-valid',
                         invalidClasses: 'is-invalid',
@@ -61309,7 +61461,7 @@ class BootstrapFormConfigHelper {
             // select
             if (fieldDef.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.choice) { // subelements are options, with no classes, no labels, and no other container
                 fieldUIConfig.subElement = {
-                    element: { elementType: 'option', elementClasses: '' },
+                    element: { type: 'option', classes: '' },
                 };
                 fieldUIConfig.datasource = fieldDef.dataSource;
             }
@@ -61317,13 +61469,13 @@ class BootstrapFormConfigHelper {
             if (fieldDef.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.limitedChoice) {
                 fieldUIConfig.subElement = {
                     element: {
-                        elementType: 'input',
-                        elementClasses: 'form-check-input',
-                        elementAttributes: [{ name: 'type', value: 'radio' }]
+                        type: 'input',
+                        classes: 'form-check-input',
+                        attributes: [{ name: 'type', value: 'radio' }]
                     },
                     container: {
-                        elementType: 'div',
-                        elementClasses: 'form-check form-check-inline'
+                        type: 'div',
+                        classes: 'form-check form-check-inline'
                     },
                     label: {
                         label: 'label',
@@ -61341,8 +61493,8 @@ class BootstrapFormConfigHelper {
         // create a form with a single group and button container with Bootstrap styles
         const fieldGroup = {
             containedBy: {
-                elementType: 'div',
-                elementClasses: 'col-sm-12',
+                type: 'div',
+                classes: 'col-sm-12',
             },
             fields: fieldUIConfigs
         };
@@ -61351,42 +61503,47 @@ class BootstrapFormConfigHelper {
             displayName: dataObjDef.displayName,
             fieldGroups: [fieldGroup],
             unsavedChanges: {
-                elementType: 'div',
-                elementClasses: 'invalid-feedback text-right col-md-12 col-lg-9 offset-lg-3',
-                elementAttributes: [{ name: 'style', value: 'display:block' }],
+                type: 'div',
+                classes: 'invalid-feedback text-right col-md-12 col-lg-9 offset-lg-3',
+                attributes: [{ name: 'style', value: 'display:block' }],
                 innerHTML: `Pending changes to ${dataObjDef.displayName}`,
-            },
-            buttonsContainedBy: {
-                elementType: 'div',
-                elementClasses: 'd-flex w-100 justify-space-between',
-            },
-            cancelButton: {
-                buttonText: 'Cancel  ',
-                buttonClasses: 'btn-info rounded p-1 mr-2 mt-2 w-100',
-                iconClasses: 'fas fa-ban'
-            },
-            submitButton: {
-                buttonText: 'Save  ',
-                buttonClasses: 'btn-primary rounded p-1 mt-2 w-100',
-                iconClasses: 'fas fa-save'
-            },
-            activeSave: '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;',
+            }
         };
+        if (!hasExternalControl) {
+            formConfig.buttonsContainedBy = {
+                type: 'div',
+                classes: 'd-flex w-100 justify-space-between',
+            };
+            formConfig.cancelButton = {
+                text: 'Cancel  ',
+                classes: 'btn-info rounded p-1 mr-2 mt-2 w-100',
+                iconClasses: 'fas fa-ban'
+            };
+            formConfig.submitButton = {
+                text: 'Save  ',
+                classes: 'btn-primary rounded p-1 mt-2 w-100',
+                iconClasses: 'fas fa-save'
+            };
+            formConfig.activeSave = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;';
+        }
         // sort the fields into display order
         formConfig.fieldGroups.forEach((group) => {
             group.fields.sort((a, b) => {
                 return (a.displayOrder - b.displayOrder);
             });
         });
-        if (hasDeleteButton) {
+        if (hasDeleteButton && !hasExternalControl) {
             formConfig.deleteButton = {
-                buttonText: 'Delete  ',
-                buttonClasses: 'btn-warning rounded p-1 mr-2 mt-2 w-100',
+                text: 'Delete  ',
+                classes: 'btn-warning rounded p-1 mr-2 mt-2 w-100',
                 iconClasses: 'fas fa-trash-alt'
             };
         }
         logger(formConfig);
         return formConfig;
+    }
+    getElementIdForDataFieldId(fieldId) {
+        return undefined;
     }
 }
 //# sourceMappingURL=BootstrapFormConfigHelper.js.map
@@ -61472,9 +61629,9 @@ class BootstrapTableConfigHelper {
                     let headerConfig = {
                         field: fieldDef,
                         element: {
-                            elementType: 'th',
-                            elementAttributes: [{ name: 'scope', value: 'col' }],
-                            elementClasses: '',
+                            type: 'th',
+                            attributes: [{ name: 'scope', value: 'col' }],
+                            classes: '',
                             innerHTML: fieldDef.displayName
                         }
                     };
@@ -61499,9 +61656,9 @@ class BootstrapTableConfigHelper {
         if (hasActions) {
             actionColumn = {
                 element: {
-                    elementType: 'th',
-                    elementAttributes: [{ name: 'scope', value: 'col' }],
-                    elementClasses: 'text-right',
+                    type: 'th',
+                    attributes: [{ name: 'scope', value: 'col' }],
+                    classes: 'text-right',
                     innerHTML: 'Actions'
                 }
             };
@@ -61510,21 +61667,21 @@ class BootstrapTableConfigHelper {
             id: dataObjDef.id,
             displayName: dataObjDef.displayName,
             container: {
-                elementType: 'div',
-                elementClasses: 'table-responsive'
+                type: 'div',
+                classes: 'table-responsive'
             },
             table: {
-                elementType: 'table',
-                elementClasses: 'table table-hover table-sm'
+                type: 'table',
+                classes: 'table table-hover table-sm'
             },
             header: {
-                elementType: 'thead',
-                elementClasses: ''
+                type: 'thead',
+                classes: ''
             },
             headerColumns: columnHeaderConfigs,
             body: {
-                elementType: 'tbody',
-                elementClasses: ''
+                type: 'tbody',
+                classes: ''
             },
             columns: fieldUIConfigs,
             itemDetailColumn: itemDetailColumn
@@ -61562,12 +61719,12 @@ const rlogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('limited-choice-tex
 class LimitedChoiceTextRenderer {
     constructor() {
     }
-    renderValue(field, currentValue) {
-        rlogger(`Rendering value for field ${field.displayName} with new value ${currentValue}`);
+    renderValue(field, fieldDef, currentValue) {
+        rlogger(`Rendering value for field ${fieldDef.displayName} with new value ${currentValue}`);
         // find the current value in the data source and convert to text for display
         let result = currentValue;
-        if (field.dataSource) {
-            const valueOptions = field.dataSource.getOptions();
+        if (fieldDef.dataSource) {
+            const valueOptions = fieldDef.dataSource.getOptions();
             const foundIndex = valueOptions.findIndex((option) => option.value === currentValue);
             if (foundIndex >= 0) {
                 result = valueOptions[foundIndex].name;
@@ -61867,8 +62024,8 @@ class RBGFieldOperations {
         vlogger(`Handling is valid value for field ${field.displayName} with value ${currentValue} - is valid is ${response.isValid} with message ${response.message}`);
         return response;
     }
-    renderValue(field, currentValue) {
-        rlogger(`Rendering value for field ${field.displayName} with new value ${currentValue}`);
+    renderValue(field, fieldDef, currentValue) {
+        rlogger(`Rendering value for field ${fieldDef.displayName} with new value ${currentValue}`);
         this.radioButtons.forEach((radioButton) => {
             if (radioButton.value === currentValue)
                 radioButton.checked = true;
@@ -62833,15 +62990,15 @@ class CarouselViewRenderer {
         avLogger(`view ${this.view.getName()}: creating carousel item`);
         avLogger(item);
         const collectionConfig = this.view.getCollectionUIConfig();
-        let childEl = document.createElement(collectionConfig.resultsElementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.resultsClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(childEl, collectionConfig.resultsElementAttributes);
+        let childEl = document.createElement(collectionConfig.resultsElement.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(childEl, collectionConfig.resultsElement.attributes);
         childEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
         childEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
         if (collectionConfig.detail.background) {
-            let backgroundEl = document.createElement(collectionConfig.detail.background.elementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(backgroundEl, collectionConfig.detail.background.elementClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(backgroundEl, collectionConfig.detail.background.elementAttributes);
+            let backgroundEl = document.createElement(collectionConfig.detail.background.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(backgroundEl, collectionConfig.detail.background.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(backgroundEl, collectionConfig.detail.background.attributes);
             backgroundEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
             backgroundEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
             childEl.appendChild(backgroundEl);
@@ -62854,14 +63011,15 @@ class CarouselViewRenderer {
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(contentEl, collectionConfig.detail.containerClasses);
             contentEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
             contentEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
-            textEl = document.createElement(collectionConfig.detail.textElementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(textEl, collectionConfig.detail.textElementClasses);
+            textEl = document.createElement(collectionConfig.detail.textElement.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(textEl, collectionConfig.detail.textElement.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(textEl, collectionConfig.detail.textElement.attributes);
             textEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
             textEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
             contentEl.appendChild(textEl);
             if (collectionConfig.extraActions || collectionConfig.detail.delete) {
-                let buttonsEl = document.createElement(this.config.actionContainer.elementType);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(buttonsEl, this.config.actionContainer.elementClasses);
+                let buttonsEl = document.createElement(this.config.actionContainer.type);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(buttonsEl, this.config.actionContainer.classes);
                 contentEl.appendChild(buttonsEl);
                 if (collectionConfig.extraActions) {
                     collectionConfig.extraActions.forEach((extraAction) => {
@@ -62869,14 +63027,14 @@ class CarouselViewRenderer {
                         if (hasPermissionForAction) {
                             let action = document.createElement('button');
                             action.setAttribute('type', 'button');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(action, extraAction.buttonClasses);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(action, extraAction.attributes);
-                            if (extraAction.buttonText) {
-                                action.innerHTML = extraAction.buttonText;
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(action, extraAction.button.classes);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(action, extraAction.button.attributes);
+                            if (extraAction.button.text) {
+                                action.innerHTML = extraAction.button.text;
                             }
-                            if (extraAction.iconClasses) {
+                            if (extraAction.button.iconClasses) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, extraAction.iconClasses);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
                                 iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                                 iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
@@ -62897,10 +63055,10 @@ class CarouselViewRenderer {
                 if (collectionConfig.detail.delete && collectionConfig && canDeleteItem) {
                     let deleteButtonEl = document.createElement('button');
                     deleteButtonEl.setAttribute('type', 'button');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(deleteButtonEl, collectionConfig.detail.delete.buttonClasses);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(deleteButtonEl, collectionConfig.detail.delete.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(deleteButtonEl, collectionConfig.detail.delete.attributes);
-                    if (collectionConfig.detail.delete.buttonText) {
-                        deleteButtonEl.innerHTML = collectionConfig.detail.delete.buttonText;
+                    if (collectionConfig.detail.delete.text) {
+                        deleteButtonEl.innerHTML = collectionConfig.detail.delete.text;
                     }
                     if (collectionConfig.detail.delete.iconClasses) {
                         let iconEl = document.createElement('i');
@@ -63062,19 +63220,19 @@ class CarouselViewRenderer {
         avLogger(`view ${this.view.getName()}: creating carousel with number of results per row of ${itemsPerRow} with rows ${numberOfRows}`);
         for (let rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
             // create the row
-            let rowContainerEl = document.createElement(this.config.rowContainer.elementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowContainerEl, this.config.rowContainer.elementClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowContainerEl, this.config.rowContainer.elementAttributes);
+            let rowContainerEl = document.createElement(this.config.rowContainer.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowContainerEl, this.config.rowContainer.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowContainerEl, this.config.rowContainer.attributes);
             //browserUtil.addAttributes(rowContainerEl,[{name:'style',value:'display:block'}]);
-            let rowEl = document.createElement(this.config.row.elementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowEl, this.config.row.elementClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowEl, this.config.row.elementAttributes);
+            let rowEl = document.createElement(this.config.row.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowEl, this.config.row.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowEl, this.config.row.attributes);
             rowContainerEl.appendChild(rowEl);
             // if this the active row?
             if (((rowIndex === 0) && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.RowPosition.first) ||
                 ((rowIndex === (numberOfRows - 1)) && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.RowPosition.last)) {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowContainerEl, this.config.activeRow.elementClasses);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowContainerEl, this.config.activeRow.elementAttributes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowContainerEl, this.config.activeRow.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowContainerEl, this.config.activeRow.attributes);
             }
             let itemIndex = rowIndex * itemsPerRow;
             while (itemIndex < ((rowIndex + 1) * itemsPerRow) && (itemIndex < numberOfResults)) {
@@ -63082,9 +63240,9 @@ class CarouselViewRenderer {
                 const item = newState[itemIndex];
                 let itemContainerEl = rowEl;
                 if (this.config.multipleItemsPerRowContainer) {
-                    itemContainerEl = document.createElement(this.config.multipleItemsPerRowContainer.elementType);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.elementClasses);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(itemContainerEl, this.config.multipleItemsPerRowContainer.elementAttributes);
+                    itemContainerEl = document.createElement(this.config.multipleItemsPerRowContainer.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(itemContainerEl, this.config.multipleItemsPerRowContainer.attributes);
                     rowEl.appendChild(itemContainerEl);
                 }
                 const itemEl = this.createDisplayElementForCollectionItem(collectionName, item);
@@ -63197,13 +63355,13 @@ class CarouselViewRendererUsingContext {
         logger(`view ${this.view.getName()}: creating carousel item`);
         logger(item);
         const collectionConfig = this.view.getCollectionUIConfig();
-        let childEl = document.createElement(collectionConfig.resultsElementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.resultsClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(childEl, collectionConfig.resultsElementAttributes);
+        let childEl = document.createElement(collectionConfig.resultsElement.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(childEl, collectionConfig.resultsElement.attributes);
         if (collectionConfig.detail.background) {
-            let backgroundEl = document.createElement(collectionConfig.detail.background.elementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(backgroundEl, collectionConfig.detail.background.elementClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(backgroundEl, collectionConfig.detail.background.elementAttributes);
+            let backgroundEl = document.createElement(collectionConfig.detail.background.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(backgroundEl, collectionConfig.detail.background.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(backgroundEl, collectionConfig.detail.background.attributes);
             childEl.appendChild(backgroundEl);
             this.view.renderBackgroundForItemInNamedCollection(backgroundEl, collectionName, item);
         }
@@ -63212,12 +63370,13 @@ class CarouselViewRendererUsingContext {
         if (collectionConfig.detail.containerClasses) {
             let contentEl = document.createElement('div');
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, collectionConfig.detail.containerClasses);
-            textEl = document.createElement(collectionConfig.detail.textElementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(textEl, collectionConfig.detail.textElementClasses);
+            textEl = document.createElement(collectionConfig.detail.textElement.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(textEl, collectionConfig.detail.textElement.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(textEl, collectionConfig.detail.textElement.attributes);
             contentEl.appendChild(textEl);
             if (collectionConfig.extraActions || collectionConfig.detail.delete) {
-                let buttonsEl = document.createElement(this.config.actionContainer.elementType);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(buttonsEl, this.config.actionContainer.elementClasses);
+                let buttonsEl = document.createElement(this.config.actionContainer.type);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(buttonsEl, this.config.actionContainer.classes);
                 contentEl.appendChild(buttonsEl);
                 if (collectionConfig.extraActions) {
                     collectionConfig.extraActions.forEach((extraAction) => {
@@ -63225,14 +63384,14 @@ class CarouselViewRendererUsingContext {
                         if (hasPermissionForAction) {
                             let action = document.createElement('button');
                             action.setAttribute('type', 'button');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(action, extraAction.buttonClasses);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(action, extraAction.attributes);
-                            if (extraAction.buttonText) {
-                                action.innerHTML = extraAction.buttonText;
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(action, extraAction.button.classes);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(action, extraAction.button.attributes);
+                            if (extraAction.button.text) {
+                                action.innerHTML = extraAction.button.text;
                             }
-                            if (extraAction.iconClasses) {
+                            if (extraAction.button.iconClasses) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, extraAction.iconClasses);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
                                 iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
                                 action.appendChild(iconEl);
                             }
@@ -63249,10 +63408,10 @@ class CarouselViewRendererUsingContext {
                 if (collectionConfig.detail.delete && collectionConfig && canDeleteItem) {
                     let deleteButtonEl = document.createElement('button');
                     deleteButtonEl.setAttribute('type', 'button');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(deleteButtonEl, collectionConfig.detail.delete.buttonClasses);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(deleteButtonEl, collectionConfig.detail.delete.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(deleteButtonEl, collectionConfig.detail.delete.attributes);
-                    if (collectionConfig.detail.delete.buttonText) {
-                        deleteButtonEl.innerHTML = collectionConfig.detail.delete.buttonText;
+                    if (collectionConfig.detail.delete.text) {
+                        deleteButtonEl.innerHTML = collectionConfig.detail.delete.text;
                     }
                     if (collectionConfig.detail.delete.iconClasses) {
                         let iconEl = document.createElement('i');
@@ -63391,19 +63550,19 @@ class CarouselViewRendererUsingContext {
         logger(`view ${this.view.getName()}: creating carousel with number of results per row of ${itemsPerRow} with rows ${numberOfRows}`);
         for (let rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
             // create the row
-            let rowContainerEl = document.createElement(this.config.rowContainer.elementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowContainerEl, this.config.rowContainer.elementClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowContainerEl, this.config.rowContainer.elementAttributes);
+            let rowContainerEl = document.createElement(this.config.rowContainer.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowContainerEl, this.config.rowContainer.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowContainerEl, this.config.rowContainer.attributes);
             //browserUtil.addAttributes(rowContainerEl,[{name:'style',value:'display:block'}]);
-            let rowEl = document.createElement(this.config.row.elementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowEl, this.config.row.elementClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowEl, this.config.row.elementAttributes);
+            let rowEl = document.createElement(this.config.row.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowEl, this.config.row.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowEl, this.config.row.attributes);
             rowContainerEl.appendChild(rowEl);
             // if this the active row?
             if (((rowIndex === 0) && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.RowPosition.first) ||
                 ((rowIndex === (numberOfRows - 1)) && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.RowPosition.last)) {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowContainerEl, this.config.activeRow.elementClasses);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowContainerEl, this.config.activeRow.elementAttributes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowContainerEl, this.config.activeRow.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowContainerEl, this.config.activeRow.attributes);
             }
             let itemIndex = rowIndex * itemsPerRow;
             while (itemIndex < ((rowIndex + 1) * itemsPerRow) && (itemIndex < numberOfResults)) {
@@ -63411,9 +63570,9 @@ class CarouselViewRendererUsingContext {
                 const item = newState[itemIndex];
                 let itemContainerEl = rowEl;
                 if (this.config.multipleItemsPerRowContainer) {
-                    itemContainerEl = document.createElement(this.config.multipleItemsPerRowContainer.elementType);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.elementClasses);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(itemContainerEl, this.config.multipleItemsPerRowContainer.elementAttributes);
+                    itemContainerEl = document.createElement(this.config.multipleItemsPerRowContainer.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(itemContainerEl, this.config.multipleItemsPerRowContainer.attributes);
                     rowEl.appendChild(itemContainerEl);
                 }
                 const itemEl = this.createDisplayElementForCollectionItem(collectionName, item);
@@ -63454,7 +63613,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('form-detail-view-renderer');
 class FormDetailViewRenderer {
-    constructor(containerId, objDef, permissionChecker) {
+    constructor(containerId, objDef, permissionChecker, configHelper, hasExternalControl = false) {
         this.form = null;
         this.containerId = containerId;
         this.objDef = objDef;
@@ -63463,6 +63622,8 @@ class FormDetailViewRenderer {
         this.forwarder = null;
         this.view = null;
         this.permissionChecker = permissionChecker;
+        this.configHelper = configHelper;
+        this.hasExternalControl = hasExternalControl;
     }
     hasActionPermission(actionName, from, item) {
         throw new Error("Method not implemented.");
@@ -63474,7 +63635,7 @@ class FormDetailViewRenderer {
         this.view = view;
     }
     onDocumentLoaded() {
-        this.form = new _form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_0__.BasicFormImplementation(this.containerId, this.objDef);
+        this.form = new _form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_0__.BasicFormImplementation(this.containerId, this.objDef, this.configHelper, this.hasExternalControl);
         this.form.addFormListener(this);
     }
     reset() {
@@ -63489,6 +63650,7 @@ class FormDetailViewRenderer {
         this.isNewItem = false;
         if (this.form)
             this.form.displayOnly(dataObject);
+        $(`#${this.containerId}`).animate({ scrollTop: 0 }, "fast");
     }
     getName() {
         return this.objDef.displayName;
@@ -63515,6 +63677,7 @@ class FormDetailViewRenderer {
         this.isNewItem = false;
         if (this.form)
             this.form.reset();
+        $(`#${this.containerId}`).animate({ scrollTop: 0 }, "fast");
     }
     clearReadOnly() {
         if (this.form)
@@ -63539,6 +63702,7 @@ class FormDetailViewRenderer {
             this.currentItem = this.form.startCreateNew();
         }
         $('[data-toggle="tooltip"]').tooltip();
+        $(`#${this.containerId}`).animate({ scrollTop: 0 }, "fast");
         return this.currentItem;
     }
     displayItem(dataObj) {
@@ -63553,6 +63717,7 @@ class FormDetailViewRenderer {
                 this.form.displayOnly(dataObj);
         }
         $('[data-toggle="tooltip"]').tooltip();
+        $(`#${this.containerId}`).animate({ scrollTop: 0 }, "fast");
     }
     hidden() {
         if (this.form)
@@ -63561,6 +63726,7 @@ class FormDetailViewRenderer {
     show() {
         if (this.form)
             this.form.setIsVisible(true);
+        $(`#${this.containerId}`).animate({ scrollTop: 0 }, "fast");
     }
     render() {
         this.displayItem(this.currentItem);
@@ -63603,6 +63769,7 @@ class FormDetailViewRenderer {
                 this.currentItem = formValues;
                 if (this.forwarder && this.view)
                     this.forwarder.cancelled(this.view, this.currentItem);
+                $(`#${this.containerId}`).animate({ scrollTop: 0 }, "fast");
                 break;
             }
             case (_form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.DELETING): {
@@ -63618,10 +63785,12 @@ class FormDetailViewRenderer {
                 this.currentItem = formValues;
                 if (this.forwarder && this.view)
                     this.forwarder.deletedItem(this.view, this.currentItem);
+                $(`#${this.containerId}`).animate({ scrollTop: 0 }, "fast");
                 // user is deleting the object, will become invisible
                 break;
             }
             case (_form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.SAVE_ABORTED): {
+                $(`#${this.containerId}`).animate({ scrollTop: 0 }, "fast");
                 logger(`Form save cancelled`);
                 break;
             }
@@ -63639,6 +63808,7 @@ class FormDetailViewRenderer {
                     }
                     this.isNewItem = false;
                 }
+                $(`#${this.containerId}`).animate({ scrollTop: 0 }, "fast");
                 break;
             }
             case (_form_FormListener__WEBPACK_IMPORTED_MODULE_1__.FormEventType.SAVING): {
@@ -63690,9 +63860,9 @@ class ListViewRenderer {
         avLogger(`view ${this.view.getName()}: creating List item`);
         avLogger(item);
         const resultDataKeyId = this.view.getIdForItemInNamedCollection(collectionName, item);
-        let childEl = document.createElement(uiConfig.resultsElementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.resultsClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(childEl, uiConfig.resultsElementAttributes);
+        let childEl = document.createElement(uiConfig.resultsElement.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(childEl, uiConfig.resultsElement.attributes);
         childEl.setAttribute(uiConfig.keyId, resultDataKeyId);
         childEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
         // the content may be structured
@@ -63702,14 +63872,15 @@ class ListViewRenderer {
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(contentEl, uiConfig.detail.containerClasses);
             contentEl.setAttribute(uiConfig.keyId, resultDataKeyId);
             contentEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
-            textEl = document.createElement(uiConfig.detail.textElementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(textEl, uiConfig.detail.textElementClasses);
+            textEl = document.createElement(uiConfig.detail.textElement.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(textEl, uiConfig.detail.textElement.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(textEl, uiConfig.detail.textElement.attributes);
             textEl.setAttribute(uiConfig.keyId, resultDataKeyId);
             textEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
             contentEl.appendChild(textEl);
             if (uiConfig.detail.background) {
-                let imgEl = document.createElement(uiConfig.detail.background.elementType);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.elementClasses);
+                let imgEl = document.createElement(uiConfig.detail.background.type);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.classes);
                 imgEl.setAttribute('src', this.view.getBackgroundImageForItemInNamedCollection(collectionName, item));
                 childEl.appendChild(imgEl);
             }
@@ -63718,9 +63889,9 @@ class ListViewRenderer {
             if (uiConfig.detail.badge) {
                 const badgeValue = this.view.getBadgeValueForItemInNamedCollection(collectionName, item);
                 if (badgeValue > 0) {
-                    let badgeEl = document.createElement(uiConfig.detail.badge.elementType);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.elementClasses);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(badgeEl, uiConfig.detail.badge.elementAttributes);
+                    let badgeEl = document.createElement(uiConfig.detail.badge.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(badgeEl, uiConfig.detail.badge.attributes);
                     badgeEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                     badgeEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                     buttonsEl.appendChild(badgeEl);
@@ -63733,14 +63904,14 @@ class ListViewRenderer {
                     if (hasPermissionForAction) {
                         let action = document.createElement('button');
                         action.setAttribute('type', 'button');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(action, extraAction.buttonClasses);
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(action, extraAction.attributes);
-                        if (extraAction.buttonText) {
-                            action.innerHTML = extraAction.buttonText;
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(action, extraAction.button.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(action, extraAction.button.attributes);
+                        if (extraAction.button.text) {
+                            action.innerHTML = extraAction.button.text;
                         }
-                        if (extraAction.iconClasses) {
+                        if (extraAction.button.iconClasses) {
                             let iconEl = document.createElement('i');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, extraAction.iconClasses);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
                             iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                             iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                             iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
@@ -63761,10 +63932,10 @@ class ListViewRenderer {
             if (uiConfig.detail.delete && canDeleteItem) {
                 let deleteButtonEl = document.createElement('button');
                 deleteButtonEl.setAttribute('type', 'button');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.buttonClasses);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.classes);
                 _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(deleteButtonEl, uiConfig.detail.delete.attributes);
-                if (uiConfig.detail.delete.buttonText) {
-                    deleteButtonEl.innerHTML = uiConfig.detail.delete.buttonText;
+                if (uiConfig.detail.delete.text) {
+                    deleteButtonEl.innerHTML = uiConfig.detail.delete.text;
                 }
                 if (uiConfig.detail.delete.iconClasses) {
                     let iconEl = document.createElement('i');
@@ -63966,20 +64137,21 @@ class ListViewRendererUsingContext {
         avLogger(`view ${this.view.getName()}: creating List item`);
         avLogger(item);
         const resultDataKeyId = this.view.getIdForItemInNamedCollection(collectionName, item);
-        let childEl = document.createElement(uiConfig.resultsElementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.resultsClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(childEl, uiConfig.resultsElementAttributes);
+        let childEl = document.createElement(uiConfig.resultsElement.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(childEl, uiConfig.resultsElement.attributes);
         // the content may be structured
         let textEl = childEl;
         if (uiConfig.detail.containerClasses) {
             let contentEl = document.createElement('div');
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, uiConfig.detail.containerClasses);
-            textEl = document.createElement(uiConfig.detail.textElementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(textEl, uiConfig.detail.textElementClasses);
+            textEl = document.createElement(uiConfig.detail.textElement.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(textEl, uiConfig.detail.textElement.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(textEl, uiConfig.detail.textElement.attributes);
             contentEl.appendChild(textEl);
             if (uiConfig.detail.background) {
-                let imgEl = document.createElement(uiConfig.detail.background.elementType);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.elementClasses);
+                let imgEl = document.createElement(uiConfig.detail.background.type);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.classes);
                 imgEl.setAttribute('src', this.view.getBackgroundImageForItemInNamedCollection(collectionName, item));
                 childEl.appendChild(imgEl);
             }
@@ -63988,9 +64160,9 @@ class ListViewRendererUsingContext {
             if (uiConfig.detail.badge) {
                 const badgeValue = this.view.getBadgeValueForItemInNamedCollection(collectionName, item);
                 if (badgeValue > 0) {
-                    let badgeEl = document.createElement(uiConfig.detail.badge.elementType);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.elementClasses);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(badgeEl, uiConfig.detail.badge.elementAttributes);
+                    let badgeEl = document.createElement(uiConfig.detail.badge.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(badgeEl, uiConfig.detail.badge.attributes);
                     buttonsEl.appendChild(badgeEl);
                     badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
                 }
@@ -64001,14 +64173,14 @@ class ListViewRendererUsingContext {
                     if (hasPermissionForAction) {
                         let action = document.createElement('button');
                         action.setAttribute('type', 'button');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(action, extraAction.buttonClasses);
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(action, extraAction.attributes);
-                        if (extraAction.buttonText) {
-                            action.innerHTML = extraAction.buttonText;
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(action, extraAction.button.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(action, extraAction.button.attributes);
+                        if (extraAction.button.text) {
+                            action.innerHTML = extraAction.button.text;
                         }
-                        if (extraAction.iconClasses) {
+                        if (extraAction.button.iconClasses) {
                             let iconEl = document.createElement('i');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, extraAction.iconClasses);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
                             iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
                             action.appendChild(iconEl);
                         }
@@ -64025,10 +64197,10 @@ class ListViewRendererUsingContext {
             if (uiConfig.detail.delete && canDeleteItem) {
                 let deleteButtonEl = document.createElement('button');
                 deleteButtonEl.setAttribute('type', 'button');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.buttonClasses);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.classes);
                 _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(deleteButtonEl, uiConfig.detail.delete.attributes);
-                if (uiConfig.detail.delete.buttonText) {
-                    deleteButtonEl.innerHTML = uiConfig.detail.delete.buttonText;
+                if (uiConfig.detail.delete.text) {
+                    deleteButtonEl.innerHTML = uiConfig.detail.delete.text;
                 }
                 if (uiConfig.detail.delete.iconClasses) {
                     let iconEl = document.createElement('i');
@@ -64192,6 +64364,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../context/ContextualInformationHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/context/ContextualInformationHelper.js");
+/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
+
 
 
 
@@ -64209,12 +64383,13 @@ class TabularViewRendererUsingContext {
         logger(`view ${this.view.getName()}: creating table row item`);
         logger(item);
         const resultDataKeyId = this.view.getIdForItemInNamedCollection(collectionName, item);
-        let tableRowEl = document.createElement(uiConfig.resultsElementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.resultsClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableRowEl, uiConfig.resultsElementAttributes);
+        let tableRowEl = document.createElement(uiConfig.resultsElement.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableRowEl, uiConfig.resultsElement.attributes);
         // we need to build the row from the displayed item values using the renderer if present
         this.tableConfig.columns.forEach((column, index) => {
             const fieldValue = column.getValue(column, item[column.field.id]);
+            const fieldDataType = column.field.type;
             let tdEl = document.createElement('td');
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tdEl, column.elementClasses);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, column.elementAttributes);
@@ -64224,23 +64399,24 @@ class TabularViewRendererUsingContext {
                 if (uiConfig.detail.containerClasses) {
                     let contentEl = document.createElement('div');
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(contentEl, uiConfig.detail.containerClasses);
-                    let textEl = document.createElement(uiConfig.detail.textElementType);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(textEl, uiConfig.detail.textElementClasses);
+                    let textEl = document.createElement(uiConfig.detail.textElement.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(textEl, uiConfig.detail.textElement.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(textEl, uiConfig.detail.textElement.attributes);
                     // add the key ids for selection
                     this.view.renderDisplayForItemInNamedCollection(textEl, collectionName, item);
                     contentEl.appendChild(textEl);
                     if (uiConfig.detail.background) {
-                        let imgEl = document.createElement(uiConfig.detail.background.elementType);
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.elementClasses);
+                        let imgEl = document.createElement(uiConfig.detail.background.type);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.classes);
                         imgEl.setAttribute('src', this.view.getBackgroundImageForItemInNamedCollection(collectionName, item));
                         contentEl.appendChild(imgEl);
                     }
                     if (uiConfig.detail.badge) {
                         const badgeValue = this.view.getBadgeValueForItemInNamedCollection(collectionName, item);
                         if (badgeValue > 0) {
-                            let badgeEl = document.createElement(uiConfig.detail.badge.elementType);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.elementClasses);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(badgeEl, uiConfig.detail.badge.elementAttributes);
+                            let badgeEl = document.createElement(uiConfig.detail.badge.type);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.classes);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(badgeEl, uiConfig.detail.badge.attributes);
                             contentEl.appendChild(badgeEl);
                             badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
                         }
@@ -64258,7 +64434,13 @@ class TabularViewRendererUsingContext {
                 }
             }
             else {
-                tdEl.innerHTML = fieldValue;
+                if (fieldDataType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__.FieldType.colour) {
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, [{ name: "style", value: `background-color:${fieldValue}` }]);
+                    tdEl.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
+                }
+                else {
+                    tdEl.innerText = fieldValue;
+                }
             }
             tableRowEl.appendChild(tdEl);
         });
@@ -64266,22 +64448,22 @@ class TabularViewRendererUsingContext {
         if (this.tableConfig.actionColumn) {
             // create the extra table column
             let tdEl = document.createElement('td');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tdEl, this.tableConfig.actionColumn.element.elementClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, this.tableConfig.actionColumn.element.elementAttributes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tdEl, this.tableConfig.actionColumn.element.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, this.tableConfig.actionColumn.element.attributes);
             if (uiConfig.extraActions) {
                 uiConfig.extraActions.forEach((extraAction) => {
                     const hasPermissionForAction = this.view.hasPermissionToActionItemInNamedCollection(extraAction.name, collectionName, item);
                     if (hasPermissionForAction) {
                         let action = document.createElement('button');
                         action.setAttribute('type', 'button');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(action, extraAction.buttonClasses);
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(action, extraAction.attributes);
-                        if (extraAction.buttonText) {
-                            action.innerHTML = extraAction.buttonText;
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(action, extraAction.button.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(action, extraAction.button.attributes);
+                        if (extraAction.button.text) {
+                            action.innerHTML = extraAction.button.text;
                         }
-                        if (extraAction.iconClasses) {
+                        if (extraAction.button.iconClasses) {
                             let iconEl = document.createElement('i');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, extraAction.iconClasses);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
                             iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
                             action.appendChild(iconEl);
                         }
@@ -64298,10 +64480,10 @@ class TabularViewRendererUsingContext {
             if (uiConfig.detail.delete && canDeleteItem) {
                 let deleteButtonEl = document.createElement('button');
                 deleteButtonEl.setAttribute('type', 'button');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.buttonClasses);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.classes);
                 _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(deleteButtonEl, uiConfig.detail.delete.attributes);
-                if (uiConfig.detail.delete.buttonText) {
-                    deleteButtonEl.innerHTML = uiConfig.detail.delete.buttonText;
+                if (uiConfig.detail.delete.text) {
+                    deleteButtonEl.innerHTML = uiConfig.detail.delete.text;
                 }
                 if (uiConfig.detail.delete.iconClasses) {
                     let iconEl = document.createElement('i');
@@ -64316,14 +64498,14 @@ class TabularViewRendererUsingContext {
                 tdEl.appendChild(deleteButtonEl);
             }
             tableRowEl.appendChild(tdEl);
-            if (uiConfig.detail.drag) {
-                tableRowEl.setAttribute('draggable', 'true');
-                tableRowEl.addEventListener('dragstart', this.eventHandler.eventStartDrag);
-            }
-            // add selection actions
-            if (uiConfig.detail.select) {
-                tableRowEl.addEventListener('click', this.eventHandler.eventClickItem);
-            }
+        }
+        if (uiConfig.detail.drag) {
+            tableRowEl.setAttribute('draggable', 'true');
+            tableRowEl.addEventListener('dragstart', this.eventHandler.eventStartDrag);
+        }
+        // add selection actions
+        if (uiConfig.detail.select) {
+            tableRowEl.addEventListener('click', this.eventHandler.eventClickItem);
         }
         // add modifiers for patient state
         if (uiConfig.modifiers) {
@@ -64423,36 +64605,36 @@ class TabularViewRendererUsingContext {
         // remove the previous items from list
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAllChildren(containerEl);
         // create the table
-        let tableEl = document.createElement(this.tableConfig.table.elementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableEl, this.tableConfig.table.elementClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableEl, this.tableConfig.table.elementAttributes);
+        let tableEl = document.createElement(this.tableConfig.table.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableEl, this.tableConfig.table.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableEl, this.tableConfig.table.attributes);
         // create the headers
-        let tableHeaderEl = document.createElement(this.tableConfig.header.elementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableHeaderEl, this.tableConfig.header.elementClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableHeaderEl, this.tableConfig.header.elementAttributes);
+        let tableHeaderEl = document.createElement(this.tableConfig.header.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableHeaderEl, this.tableConfig.header.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableHeaderEl, this.tableConfig.header.attributes);
         // create the column headers
         this.tableConfig.headerColumns.forEach((header) => {
-            let thEl = document.createElement(header.element.elementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(thEl, header.element.elementClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(thEl, header.element.elementAttributes);
+            let thEl = document.createElement(header.element.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(thEl, header.element.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(thEl, header.element.attributes);
             if (header.element.innerHTML)
                 thEl.innerHTML = header.element.innerHTML;
             tableHeaderEl.appendChild(thEl);
         });
         // create the action column header (if one)
         if (this.tableConfig.actionColumn) {
-            let thEl = document.createElement(this.tableConfig.actionColumn.element.elementType);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(thEl, this.tableConfig.actionColumn.element.elementClasses);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(thEl, this.tableConfig.actionColumn.element.elementAttributes);
+            let thEl = document.createElement(this.tableConfig.actionColumn.element.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(thEl, this.tableConfig.actionColumn.element.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(thEl, this.tableConfig.actionColumn.element.attributes);
             if (this.tableConfig.actionColumn.element.innerHTML)
                 thEl.innerHTML = this.tableConfig.actionColumn.element.innerHTML;
             tableHeaderEl.appendChild(thEl);
         }
         tableEl.appendChild(tableHeaderEl);
         // create the table body
-        let tableBodyEl = document.createElement(this.tableConfig.body.elementType);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableBodyEl, this.tableConfig.body.elementClasses);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableBodyEl, this.tableConfig.body.elementAttributes);
+        let tableBodyEl = document.createElement(this.tableConfig.body.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableBodyEl, this.tableConfig.body.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableBodyEl, this.tableConfig.body.attributes);
         // add the new children
         newState.map((item, index) => {
             const childEl = this.createDisplayElementForCollectionItem(collectionName, item);
@@ -64583,6 +64765,62 @@ const browserUtil = new BrowserUtil();
 
 /***/ }),
 
+/***/ "./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "addDurations": () => (/* binding */ addDurations)
+/* harmony export */ });
+function addDurations(duration1, duration2) {
+    const durationRegexp = /^(\d+:)?[0-5]?\d:[0-5]\d$/;
+    // check both are valid durations
+    const duration1Valid = durationRegexp.test(duration1);
+    const duration2Valid = durationRegexp.test(duration2);
+    if (duration1Valid && duration2Valid) {
+        // split them into seconds, minutes, and hours
+        const duration1Components = duration1.split(':');
+        const duration2Components = duration2.split(':');
+        let carry = 0;
+        // add the seconds (last elements in each)
+        const duration1Seconds = parseInt(duration1Components[duration1Components.length - 1]);
+        const duration2Seconds = parseInt(duration2Components[duration2Components.length - 1]);
+        let sumSeconds = duration1Seconds + duration2Seconds;
+        if (sumSeconds >= 60) {
+            carry = 1;
+            sumSeconds -= 60;
+        }
+        const duration1Minutes = parseInt(duration1Components[duration1Components.length - 2]);
+        const duration2Minutes = parseInt(duration2Components[duration2Components.length - 2]);
+        let sumMinutes = duration1Minutes + duration2Minutes + carry;
+        if (sumMinutes >= 60) {
+            carry = 1;
+            sumMinutes -= 60;
+        }
+        // do we have hours?
+        let duration1Hours = 0;
+        if (duration1Components.length == 3) {
+            duration1Hours = parseInt(duration1Components[0]);
+        }
+        let duration2Hours = 0;
+        if (duration2Components.length == 3) {
+            duration2Hours = parseInt(duration2Components[0]);
+        }
+        let sumHours = duration1Hours + duration2Hours + carry;
+        return `${(sumHours > 0) ? sumHours + ':' : ''}${(sumMinutes < 10) ? '0' + sumMinutes : sumMinutes}:${(sumSeconds < 10) ? '0' + sumSeconds : sumSeconds}`;
+    }
+    else {
+        return '00:00';
+    }
+}
+//# sourceMappingURL=DurationFunctions.js.map
+
+/***/ }),
+
 /***/ "./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js":
 /*!********************************************************************************!*\
   !*** ./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js ***!
@@ -64610,6 +64848,89 @@ function isSameRoom(item1, item2) {
     return (item1.roomName === item2.roomName);
 }
 //# sourceMappingURL=EqualityFunctions.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "truncateString": () => (/* binding */ truncateString),
+/* harmony export */   "convertSingleHexToNumber": () => (/* binding */ convertSingleHexToNumber),
+/* harmony export */   "convertHexToNumber": () => (/* binding */ convertHexToNumber),
+/* harmony export */   "isHexValueDark": () => (/* binding */ isHexValueDark)
+/* harmony export */ });
+function truncateString(str, num) {
+    // If the length of str is less than or equal to num
+    // just return str--don't truncate it.
+    if (str.length <= num) {
+        return str;
+    }
+    // Return str truncated with '...' concatenated to the end of str.
+    return str.slice(0, num) + '...';
+}
+function convertSingleHexToNumber(singleHexValue) {
+    let value = parseInt(singleHexValue);
+    if (isNaN(value)) {
+        switch (singleHexValue) {
+            case 'a': {
+                value = 11;
+                break;
+            }
+            case 'b': {
+                value = 12;
+                break;
+            }
+            case 'c': {
+                value = 13;
+                break;
+            }
+            case 'd': {
+                value = 14;
+                break;
+            }
+            case 'e': {
+                value = 15;
+                break;
+            }
+            case 'f': {
+                value = 16;
+                break;
+            }
+        }
+    }
+    return value;
+}
+function convertHexToNumber(hexValue) {
+    let value = 0;
+    let firstHexDigit = hexValue.substr(1, 1);
+    let tensHexDigit = hexValue.substr(0, 1);
+    value = 10 * convertSingleHexToNumber(tensHexDigit) + convertSingleHexToNumber(firstHexDigit);
+    return value;
+}
+function isHexValueDark(hexValue) {
+    let result = false;
+    // we are dark if the equivalent rgb value is < 125 for each value
+    hexValue = hexValue.toLowerCase();
+    if (hexValue.length < 7)
+        return false;
+    let redHex = hexValue.substr(1, 2);
+    let greenHex = hexValue.substr(3, 2);
+    let blueHex = hexValue.substr(5, 2);
+    let redValue = convertHexToNumber(redHex);
+    let greenValue = convertHexToNumber(greenHex);
+    let blueValue = convertHexToNumber(blueHex);
+    if ((redValue < 125) && (greenValue < 125) && (blueValue < 125)) {
+        result = true;
+    }
+    return result;
+}
+//# sourceMappingURL=MiscFunctions.js.map
 
 /***/ }),
 
@@ -64688,30 +65009,46 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "AbstractForm": () => (/* reexport safe */ _framework_ui_form_AbstractForm__WEBPACK_IMPORTED_MODULE_43__.AbstractForm),
 /* harmony export */   "FormElementFactory": () => (/* reexport safe */ _framework_ui_form_factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_44__.FormElementFactory),
 /* harmony export */   "BasicFormImplementation": () => (/* reexport safe */ _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_45__.BasicFormImplementation),
-/* harmony export */   "ConditionResponse": () => (/* reexport safe */ _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_46__.ConditionResponse),
-/* harmony export */   "ValidationManager": () => (/* reexport safe */ _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_47__.ValidationManager),
-/* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_48__.BootstrapFormConfigHelper),
-/* harmony export */   "BootstrapTableConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_49__.BootstrapTableConfigHelper),
-/* harmony export */   "LimitedChoiceTextRenderer": () => (/* reexport safe */ _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_50__.LimitedChoiceTextRenderer),
-/* harmony export */   "LinkedCollectionDetailController": () => (/* reexport safe */ _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_51__.LinkedCollectionDetailController),
-/* harmony export */   "RBGFieldOperations": () => (/* reexport safe */ _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_52__.RBGFieldOperations),
-/* harmony export */   "SimpleValueDataSource": () => (/* reexport safe */ _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_53__.SimpleValueDataSource),
-/* harmony export */   "AbstractView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_54__.AbstractView),
-/* harmony export */   "AbstractCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_55__.AbstractCollectionView),
-/* harmony export */   "AbstractStatefulCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_56__.AbstractStatefulCollectionView),
-/* harmony export */   "DefaultPermissionChecker": () => (/* reexport safe */ _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_57__.DefaultPermissionChecker),
-/* harmony export */   "DetailViewImplementation": () => (/* reexport safe */ _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_58__.DetailViewImplementation),
-/* harmony export */   "CarouselViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_59__.CarouselViewRenderer),
-/* harmony export */   "CarouselViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_60__.CarouselViewRendererUsingContext),
-/* harmony export */   "FormDetailViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_61__.FormDetailViewRenderer),
-/* harmony export */   "ListViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_62__.ListViewRenderer),
-/* harmony export */   "ListViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_63__.ListViewRendererUsingContext),
-/* harmony export */   "TabularViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_64__.TabularViewRendererUsingContext),
-/* harmony export */   "ViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_65__.ViewListenerForwarder),
-/* harmony export */   "DetailViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_66__.DetailViewListenerForwarder),
-/* harmony export */   "CollectionViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_67__.CollectionViewListenerForwarder),
-/* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_68__.CollectionViewEventHandlerDelegate),
-/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_69__.CollectionViewEventHandlerDelegateUsingContext)
+/* harmony export */   "AbstractField": () => (/* reexport safe */ _framework_ui_form_field_AbstractField__WEBPACK_IMPORTED_MODULE_46__.AbstractField),
+/* harmony export */   "InputField": () => (/* reexport safe */ _framework_ui_form_field_InputField__WEBPACK_IMPORTED_MODULE_47__.InputField),
+/* harmony export */   "TextAreaField": () => (/* reexport safe */ _framework_ui_form_field_TextAreaField__WEBPACK_IMPORTED_MODULE_48__.TextAreaField),
+/* harmony export */   "SelectField": () => (/* reexport safe */ _framework_ui_form_field_SelectField__WEBPACK_IMPORTED_MODULE_49__.SelectField),
+/* harmony export */   "RadioButtonGroupField": () => (/* reexport safe */ _framework_ui_form_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_50__.RadioButtonGroupField),
+/* harmony export */   "ColourInputField": () => (/* reexport safe */ _framework_ui_form_field_ColourInputField__WEBPACK_IMPORTED_MODULE_51__.ColourInputField),
+/* harmony export */   "ConditionResponse": () => (/* reexport safe */ _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_52__.ConditionResponse),
+/* harmony export */   "ValidationManager": () => (/* reexport safe */ _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_53__.ValidationManager),
+/* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_54__.BootstrapFormConfigHelper),
+/* harmony export */   "BootstrapTableConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_55__.BootstrapTableConfigHelper),
+/* harmony export */   "LimitedChoiceTextRenderer": () => (/* reexport safe */ _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_56__.LimitedChoiceTextRenderer),
+/* harmony export */   "LinkedCollectionDetailController": () => (/* reexport safe */ _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_57__.LinkedCollectionDetailController),
+/* harmony export */   "RBGFieldOperations": () => (/* reexport safe */ _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_58__.RBGFieldOperations),
+/* harmony export */   "SimpleValueDataSource": () => (/* reexport safe */ _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_59__.SimpleValueDataSource),
+/* harmony export */   "AbstractView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_60__.AbstractView),
+/* harmony export */   "AbstractCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_61__.AbstractCollectionView),
+/* harmony export */   "AbstractStatefulCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_62__.AbstractStatefulCollectionView),
+/* harmony export */   "DefaultPermissionChecker": () => (/* reexport safe */ _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_63__.DefaultPermissionChecker),
+/* harmony export */   "DetailViewImplementation": () => (/* reexport safe */ _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_64__.DetailViewImplementation),
+/* harmony export */   "CarouselViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_65__.CarouselViewRenderer),
+/* harmony export */   "CarouselViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_66__.CarouselViewRendererUsingContext),
+/* harmony export */   "FormDetailViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_67__.FormDetailViewRenderer),
+/* harmony export */   "ListViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_68__.ListViewRenderer),
+/* harmony export */   "ListViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_69__.ListViewRendererUsingContext),
+/* harmony export */   "TabularViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_70__.TabularViewRendererUsingContext),
+/* harmony export */   "ViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_71__.ViewListenerForwarder),
+/* harmony export */   "DetailViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_72__.DetailViewListenerForwarder),
+/* harmony export */   "CollectionViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_73__.CollectionViewListenerForwarder),
+/* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_74__.CollectionViewEventHandlerDelegate),
+/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_75__.CollectionViewEventHandlerDelegateUsingContext),
+/* harmony export */   "truncateString": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__.truncateString),
+/* harmony export */   "convertHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__.convertHexToNumber),
+/* harmony export */   "convertSingleHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__.convertSingleHexToNumber),
+/* harmony export */   "isHexValueDark": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__.isHexValueDark),
+/* harmony export */   "isSameMongo": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__.isSameMongo),
+/* harmony export */   "isSame": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__.isSame),
+/* harmony export */   "isSameUsername": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__.isSameUsername),
+/* harmony export */   "isSameRoom": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__.isSameRoom),
+/* harmony export */   "addDurations": () => (/* reexport safe */ _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_78__.addDurations),
+/* harmony export */   "BrowserUtil": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_79__.BrowserUtil)
 /* harmony export */ });
 /* harmony import */ var _framework_CommonTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
 /* harmony import */ var _framework_model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./framework/model/BasicFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/model/BasicFieldOperations.js");
@@ -64759,30 +65096,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _framework_ui_form_AbstractForm__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./framework/ui/form/AbstractForm */ "./node_modules/ui-framework-jps/dist/framework/ui/form/AbstractForm.js");
 /* harmony import */ var _framework_ui_form_factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./framework/ui/form/factory/FormElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/form/factory/FormElementFactory.js");
 /* harmony import */ var _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./framework/ui/form/BasicFormImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/form/BasicFormImplementation.js");
-/* harmony import */ var _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js");
-/* harmony import */ var _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js");
-/* harmony import */ var _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./framework/ui/helper/LimitedChoiceTextRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
-/* harmony import */ var _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./framework/ui/helper/LinkedCollectionDetailController */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LinkedCollectionDetailController.js");
-/* harmony import */ var _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./framework/ui/helper/RBGFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/RBGFieldOperations.js");
-/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./framework/ui/helper/SimpleValueDataSource */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/SimpleValueDataSource.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractStatefulCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./framework/ui/view/implementation/DefaultPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DefaultPermissionChecker.js");
-/* harmony import */ var _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./framework/ui/view/implementation/DetailViewImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DetailViewImplementation.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./framework/ui/view/renderer/FormDetailViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/FormDetailViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./framework/ui/view/renderer/TabularViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./framework/ui/view/delegate/ViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./framework/ui/view/delegate/DetailViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegate */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js");
+/* harmony import */ var _framework_ui_form_field_AbstractField__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./framework/ui/form/field/AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
+/* harmony import */ var _framework_ui_form_field_InputField__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./framework/ui/form/field/InputField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/InputField.js");
+/* harmony import */ var _framework_ui_form_field_TextAreaField__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./framework/ui/form/field/TextAreaField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/TextAreaField.js");
+/* harmony import */ var _framework_ui_form_field_SelectField__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./framework/ui/form/field/SelectField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/SelectField.js");
+/* harmony import */ var _framework_ui_form_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./framework/ui/form/field/RadioButtonGroupField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/RadioButtonGroupField.js");
+/* harmony import */ var _framework_ui_form_field_ColourInputField__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./framework/ui/form/field/ColourInputField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/ColourInputField.js");
+/* harmony import */ var _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js");
+/* harmony import */ var _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js");
+/* harmony import */ var _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
+/* harmony import */ var _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableConfigHelper.js");
+/* harmony import */ var _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./framework/ui/helper/LimitedChoiceTextRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
+/* harmony import */ var _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./framework/ui/helper/LinkedCollectionDetailController */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LinkedCollectionDetailController.js");
+/* harmony import */ var _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./framework/ui/helper/RBGFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/RBGFieldOperations.js");
+/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./framework/ui/helper/SimpleValueDataSource */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/SimpleValueDataSource.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractView.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractCollectionView.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractStatefulCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
+/* harmony import */ var _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./framework/ui/view/implementation/DefaultPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DefaultPermissionChecker.js");
+/* harmony import */ var _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./framework/ui/view/implementation/DetailViewImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DetailViewImplementation.js");
+/* harmony import */ var _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./framework/ui/view/renderer/FormDetailViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/FormDetailViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./framework/ui/view/renderer/TabularViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./framework/ui/view/delegate/ViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./framework/ui/view/delegate/DetailViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegate */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js");
+/* harmony import */ var _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./framework/util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
+/* harmony import */ var _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./framework/util/EqualityFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js");
+/* harmony import */ var _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./framework/util/DurationFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js");
+/* harmony import */ var _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
 
 
 
@@ -64815,6 +65162,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* ui */
+
+
+
+
+
+
+
+
+
+
 
 
 

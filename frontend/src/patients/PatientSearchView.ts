@@ -25,9 +25,11 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
             resultsContainerId: 'recentPatientSearches',
             dataSourceId: VIEW_NAME.patientSearch,
         },
-        resultsElementType: 'a',
-        resultsElementAttributes: [{name: 'href', value: '#'}],
-        resultsClasses: 'list-group-item my-list-item truncate-notification list-group-item-action',
+        resultsElement: {
+            type: 'a',
+            attributes: [{name: 'href', value: '#'}],
+            classes: 'list-group-item my-list-item truncate-notification list-group-item-action',
+        },
         keyId: '_id',
         keyType: KeyType.string,
         modifiers: {
@@ -44,12 +46,14 @@ export class PatientSearchView extends AbstractStatefulCollectionView  {
         },
         detail: {
             containerClasses: 'd-flex w-100 justify-content-between',
-            textElementType: 'span',
-            textElementClasses: 'mb-1',
+            textElement: {
+                classes: 'mb-1',
+                type:'span',
+            },
             select: true,
             quickDelete: true,
             delete: {
-                buttonClasses: 'btn bg-danger text-white btn-circle btn-sm',
+                classes: 'btn bg-danger text-white btn-circle btn-sm',
                 iconClasses: 'fas fa-trash-alt',
             },
             drag: {

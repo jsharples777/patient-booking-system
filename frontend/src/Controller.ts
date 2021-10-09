@@ -192,7 +192,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
             {
                 stateName: STATE_NAMES.patients,
                 serverURL: '',
-                api: API_Config.patientDemographics,
+                api: API_Config.patients,
                 isActive: true,
                 idField: '_id'
             },
@@ -246,10 +246,10 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 serverURL: '',
                 apiURL: API_Config.graphQL,
                 apis: {
-                    findAll: 'query {getAppointmentTypes {_id,name,colour,icon}}',
-                    create: 'mutation createAppointmentType($data: AppointmentInput!){addAppointmentType(apptType: $data) {_id,name,colour,icon}}',
+                    findAll: 'query {getAppointmentTypes {_id,name,colour,icon,isStatus}}',
+                    create: 'mutation createAppointmentType($data: AppointmentTypeInput!){addAppointmentType(apptType: $data) {_id,name,colour,icon,isStatus}}',
                     destroy: 'mutation deleteAppointmentType($identifier: String!){deleteAppointmentType(id: $identifier)}',
-                    update: 'mutation updateAppointmentType($data: AppointmentInput!){updateAppointmentType(apptType: $data)}',
+                    update: 'mutation updateAppointmentType($data: AppointmentTypeInput!){updateAppointmentType(apptType: $data)}',
                     find: '',
                 },
                 data: {
@@ -335,10 +335,10 @@ export default class Controller implements StateChangeListener, DataObjectListen
         let asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
 
         aggregateSM.addStateManager(memorySM, [], false);
-        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patients], false);
-        //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates], false);
-        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
-        //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig,STATE_NAMES.patientDemographics], false);
+        //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patients], false);
+        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates], false);
+        //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
+        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig,STATE_NAMES.patients], false);
         this.stateManager = aggregateSM;
 
         // state listener
@@ -512,33 +512,30 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
     private setupDataObjectDefinitions() {
         // create the object definitions for the exercise type and workout
-        let exerciseTypeDefinition: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.exerciseTypes, 'Exercise', true, true, true, '_id');
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "name", "Name", FieldType.text, true, "Exercise name");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "type", "Type", FieldType.limitedChoice, true, "Choose cardio or strength",
-            new SimpleValueDataSource([
-                {name: 'Cardio', value: 'cardio'},
-                {name: 'Strength', value: 'strength'}
-            ]));
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "duration", "Duration", FieldType.duration, true, "Exercise time");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "sets", "Sets", FieldType.integer, false, "Number of sets");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "reps", "Repetitions", FieldType.integer, false, "Number of reps");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "weight", "Weight", FieldType.float, false, "Weight used");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(exerciseTypeDefinition, "distance", "Distance", FieldType.float, false, "Distance travelled");
+        let apptTypeDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.appointmentTypes, 'Appointment Type', true, true, false, '_id');
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "name", "Name", FieldType.text, true, "Name");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "colour", "Colour", FieldType.colour, true, "Choose color from below");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "icon", "Icon", FieldType.text, false, "Font Awesome icon classes");
+        let statusFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "isStatus", "Patient flow status", FieldType.boolean, false, "Used by the application to track patient state");
+        statusFieldDef.displayOnly = true;
 
-        cLogger(`Exercise type data object definition`);
-        cLogger(exerciseTypeDefinition);
-        cLoggerDetail(ObjectDefinitionRegistry.getInstance().findDefinition('exerciseType'));
+        cLogger(`Appointment type data object definition`);
+        cLogger(apptTypeDef);
 
-        let workoutDefinition: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.workouts, 'Workout', true, true, true, '_id');
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "name", "Name", FieldType.text, false, "Give the workout a name");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "completed", "Completed", FieldType.boolean, true, "Have completed the workout");
-        let exercisesFieldDefinition: FieldDefinition = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "exercises", "Exercises", FieldType.collection, true, "Exercises in this workout");
-        exercisesFieldDefinition.idType = KeyType.collection;
-        exercisesFieldDefinition.collectionOfDataObjectId = exerciseTypeDefinition.id;
 
-        cLogger(`Workout data object definition`);
-        cLogger(workoutDefinition);
-        cLoggerDetail(ObjectDefinitionRegistry.getInstance().findDefinition('workout'));
+
+
+
+        // let workoutDefinition: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.workouts, 'Workout', true, true, true, '_id');
+        // BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "name", "Name", FieldType.text, false, "Give the workout a name");
+        // BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "completed", "Completed", FieldType.boolean, true, "Have completed the workout");
+        // let exercisesFieldDefinition: FieldDefinition = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "exercises", "Exercises", FieldType.collection, true, "Exercises in this workout");
+        // exercisesFieldDefinition.idType = KeyType.collection;
+        // exercisesFieldDefinition.linkedDataObjectId = exerciseTypeDefinition.id;
+        //
+        // cLogger(`Workout data object definition`);
+        // cLogger(workoutDefinition);
+        // cLoggerDetail(ObjectDefinitionRegistry.getInstance().findDefinition('workout'));
 
 
     }

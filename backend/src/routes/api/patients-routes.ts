@@ -1,11 +1,15 @@
 import express from 'express';
 import {MongoDataSource} from "../../db/MongoDataSource";
 import {Document} from "mongodb";
+import debug from "debug";
+
 const router = express.Router();
+
+const logger = debug('route-patients');
 
 
 router.get("/",function(req,res) {
-    console.log("Starting route GET /patients");
+    logger("Starting route GET /patients");
     try {
         MongoDataSource.getInstance().getPatientSearchDetails().then((jsonData) => {
             res.json(jsonData);
@@ -20,30 +24,20 @@ router.get("/",function(req,res) {
     }
 });
 
-router.get("/demographics/:id",function(req,res) {
-    console.log(`Starting route GET /patient/demographics by id ${req.params.id}`);
+router.get("/:id",function(req,res) {
+    logger(`Starting route GET /patient by id ${req.params.id}`);
     const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
 
-    let projection = {
-        projection: {
-            _id: 1,
-            lastSeen: 1,
-            lastSeenBy: 1,
-            dob: 1,
-            dod: 1,
-            gender:1,
-            ethnicity: 1,
-            countryofbirth: 1,
-            created: 1,
-            modified: 1,
-            identifiers: 1,
-            name: 1,
-            flags: 1,
-            warnings: 1,
-            contact:1
+    MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id:req.params.id}).then((result: Document|null) => {
+        logger(result);
+        if (result) {
+            result.results.forEach((pathology:any) => {
+                if (isNaN(pathology.received)) {
+                    pathology.received = -1;
+                }
+
+            });
         }
-    };
-    MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id:req.params.id}, projection).then((result: Document|null) => {
         res.json(result);
         res.end();
     })
@@ -57,7 +51,7 @@ router.get("/demographics/:id",function(req,res) {
 
 
 router.get("/:id",function(req,res) {
-    console.log("Starting route GET /patient by legacy id");
+    logger("Starting route GET /patient by legacy id");
     try {
         MongoDataSource.getInstance().getPatientById(req.params.id).then((jsonData) => {
             res.json(jsonData);

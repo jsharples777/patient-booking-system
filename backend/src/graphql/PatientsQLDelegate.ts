@@ -54,27 +54,6 @@ export default class PatientsQLDelegate {
         logger(data);
         return new Promise((resolve, reject) => {
             const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
-
-            // let projection = {
-            //     projection: {
-            //         _id: 1,
-            //         lastSeen: 1,
-            //         lastSeenBy: 1,
-            //         dob: 1,
-            //         dod: 1,
-            //         gender:1,
-            //         ethnicity: 1,
-            //         countryofbirth: 1,
-            //         created: 1,
-            //         modified: 1,
-            //         identifiers: 1,
-            //         name: 1,
-            //         flags: 1,
-            //         warnings: 1,
-            //         contact:1
-            //     }
-            // };
-            // MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id:data.id}, projection).then((result: Document|null) => {
             MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id:data.id}).then((result: Document|null) => {
                 logger(result);
                 if (result) {
