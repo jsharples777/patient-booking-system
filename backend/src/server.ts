@@ -25,7 +25,7 @@ import connectFlash from 'connect-flash';
 import compression from 'compression';
 
 // Sockets
-import socketManager from './socket/SocketManager';
+
 
 // Authentication middleware
 import passport from 'passport';
@@ -38,6 +38,7 @@ import routes from './routes';
 import apiRoutes from './routes/api';
 import DataSource from "./graphql/DataSource";
 import {setupPassport} from "./passport/passport";
+import {SocketManager} from "server-socket-framework-jps";
 //dotenv.config({ path: __dirname+'/.env' });
 dotenv.config();
 
@@ -164,7 +165,7 @@ const httpServer = new http.Server(app);
 if (enableSockets) {
     // setup the sockets manager with the server
     serverDebug('Setting up Socket manager');
-    socketManager.connectToServer(httpServer);
+    SocketManager.getInstance().connectToServer(httpServer);
 
     // setup the WebRTC peer server
     // @ts-ignore
@@ -214,6 +215,6 @@ if (isDevelopment) {
 httpServer.listen(port, () => {
     serverDebug(`Server started on port ${port}`);
     // start listening for socket events
-    if (enableSockets) socketManager.listen();
+    if (enableSockets) SocketManager.getInstance().listen();
 });
 

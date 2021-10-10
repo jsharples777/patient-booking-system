@@ -53957,7 +53957,7 @@ class ChatManager {
             from: '',
             created: created,
             room: users.room,
-            priority: 0,
+            priority: _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Normal,
             type: _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom,
             message: `${users.username} joined the chat on ${joinDateTime}`
         };
@@ -53981,7 +53981,7 @@ class ChatManager {
             from: '',
             created: created,
             room: users.room,
-            priority: 0,
+            priority: _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Normal,
             type: _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom,
             message: `${users.username} left the chat on ${joinDateTime}`
         };
@@ -54070,7 +54070,9 @@ class ChatManager {
     }
     touchChatLog(room) {
         let chatLog = this.ensureChatLogExists(room);
-        chatLog.numOfNewMessages = 0;
+        chatLog.unreadMessages = 0;
+        chatLog.unreadHighMessages = 0;
+        chatLog.unreadUrgentMessages = 0;
         chatLog.lastViewed = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDDHHmmss'));
         this.emitUnreadMessageCountChanged();
         this.saveLogs();
@@ -54163,13 +54165,19 @@ class ChatManager {
             _SocketManager__WEBPACK_IMPORTED_MODULE_2__.SocketManager.getInstance().sendInvite(this.getCurrentUser(), to, room, type, requiresAcceptDecline, subject);
         }
     }
-    sendMessage(room, content, priority = _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Normal, attachment) {
+    sendMessage(room, content, priority = _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Normal, simpleAttachement, attachment) {
         if (this.getCurrentUser().trim().length === 0)
             return null; // we are not logged in
         let log = this.ensureChatLogExists(room);
         // send the message
         let created = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDDHHmmss'));
-        _SocketManager__WEBPACK_IMPORTED_MODULE_2__.SocketManager.getInstance().sendMessage(this.getCurrentUser(), room, content, created, _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom, _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Normal, {});
+        if (!(simpleAttachement))
+            simpleAttachement = {
+                identifier: '',
+                type: '',
+                displayText: ''
+            };
+        _SocketManager__WEBPACK_IMPORTED_MODULE_2__.SocketManager.getInstance().sendMessage(this.getCurrentUser(), room, content, created, _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom, _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Normal, simpleAttachement, {});
         // add the message to the chat log
         if (!attachment)
             attachment = {};
@@ -54180,6 +54188,7 @@ class ChatManager {
             created: created,
             priority: priority,
             type: _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom,
+            simpleAttachment: simpleAttachement,
             attachment: attachment
         };
         this.addMessageToChatLog(log, sent);
@@ -54221,7 +54230,9 @@ class ChatManager {
                 users: [this.getCurrentUser()],
                 messages: [],
                 lastViewed: parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDDHHmmss')),
-                numOfNewMessages: 0,
+                unreadMessages: 0,
+                unreadHighMessages: 0,
+                unreadUrgentMessages: 0,
                 type: _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom,
             };
             this.chatLogs.push(log);
@@ -54252,7 +54263,9 @@ class ChatManager {
                 users: [this.getCurrentUser(), username],
                 messages: [],
                 lastViewed: parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDDHHmmss')),
-                numOfNewMessages: 0,
+                unreadMessages: 0,
+                unreadHighMessages: 0,
+                unreadUrgentMessages: 0,
                 type: _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom
             };
             this.chatLogs.push(foundLog);
@@ -54266,14 +54279,31 @@ class ChatManager {
     }
     emitUnreadMessageCountChanged() {
         var _a;
-        let unreadCount = 0;
+        let unreadNormalMessages = 0;
+        let unreadHighMessages = 0;
+        let unreadUrgentMessages = 0;
         this.chatLogs.forEach((log) => {
-            unreadCount += log.numOfNewMessages;
+            unreadNormalMessages += log.unreadMessages;
+            unreadHighMessages += log.unreadHighMessages;
+            unreadUrgentMessages += log.unreadUrgentMessages;
         });
-        (_a = this.unreadListener) === null || _a === void 0 ? void 0 : _a.countChanged(unreadCount);
+        (_a = this.unreadListener) === null || _a === void 0 ? void 0 : _a.countChanged(unreadNormalMessages, unreadHighMessages, unreadUrgentMessages);
     }
     addMessageToChatLog(log, message) {
-        log.numOfNewMessages++;
+        switch (message.priority) {
+            case _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Normal: {
+                log.unreadMessages++;
+                break;
+            }
+            case _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.High: {
+                log.unreadHighMessages++;
+                break;
+            }
+            case _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Urgent: {
+                log.unreadUrgentMessages++;
+                break;
+            }
+        }
         log.messages.push(message);
         this.emitUnreadMessageCountChanged();
         if (message.from === this.getCurrentUser()) {
@@ -54357,7 +54387,7 @@ class NotificationController {
     handleNewInviteReceived(invite) {
         let result = true;
         // is this a chat room or score sheet?
-        if (invite.type === _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ScoreSheet)
+        if (invite.type !== _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom)
             return true;
         if ((this.doNotDisturb) && (!invite.requiresAcceptDecline))
             return result;
@@ -54583,7 +54613,7 @@ class SocketManager {
         sDebug(inviteObj);
         this.socket.emit('invite', inviteObj);
     }
-    sendMessage(from, room, message, created, type, priority = _Types__WEBPACK_IMPORTED_MODULE_1__.Priority.Normal, attachment = {}) {
+    sendMessage(from, room, message, created, type, priority = _Types__WEBPACK_IMPORTED_MODULE_1__.Priority.Normal, simpleAttachment, attachment = {}) {
         let messageObj = {
             from: from,
             room: room,
@@ -54591,6 +54621,7 @@ class SocketManager {
             created: created,
             priority: priority,
             type: type,
+            simpleAttachment: simpleAttachment,
             attachment: attachment
         };
         this.socket.emit('chat', messageObj);
@@ -54755,7 +54786,15 @@ var Priority;
 var InviteType;
 (function (InviteType) {
     InviteType[InviteType["ChatRoom"] = 0] = "ChatRoom";
-    InviteType[InviteType["ScoreSheet"] = 1] = "ScoreSheet";
+    InviteType[InviteType["CustomType1"] = 1] = "CustomType1";
+    InviteType[InviteType["CustomType2"] = 2] = "CustomType2";
+    InviteType[InviteType["CustomType3"] = 3] = "CustomType3";
+    InviteType[InviteType["CustomType4"] = 4] = "CustomType4";
+    InviteType[InviteType["CustomType5"] = 5] = "CustomType5";
+    InviteType[InviteType["CustomType6"] = 6] = "CustomType6";
+    InviteType[InviteType["CustomType7"] = 7] = "CustomType7";
+    InviteType[InviteType["CustomType8"] = 8] = "CustomType8";
+    InviteType[InviteType["CustomType9"] = 9] = "CustomType9";
 })(InviteType || (InviteType = {}));
 //# sourceMappingURL=Types.js.map
 
@@ -57240,7 +57279,8 @@ class ChatLogDetailView {
             const messageContent = this.commentEl.value.trim();
             // @ts-ignore
             this.commentEl.value = '';
-            let sentMessage = _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__.ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, _socket_Types__WEBPACK_IMPORTED_MODULE_5__.Priority.Normal, {});
+            const simpleAttachment = { identifier: '', type: '', displayText: '' };
+            let sentMessage = _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__.ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, _socket_Types__WEBPACK_IMPORTED_MODULE_5__.Priority.Normal, simpleAttachment, {});
             if (sentMessage) {
                 // add the message to our display
                 let messageEl = this.addChatMessage(sentMessage);
@@ -57576,7 +57616,7 @@ class ChatLogsView extends _view_implementation_AbstractStatefulCollectionView__
         this.updateStateManager();
     }
     getBadgeValueForItemInNamedCollection(name, item) {
-        return item.numOfNewMessages;
+        return item.unreadMessages + item.unreadHighMessages + item.unreadUrgentMessages;
     }
     canDeleteItem(view, selectedItem) {
         return true;
@@ -58743,7 +58783,7 @@ const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form');
 const dlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail');
 const vlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail-validation');
 class AbstractForm {
-    constructor(containerId, dataObjDef, configHelper, hasExternalControl = false) {
+    constructor(containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl = false) {
         this.formListeners = [];
         this.fieldListeners = [];
         this.uiDef = null;
@@ -58759,6 +58799,7 @@ class AbstractForm {
         this.dataObjDef = dataObjDef;
         this.configHelper = configHelper;
         this.hasExternalControl = hasExternalControl;
+        this.permissionChecker = permissionChecker;
         this.currentDataObj = {};
         this.id = (0,uuid__WEBPACK_IMPORTED_MODULE_7__["default"])();
         // sub-classes need to create the form and it's fields
@@ -59104,7 +59145,14 @@ class AbstractForm {
     }
     clearReadOnly() {
         this.fields.forEach((field) => {
-            field.clearReadOnly();
+            if (this.currentDataObj) {
+                if (this.permissionChecker.hasPermissionToEditField(this.currentDataObj, field)) {
+                    field.clearReadOnly();
+                }
+            }
+            else {
+                field.clearReadOnly();
+            }
         });
     }
     setReadOnly() {
@@ -59227,8 +59275,8 @@ __webpack_require__.r(__webpack_exports__);
 const logger = debug__WEBPACK_IMPORTED_MODULE_4___default()('basic-form');
 const dlogger = debug__WEBPACK_IMPORTED_MODULE_4___default()('basic-form-detail');
 class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__.AbstractForm {
-    constructor(containerId, dataObjDef, configHelper, hasExternalControl = false) {
-        super(containerId, dataObjDef, configHelper, hasExternalControl);
+    constructor(containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl = false) {
+        super(containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl);
         this.factoryElements = null;
     }
     getFormattedDataObject() {
@@ -59376,8 +59424,17 @@ class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__
     }
     validateField(fieldDef) {
         const field = this.getFieldFromDataFieldId(fieldDef.id);
-        if (field)
+        if (field) {
             field.validate();
+            if (this.currentDataObj) {
+                if (!this.permissionChecker.hasPermissionToEditField(this.currentDataObj, field)) {
+                    field.setReadOnly();
+                }
+                else {
+                    field.clearReadOnly();
+                }
+            }
+        }
     }
     renderField(fieldDef, currentValue) {
         let result = currentValue;
@@ -59557,6 +59614,32 @@ class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__
     }
 }
 //# sourceMappingURL=BasicFormImplementation.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/DefaultFormFieldPermissionChecker.js":
+/*!***************************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/DefaultFormFieldPermissionChecker.js ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "DefaultFormFieldPermissionChecker": () => (/* binding */ DefaultFormFieldPermissionChecker)
+/* harmony export */ });
+class DefaultFormFieldPermissionChecker {
+    hasPermissionToDeleteItem(item) {
+        return true;
+    }
+    hasPermissionToEditField(dataObj, field) {
+        return true;
+    }
+    hasPermissionToUpdateItem(item) {
+        return true;
+    }
+}
+//# sourceMappingURL=DefaultFormFieldPermissionChecker.js.map
 
 /***/ }),
 
@@ -60355,6 +60438,7 @@ class AbstractField {
         if (config.editor) { // render the value when the field gains focus
             this.element.addEventListener('focus', editingHandler.handleEditEvent);
             this.element.addEventListener('blur', editingHandler.handleEditCompletedEvent);
+            this.element.addEventListener('click', editingHandler.handleEditEvent);
         }
         // listen for our own change events
         this.handleChangeEvent = this.handleChangeEvent.bind(this);
@@ -60630,6 +60714,9 @@ class AbstractField {
             logger(`Handling change event - informing listeners`);
             this.listeners.forEach((listener) => listener.valueChanged(this.formId, this, this.definition, value));
         }
+    }
+    getElement() {
+        return this.element;
     }
 }
 //# sourceMappingURL=AbstractField.js.map
@@ -61319,6 +61406,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _RBGFieldOperations__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./RBGFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/RBGFieldOperations.js");
 /* harmony import */ var _model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../model/BasicObjectDefinitionFactory */ "./node_modules/ui-framework-jps/dist/framework/model/BasicObjectDefinitionFactory.js");
+/* harmony import */ var _ColourEditor__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ColourEditor */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/ColourEditor.js");
+
 
 
 
@@ -61488,6 +61577,9 @@ class BootstrapFormConfigHelper {
                 fieldUIConfig.formatter = rbgFieldOperation;
                 fieldUIConfig.datasource = fieldDef.dataSource;
             }
+            if (fieldDef.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.colour) {
+                fieldUIConfig.editor = new _ColourEditor__WEBPACK_IMPORTED_MODULE_6__.ColourEditor(BootstrapFormConfigHelper.COLOUR_PICKER_CONTAINER);
+            }
             fieldUIConfigs.push(fieldUIConfig);
         });
         // create a form with a single group and button container with Bootstrap styles
@@ -61546,6 +61638,7 @@ class BootstrapFormConfigHelper {
         return undefined;
     }
 }
+BootstrapFormConfigHelper.COLOUR_PICKER_CONTAINER = 'framework-colour-picker-container';
 //# sourceMappingURL=BootstrapFormConfigHelper.js.map
 
 /***/ }),
@@ -61698,6 +61791,68 @@ class BootstrapTableConfigHelper {
     }
 }
 //# sourceMappingURL=BootstrapTableConfigHelper.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/helper/ColourEditor.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/helper/ColourEditor.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ColourEditor": () => (/* binding */ ColourEditor)
+/* harmony export */ });
+/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+
+class ColourEditor {
+    constructor(colourPickerContainerId) {
+        this.field = null;
+        this.container = null;
+        this.colourPickerContainerId = colourPickerContainerId;
+        this.editValue = this.editValue.bind(this);
+        this.cbColourChange = this.cbColourChange.bind(this);
+        this.container = document.getElementById(this.colourPickerContainerId);
+        if (this.container) {
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none');
+            $(this.container).farbtastic(this.cbColourChange);
+        }
+    }
+    editCompleted(field, fieldDef) {
+        if (this.container)
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none');
+    }
+    editValue(field, fieldDef, currentValue) {
+        this.field = field;
+        // do we have a valid value?
+        if (/^#[0-9a-f]{6}$/.test(currentValue) && this.container) {
+            $.farbtastic(this.container).setColor(currentValue);
+        }
+        if (field && this.container) {
+            let element = field.getElement();
+            let offset = (0,_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__.getElementOffset)(element);
+            offset.top += element.offsetHeight;
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].removeAttributes(this.container, ['style']);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(this.container, [{
+                    name: 'style',
+                    value: `top:${offset.top}px; left: ${offset.left}px;`
+                }]);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none', false);
+        }
+        return currentValue;
+    }
+    cbColourChange(colour) {
+        if (/^#[0-9a-f]{6}$/.test(colour)) {
+            if (this.field)
+                this.field.setValue(colour);
+            if (this.container)
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none', true);
+        }
+    }
+}
+//# sourceMappingURL=ColourEditor.js.map
 
 /***/ }),
 
@@ -62558,6 +62713,10 @@ class AbstractCollectionView extends _AbstractView__WEBPACK_IMPORTED_MODULE_0__.
     }
     updateViewForNamedCollection(name, newState) {
         if (this.viewEl && this.renderer) {
+            if (this.collectionUIConfig.sorter) {
+                // pre sort the collection for display
+                newState = newState.sort(this.collectionUIConfig.sorter);
+            }
             this.renderer.setDisplayElementsForCollectionInContainer(this.viewEl, name, newState);
         }
     }
@@ -63635,7 +63794,7 @@ class FormDetailViewRenderer {
         this.view = view;
     }
     onDocumentLoaded() {
-        this.form = new _form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_0__.BasicFormImplementation(this.containerId, this.objDef, this.configHelper, this.hasExternalControl);
+        this.form = new _form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_0__.BasicFormImplementation(this.containerId, this.objDef, this.configHelper, this.permissionChecker, this.hasExternalControl);
         this.form.addFormListener(this);
     }
     reset() {
@@ -64662,9 +64821,27 @@ class TabularViewRendererUsingContext {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getElementOffset": () => (/* binding */ getElementOffset),
 /* harmony export */   "BrowserUtil": () => (/* binding */ BrowserUtil),
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/**
+ * Returns an element's position relative to the whole document (page).
+ *
+ * If the element does not exist, returns O/O (top-left window corner).
+ *
+ * @example getOffset(document.getElementById('#element'));
+ *
+ * @param el
+ * @see https://stackoverflow.com/a/28222246/2391795
+ */
+const getElementOffset = (el) => {
+    const rect = el === null || el === void 0 ? void 0 : el.getBoundingClientRect();
+    return {
+        left: ((rect === null || rect === void 0 ? void 0 : rect.left) || 0) + (window === null || window === void 0 ? void 0 : window.scrollX),
+        top: ((rect === null || rect === void 0 ? void 0 : rect.top) || 0) + (window === null || window === void 0 ? void 0 : window.scrollY),
+    };
+};
 class BrowserUtil {
     constructor() {
     }
@@ -65017,38 +65194,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "ColourInputField": () => (/* reexport safe */ _framework_ui_form_field_ColourInputField__WEBPACK_IMPORTED_MODULE_51__.ColourInputField),
 /* harmony export */   "ConditionResponse": () => (/* reexport safe */ _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_52__.ConditionResponse),
 /* harmony export */   "ValidationManager": () => (/* reexport safe */ _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_53__.ValidationManager),
-/* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_54__.BootstrapFormConfigHelper),
-/* harmony export */   "BootstrapTableConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_55__.BootstrapTableConfigHelper),
-/* harmony export */   "LimitedChoiceTextRenderer": () => (/* reexport safe */ _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_56__.LimitedChoiceTextRenderer),
-/* harmony export */   "LinkedCollectionDetailController": () => (/* reexport safe */ _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_57__.LinkedCollectionDetailController),
-/* harmony export */   "RBGFieldOperations": () => (/* reexport safe */ _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_58__.RBGFieldOperations),
-/* harmony export */   "SimpleValueDataSource": () => (/* reexport safe */ _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_59__.SimpleValueDataSource),
-/* harmony export */   "AbstractView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_60__.AbstractView),
-/* harmony export */   "AbstractCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_61__.AbstractCollectionView),
-/* harmony export */   "AbstractStatefulCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_62__.AbstractStatefulCollectionView),
-/* harmony export */   "DefaultPermissionChecker": () => (/* reexport safe */ _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_63__.DefaultPermissionChecker),
-/* harmony export */   "DetailViewImplementation": () => (/* reexport safe */ _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_64__.DetailViewImplementation),
-/* harmony export */   "CarouselViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_65__.CarouselViewRenderer),
-/* harmony export */   "CarouselViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_66__.CarouselViewRendererUsingContext),
-/* harmony export */   "FormDetailViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_67__.FormDetailViewRenderer),
-/* harmony export */   "ListViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_68__.ListViewRenderer),
-/* harmony export */   "ListViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_69__.ListViewRendererUsingContext),
-/* harmony export */   "TabularViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_70__.TabularViewRendererUsingContext),
-/* harmony export */   "ViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_71__.ViewListenerForwarder),
-/* harmony export */   "DetailViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_72__.DetailViewListenerForwarder),
-/* harmony export */   "CollectionViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_73__.CollectionViewListenerForwarder),
-/* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_74__.CollectionViewEventHandlerDelegate),
-/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_75__.CollectionViewEventHandlerDelegateUsingContext),
-/* harmony export */   "truncateString": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__.truncateString),
-/* harmony export */   "convertHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__.convertHexToNumber),
-/* harmony export */   "convertSingleHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__.convertSingleHexToNumber),
-/* harmony export */   "isHexValueDark": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__.isHexValueDark),
-/* harmony export */   "isSameMongo": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__.isSameMongo),
-/* harmony export */   "isSame": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__.isSame),
-/* harmony export */   "isSameUsername": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__.isSameUsername),
-/* harmony export */   "isSameRoom": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__.isSameRoom),
-/* harmony export */   "addDurations": () => (/* reexport safe */ _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_78__.addDurations),
-/* harmony export */   "BrowserUtil": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_79__.BrowserUtil)
+/* harmony export */   "DefaultFormFieldPermissionChecker": () => (/* reexport safe */ _framework_ui_form_DefaultFormFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_54__.DefaultFormFieldPermissionChecker),
+/* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_55__.BootstrapFormConfigHelper),
+/* harmony export */   "BootstrapTableConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_56__.BootstrapTableConfigHelper),
+/* harmony export */   "LimitedChoiceTextRenderer": () => (/* reexport safe */ _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_57__.LimitedChoiceTextRenderer),
+/* harmony export */   "LinkedCollectionDetailController": () => (/* reexport safe */ _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_58__.LinkedCollectionDetailController),
+/* harmony export */   "RBGFieldOperations": () => (/* reexport safe */ _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_59__.RBGFieldOperations),
+/* harmony export */   "SimpleValueDataSource": () => (/* reexport safe */ _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_60__.SimpleValueDataSource),
+/* harmony export */   "ColourEditor": () => (/* reexport safe */ _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_61__.ColourEditor),
+/* harmony export */   "AbstractView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_62__.AbstractView),
+/* harmony export */   "AbstractCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_63__.AbstractCollectionView),
+/* harmony export */   "AbstractStatefulCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_64__.AbstractStatefulCollectionView),
+/* harmony export */   "DefaultPermissionChecker": () => (/* reexport safe */ _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_65__.DefaultPermissionChecker),
+/* harmony export */   "DetailViewImplementation": () => (/* reexport safe */ _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_66__.DetailViewImplementation),
+/* harmony export */   "CarouselViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_67__.CarouselViewRenderer),
+/* harmony export */   "CarouselViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_68__.CarouselViewRendererUsingContext),
+/* harmony export */   "FormDetailViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_69__.FormDetailViewRenderer),
+/* harmony export */   "ListViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_70__.ListViewRenderer),
+/* harmony export */   "ListViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_71__.ListViewRendererUsingContext),
+/* harmony export */   "TabularViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_72__.TabularViewRendererUsingContext),
+/* harmony export */   "ViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_73__.ViewListenerForwarder),
+/* harmony export */   "DetailViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_74__.DetailViewListenerForwarder),
+/* harmony export */   "CollectionViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__.CollectionViewListenerForwarder),
+/* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_76__.CollectionViewEventHandlerDelegate),
+/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_77__.CollectionViewEventHandlerDelegateUsingContext),
+/* harmony export */   "truncateString": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_78__.truncateString),
+/* harmony export */   "convertHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_78__.convertHexToNumber),
+/* harmony export */   "convertSingleHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_78__.convertSingleHexToNumber),
+/* harmony export */   "isHexValueDark": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_78__.isHexValueDark),
+/* harmony export */   "isSameMongo": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_79__.isSameMongo),
+/* harmony export */   "isSame": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_79__.isSame),
+/* harmony export */   "isSameUsername": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_79__.isSameUsername),
+/* harmony export */   "isSameRoom": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_79__.isSameRoom),
+/* harmony export */   "addDurations": () => (/* reexport safe */ _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_80__.addDurations),
+/* harmony export */   "BrowserUtil": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_81__.BrowserUtil),
+/* harmony export */   "getElementOffset": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_81__.getElementOffset)
 /* harmony export */ });
 /* harmony import */ var _framework_CommonTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
 /* harmony import */ var _framework_model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./framework/model/BasicFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/model/BasicFieldOperations.js");
@@ -65104,32 +65284,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _framework_ui_form_field_ColourInputField__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./framework/ui/form/field/ColourInputField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/ColourInputField.js");
 /* harmony import */ var _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js");
 /* harmony import */ var _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js");
-/* harmony import */ var _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./framework/ui/helper/LimitedChoiceTextRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
-/* harmony import */ var _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./framework/ui/helper/LinkedCollectionDetailController */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LinkedCollectionDetailController.js");
-/* harmony import */ var _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./framework/ui/helper/RBGFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/RBGFieldOperations.js");
-/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./framework/ui/helper/SimpleValueDataSource */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/SimpleValueDataSource.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractStatefulCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./framework/ui/view/implementation/DefaultPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DefaultPermissionChecker.js");
-/* harmony import */ var _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./framework/ui/view/implementation/DetailViewImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DetailViewImplementation.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./framework/ui/view/renderer/FormDetailViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/FormDetailViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./framework/ui/view/renderer/TabularViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./framework/ui/view/delegate/ViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./framework/ui/view/delegate/DetailViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegate */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js");
-/* harmony import */ var _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./framework/util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
-/* harmony import */ var _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./framework/util/EqualityFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js");
-/* harmony import */ var _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./framework/util/DurationFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js");
-/* harmony import */ var _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var _framework_ui_form_DefaultFormFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./framework/ui/form/DefaultFormFieldPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/form/DefaultFormFieldPermissionChecker.js");
+/* harmony import */ var _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
+/* harmony import */ var _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableConfigHelper.js");
+/* harmony import */ var _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./framework/ui/helper/LimitedChoiceTextRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
+/* harmony import */ var _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./framework/ui/helper/LinkedCollectionDetailController */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LinkedCollectionDetailController.js");
+/* harmony import */ var _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./framework/ui/helper/RBGFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/RBGFieldOperations.js");
+/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./framework/ui/helper/SimpleValueDataSource */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/SimpleValueDataSource.js");
+/* harmony import */ var _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./framework/ui/helper/ColourEditor */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/ColourEditor.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractView.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractCollectionView.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractStatefulCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
+/* harmony import */ var _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./framework/ui/view/implementation/DefaultPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DefaultPermissionChecker.js");
+/* harmony import */ var _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./framework/ui/view/implementation/DetailViewImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DetailViewImplementation.js");
+/* harmony import */ var _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./framework/ui/view/renderer/FormDetailViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/FormDetailViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./framework/ui/view/renderer/TabularViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./framework/ui/view/delegate/ViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./framework/ui/view/delegate/DetailViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegate */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js");
+/* harmony import */ var _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./framework/util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
+/* harmony import */ var _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./framework/util/EqualityFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js");
+/* harmony import */ var _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./framework/util/DurationFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js");
+/* harmony import */ var _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
 
 
 
@@ -65162,6 +65344,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* ui */
+
+
 
 
 

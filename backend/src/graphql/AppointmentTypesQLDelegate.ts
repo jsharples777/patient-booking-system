@@ -1,8 +1,7 @@
 import debug from "debug";
 import {MongoDataSource} from "../db/MongoDataSource";
 import {DeleteResult, Document, ObjectId} from "mongodb";
-import {DataMessage} from "../socket/SocketTypes";
-import socketManager from "../socket/SocketManager";
+import {DataMessage, SocketManager} from "server-socket-framework-jps";
 
 const logger = debug('data-source-appointment-types');
 
@@ -50,7 +49,7 @@ export default class AppointmentTypesQLDelegate {
                     data: data.apptType,
                     user: "-1",
                 }
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 resolve(data);
             })
@@ -74,7 +73,7 @@ export default class AppointmentTypesQLDelegate {
                     data: data.apptType,
                     user: "-1"
                 }
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 if (value.modifiedCount === 0) {
                     const objId = new ObjectId(data.apptType._id);
@@ -103,7 +102,7 @@ export default class AppointmentTypesQLDelegate {
                     data: {_id: data.id},
                     user: "-1",
                 }
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
                 logger(result);
                 resolve(true);
             })

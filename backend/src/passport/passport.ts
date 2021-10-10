@@ -1,10 +1,10 @@
 import bCrypt from 'bcrypt-nodejs';
-import socketManager from '../socket/SocketManager';
 import {Request} from "express";
 import debug from 'debug';
 import {MongoDataSource} from "../db/MongoDataSource";
 import {Db, Document} from "mongodb";
 import {v4} from "uuid";
+import {SocketManager} from "server-socket-framework-jps";
 
 const logger = debug('my-passport');
 
@@ -59,7 +59,7 @@ export function setupPassport(passport: any) {
                         db.collection(collection).findOne({_id: newUser.insertedId}).then((userDetails) => {
                             // @ts-ignore
                             let message = {type: "create", stateName: "users", data: userDetails, user: userDetails._id}
-                            socketManager.sendDataMessage(message);
+                            SocketManager.getInstance().sendDataMessage(message);
                             if (!userDetails) {
                                 return done(null, false);
                             }

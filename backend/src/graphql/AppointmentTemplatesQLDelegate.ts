@@ -1,8 +1,8 @@
 import debug from "debug";
 import {MongoDataSource} from "../db/MongoDataSource";
 import {DeleteResult, Document} from "mongodb";
-import {DataMessage} from "../socket/SocketTypes";
-import socketManager from "../socket/SocketManager";
+import {DataMessage, SocketManager} from "server-socket-framework-jps";
+
 
 
 const logger = debug('data-source-appointment-templates');
@@ -56,7 +56,7 @@ export default class AppointmentTemplatesQLDelegate {
                     data: data.template,
                     user: data.template.createdBy,
                 }
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 resolve(data.template);
             })
@@ -80,7 +80,7 @@ export default class AppointmentTemplatesQLDelegate {
                     data: data.template,
                     user: data.template.createdBy
                 }
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 resolve(true);
             })
@@ -104,7 +104,7 @@ export default class AppointmentTemplatesQLDelegate {
                     data: {_id: data.id},
                     user: "-1",
                 }
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
                 logger(result);
                 resolve(true);
             })

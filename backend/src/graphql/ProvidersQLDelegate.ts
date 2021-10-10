@@ -1,8 +1,7 @@
 import debug from "debug";
 import {MongoDataSource} from "../db/MongoDataSource";
 import {DeleteResult, Document} from "mongodb";
-import {DataMessage} from "../socket/SocketTypes";
-import socketManager from "../socket/SocketManager";
+import {DataMessage, SocketManager} from "server-socket-framework-jps";
 
 const logger = debug('data-source-providers');
 
@@ -54,7 +53,7 @@ export default class ProvidersQLDelegate {
             MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.provider).then((value) => {
                 logger(value);
                 const message: DataMessage = {type: "create", stateName: "provider", data: data.provider, user: "-1",}
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 resolve(data);
             })
@@ -73,7 +72,7 @@ export default class ProvidersQLDelegate {
             MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: data.provider._id}, data.provider).then((value) => {
                 logger(value);
                 const message: DataMessage = {type: "update", stateName: "provider", data: data.provider, user: "-1"}
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 resolve(true);
             })
@@ -92,7 +91,7 @@ export default class ProvidersQLDelegate {
             MongoDataSource.getInstance().getDatabase().collection(collection).deleteOne({_id: data.id}).then((result: DeleteResult) => {
                 // @ts-ignore
                 const message: DataMessage = {type: "delete", stateName: "provider", data: {_id: data.id}, user: "-1",}
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
                 logger(result);
                 resolve(true);
             })

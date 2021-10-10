@@ -1,9 +1,8 @@
 import debug from "debug";
 import {MongoDataSource} from "../db/MongoDataSource";
 import {DeleteResult, Document} from "mongodb";
-import {DataMessage} from "../socket/SocketTypes";
-import socketManager from "../socket/SocketManager";
 import moment from "moment";
+import {DataMessage, SocketManager} from "server-socket-framework-jps";
 
 const logger = debug('data-source-appointments');
 
@@ -67,7 +66,7 @@ export default class AppointmentsQLDelegate {
                     data: data.appt,
                     user: data.appt.createdBy
                 }
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 resolve(data.appt);
             })
@@ -91,7 +90,7 @@ export default class AppointmentsQLDelegate {
                     data: data.appt,
                     user: data.appt.createdBy
                 }
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 resolve(true);
             })
@@ -115,7 +114,7 @@ export default class AppointmentsQLDelegate {
                     data: {_id: data.id},
                     user: "-1",
                 }
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
                 logger(result);
                 resolve(true);
             })

@@ -1,8 +1,7 @@
 import debug from "debug";
 import {MongoDataSource} from "../db/MongoDataSource";
 import {Document} from "mongodb";
-import {DataMessage} from "../socket/SocketTypes";
-import socketManager from "../socket/SocketManager";
+import {DataMessage, SocketManager} from "server-socket-framework-jps";
 
 const logger = debug('data-source-patients');
 
@@ -81,7 +80,7 @@ export default class PatientsQLDelegate {
             MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.patient).then((value) => {
                 logger(value);
                 const message: DataMessage = {type: "create", stateName: "patient", data: data.patient, user: "-1",}
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 resolve(data);
             })
@@ -100,7 +99,7 @@ export default class PatientsQLDelegate {
             MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: data.patient._id}, data.patient).then((value) => {
                 logger(value);
                 const message: DataMessage = {type: "update", stateName: "patient", data: data.patient, user: "-1"}
-                socketManager.sendDataMessage(message);
+                SocketManager.getInstance().sendDataMessage(message);
 
                 resolve(true);
             })
