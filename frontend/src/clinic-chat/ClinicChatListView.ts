@@ -18,6 +18,7 @@ import {
     View, VIEW_NAME
 } from "ui-framework-jps";
 import Controller from "../Controller";
+import {AttachmentListener} from "./AttachmentListener";
 
 
 
@@ -32,6 +33,8 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         }
         return ClinicChatListView._instance;
     }
+
+
 
 
     private static DOMConfig: CollectionViewDOMConfig = {
@@ -146,10 +149,10 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
     onDocumentLoaded() {
         super.onDocumentLoaded();
         this.doNotDisturbEl = <HTMLInputElement>document.getElementById('doNotDisturb');
-        if (this.doNotDisturbEl) {
-            // @ts-ignore
-            mobiscroll5.enhance(this.doNotDisturbEl);
-        }
+        // if (this.doNotDisturbEl) {
+        //     // @ts-ignore
+        //     mobiscroll5.enhance(this.doNotDisturbEl);
+        // }
         this.doNotDisturbEl.addEventListener('change', this.toggleDoNotDisturb)
 
         this.addEventCollectionListener(this);

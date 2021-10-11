@@ -24,6 +24,7 @@ import moment from "moment";
 
 import {DRAGGABLE as APP_DRAGGABLE, STATE_NAMES as APP_STATE_NAMES} from '../AppTypes'
 import Controller from "../Controller";
+import {AttachmentListener} from "./AttachmentListener";
 
 
 const logger = debug('clinic-chat-detail-view');
@@ -67,6 +68,10 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
 
     protected selectedChatLog: ChatLog | null;
     protected currentlySelectedPatient: any | null;
+
+    private listeners:AttachmentListener[] = [];
+
+
 
 
     private constructor(stateManager: StateManager) {
@@ -535,10 +540,18 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     handleAttachmentClicked(event:Event) {
         event.preventDefault();
         event.stopPropagation();
-        logger(`Handling attachment clicked`);
-        logger(event.target);
+        const dataType = (<HTMLElement>event.target).getAttribute("data-type");
+        const dataId = (<HTMLElement>event.target).getAttribute("data-id");
+        logger(`Handling attachment clicked of type ${dataType} with identifier ${dataId}`);
+        this.listeners.forEach((listener) => {
+            listener.attachmentClicked(dataType,dataId);
+        });
+
     }
 
+    public addAttachmentListener(listener:AttachmentListener) {
+        this.listeners.push(listener);
+    }
 
 }
 

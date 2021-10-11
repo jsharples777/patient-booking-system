@@ -3226,6 +3226,8 @@ class ClinicChatDetailView {
   static priorityId = 'priority';
   static clinicChatFastPatientSearch = 'clinicChatFastPatientSearch'; // @ts-ignore
 
+  listeners = [];
+
   constructor(stateManager) {
     this.stateManager = stateManager;
     this.selectedChatLog = null; // handler binding
@@ -3688,8 +3690,16 @@ class ClinicChatDetailView {
   handleAttachmentClicked(event) {
     event.preventDefault();
     event.stopPropagation();
-    logger(`Handling attachment clicked`);
-    logger(event.target);
+    const dataType = event.target.getAttribute("data-type");
+    const dataId = event.target.getAttribute("data-id");
+    logger(`Handling attachment clicked of type ${dataType} with identifier ${dataId}`);
+    this.listeners.forEach(listener => {
+      listener.attachmentClicked(dataType, dataId);
+    });
+  }
+
+  addAttachmentListener(listener) {
+    this.listeners.push(listener);
   }
 
 }
@@ -3836,12 +3846,10 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
 
   onDocumentLoaded() {
     super.onDocumentLoaded();
-    this.doNotDisturbEl = document.getElementById('doNotDisturb');
-
-    if (this.doNotDisturbEl) {
-      // @ts-ignore
-      mobiscroll5.enhance(this.doNotDisturbEl);
-    }
+    this.doNotDisturbEl = document.getElementById('doNotDisturb'); // if (this.doNotDisturbEl) {
+    //     // @ts-ignore
+    //     mobiscroll5.enhance(this.doNotDisturbEl);
+    // }
 
     this.doNotDisturbEl.addEventListener('change', this.toggleDoNotDisturb);
     this.addEventCollectionListener(this);
