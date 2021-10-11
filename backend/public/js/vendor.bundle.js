@@ -62732,6 +62732,12 @@ class AbstractCollectionView extends _AbstractView__WEBPACK_IMPORTED_MODULE_0__.
     setRenderer(renderer) {
         this.renderer = renderer;
     }
+    getSecondaryBadgeValueForItemInNamedCollection(name, item) {
+        return 0;
+    }
+    getTertiaryBadgeValueForItemInNamedCollection(name, item) {
+        return 0;
+    }
 }
 //# sourceMappingURL=AbstractCollectionView.js.map
 
@@ -64057,6 +64063,30 @@ class ListViewRenderer {
                     badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
                 }
             }
+            if (uiConfig.detail.secondBadge) {
+                const badgeValue = this.view.getSecondaryBadgeValueForItemInNamedCollection(collectionName, item);
+                if (badgeValue > 0) {
+                    let badgeEl = document.createElement(uiConfig.detail.secondBadge.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(badgeEl, uiConfig.detail.secondBadge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(badgeEl, uiConfig.detail.secondBadge.attributes);
+                    badgeEl.setAttribute(uiConfig.keyId, resultDataKeyId);
+                    badgeEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
+                    buttonsEl.appendChild(badgeEl);
+                    badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
+                }
+            }
+            if (uiConfig.detail.thirdBadge) {
+                const badgeValue = this.view.getTertiaryBadgeValueForItemInNamedCollection(collectionName, item);
+                if (badgeValue > 0) {
+                    let badgeEl = document.createElement(uiConfig.detail.thirdBadge.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(badgeEl, uiConfig.detail.thirdBadge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(badgeEl, uiConfig.detail.thirdBadge.attributes);
+                    badgeEl.setAttribute(uiConfig.keyId, resultDataKeyId);
+                    badgeEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
+                    buttonsEl.appendChild(badgeEl);
+                    badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
+                }
+            }
             if (uiConfig.extraActions) {
                 uiConfig.extraActions.forEach((extraAction) => {
                     const hasPermissionForAction = this.view.hasPermissionToActionItemInNamedCollection(extraAction.name, collectionName, item);
@@ -64322,6 +64352,26 @@ class ListViewRendererUsingContext {
                     let badgeEl = document.createElement(uiConfig.detail.badge.type);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(badgeEl, uiConfig.detail.badge.attributes);
+                    buttonsEl.appendChild(badgeEl);
+                    badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
+                }
+            }
+            if (uiConfig.detail.secondBadge) {
+                const badgeValue = this.view.getSecondaryBadgeValueForItemInNamedCollection(collectionName, item);
+                if (badgeValue > 0) {
+                    let badgeEl = document.createElement(uiConfig.detail.secondBadge.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(badgeEl, uiConfig.detail.secondBadge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(badgeEl, uiConfig.detail.secondBadge.attributes);
+                    buttonsEl.appendChild(badgeEl);
+                    badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
+                }
+            }
+            if (uiConfig.detail.thirdBadge) {
+                const badgeValue = this.view.getTertiaryBadgeValueForItemInNamedCollection(collectionName, item);
+                if (badgeValue > 0) {
+                    let badgeEl = document.createElement(uiConfig.detail.thirdBadge.type);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(badgeEl, uiConfig.detail.thirdBadge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(badgeEl, uiConfig.detail.thirdBadge.attributes);
                     buttonsEl.appendChild(badgeEl);
                     badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
                 }

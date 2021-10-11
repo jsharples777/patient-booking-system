@@ -480,16 +480,7 @@ class Controller {
     let statusFieldDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "isStatus", "Patient flow status", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.boolean, false, "Used by the application to track patient state");
     statusFieldDef.displayOnly = true;
     cLogger(`Appointment type data object definition`);
-    cLogger(apptTypeDef); // let workoutDefinition: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.workouts, 'Workout', true, true, true, '_id');
-    // BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "name", "Name", FieldType.text, false, "Give the workout a name");
-    // BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "completed", "Completed", FieldType.boolean, true, "Have completed the workout");
-    // let exercisesFieldDefinition: FieldDefinition = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(workoutDefinition, "exercises", "Exercises", FieldType.collection, true, "Exercises in this workout");
-    // exercisesFieldDefinition.idType = KeyType.collection;
-    // exercisesFieldDefinition.linkedDataObjectId = exerciseTypeDefinition.id;
-    //
-    // cLogger(`Workout data object definition`);
-    // cLogger(workoutDefinition);
-    // cLoggerDetail(ObjectDefinitionRegistry.getInstance().findDefinition('workout'));
+    cLogger(apptTypeDef);
   }
   /*
   *
