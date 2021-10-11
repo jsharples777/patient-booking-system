@@ -1,4 +1,4 @@
-(self["webpackChunktemplate_feo_react_babel"] = self["webpackChunktemplate_feo_react_babel"] || []).push([["vendor"],{
+(self["webpackChunkpatient_booking_system"] = self["webpackChunkpatient_booking_system"] || []).push([["vendor"],{
 
 /***/ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js":
 /*!************************************************************************************!*\
@@ -54177,7 +54177,7 @@ class ChatManager {
                 type: '',
                 displayText: ''
             };
-        _SocketManager__WEBPACK_IMPORTED_MODULE_2__.SocketManager.getInstance().sendMessage(this.getCurrentUser(), room, content, created, _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom, _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Normal, simpleAttachement, {});
+        _SocketManager__WEBPACK_IMPORTED_MODULE_2__.SocketManager.getInstance().sendMessage(this.getCurrentUser(), room, content, created, _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom, priority, simpleAttachement, {});
         // add the message to the chat log
         if (!attachment)
             attachment = {};

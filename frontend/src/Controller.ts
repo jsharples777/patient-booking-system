@@ -176,12 +176,6 @@ export default class Controller implements StateChangeListener, DataObjectListen
         let restSM = RESTApiStateManager.getInstance();
         restSM.initialise([
             {
-                stateName: STATE_NAMES.users,
-                serverURL: '',
-                api: API_Config.users,
-                isActive: true
-            },
-            {
                 stateName: STATE_NAMES.clinicConfig,
                 serverURL: '',
                 api: API_Config.clinicConfig,
@@ -282,6 +276,27 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 idField: '_id'
             },
             {
+                stateName: STATE_NAMES.users,
+                serverURL: '',
+                apiURL: API_Config.graphQL,
+                apis: {
+                    findAll: 'query {getUsers {_id,username,providerNo,isCurrent,isAdmin}}',
+                    create: 'mutation addUser($data: UserInput!){addUser(user: $data) {_id,username,providerNo,isCurrent,isAdmin}}',
+                    destroy: '',
+                    update: 'mutation updateUser($data: UserInput!){updateUser(user: $data)}',
+                    find: '',
+                },
+                data: {
+                    findAll: 'getUsers',
+                    create: 'addUser',
+                    destroy: '',
+                    update: 'updateUser',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
+            },
+            {
                 stateName: STATE_NAMES.appointmentTemplates,
                 serverURL: '',
                 apiURL: API_Config.graphQL,
@@ -334,9 +349,9 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
         aggregateSM.addStateManager(memorySM, [], false);
         //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patients], false);
-        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments, STATE_NAMES.patientSearch, STATE_NAMES.recentPatientSearches, STATE_NAMES.appointmentTypes, STATE_NAMES.providers, STATE_NAMES.appointmentTemplates], false);
+        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.users, STATE_NAMES.appointments, STATE_NAMES.patientSearch, STATE_NAMES.recentPatientSearches, STATE_NAMES.appointmentTypes, STATE_NAMES.providers, STATE_NAMES.appointmentTemplates], false);
         //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
-        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users, STATE_NAMES.clinicConfig, STATE_NAMES.patients], false);
+        aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.clinicConfig, STATE_NAMES.patients], false);
         this.stateManager = aggregateSM;
 
         // state listener

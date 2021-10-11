@@ -734,7 +734,20 @@ input PatientInput {
 
 type User {
     _id:String,
+    username:String,
+    providerNo:String,
+    isCurrent:Boolean,
+    isAdmin:Boolean
+}
 
+input UserInput {
+    _id:String,
+    username:String,
+    providerNo:String,
+    isCurrent:Boolean,
+    isAdmin:Boolean,
+    isResettingPassword:Boolean,
+    newPassword:String
 }
 
 
@@ -745,6 +758,7 @@ type Query {
     getProviders:[Provider]
     getAppointmentTemplates:[AppointmentTemplate]
     getPatient(id:String):Patient
+    getUsers:[User]
 }
 
 type Mutation {
@@ -762,4 +776,6 @@ type Mutation {
     deleteAppointmentTemplate(id:String):Boolean
     addPatient(patient:PatientInput):Patient
     updatePatient(patient:PatientInput):Boolean
+    addUser(user:UserInput):User
+    updateUser(user:UserInput):Boolean
 }

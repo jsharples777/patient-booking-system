@@ -14,9 +14,12 @@ import {SimpleAttachment} from "ui-framework-jps/dist/framework/socket/Types";
 import {DRAGGABLE_KEY_ID, DRAGGABLE_TYPE} from "ui-framework-jps/dist/framework/ui/ConfigurationTypes";
 import moment from "moment";
 
+import {DRAGGABLE as APP_DRAGGABLE,STATE_NAMES as APP_STATE_NAMES}  from '../AppTypes'
+import Controller from "../Controller";
 
 
-const csLoggerDetail = debug('chat-sidebar:detail');
+
+const logger = debug('clinic-chat-detail-view');
 
 export class ClinicChatDetailView implements View, ChatEventListener, CollectionViewListener, StateChangeListener {
     private static _instance: ClinicChatDetailView;
@@ -34,28 +37,29 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     private static submitCommentId: string = "submitMessage";
     private static chatLogId: string = 'chatLog';
     private static chatLogRoomId: string = 'chatLogRoom';
-    private static leaveChatId: string = 'leaveChat';
-    private static chatFastSearchUserNames: string = 'chatFastSearchUserNames';
+    private static priorityId: string = 'priority';
+    private static clinicChatFastPatientSearch: string = 'clinicChatFastPatientSearch';
 
 
     // @ts-ignore
-    protected chatRoomDiv: HTMLElement;
+    protected chatRoomDiv: HTMLDivElement;
     // @ts-ignore
-    protected chatLogDiv: HTMLElement;
+    protected chatLogDiv: HTMLDivElement;
     // @ts-ignore
-    protected chatForm: HTMLElement;
+    protected chatForm: HTMLFormElement;
     // @ts-ignore
-    protected commentEl: HTMLElement;
+    protected priorityEl: HTMLSelectElement;
     // @ts-ignore
-    protected sendMessageButton: HTMLElement;
+    protected commentEl: HTMLInputElement;
     // @ts-ignore
-    protected leaveChatButton: HTMLElement;
+    protected sendMessageButton: HTMLButtonElement;
     // @ts-ignore
-    protected fastUserSearch: HTMLElement;
+    protected fastPatientSearch: HTMLInputElement;
 
     protected stateManager: StateManager;
 
     protected selectedChatLog: ChatLog | null;
+    protected currentlySelectedPatient: any|null;
 
 
     private constructor(stateManager: StateManager) {
@@ -67,12 +71,46 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         this.handleChatLogsUpdated = this.handleChatLogsUpdated.bind(this);
         this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
         this.handleChatStarted = this.handleChatStarted.bind(this);
-        this.handleUserDrop = this.handleUserDrop.bind(this);
-        this.leaveChat = this.leaveChat.bind(this);
+        this.handlePatientDrop = this.handlePatientDrop.bind(this);
         this.eventUserSelected = this.eventUserSelected.bind(this);
+        this.handlePatientSelected = this.handlePatientSelected.bind(this);
 
         NotificationController.getInstance().addListener(this);
         this.stateManager.addChangeListenerForName(STATE_NAMES.users, this);
+        this.stateManager.addChangeListenerForName(APP_STATE_NAMES.patientSearch, this);
+    }
+    onDocumentLoaded() {
+        // @ts-ignore
+        this.chatLogDiv = document.getElementById(ClinicChatDetailView.chatLogId);
+        // @ts-ignore
+        this.commentEl = document.getElementById(ClinicChatDetailView.commentId);
+        // @ts-ignore
+        this.chatForm = document.getElementById(ClinicChatDetailView.newFormId);
+        // @ts-ignore
+        this.sendMessageButton = document.getElementById(ClinicChatDetailView.submitCommentId);
+        // @ts-ignore
+        this.priorityEl = document.getElementById(ClinicChatDetailView.priorityId);
+        // @ts-ignore
+        this.chatRoomDiv = document.getElementById(ClinicChatDetailView.chatLogRoomId);
+        // @ts-ignore
+        this.fastPatientSearch = document.getElementById(ClinicChatDetailView.clinicChatFastPatientSearch);
+
+
+
+        this.chatRoomDiv.addEventListener('dragover', (event) => {
+            logger('Dragged over');
+            if (this.selectedChatLog) event.preventDefault();
+        });
+        this.chatRoomDiv.addEventListener('drop', this.handlePatientDrop);
+
+
+        this.chatForm.addEventListener('submit', this.handleAddMessage);
+
+        this.checkCanComment();
+
+        const fastSearchEl = $(this.fastPatientSearch);
+        // @ts-ignore
+        fastSearchEl.on('autocompleteselect', this.handlePatientSelected);
     }
 
     hasActionPermission(actionName: string, from: string, item: any): boolean {
@@ -138,7 +176,7 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     }
 
     itemDeselected(view: View, selectedItem: any): void {
-        csLoggerDetail(`Chat Log with id ${selectedItem.roomName} deselected`);
+        logger(`Chat Log with id ${selectedItem.roomName} deselected`);
         if (this.selectedChatLog && (selectedItem.roomName === this.selectedChatLog.roomName)) {
             this.selectedChatLog = null;
             this.checkCanComment();
@@ -150,7 +188,7 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     itemSelected(view: View, selectedItem: ChatLog): void {
         this.selectedChatLog = selectedItem;
         if (this.selectedChatLog) {
-            csLoggerDetail(`Chat Log with id ${selectedItem.roomName} selected`);
+            logger(`Chat Log with id ${selectedItem.roomName} selected`);
             this.checkCanComment();
             this.renderChatLog(this.selectedChatLog);
         }
@@ -161,7 +199,7 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     }
 
     itemDeleted(view: View, selectedItem: any): void {
-        csLoggerDetail(`Chat Log with ${selectedItem.roomName} deleting`);
+        logger(`Chat Log with ${selectedItem.roomName} deleting`);
         if (this.selectedChatLog && (this.selectedChatLog.roomName === selectedItem.roomName)) {
             this.checkCanComment();
             this.renderChatLog(this.selectedChatLog);
@@ -174,25 +212,38 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         this.clearChatLog();
     }
 
-    handleUserDrop(event: Event) {
-        csLoggerDetail('drop event on current chat room');
+    handlePatientDrop(event: Event) {
+        logger('drop event on current chat room');
         if (this.selectedChatLog) {
             // @ts-ignore
             const draggedObjectJSON = event.dataTransfer.getData(DRAGGABLE_KEY_ID);
             const draggedObject = JSON.parse(draggedObjectJSON);
-            csLoggerDetail(draggedObject);
+            logger(draggedObject);
 
-            if (draggedObject[DRAGGABLE_TYPE] === DRAGGABLE.typeUser) {
-                //add the user to the current chat if not already there
-                ChatManager.getInstance().sendInvite(draggedObject.username, this.selectedChatLog.roomName);
-                NotificationManager.getInstance().show('Chat', `Invited ${draggedObject.username} to the chat.`);
+            if (draggedObject[DRAGGABLE_TYPE] === APP_DRAGGABLE.typePatientSummary) {
+                // send the patient as an attachment
+                const roomName = this.selectedChatLog.roomName;
+                const simpleAttachment:SimpleAttachment = {
+                    identifier: draggedObject._id,
+                    type: APP_DRAGGABLE.typePatientSummary,
+                    displayText: `${draggedObject.name.firstname} ${draggedObject.name.surname}`,
+                    iconClasses: 'fas fa-male'
+                }
+                let sentMessage: Message | null = ChatManager.getInstance().sendMessage(roomName, '', Priority.Normal, simpleAttachment,{});
+                if (sentMessage) {
+                    // add the message to our display
+                    let messageEl = this.addChatMessage(sentMessage);
+                    // scroll to bottom
+                    if (messageEl) browserUtil.scrollSmoothTo(messageEl);
+                }
+
             }
         }
 
     }
 
     handleChatLogUpdated(log: ChatLog): void {
-        csLoggerDetail(`Handling chat log updates`);
+        logger(`Handling chat log updates`);
         this.checkCanComment();
         this.renderChatLog(log);
     }
@@ -200,65 +251,52 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     handleAddMessage(event: Event): void {
         event.preventDefault();
         event.stopPropagation();
-        csLoggerDetail(`Handling message event`);
+        logger(`Handling message event`);
         if (this.selectedChatLog) {
-            // @ts-ignore
             if (this.commentEl && this.commentEl.value.trim().length === 0) return;
-            // @ts-ignore
             const messageContent = this.commentEl.value.trim();
-            // @ts-ignore
             this.commentEl.value = '';
 
+            let priority = parseInt(this.priorityEl.value);
+            if (isNaN(priority)) priority = Priority.Normal;
+
             const simpleAttachment:SimpleAttachment = {identifier:'',type:'',displayText:''};
-            let sentMessage: Message | null = ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, Priority.Normal, simpleAttachment,{});
+
+
+            let sentMessage: Message | null = ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, priority, simpleAttachment,{});
+            logger(sentMessage);
             if (sentMessage) {
                 // add the message to our display
                 let messageEl = this.addChatMessage(sentMessage);
                 // scroll to bottom
-                browserUtil.scrollSmoothTo(messageEl);
+                if (messageEl) browserUtil.scrollSmoothTo(messageEl);
             }
+
+            if (this.currentlySelectedPatient) {
+                simpleAttachment.identifier = this.currentlySelectedPatient._id;
+                simpleAttachment.type = APP_DRAGGABLE.typePatientSummary;
+                simpleAttachment.displayText = `${this.currentlySelectedPatient.name.firstname} ${this.currentlySelectedPatient.name.surname}`;
+                simpleAttachment.iconClasses = 'fas fa-male';
+                //send a second message with the patient attachment
+                sentMessage = ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, '', priority, simpleAttachment,{});
+                logger(sentMessage);
+                if (sentMessage) {
+                    // add the message to our display
+                    let messageEl = this.addChatMessage(sentMessage);
+                    // scroll to bottom
+                    if (messageEl) browserUtil.scrollSmoothTo(messageEl);
+                }
+            }
+            this.currentlySelectedPatient = null;
+            this.fastPatientSearch.value = '';
         }
     }
 
-    onDocumentLoaded() {
-        // @ts-ignore
-        this.chatLogDiv = document.getElementById(ClinicChatDetailView.chatLogId);
-        // @ts-ignore
-        this.commentEl = document.getElementById(ClinicChatDetailView.commentId);
-        // @ts-ignore
-        this.chatForm = document.getElementById(ClinicChatDetailView.newFormId);
-        // @ts-ignore
-        this.sendMessageButton = document.getElementById(ClinicChatDetailView.submitCommentId);
-        // @ts-ignore
-        this.leaveChatButton = document.getElementById(ClinicChatDetailView.leaveChatId);
-        // @ts-ignore
-        this.chatRoomDiv = document.getElementById(ClinicChatDetailView.chatLogRoomId);
-        // @ts-ignore
-        this.fastUserSearch = document.getElementById(ClinicChatDetailView.chatFastSearchUserNames);
-
-        this.chatRoomDiv.addEventListener('dragover', (event) => {
-            csLoggerDetail('Dragged over');
-            if (this.selectedChatLog) event.preventDefault();
-        });
-        this.chatRoomDiv.addEventListener('drop', this.handleUserDrop);
-
-
-        this.chatForm.addEventListener('submit', this.handleAddMessage);
-        this.leaveChatButton.addEventListener('click', this.leaveChat);
-
-        this.checkCanComment();
-
-        // fast user search
-        // @ts-ignore
-        const fastSearchEl = $(`#${ClinicChatDetailView.chatFastSearchUserNames}`);
-        // @ts-ignore
-        fastSearchEl.on('autocompleteselect', this.eventUserSelected);
-    }
 
     eventUserSelected(event: Event, ui: any) {
         event.preventDefault();
         event.stopPropagation();
-        csLoggerDetail(`User ${ui.item.label} with id ${ui.item.value} selected`);
+        logger(`User ${ui.item.label} with id ${ui.item.value} selected`);
         // @ts-ignore
         event.target.innerText = '';
 
@@ -267,37 +305,71 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         NotificationManager.getInstance().show('Chat', `Invited ${ui.item.label} to the chat.`);
     }
 
-    addChatMessage(message: Message): HTMLElement {
-        let chatMessageEl = document.createElement('div');
-        browserUtil.addRemoveClasses(chatMessageEl, "message");
-        // are we dealing with an "join"/"exit" message?
-        if (message.from.trim().length === 0) {
+    addChatMessage(message: Message): HTMLElement|null {
+        let chatMessageEl:HTMLElement|null = null;
+
+        // ignore "join"/"exit" message?
+        if (message.from.trim().length !== 0) {
+            chatMessageEl = document.createElement('div');
+            browserUtil.addRemoveClasses(chatMessageEl, "message");
+            if (message.from === ChatManager.getInstance().getCurrentUser()) {
+                browserUtil.addRemoveClasses(chatMessageEl, 'my-message');
+            }
+
+            // create and display a time stamp
             let messageSenderEl = document.createElement('div');
             browserUtil.addRemoveClasses(messageSenderEl, 'message-sender');
-            messageSenderEl.innerText = message.message;
+            messageSenderEl.innerText = message.from + '   ' + moment(message.created, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm');
             chatMessageEl.appendChild(messageSenderEl);
-        } else {
-
-            if (message.from === ChatManager.getInstance().getCurrentUser()) {
-                browserUtil.addRemoveClasses(chatMessageEl, "my-message");
-            } else {
-                let messageSenderEl = document.createElement('div');
-                browserUtil.addRemoveClasses(messageSenderEl, 'message-sender');
-                messageSenderEl.innerText = message.from + '   ' + moment(message.created, 'YYYYMMDDHHmmss').format('DD/MM/YYYY ');
-                chatMessageEl.appendChild(messageSenderEl);
-            }
-
+            // message content
             let contentEl = document.createElement('div');
-            if (message.from === ChatManager.getInstance().getCurrentUser()) {
-                browserUtil.addRemoveClasses(contentEl, "my-message-content");
-            } else {
-                browserUtil.addRemoveClasses(contentEl, 'message-content');
+
+            // are we displaying a (simple) attachment?
+            if (message.simpleAttachment.identifier.trim().length === 0) {
+                // just a text message
+                let classesTextAppend = '';
+                switch(message.priority) {
+                    case Priority.High: {
+                        classesTextAppend = '-high';
+                        break;
+                    }
+                    case Priority.Urgent: {
+                        classesTextAppend = '-urgent';
+                        break;
+                    }
+                }
+                if (message.from === ChatManager.getInstance().getCurrentUser()) {
+                    browserUtil.addRemoveClasses(contentEl, `my-message-content${classesTextAppend}`);
+                } else {
+                    browserUtil.addRemoveClasses(contentEl, `message-content${classesTextAppend}`);
+                }
+                contentEl.innerText = message.message;
             }
-            contentEl.innerText = message.message;
+            else {
+                const attachment = message.simpleAttachment;
+                // simple attachment - should be a patient summary
+                let attachmentLinkEl = document.createElement('a');
+                browserUtil.addAttributes(attachmentLinkEl,[{name:'data-type',value:`${attachment.type}`},{name:'data-id',value:`${attachment.identifier}`}]);
+                if (attachment.iconClasses) {
+                    let iconEl = document.createElement('i');
+                    browserUtil.addRemoveClasses(iconEl,attachment.iconClasses);
+                    attachmentLinkEl.appendChild(iconEl);
+                }
+                let textEl = document.createElement('span');
+                textEl.innerText = attachment.displayText;
+                attachmentLinkEl.appendChild(textEl);
+                if (message.from === ChatManager.getInstance().getCurrentUser()) {
+                    browserUtil.addRemoveClasses(contentEl, `my-message-content`);
+                } else {
+                    browserUtil.addRemoveClasses(contentEl, `message-content`);
+                }
+                contentEl.appendChild(attachmentLinkEl);
+            }
+
             chatMessageEl.appendChild(contentEl);
+            this.chatLogDiv.appendChild(chatMessageEl);
         }
 
-        this.chatLogDiv.appendChild(chatMessageEl);
         return chatMessageEl;
     }
 
@@ -312,7 +384,7 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     }
 
     renderChatLog(chatLog: ChatLog) {
-        csLoggerDetail(`Chat Log ${chatLog.roomName} rendering`);
+        logger(`Chat Log ${chatLog.roomName} rendering`);
         if (this.selectedChatLog) {
             if (this.selectedChatLog.roomName === chatLog.roomName) {
                 this.selectedChatLog = chatLog;
@@ -338,25 +410,25 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         this.renderChatLog(log);
     }
 
-    stateChanged(managerName: string, name: string, newValue: any): void {
-        if (name === STATE_NAMES.users) {
-            // @ts-ignore
-            const fastSearchEl = $(`#${ClinicChatDetailView.ssFastSearchUserNames}`);
-            // what is my username?
-            let myUsername = SecurityManager.getInstance().getLoggedInUsername();
+    stateChanged(managerName: string, name: string, newState: any): void {
+        if (name === APP_STATE_NAMES.patientSearch) {
+            logger(`Handling patient search results`);
+            logger(newState);
+            // load the search names into the search field
+            const fastSearchEl = $(this.fastPatientSearch);
             // for each name, construct the patient details to display and the id referenced
             const fastSearchValues: any = [];
-            newValue.forEach((item: any) => {
+            newState.forEach((item: any) => {
                 const searchValue = {
-                    label: item.username,
+                    label: `${item.name.firstname} ${item.name.surname}`,
                     value: item._id,
                 };
-                // @ts-ignore
-                if (myUsername !== item.username) fastSearchValues.push(searchValue); // don't search for ourselves
+                fastSearchValues.push(searchValue);
             });
             fastSearchEl.autocomplete({source: fastSearchValues});
             fastSearchEl.autocomplete('option', {disabled: false, minLength: 1});
         }
+
     }
 
     stateChangedItemAdded(managerName: string, name: string, itemAdded: any): void {
@@ -428,30 +500,19 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     filterResults(managerName: string, name: string, filterResults: any): void {
     }
 
-    private leaveChat(event: Event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (this.selectedChatLog) {
-            ChatManager.getInstance().leaveChat(this.selectedChatLog.roomName);
-            this.selectedChatLog = null;
-            this.clearChatLog();
-            this.checkCanComment();
-        }
-    }
-
     private checkCanComment() {
         if (this.selectedChatLog) {
             if (this.commentEl) this.commentEl.removeAttribute("readonly");
             if (this.commentEl) this.commentEl.removeAttribute("disabled");
             if (this.sendMessageButton) this.sendMessageButton.removeAttribute("disabled");
-            if (this.leaveChatButton) this.leaveChatButton.removeAttribute("disabled");
-            if (this.fastUserSearch) this.fastUserSearch.removeAttribute("disabled");
+            if (this.fastPatientSearch) this.fastPatientSearch.removeAttribute("disabled");
+            if (this.priorityEl) this.priorityEl.removeAttribute("disabled");
         } else {
             if (this.commentEl) this.commentEl.setAttribute("readonly", "true");
             if (this.commentEl) this.commentEl.setAttribute("disabled", "true");
             if (this.sendMessageButton) this.sendMessageButton.setAttribute("disabled", "true");
-            if (this.leaveChatButton) this.leaveChatButton.setAttribute("disabled", "true");
-            if (this.fastUserSearch) this.fastUserSearch.setAttribute("disabled", "true");
+            if (this.fastPatientSearch) this.fastPatientSearch.setAttribute("disabled", "true");
+            if (this.priorityEl) this.priorityEl.setAttribute("disabled","true");
         }
 
     }
@@ -459,6 +520,17 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     private clearChatLog() {
         browserUtil.removeAllChildren(this.chatLogDiv);
     }
+
+    handlePatientSelected(event: Event, ui: any) {
+        event.preventDefault();
+        event.stopPropagation();
+        logger(`Patient ${ui.item.label} with id ${ui.item.value} selected`);
+        // @ts-ignore
+        event.target.value = ui.item.label;
+        this.currentlySelectedPatient = Controller.getInstance().getStateManager().findItemInState(APP_STATE_NAMES.patientSearch, {_id: ui.item.value});
+        logger(this.currentlySelectedPatient);
+    }
+
 
 }
 

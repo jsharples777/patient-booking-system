@@ -7,6 +7,7 @@ import PatientsQLDelegate from "./PatientsQLDelegate";
 import AppointmentTypesQLDelegate from "./AppointmentTypesQLDelegate";
 import ProvidersQLDelegate from "./ProvidersQLDelegate";
 import AppointmentTemplatesQLDelegate from "./AppointmentTemplatesQLDelegate";
+import UsersQLDelegate from "./UsersQLDelegate";
 
 const dsLogger = debug('data-source');
 
@@ -24,7 +25,8 @@ export default class DataSource {
                 getAppointmentTypes: AppointmentTypesQLDelegate.getAppointmentTypes,
                 getProviders: ProvidersQLDelegate.getProviders,
                 getAppointmentTemplates: AppointmentTemplatesQLDelegate.getAppointmentTemplates,
-                getPatient: PatientsQLDelegate.getPatient
+                getPatient: PatientsQLDelegate.getPatient,
+                getUsers:UsersQLDelegate.getUsers
             },
             Mutation: {
                 addAppointment: AppointmentsQLDelegate.addAppointment,
@@ -41,6 +43,8 @@ export default class DataSource {
                 deleteAppointmentTemplate: AppointmentTemplatesQLDelegate.deleteAppointmentTemplate,
                 addPatient: PatientsQLDelegate.addPatient,
                 updatePatient: PatientsQLDelegate.updatePatient,
+                addUser: UsersQLDelegate.addUser,
+                updateUser: UsersQLDelegate.updateUser,
             }
         };
 

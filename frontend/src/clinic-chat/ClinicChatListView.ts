@@ -21,7 +21,7 @@ import Controller from "../Controller";
 
 
 
-const csLogger = debug('chat-sidebar');
+const logger = debug('clinic-chat-list-view');
 
 export class ClinicChatListView extends AbstractStatefulCollectionView implements ChatEventListener, CollectionViewListener, ChatUserEventListener {
     private static _instance: ClinicChatListView;
@@ -89,6 +89,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         this.handleChatLogsUpdated = this.handleChatLogsUpdated.bind(this);
         this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
         this.handleChatStarted = this.handleChatStarted.bind(this);
+        this.stateChanged = this.stateChanged.bind(this);
 
         NotificationController.getInstance().addListener(this);
 
@@ -97,7 +98,8 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
     }
 
     handleLoggedInUsersUpdated(usernames: string[]): void {
-        throw new Error('Method not implemented.');
+        logger(`Handling logged in users changed`);
+        this.updateStateManager();
     }
     handleFavouriteUserLoggedIn(username: string): void {}
     handleFavouriteUserLoggedOut(username: string): void {}
@@ -113,7 +115,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
     }
 
     handleChatLogUpdated(log: ChatLog): void {
-        csLogger(`Handling chat log updates`);
+        logger(`Handling chat log updates`);
         this.updateStateManager();
     }
 
@@ -186,7 +188,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
     }
 
     itemDeleted(view: View, selectedItem: any): void {
-        csLogger(`Deleting chat ${selectedItem.roomName}`);
+        logger(`Deleting chat ${selectedItem.roomName}`);
         ChatManager.getInstance().leaveChat(selectedItem.roomName);
         if (this.selectedChatLog && (this.selectedChatLog.roomName === selectedItem.roomName)) {
             (<CollectionViewListenerForwarder>this.eventForwarder).itemDeselected(this, this.selectedChatLog);
@@ -242,14 +244,15 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
     }
 
     private updateStateManager() {
-        csLogger(`Updating state with chat manager`);
+        logger(`Updating state with chat manager`);
         let newState = ChatManager.getInstance().getChatLogs();
-        csLogger(newState);
+        logger(newState);
         this.stateManager.setStateByName(STATE_NAMES.chatLogs, newState, true);
     }
 
     public stateChanged(managerName: string, name: string, newValue: any) {
-        super.stateChanged(managerName, name, newValue);
+        logger(`Updating state for ${name}`);
+        logger(newValue);
         if (name === STATE_NAMES.users) {
             // load a chat room for each other user
             newValue.forEach((user:any) => {
@@ -258,6 +261,10 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
                 }
             })
         }
+        if (name === STATE_NAMES.chatLogs) {
+            super.stateChanged(managerName,name,newValue);
+        }
+
     }
 }
 

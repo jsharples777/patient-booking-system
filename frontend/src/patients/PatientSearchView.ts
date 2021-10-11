@@ -87,7 +87,6 @@ export class PatientSearchView extends AbstractStatefulCollectionView {
 
     onDocumentLoaded() {
         super.onDocumentLoaded();
-        // @ts-ignore
         const fastSearchEl = $(`#${PatientSearchView.fastSearchInputId}`);
         // @ts-ignore
         fastSearchEl.on('autocompleteselect', this.eventPatientSelected);

@@ -22,11 +22,19 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <form class="d-flex justify-content-between" id="newMessage">
-                            <input type="text" style="width:80%" class="align-self-center enter-message" id="message"
-                                   placeholder="Enter message">
-                            <button type="submit" class="btn btn-primary btn-circle btn-md" id="submitMessage"><i
-                                    class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                        <form id="newMessage">
+                            <div class="form-row">
+                                <input type="text" style='width: 80%' class="form-control" id="message" placeholder="Message">
+                                <button type="submit" class="ml-2 btn btn-primary btn-circle btn-md" id="submitMessage"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                            </div>
+                            <div class="form-row pt-2">
+                                <select id="priority" class="form-control">
+                                    <option value="0" selected>Normal</option>
+                                    <option value="1">High</option>
+                                    <option value="2">Urgent</option>
+                                </select>
+                                <input type="text" class='form-control mt-2' id="clinicChatFastPatientSearch" placeholder="Patient"/>
+                            </div>
                         </form>
                     </div>
                 </div>

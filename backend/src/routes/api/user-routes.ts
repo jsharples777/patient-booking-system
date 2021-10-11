@@ -11,12 +11,15 @@ const logger = debug('api-users');
 // The `/api/users types` endpoint
 
 router.get('/', (req, res) => {
-    const collection = process.env.DB_COLLECTION_ACCOUNTS || 'accounts';
+    logger(`Getting users`)
+    const collection = process.env.DB_COLLECTION_USERS || 'pms-users';
     const projection = {
         projection: {
             _id: 1,
             username: 1,
             isCurrent: 1,
+            providerNo:1,
+            isAdmin:1
 
         }
     };

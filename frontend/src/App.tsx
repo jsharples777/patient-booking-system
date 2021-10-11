@@ -17,18 +17,13 @@ import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 import {PatientSearchSidebar} from "./patients/PatientSearchSidebar";
 import {AppointmentTypesCompositeView} from "./appointment-types/AppointmentTypesCompositeView";
 import {AppointmentTypesSidebar} from "./appointment-types/AppointmentTypesSidebar";
+import {ClinicChatSidebar} from "./clinic-chat/ClinicChatSidebar";
+import {ClinicChatListView} from "./clinic-chat/ClinicChatListView";
 
 
 const logger = debug('app');
 
 export default class App extends React.Component implements UnreadMessageCountListener {
-
-
-    // @ts-ignore
-    private chatSidebar: ChatRoomsSidebar;
-
-    // @ts-ignore
-    private chatView: ChatLogsView;
 
     private thisEl: HTMLDivElement | null = null;
     private chatNavigationItem: HTMLAnchorElement | null = null;
@@ -66,6 +61,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
         new AppointmentTypesCompositeView(AppointmentTypesSidebar.getInstance()).onDocumentLoaded();
 
+        ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).onDocumentLoaded();
+
 
         this.setupNavigationItemHandling();
 
@@ -75,8 +72,6 @@ export default class App extends React.Component implements UnreadMessageCountLi
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         Controller.getInstance().onDocumentLoaded();
 
-        Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patients, {_id: '2a8665a6-3580-4195-8ed7-0f81df551204'});
-
     }
 
     getCurrentUser() {
@@ -84,7 +79,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 
     hideAllSideBars() {
-        this.chatSidebar.eventHide(null);
+        ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).eventHide(null);
         PatientSearchSidebar.getInstance().eventHide(null);
     }
 
@@ -97,17 +92,23 @@ export default class App extends React.Component implements UnreadMessageCountLi
             window.location.href = API_Config.login;
             return;
         }
-        this.chatSidebar.eventShow(null);
+        ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).eventShow(null);
         if (roomName) {
-            this.chatView.selectChatRoom(roomName);
+            ClinicChatListView.getInstance().selectChatRoom(roomName);
         }
     }
 
-    countChanged(newCount: number): void {
+    countChanged(unreadNormalMessages: number, unreadHighMessages: number, unreadUrgentMessages: number): void {
         //
         let buffer = 'Chat <i class="fas fa-inbox"></i>';
-        if (newCount > 0) {
-            buffer += ` <span class="badge badge-pill badge-primary">&nbsp;${newCount}&nbsp;</span>`;
+        if (unreadNormalMessages > 0) {
+            buffer += ` <span class="badge badge-pill badge-primary">&nbsp;${unreadNormalMessages}&nbsp;</span>`;
+        }
+        if (unreadHighMessages > 0) {
+            buffer += ` <span class="badge badge-pill badge-warning">&nbsp;${unreadHighMessages}&nbsp;</span>`;
+        }
+        if (unreadUrgentMessages > 0) {
+            buffer += ` <span class="badge badge-pill badge-danger">&nbsp;${unreadUrgentMessages}&nbsp;</span>`;
         }
         if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
     }
@@ -171,7 +172,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 }
 
 //localStorage.debug = 'app api-ts-results bootstrap-form-config-helper';
-localStorage.debug = 'api-ts colour-input-field socket-ts';
+localStorage.debug = 'api-ts-results clinic-chat-list-view socket-ts clinic-chat-detail-view';
 localStorage.plugin = 'chat';
 
 debug.log = console.info.bind(console);

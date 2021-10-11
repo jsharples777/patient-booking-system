@@ -154,11 +154,6 @@ class Controller {
 
     let restSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.RESTApiStateManager.getInstance();
     restSM.initialise([{
-      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users,
-      serverURL: '',
-      api: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.users,
-      isActive: true
-    }, {
       stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig,
       serverURL: '',
       api: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.clinicConfig,
@@ -252,6 +247,26 @@ class Controller {
       isActive: true,
       idField: '_id'
     }, {
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users,
+      serverURL: '',
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
+      apis: {
+        findAll: 'query {getUsers {_id,username,providerNo,isCurrent,isAdmin}}',
+        create: 'mutation addUser($data: UserInput!){addUser(user: $data) {_id,username,providerNo,isCurrent,isAdmin}}',
+        destroy: '',
+        update: 'mutation updateUser($data: UserInput!){updateUser(user: $data)}',
+        find: ''
+      },
+      data: {
+        findAll: 'getUsers',
+        create: 'addUser',
+        destroy: '',
+        update: 'updateUser',
+        find: ''
+      },
+      isActive: true,
+      idField: '_id'
+    }, {
       stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates,
       serverURL: '',
       apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
@@ -298,9 +313,9 @@ class Controller {
     let asyncQL = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.AsyncStateManagerWrapper(aggregateSM, qlSM, ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.isSameMongo);
     aggregateSM.addStateManager(memorySM, [], false); //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patients], false);
 
-    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.providers, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates], false); //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
+    aggregateSM.addStateManager(asyncREST, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.providers, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates], false); //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
 
-    aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients], false);
+    aggregateSM.addStateManager(asyncQL, [_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentUserSearches, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients], false);
     this.stateManager = aggregateSM; // state listener
 
     this.stateChanged = this.stateChanged.bind(this);
@@ -3166,6 +3181,846 @@ class AppointmentFilterView {
 
 /***/ }),
 
+/***/ "./src/clinic-chat/ClinicChatDetailView.ts":
+/*!*************************************************!*\
+  !*** ./src/clinic-chat/ClinicChatDetailView.ts ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ClinicChatDetailView": () => (/* binding */ ClinicChatDetailView)
+/* harmony export */ });
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var ui_framework_jps_dist_framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ui-framework-jps/dist/framework/ui/ConfigurationTypes */ "./node_modules/ui-framework-jps/dist/framework/ui/ConfigurationTypes.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+
+
+
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('clinic-chat-detail-view');
+class ClinicChatDetailView {
+  static getInstance(stateManager) {
+    if (!ClinicChatDetailView._instance) {
+      ClinicChatDetailView._instance = new ClinicChatDetailView(stateManager);
+    }
+
+    return ClinicChatDetailView._instance;
+  }
+
+  static newFormId = "newMessage";
+  static commentId = "message";
+  static submitCommentId = "submitMessage";
+  static chatLogId = 'chatLog';
+  static chatLogRoomId = 'chatLogRoom';
+  static priorityId = 'priority';
+  static clinicChatFastPatientSearch = 'clinicChatFastPatientSearch'; // @ts-ignore
+
+  constructor(stateManager) {
+    this.stateManager = stateManager;
+    this.selectedChatLog = null; // handler binding
+
+    this.handleAddMessage = this.handleAddMessage.bind(this);
+    this.handleChatLogsUpdated = this.handleChatLogsUpdated.bind(this);
+    this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
+    this.handleChatStarted = this.handleChatStarted.bind(this);
+    this.handlePatientDrop = this.handlePatientDrop.bind(this);
+    this.eventUserSelected = this.eventUserSelected.bind(this);
+    this.handlePatientSelected = this.handlePatientSelected.bind(this);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this);
+    this.stateManager.addChangeListenerForName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users, this);
+    this.stateManager.addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_5__.STATE_NAMES.patientSearch, this);
+  }
+
+  onDocumentLoaded() {
+    // @ts-ignore
+    this.chatLogDiv = document.getElementById(ClinicChatDetailView.chatLogId); // @ts-ignore
+
+    this.commentEl = document.getElementById(ClinicChatDetailView.commentId); // @ts-ignore
+
+    this.chatForm = document.getElementById(ClinicChatDetailView.newFormId); // @ts-ignore
+
+    this.sendMessageButton = document.getElementById(ClinicChatDetailView.submitCommentId); // @ts-ignore
+
+    this.priorityEl = document.getElementById(ClinicChatDetailView.priorityId); // @ts-ignore
+
+    this.chatRoomDiv = document.getElementById(ClinicChatDetailView.chatLogRoomId); // @ts-ignore
+
+    this.fastPatientSearch = document.getElementById(ClinicChatDetailView.clinicChatFastPatientSearch);
+    this.chatRoomDiv.addEventListener('dragover', event => {
+      logger('Dragged over');
+      if (this.selectedChatLog) event.preventDefault();
+    });
+    this.chatRoomDiv.addEventListener('drop', this.handlePatientDrop);
+    this.chatForm.addEventListener('submit', this.handleAddMessage);
+    this.checkCanComment();
+    const fastSearchEl = $(this.fastPatientSearch); // @ts-ignore
+
+    fastSearchEl.on('autocompleteselect', this.handlePatientSelected);
+  }
+
+  hasActionPermission(actionName, from, item) {
+    return true;
+  }
+
+  getListenerName() {
+    return 'Chat Log Details';
+  }
+
+  canSelectItem(view, selectedItem) {
+    return true;
+  }
+
+  hasPermissionToDeleteItemInNamedCollection(name, item) {
+    return true;
+  }
+
+  hasPermissionToUpdateItemInNamedCollection(name, item) {
+    return true;
+  }
+
+  hasChanged() {
+    return false;
+  }
+
+  setContainedBy(container) {}
+
+  addEventListener(listener) {}
+
+  getIdForItemInNamedCollection(name, item) {
+    throw new Error('Method not implemented.');
+  }
+
+  getDisplayValueForItemInNamedCollection(name, item) {
+    throw new Error('Method not implemented.');
+  }
+
+  compareItemsForEquality(item1, item2) {
+    throw new Error('Method not implemented.');
+  }
+
+  getModifierForItemInNamedCollection(name, item) {
+    throw new Error('Method not implemented.');
+  }
+
+  getSecondaryModifierForItemInNamedCollection(name, item) {
+    throw new Error('Method not implemented.');
+  }
+
+  getBadgeValueForItemInNamedCollection(name, item) {
+    throw new Error('Method not implemented.');
+  }
+
+  getBackgroundImageForItemInNamedCollection(name, item) {
+    throw new Error('Method not implemented.');
+  }
+
+  updateViewForNamedCollection(name, newState) {
+    throw new Error('Method not implemented.');
+  }
+
+  itemDeselected(view, selectedItem) {
+    logger(`Chat Log with id ${selectedItem.roomName} deselected`);
+
+    if (this.selectedChatLog && selectedItem.roomName === this.selectedChatLog.roomName) {
+      this.selectedChatLog = null;
+      this.checkCanComment();
+      this.clearChatLog();
+    }
+  }
+
+  itemSelected(view, selectedItem) {
+    this.selectedChatLog = selectedItem;
+
+    if (this.selectedChatLog) {
+      logger(`Chat Log with id ${selectedItem.roomName} selected`);
+      this.checkCanComment();
+      this.renderChatLog(this.selectedChatLog);
+    }
+  }
+
+  canDeleteItem(view, selectedItem) {
+    return true;
+  }
+
+  itemDeleted(view, selectedItem) {
+    logger(`Chat Log with ${selectedItem.roomName} deleting`);
+
+    if (this.selectedChatLog && this.selectedChatLog.roomName === selectedItem.roomName) {
+      this.checkCanComment();
+      this.renderChatLog(this.selectedChatLog);
+    }
+  }
+
+  hideRequested(view) {
+    this.selectedChatLog = null;
+    this.checkCanComment();
+    this.clearChatLog();
+  }
+
+  handlePatientDrop(event) {
+    logger('drop event on current chat room');
+
+    if (this.selectedChatLog) {
+      // @ts-ignore
+      const draggedObjectJSON = event.dataTransfer.getData(ui_framework_jps_dist_framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_3__.DRAGGABLE_KEY_ID);
+      const draggedObject = JSON.parse(draggedObjectJSON);
+      logger(draggedObject);
+
+      if (draggedObject[ui_framework_jps_dist_framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_3__.DRAGGABLE_TYPE] === _AppTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE.typePatientSummary) {
+        // send the patient as an attachment
+        const roomName = this.selectedChatLog.roomName;
+        const simpleAttachment = {
+          identifier: draggedObject._id,
+          type: _AppTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE.typePatientSummary,
+          displayText: `${draggedObject.name.firstname} ${draggedObject.name.surname}`,
+          iconClasses: 'fas fa-male'
+        };
+        let sentMessage = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().sendMessage(roomName, '', ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.Normal, simpleAttachment, {});
+
+        if (sentMessage) {
+          // add the message to our display
+          let messageEl = this.addChatMessage(sentMessage); // scroll to bottom
+
+          if (messageEl) ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].scrollSmoothTo(messageEl);
+        }
+      }
+    }
+  }
+
+  handleChatLogUpdated(log) {
+    logger(`Handling chat log updates`);
+    this.checkCanComment();
+    this.renderChatLog(log);
+  }
+
+  handleAddMessage(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    logger(`Handling message event`);
+
+    if (this.selectedChatLog) {
+      if (this.commentEl && this.commentEl.value.trim().length === 0) return;
+      const messageContent = this.commentEl.value.trim();
+      this.commentEl.value = '';
+      let priority = parseInt(this.priorityEl.value);
+      if (isNaN(priority)) priority = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.Normal;
+      const simpleAttachment = {
+        identifier: '',
+        type: '',
+        displayText: ''
+      };
+      let sentMessage = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, priority, simpleAttachment, {});
+      logger(sentMessage);
+
+      if (sentMessage) {
+        // add the message to our display
+        let messageEl = this.addChatMessage(sentMessage); // scroll to bottom
+
+        if (messageEl) ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].scrollSmoothTo(messageEl);
+      }
+
+      if (this.currentlySelectedPatient) {
+        simpleAttachment.identifier = this.currentlySelectedPatient._id;
+        simpleAttachment.type = _AppTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE.typePatientSummary;
+        simpleAttachment.displayText = `${this.currentlySelectedPatient.name.firstname} ${this.currentlySelectedPatient.name.surname}`;
+        simpleAttachment.iconClasses = 'fas fa-male'; //send a second message with the patient attachment
+
+        sentMessage = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, '', priority, simpleAttachment, {});
+        logger(sentMessage);
+
+        if (sentMessage) {
+          // add the message to our display
+          let messageEl = this.addChatMessage(sentMessage); // scroll to bottom
+
+          if (messageEl) ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].scrollSmoothTo(messageEl);
+        }
+      }
+
+      this.currentlySelectedPatient = null;
+      this.fastPatientSearch.value = '';
+    }
+  }
+
+  eventUserSelected(event, ui) {
+    event.preventDefault();
+    event.stopPropagation();
+    logger(`User ${ui.item.label} with id ${ui.item.value} selected`); // @ts-ignore
+
+    event.target.innerText = ''; // add to the chat, if one selected
+
+    if (this.selectedChatLog) ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().sendInvite(ui.item.label, this.selectedChatLog.roomName);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show('Chat', `Invited ${ui.item.label} to the chat.`);
+  }
+
+  addChatMessage(message) {
+    let chatMessageEl = null; // ignore "join"/"exit" message?
+
+    if (message.from.trim().length !== 0) {
+      chatMessageEl = document.createElement('div');
+      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(chatMessageEl, "message");
+
+      if (message.from === ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getCurrentUser()) {
+        ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(chatMessageEl, 'my-message');
+      } // create and display a time stamp
+
+
+      let messageSenderEl = document.createElement('div');
+      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(messageSenderEl, 'message-sender');
+      messageSenderEl.innerText = message.from + '   ' + moment__WEBPACK_IMPORTED_MODULE_4___default()(message.created, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm');
+      chatMessageEl.appendChild(messageSenderEl); // message content
+
+      let contentEl = document.createElement('div'); // are we displaying a (simple) attachment?
+
+      if (message.simpleAttachment.identifier.trim().length === 0) {
+        // just a text message
+        let classesTextAppend = '';
+
+        switch (message.priority) {
+          case ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.High:
+            {
+              classesTextAppend = '-high';
+              break;
+            }
+
+          case ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.Urgent:
+            {
+              classesTextAppend = '-urgent';
+              break;
+            }
+        }
+
+        if (message.from === ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getCurrentUser()) {
+          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `my-message-content${classesTextAppend}`);
+        } else {
+          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `message-content${classesTextAppend}`);
+        }
+
+        contentEl.innerText = message.message;
+      } else {
+        const attachment = message.simpleAttachment; // simple attachment - should be a patient summary
+
+        let attachmentLinkEl = document.createElement('a');
+        ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(attachmentLinkEl, [{
+          name: 'data-type',
+          value: `${attachment.type}`
+        }, {
+          name: 'data-id',
+          value: `${attachment.identifier}`
+        }]);
+
+        if (attachment.iconClasses) {
+          let iconEl = document.createElement('i');
+          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, attachment.iconClasses);
+          attachmentLinkEl.appendChild(iconEl);
+        }
+
+        let textEl = document.createElement('span');
+        textEl.innerText = attachment.displayText;
+        attachmentLinkEl.appendChild(textEl);
+
+        if (message.from === ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getCurrentUser()) {
+          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `my-message-content`);
+        } else {
+          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `message-content`);
+        }
+
+        contentEl.appendChild(attachmentLinkEl);
+      }
+
+      chatMessageEl.appendChild(contentEl);
+      this.chatLogDiv.appendChild(chatMessageEl);
+    }
+
+    return chatMessageEl;
+  }
+
+  reRenderChatMessages(chatLog) {
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeAllChildren(this.chatLogDiv);
+    let messageEl = null;
+    chatLog.messages.forEach(message => {
+      messageEl = this.addChatMessage(message);
+    }); // scroll to the last message (if any)
+
+    if (messageEl) ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].scrollTo(messageEl);
+  }
+
+  renderChatLog(chatLog) {
+    logger(`Chat Log ${chatLog.roomName} rendering`);
+
+    if (this.selectedChatLog) {
+      if (this.selectedChatLog.roomName === chatLog.roomName) {
+        this.selectedChatLog = chatLog;
+        ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().touchChatLog(chatLog.roomName); // render the chat conversation
+
+        this.reRenderChatMessages(chatLog);
+      }
+    }
+  }
+
+  handleChatLogsUpdated() {
+    if (this.selectedChatLog) {
+      ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().touchChatLog(this.selectedChatLog.roomName); // render the chat conversation
+
+      this.reRenderChatMessages(this.selectedChatLog);
+    }
+
+    this.checkCanComment();
+  }
+
+  handleChatStarted(log) {
+    this.selectedChatLog = log;
+    this.renderChatLog(log);
+  }
+
+  stateChanged(managerName, name, newState) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_5__.STATE_NAMES.patientSearch) {
+      logger(`Handling patient search results`);
+      logger(newState); // load the search names into the search field
+
+      const fastSearchEl = $(this.fastPatientSearch); // for each name, construct the patient details to display and the id referenced
+
+      const fastSearchValues = [];
+      newState.forEach(item => {
+        const searchValue = {
+          label: `${item.name.firstname} ${item.name.surname}`,
+          value: item._id
+        };
+        fastSearchValues.push(searchValue);
+      });
+      fastSearchEl.autocomplete({
+        source: fastSearchValues
+      });
+      fastSearchEl.autocomplete('option', {
+        disabled: false,
+        minLength: 1
+      });
+    }
+  }
+
+  stateChangedItemAdded(managerName, name, itemAdded) {
+    this.stateChanged(managerName, name, this.stateManager.getStateByName(name));
+  }
+
+  stateChangedItemRemoved(managerName, name, itemRemoved) {}
+
+  stateChangedItemUpdated(managerName, name, itemUpdated, itemNewValue) {}
+
+  handleOfflineMessagesReceived(messages) {}
+
+  handleInvitationDeclined(room, username) {}
+
+  handleNewInviteReceived(invite) {
+    return true;
+  }
+
+  itemDragStarted(view, selectedItem) {}
+
+  itemAction(view, actionName, selectedItem) {}
+
+  documentLoaded(view) {}
+
+  showRequested(view) {}
+
+  itemDropped(view, droppedItem) {}
+
+  getName() {
+    return ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.VIEW_NAME.chatLog;
+  }
+
+  hidden() {
+    this.hideRequested(this);
+  }
+
+  getDataSourceKeyId() {
+    return "";
+  }
+
+  getUIConfig() {
+    // @ts-ignore
+    return undefined;
+  }
+
+  render() {}
+
+  show() {}
+
+  getItemDescription(from, item) {
+    return "";
+  }
+
+  getItemId(from, item) {
+    return "";
+  }
+
+  filterResults(managerName, name, filterResults) {}
+
+  checkCanComment() {
+    if (this.selectedChatLog) {
+      if (this.commentEl) this.commentEl.removeAttribute("readonly");
+      if (this.commentEl) this.commentEl.removeAttribute("disabled");
+      if (this.sendMessageButton) this.sendMessageButton.removeAttribute("disabled");
+      if (this.fastPatientSearch) this.fastPatientSearch.removeAttribute("disabled");
+      if (this.priorityEl) this.priorityEl.removeAttribute("disabled");
+    } else {
+      if (this.commentEl) this.commentEl.setAttribute("readonly", "true");
+      if (this.commentEl) this.commentEl.setAttribute("disabled", "true");
+      if (this.sendMessageButton) this.sendMessageButton.setAttribute("disabled", "true");
+      if (this.fastPatientSearch) this.fastPatientSearch.setAttribute("disabled", "true");
+      if (this.priorityEl) this.priorityEl.setAttribute("disabled", "true");
+    }
+  }
+
+  clearChatLog() {
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeAllChildren(this.chatLogDiv);
+  }
+
+  handlePatientSelected(event, ui) {
+    event.preventDefault();
+    event.stopPropagation();
+    logger(`Patient ${ui.item.label} with id ${ui.item.value} selected`); // @ts-ignore
+
+    event.target.value = ui.item.label;
+    this.currentlySelectedPatient = _Controller__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_5__.STATE_NAMES.patientSearch, {
+      _id: ui.item.value
+    });
+    logger(this.currentlySelectedPatient);
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/clinic-chat/ClinicChatListView.ts":
+/*!***********************************************!*\
+  !*** ./src/clinic-chat/ClinicChatListView.ts ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ClinicChatListView": () => (/* binding */ ClinicChatListView)
+/* harmony export */ });
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('clinic-chat-list-view');
+class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.AbstractStatefulCollectionView {
+  static getInstance() {
+    if (!ClinicChatListView._instance) {
+      ClinicChatListView._instance = new ClinicChatListView();
+    }
+
+    return ClinicChatListView._instance;
+  }
+
+  static DOMConfig = {
+    viewConfig: {
+      resultsContainerId: 'chatLogs',
+      dataSourceId: ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.VIEW_NAME.chatLogs
+    },
+    resultsElement: {
+      type: 'a',
+      attributes: [{
+        name: 'href',
+        value: '#'
+      }],
+      classes: 'list-group-item my-list-item truncate-notification list-group-item-action'
+    },
+    keyId: 'roomName',
+    keyType: ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.KeyType.string,
+    modifiers: {
+      normal: '',
+      inactive: 'list-group-item-dark',
+      active: 'list-group-item-primary',
+      warning: ''
+    },
+    detail: {
+      containerClasses: 'd-flex w-100 justify-content-between',
+      textElement: {
+        type: 'span',
+        classes: 'mb-1'
+      },
+      select: true,
+      delete: {
+        classes: 'btn bg-danger text-white btn-circle btn-sm',
+        iconClasses: 'text-black fas fa-sign-out-alt'
+      },
+      badge: {
+        type: 'span',
+        classes: 'badge badge-pill badge-primary mr-1'
+      },
+      secondBadge: {
+        type: 'span',
+        classes: 'badge badge-pill badge-warning mr-1'
+      },
+      thirdBadge: {
+        type: 'span',
+        classes: 'badge badge-pill badge-danger mr-1'
+      }
+    }
+  };
+  selectedChatLog = null;
+
+  constructor() {
+    super(ClinicChatListView.DOMConfig, new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.MemoryBufferStateManager(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.isSameRoom), ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.chatLogs);
+    this.renderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ListViewRenderer(this, this); // handler binding
+
+    this.handleChatLogsUpdated = this.handleChatLogsUpdated.bind(this);
+    this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
+    this.handleChatStarted = this.handleChatStarted.bind(this);
+    this.stateChanged = this.stateChanged.bind(this);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this); // load all users into the list view
+
+    _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addChangeListenerForName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users, this);
+  }
+
+  handleLoggedInUsersUpdated(usernames) {
+    logger(`Handling logged in users changed`);
+    this.updateStateManager();
+  }
+
+  handleFavouriteUserLoggedIn(username) {}
+
+  handleFavouriteUserLoggedOut(username) {}
+
+  handleFavouriteUsersChanged(usernames) {}
+
+  handleBlockedUsersChanged(usernames) {}
+
+  compareItemsForEquality(item1, item2) {
+    return (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.isSameRoom)(item1, item2);
+  }
+
+  handleNewInviteReceived(invite) {
+    return true;
+  }
+
+  handleChatLogUpdated(log) {
+    logger(`Handling chat log updates`);
+    this.updateStateManager();
+  }
+
+  onDocumentLoaded() {
+    super.onDocumentLoaded();
+    this.addEventCollectionListener(this);
+    this.updateStateManager();
+  }
+
+  getIdForItemInNamedCollection(name, item) {
+    return item.roomName;
+  }
+
+  renderDisplayForItemInNamedCollection(containerEl, name, item) {
+    let chatLog = item;
+    containerEl.innerHTML = chatLog.users[1];
+  }
+
+  getModifierForItemInNamedCollection(name, item) {
+    let result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal; // if the user is currently logged out make the item inactive
+
+    if (!ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().isUserLoggedIn(item.username)) {
+      result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.inactive;
+    }
+
+    if (this.selectedChatLog) {
+      if (this.selectedChatLog.roomName === item.roomName) {
+        result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.active;
+      }
+    }
+
+    return result;
+  }
+
+  getSecondaryModifierForItemInNamedCollection(name, item) {
+    return this.getModifierForItemInNamedCollection(name, item);
+  }
+
+  selectChatRoom(roomName) {
+    let room = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getChatLog(roomName);
+    this.selectedChatLog = room;
+    this.eventForwarder.itemSelected(this, this.selectedChatLog);
+    this.updateStateManager();
+  }
+
+  handleChatLogsUpdated() {
+    if (this.selectedChatLog) {
+      ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().touchChatLog(this.selectedChatLog.roomName);
+    }
+
+    this.updateStateManager();
+  }
+
+  handleChatStarted(log) {
+    this.selectedChatLog = log;
+    this.eventForwarder.itemSelected(this, this.selectedChatLog);
+    this.updateStateManager();
+  }
+
+  getBadgeValueForItemInNamedCollection(name, item) {
+    return item.unreadMessages;
+  }
+
+  getSecondaryBadgeValueForItemInNamedCollection(name, item) {
+    return item.unreadHighMessages;
+  }
+
+  getTertiaryBadgeValueForItemInNamedCollection(name, item) {
+    return item.unreadUrgentMessages;
+  }
+
+  canDeleteItem(view, selectedItem) {
+    return true;
+  }
+
+  itemDeleted(view, selectedItem) {
+    logger(`Deleting chat ${selectedItem.roomName}`);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().leaveChat(selectedItem.roomName);
+
+    if (this.selectedChatLog && this.selectedChatLog.roomName === selectedItem.roomName) {
+      this.eventForwarder.itemDeselected(this, this.selectedChatLog);
+      this.selectedChatLog = null;
+    }
+
+    this.updateStateManager();
+  }
+
+  hideRequested(view) {
+    if (this.selectedChatLog) {
+      this.eventForwarder.itemDeselected(this, this.selectedChatLog);
+      this.selectedChatLog = null;
+    }
+  }
+
+  hidden() {
+    this.hideRequested(this);
+  }
+
+  documentLoaded(view) {}
+
+  itemAction(view, actionName, selectedItem) {}
+
+  itemDragStarted(view, selectedItem) {}
+
+  itemDropped(view, droppedItem) {}
+
+  itemSelected(view, selectedItem) {
+    this.selectedChatLog = selectedItem;
+    this.updateStateManager();
+  }
+
+  itemDeselected(view, selectedItem) {
+    this.selectedChatLog = null;
+    this.updateStateManager();
+  }
+
+  showRequested(view) {}
+
+  handleOfflineMessagesReceived(messages) {}
+
+  handleInvitationDeclined(room, username) {}
+
+  canSelectItem(view, selectedItem) {
+    return true;
+  }
+
+  updateStateManager() {
+    logger(`Updating state with chat manager`);
+    let newState = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getChatLogs();
+    logger(newState);
+    this.stateManager.setStateByName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.chatLogs, newState, true);
+  }
+
+  stateChanged(managerName, name, newValue) {
+    logger(`Updating state for ${name}`);
+    logger(newValue);
+
+    if (name === ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users) {
+      // load a chat room for each other user
+      newValue.forEach(user => {
+        if (user.username !== ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.SecurityManager.getInstance().getLoggedInUsername()) {
+          ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().startChatWithUser(user.username);
+        }
+      });
+    }
+
+    if (name === ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.chatLogs) {
+      super.stateChanged(managerName, name, newValue);
+    }
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/clinic-chat/ClinicChatSidebar.ts":
+/*!**********************************************!*\
+  !*** ./src/clinic-chat/ClinicChatSidebar.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ClinicChatSidebar": () => (/* binding */ ClinicChatSidebar)
+/* harmony export */ });
+/* harmony import */ var _ClinicChatListView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ClinicChatListView */ "./src/clinic-chat/ClinicChatListView.ts");
+/* harmony import */ var _ClinicChatDetailView__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ClinicChatDetailView */ "./src/clinic-chat/ClinicChatDetailView.ts");
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+
+
+
+class ClinicChatSidebar extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.SidebarViewContainer {
+  static getInstance(stateManager) {
+    if (!ClinicChatSidebar._instance) {
+      ClinicChatSidebar._instance = new ClinicChatSidebar(stateManager);
+    }
+
+    return ClinicChatSidebar._instance;
+  }
+
+  static SidebarPrefs = {
+    id: 'chatSideBar',
+    expandedSize: '35%',
+    location: ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.SidebarLocation.right
+  };
+  static SidebarContainers = {
+    chatLogs: 'chatLogs',
+    chatLog: 'chatLogRoom'
+  };
+
+  constructor(stateManager) {
+    super(ClinicChatSidebar.SidebarPrefs);
+    const chatView = _ClinicChatListView__WEBPACK_IMPORTED_MODULE_0__.ClinicChatListView.getInstance();
+    this.addView(chatView, {
+      containerId: ClinicChatSidebar.SidebarContainers.chatLogs
+    });
+    const chatLogView = _ClinicChatDetailView__WEBPACK_IMPORTED_MODULE_1__.ClinicChatDetailView.getInstance(stateManager);
+    this.addView(chatLogView, {
+      containerId: ClinicChatSidebar.SidebarContainers.chatLog
+    });
+    chatView.addEventListener(chatLogView);
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/patients/PatientSearchSidebar.ts":
 /*!**********************************************!*\
   !*** ./src/patients/PatientSearchSidebar.ts ***!
@@ -3291,8 +4146,7 @@ class PatientSearchView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Ab
   }
 
   onDocumentLoaded() {
-    super.onDocumentLoaded(); // @ts-ignore
-
+    super.onDocumentLoaded();
     const fastSearchEl = $(`#${PatientSearchView.fastSearchInputId}`); // @ts-ignore
 
     fastSearchEl.on('autocompleteselect', this.eventPatientSelected);
@@ -3419,6 +4273,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./patients/PatientSearchSidebar */ "./src/patients/PatientSearchSidebar.ts");
 /* harmony import */ var _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./appointment-types/AppointmentTypesCompositeView */ "./src/appointment-types/AppointmentTypesCompositeView.ts");
 /* harmony import */ var _appointment_types_AppointmentTypesSidebar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./appointment-types/AppointmentTypesSidebar */ "./src/appointment-types/AppointmentTypesSidebar.ts");
+/* harmony import */ var _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./clinic-chat/ClinicChatSidebar */ "./src/clinic-chat/ClinicChatSidebar.ts");
+/* harmony import */ var _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./clinic-chat/ClinicChatListView */ "./src/clinic-chat/ClinicChatListView.ts");
+
+
 
 
 
@@ -3434,8 +4292,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('app');
 class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
-  // @ts-ignore
-  // @ts-ignore
   thisEl = null;
   chatNavigationItem = null;
 
@@ -3464,15 +4320,13 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.thisEl = document.getElementById('root');
     _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().onDocumentLoaded();
     new _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__.AppointmentTypesCompositeView(_appointment_types_AppointmentTypesSidebar__WEBPACK_IMPORTED_MODULE_12__.AppointmentTypesSidebar.getInstance()).onDocumentLoaded();
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_13__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).onDocumentLoaded();
     this.setupNavigationItemHandling();
     _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
     _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.ContextualInformationHelper.getInstance().onDocumentLoaded();
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SecurityManager.getInstance().onDocumentLoaded(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
-    _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients, {
-      _id: '2a8665a6-3580-4195-8ed7-0f81df551204'
-    });
   }
 
   getCurrentUser() {
@@ -3480,7 +4334,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
   hideAllSideBars() {
-    this.chatSidebar.eventHide(null);
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_13__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).eventHide(null);
     _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().eventHide(null);
   }
 
@@ -3493,19 +4347,27 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
       return;
     }
 
-    this.chatSidebar.eventShow(null);
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_13__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).eventShow(null);
 
     if (roomName) {
-      this.chatView.selectChatRoom(roomName);
+      _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_14__.ClinicChatListView.getInstance().selectChatRoom(roomName);
     }
   }
 
-  countChanged(newCount) {
+  countChanged(unreadNormalMessages, unreadHighMessages, unreadUrgentMessages) {
     //
     let buffer = 'Chat <i class="fas fa-inbox"></i>';
 
-    if (newCount > 0) {
-      buffer += ` <span class="badge badge-pill badge-primary">&nbsp;${newCount}&nbsp;</span>`;
+    if (unreadNormalMessages > 0) {
+      buffer += ` <span class="badge badge-pill badge-primary">&nbsp;${unreadNormalMessages}&nbsp;</span>`;
+    }
+
+    if (unreadHighMessages > 0) {
+      buffer += ` <span class="badge badge-pill badge-warning">&nbsp;${unreadHighMessages}&nbsp;</span>`;
+    }
+
+    if (unreadUrgentMessages > 0) {
+      buffer += ` <span class="badge badge-pill badge-danger">&nbsp;${unreadUrgentMessages}&nbsp;</span>`;
     }
 
     if (this.chatNavigationItem) this.chatNavigationItem.innerHTML = `${buffer}`;
@@ -3561,7 +4423,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
 } //localStorage.debug = 'app api-ts-results bootstrap-form-config-helper';
 
-localStorage.debug = 'api-ts colour-input-field socket-ts';
+localStorage.debug = 'api-ts-results clinic-chat-list-view socket-ts clinic-chat-detail-view';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {
@@ -4046,7 +4908,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunktemplate_feo_react_babel"] = self["webpackChunktemplate_feo_react_babel"] || [];
+/******/ 		var chunkLoadingGlobal = self["webpackChunkpatient_booking_system"] = self["webpackChunkpatient_booking_system"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
