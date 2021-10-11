@@ -1,22 +1,29 @@
 import debug from 'debug';
 import {
     ChatEventListener,
-    ChatLog, ChatManager, CollectionView, CollectionViewListener, DRAGGABLE,
+    ChatLog,
+    ChatManager,
+    CollectionView,
+    CollectionViewListener,
     Invitation,
-    Message, Modifier, NotificationController,
-    NotificationManager,
+    Message,
+    Modifier,
+    NotificationController,
     Priority,
-    SecurityManager, STATE_NAMES,
-    StateChangeListener, StateManager, View, VIEW_NAME, ViewDOMConfig
+    STATE_NAMES,
+    StateChangeListener,
+    StateManager,
+    View,
+    VIEW_NAME,
+    ViewDOMConfig
 } from "ui-framework-jps";
 import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 import {SimpleAttachment} from "ui-framework-jps/dist/framework/socket/Types";
 import {DRAGGABLE_KEY_ID, DRAGGABLE_TYPE} from "ui-framework-jps/dist/framework/ui/ConfigurationTypes";
 import moment from "moment";
 
-import {DRAGGABLE as APP_DRAGGABLE,STATE_NAMES as APP_STATE_NAMES}  from '../AppTypes'
+import {DRAGGABLE as APP_DRAGGABLE, STATE_NAMES as APP_STATE_NAMES} from '../AppTypes'
 import Controller from "../Controller";
-
 
 
 const logger = debug('clinic-chat-detail-view');
@@ -59,7 +66,7 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     protected stateManager: StateManager;
 
     protected selectedChatLog: ChatLog | null;
-    protected currentlySelectedPatient: any|null;
+    protected currentlySelectedPatient: any | null;
 
 
     private constructor(stateManager: StateManager) {
@@ -72,13 +79,14 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
         this.handleChatStarted = this.handleChatStarted.bind(this);
         this.handlePatientDrop = this.handlePatientDrop.bind(this);
-        this.eventUserSelected = this.eventUserSelected.bind(this);
         this.handlePatientSelected = this.handlePatientSelected.bind(this);
+        this.handleAttachmentClicked = this.handleAttachmentClicked.bind(this);
 
         NotificationController.getInstance().addListener(this);
         this.stateManager.addChangeListenerForName(STATE_NAMES.users, this);
         this.stateManager.addChangeListenerForName(APP_STATE_NAMES.patientSearch, this);
     }
+
     onDocumentLoaded() {
         // @ts-ignore
         this.chatLogDiv = document.getElementById(ClinicChatDetailView.chatLogId);
@@ -94,7 +102,6 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         this.chatRoomDiv = document.getElementById(ClinicChatDetailView.chatLogRoomId);
         // @ts-ignore
         this.fastPatientSearch = document.getElementById(ClinicChatDetailView.clinicChatFastPatientSearch);
-
 
 
         this.chatRoomDiv.addEventListener('dragover', (event) => {
@@ -223,13 +230,13 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
             if (draggedObject[DRAGGABLE_TYPE] === APP_DRAGGABLE.typePatientSummary) {
                 // send the patient as an attachment
                 const roomName = this.selectedChatLog.roomName;
-                const simpleAttachment:SimpleAttachment = {
+                const simpleAttachment: SimpleAttachment = {
                     identifier: draggedObject._id,
                     type: APP_DRAGGABLE.typePatientSummary,
                     displayText: `${draggedObject.name.firstname} ${draggedObject.name.surname}`,
                     iconClasses: 'fas fa-male'
                 }
-                let sentMessage: Message | null = ChatManager.getInstance().sendMessage(roomName, '', Priority.Normal, simpleAttachment,{});
+                let sentMessage: Message | null = ChatManager.getInstance().sendMessage(roomName, simpleAttachment.displayText, Priority.Normal, simpleAttachment, {});
                 if (sentMessage) {
                     // add the message to our display
                     let messageEl = this.addChatMessage(sentMessage);
@@ -260,10 +267,15 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
             let priority = parseInt(this.priorityEl.value);
             if (isNaN(priority)) priority = Priority.Normal;
 
-            const simpleAttachment:SimpleAttachment = {identifier:'',type:'',displayText:''};
+            let simpleAttachment: SimpleAttachment = {identifier: '', type: '', displayText: ''};
+            if (this.currentlySelectedPatient) {
+                simpleAttachment.identifier = this.currentlySelectedPatient._id;
+                simpleAttachment.type = APP_DRAGGABLE.typePatientSummary;
+                simpleAttachment.displayText = `${this.currentlySelectedPatient.name.firstname} ${this.currentlySelectedPatient.name.surname}`;
+                simpleAttachment.iconClasses = 'fas fa-male';
+            }
 
-
-            let sentMessage: Message | null = ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, priority, simpleAttachment,{});
+            let sentMessage: Message | null = ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, priority, simpleAttachment, {});
             logger(sentMessage);
             if (sentMessage) {
                 // add the message to our display
@@ -272,41 +284,14 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
                 if (messageEl) browserUtil.scrollSmoothTo(messageEl);
             }
 
-            if (this.currentlySelectedPatient) {
-                simpleAttachment.identifier = this.currentlySelectedPatient._id;
-                simpleAttachment.type = APP_DRAGGABLE.typePatientSummary;
-                simpleAttachment.displayText = `${this.currentlySelectedPatient.name.firstname} ${this.currentlySelectedPatient.name.surname}`;
-                simpleAttachment.iconClasses = 'fas fa-male';
-                //send a second message with the patient attachment
-                sentMessage = ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, '', priority, simpleAttachment,{});
-                logger(sentMessage);
-                if (sentMessage) {
-                    // add the message to our display
-                    let messageEl = this.addChatMessage(sentMessage);
-                    // scroll to bottom
-                    if (messageEl) browserUtil.scrollSmoothTo(messageEl);
-                }
-            }
             this.currentlySelectedPatient = null;
             this.fastPatientSearch.value = '';
         }
     }
 
 
-    eventUserSelected(event: Event, ui: any) {
-        event.preventDefault();
-        event.stopPropagation();
-        logger(`User ${ui.item.label} with id ${ui.item.value} selected`);
-        // @ts-ignore
-        event.target.innerText = '';
-
-        // add to the chat, if one selected
-        if (this.selectedChatLog) ChatManager.getInstance().sendInvite(ui.item.label, this.selectedChatLog.roomName);
-        NotificationManager.getInstance().show('Chat', `Invited ${ui.item.label} to the chat.`);
-    }
-
-    addChatMessage(message: Message): HTMLElement|null {
-        let chatMessageEl:HTMLElement|null = null;
+    addChatMessage(message: Message): HTMLElement | null {
+        let chatMessageEl: HTMLElement | null = null;
 
         // ignore "join"/"exit" message?
         if (message.from.trim().length !== 0) {
@@ -324,50 +309,66 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
             // message content
             let contentEl = document.createElement('div');
 
-            // are we displaying a (simple) attachment?
-            if (message.simpleAttachment.identifier.trim().length === 0) {
-                // just a text message
-                let classesTextAppend = '';
-                switch(message.priority) {
-                    case Priority.High: {
-                        classesTextAppend = '-high';
-                        break;
-                    }
-                    case Priority.Urgent: {
-                        classesTextAppend = '-urgent';
-                        break;
-                    }
+
+            // just a text message
+            let classesTextAppend = '';
+            switch (message.priority) {
+                case Priority.High: {
+                    classesTextAppend = '-high';
+                    break;
                 }
-                if (message.from === ChatManager.getInstance().getCurrentUser()) {
-                    browserUtil.addRemoveClasses(contentEl, `my-message-content${classesTextAppend}`);
-                } else {
-                    browserUtil.addRemoveClasses(contentEl, `message-content${classesTextAppend}`);
+                case Priority.Urgent: {
+                    classesTextAppend = '-urgent';
+                    break;
                 }
-                contentEl.innerText = message.message;
             }
-            else {
+            if (message.from === ChatManager.getInstance().getCurrentUser()) {
+                browserUtil.addRemoveClasses(contentEl, `my-message-content${classesTextAppend}`);
+            } else {
+                browserUtil.addRemoveClasses(contentEl, `message-content${classesTextAppend}`);
+            }
+            contentEl.innerText = message.message;
+            chatMessageEl.appendChild(contentEl);
+            this.chatLogDiv.appendChild(chatMessageEl);
+
+
+
+
+            // do we have a simple attachement?
+            if (message.simpleAttachment.identifier.trim().length > 0) {
+                chatMessageEl = document.createElement('div');
+                browserUtil.addRemoveClasses(chatMessageEl, "message");
+                if (message.from === ChatManager.getInstance().getCurrentUser()) {
+                    browserUtil.addRemoveClasses(chatMessageEl, 'my-message');
+                }
+
+                // message content
+                let contentEl = document.createElement('div');
+
                 const attachment = message.simpleAttachment;
                 // simple attachment - should be a patient summary
                 let attachmentLinkEl = document.createElement('a');
-                browserUtil.addAttributes(attachmentLinkEl,[{name:'data-type',value:`${attachment.type}`},{name:'data-id',value:`${attachment.identifier}`}]);
+                browserUtil.addAttributes(attachmentLinkEl, [{
+                    name: 'data-type',
+                    value: `${attachment.type}`
+                }, {name: 'data-id', value: `${attachment.identifier}`}]);
+                let buffer = '';
                 if (attachment.iconClasses) {
-                    let iconEl = document.createElement('i');
-                    browserUtil.addRemoveClasses(iconEl,attachment.iconClasses);
-                    attachmentLinkEl.appendChild(iconEl);
+                    buffer += `<i class="${attachment.iconClasses}"></i>`;
                 }
-                let textEl = document.createElement('span');
-                textEl.innerText = attachment.displayText;
-                attachmentLinkEl.appendChild(textEl);
+                buffer += `&nbsp;&nbsp;${attachment.displayText}`;
+                attachmentLinkEl.innerHTML = buffer;
                 if (message.from === ChatManager.getInstance().getCurrentUser()) {
-                    browserUtil.addRemoveClasses(contentEl, `my-message-content`);
+                    browserUtil.addRemoveClasses(contentEl, `my-message-content-${attachment.type}`);
                 } else {
-                    browserUtil.addRemoveClasses(contentEl, `message-content`);
+                    browserUtil.addRemoveClasses(contentEl, `message-content-${attachment.type}`);
                 }
                 contentEl.appendChild(attachmentLinkEl);
+                attachmentLinkEl.addEventListener('click',this.handleAttachmentClicked);
+                chatMessageEl.appendChild(contentEl);
+                this.chatLogDiv.appendChild(chatMessageEl);
             }
 
-            chatMessageEl.appendChild(contentEl);
-            this.chatLogDiv.appendChild(chatMessageEl);
         }
 
         return chatMessageEl;
@@ -512,7 +513,7 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
             if (this.commentEl) this.commentEl.setAttribute("disabled", "true");
             if (this.sendMessageButton) this.sendMessageButton.setAttribute("disabled", "true");
             if (this.fastPatientSearch) this.fastPatientSearch.setAttribute("disabled", "true");
-            if (this.priorityEl) this.priorityEl.setAttribute("disabled","true");
+            if (this.priorityEl) this.priorityEl.setAttribute("disabled", "true");
         }
 
     }
@@ -529,6 +530,13 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         event.target.value = ui.item.label;
         this.currentlySelectedPatient = Controller.getInstance().getStateManager().findItemInState(APP_STATE_NAMES.patientSearch, {_id: ui.item.value});
         logger(this.currentlySelectedPatient);
+    }
+
+    handleAttachmentClicked(event:Event) {
+        event.preventDefault();
+        event.stopPropagation();
+        logger(`Handling attachment clicked`);
+        logger(event.target);
     }
 
 

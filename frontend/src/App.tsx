@@ -7,7 +7,7 @@ import ReactDOM from "react-dom";
 import {AppointmentController} from "./appointments/AppointmentController";
 import {
     ChatRoomsSidebar,
-    ContextualInformationHelper,
+    ContextualInformationHelper, NotificationController,
     SecurityManager,
     UnreadMessageCountListener
 } from "ui-framework-jps";
@@ -70,6 +70,17 @@ export default class App extends React.Component implements UnreadMessageCountLi
         AppointmentTemplateController.getInstance().onDocumentLoaded();
         ContextualInformationHelper.getInstance().onDocumentLoaded();
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
+        NotificationController.getInstance().setOptions({
+            showNormalPriorityMessageNotifications:true,
+            showHighPriorityMessageNotifications:true,
+            showUrgentPriorityMessageNotifications:true,
+            showInvitationDeclinedNotifications:false,
+            showInvitedNotifications:false,
+            showOfflineMessageNotification:true,
+            showFavouriteUserLoggedInNotification:false,
+            showFavouriteUserLoggedOutNotification:false,
+            showUserJoinLeaveChatNotification:false
+        })
         Controller.getInstance().onDocumentLoaded();
 
     }

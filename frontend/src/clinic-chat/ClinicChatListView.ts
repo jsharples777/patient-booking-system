@@ -78,6 +78,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         },
     };
     protected selectedChatLog: ChatLog | null = null;
+    private doNotDisturbEl: HTMLInputElement|null = null;
 
    private constructor() {
         super(ClinicChatListView.DOMConfig, new MemoryBufferStateManager(isSameRoom), STATE_NAMES.chatLogs);
@@ -90,11 +91,34 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
         this.handleChatStarted = this.handleChatStarted.bind(this);
         this.stateChanged = this.stateChanged.bind(this);
+        this.toggleDoNotDisturb = this.toggleDoNotDisturb.bind(this);
 
         NotificationController.getInstance().addListener(this);
 
         // load all users into the list view
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.users,this);
+    }
+
+    toggleDoNotDisturb(event:Event) {
+       event.preventDefault();
+       event.stopPropagation();
+       if (this.doNotDisturbEl) {
+           logger(`Toggling Do Not Disturb ${this.doNotDisturbEl.checked}`)
+           const doNotDisturb = !this.doNotDisturbEl.checked;
+
+           NotificationController.getInstance().setOptions({
+               showNormalPriorityMessageNotifications: doNotDisturb,
+               showHighPriorityMessageNotifications: doNotDisturb,
+               showUrgentPriorityMessageNotifications: true,
+               showInvitationDeclinedNotifications: false,
+               showInvitedNotifications: false,
+               showOfflineMessageNotification: true,
+               showFavouriteUserLoggedInNotification: false,
+               showFavouriteUserLoggedOutNotification: false,
+               showUserJoinLeaveChatNotification: false
+
+           });
+       }
     }
 
     handleLoggedInUsersUpdated(usernames: string[]): void {
@@ -121,6 +145,13 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
 
     onDocumentLoaded() {
         super.onDocumentLoaded();
+        this.doNotDisturbEl = <HTMLInputElement>document.getElementById('doNotDisturb');
+        if (this.doNotDisturbEl) {
+            // @ts-ignore
+            mobiscroll5.enhance(this.doNotDisturbEl);
+        }
+        this.doNotDisturbEl.addEventListener('change', this.toggleDoNotDisturb)
+
         this.addEventCollectionListener(this);
         this.updateStateManager();
     }

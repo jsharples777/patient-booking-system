@@ -1,3 +1,29 @@
+.my-message-content-patientSummary {
+    font-size: small;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    color: rgba(255, 255, 255, 1);
+    background: rgba(50,150,50,0.7);
+}
+
+.message-content-patientSummary {
+    font-size: small;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    color: rgba(255, 255, 255, 1);
+    background: rgba(50,150,50,0.7);
+}
+
+.message-content-patientSummary:hover {
+    cursor: pointer;
+    background: rgba(50,150,50,1);
+}
+
+.my-message-content-patientSummary:hover {
+    cursor: pointer;
+    background: rgba(50,150,50,1);
+}
+
 
 /* card scrolling on side bars*/
 .scroll {

@@ -54359,11 +54359,20 @@ __webpack_require__.r(__webpack_exports__);
 const notLogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('notification-controller');
 class NotificationController {
     constructor() {
-        this.doNotDisturb = false;
         this.chatManager = _ChatManager__WEBPACK_IMPORTED_MODULE_0__.ChatManager.getInstance();
-        this.doNotDisturb = false;
         this.chatListeners = [];
         this.chatUserListeners = [];
+        this.notificationOptions = {
+            showNormalPriorityMessageNotifications: true,
+            showHighPriorityMessageNotifications: true,
+            showUrgentPriorityMessageNotifications: true,
+            showInvitationDeclinedNotifications: true,
+            showInvitedNotifications: true,
+            showOfflineMessageNotification: true,
+            showFavouriteUserLoggedInNotification: true,
+            showFavouriteUserLoggedOutNotification: true,
+            showUserJoinLeaveChatNotification: true
+        };
         //bind the methods
         this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
         this.handleLoggedInUsersUpdated = this.handleLoggedInUsersUpdated.bind(this);
@@ -54379,7 +54388,7 @@ class NotificationController {
         return NotificationController._instance;
     }
     handleInvitationDeclined(room, username) {
-        if ((this.doNotDisturb))
+        if (!this.notificationOptions.showInvitationDeclinedNotifications)
             return;
         // notify the user of the new chat
         _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show('Room', `User ${username} has declined the invitation to join you.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.info, 7000);
@@ -54389,7 +54398,7 @@ class NotificationController {
         // is this a chat room or score sheet?
         if (invite.type !== _Types__WEBPACK_IMPORTED_MODULE_3__.InviteType.ChatRoom)
             return true;
-        if ((this.doNotDisturb) && (!invite.requiresAcceptDecline))
+        if (!invite.requiresAcceptDecline)
             return result;
         if (invite.requiresAcceptDecline) {
             // notify the user of the invitation
@@ -54397,7 +54406,8 @@ class NotificationController {
         }
         else {
             // notify the user of the new chat
-            _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show('Chat Room', `User ${invite.from} has invited you.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.info, 7000);
+            if (this.notificationOptions.showInvitedNotifications)
+                _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show('Chat Room', `User ${invite.from} has invited you.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.info, 7000);
         }
         return result;
     }
@@ -54406,9 +54416,6 @@ class NotificationController {
     }
     addUserListener(listener) {
         this.chatUserListeners.push(listener);
-    }
-    setDoNotDisturb(dontDisturbMe = true) {
-        this.doNotDisturb = dontDisturbMe;
     }
     blackListUser(username, isBlackedListed = true) {
         if (isBlackedListed) {
@@ -54444,10 +54451,26 @@ class NotificationController {
             // get the last message added, it won't be from ourselves (the chat manager takes care of that)
             if (log.messages.length > 0) {
                 const displayMessage = log.messages[log.messages.length - 1];
-                // provide visual notifications if do not disturb is not on, unless the message is marked priority
-                if (this.doNotDisturb && (displayMessage.priority !== _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Urgent))
+                // is this a user join/leave?
+                if ((displayMessage.from.trim().length === 0) && (!this.notificationOptions.showUserJoinLeaveChatNotification))
                     return;
-                _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(displayMessage.from, displayMessage.message, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.message, 3000);
+                // provide visual notifications if do not disturb is not on, unless the message is marked priority
+                let notificationType = _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.message;
+                let showNotification = this.notificationOptions.showNormalPriorityMessageNotifications;
+                switch (displayMessage.priority) {
+                    case _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.High: {
+                        notificationType = _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.warning;
+                        showNotification = this.notificationOptions.showHighPriorityMessageNotifications;
+                        break;
+                    }
+                    case _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Urgent: {
+                        notificationType = _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.priority;
+                        showNotification = this.notificationOptions.showUrgentPriorityMessageNotifications;
+                        break;
+                    }
+                }
+                if (showNotification)
+                    _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(displayMessage.from, displayMessage.message, notificationType, 3000);
             }
         }
     }
@@ -54462,18 +54485,15 @@ class NotificationController {
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUserLoggedIn(username));
         // provide visual notifications if do not disturb is not on
-        if (this.doNotDisturb)
-            return;
-        _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged in.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.warning, 5000);
+        if (this.notificationOptions.showFavouriteUserLoggedInNotification)
+            _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged in.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.warning, 5000);
     }
     handleFavouriteUserLoggedOut(username) {
         notLogger(`Handle favourite user ${username} logged out`);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUserLoggedOut(username));
-        // provide visual notifications if do not disturb is not on
-        if (this.doNotDisturb)
-            return;
-        _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged out.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.priority, 4000);
+        if (this.notificationOptions.showFavouriteUserLoggedOutNotification)
+            _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged out.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.priority, 4000);
     }
     handleBlockedUsersChanged(usernames) {
         notLogger(`Handle blocked users changed to ${usernames}`);
@@ -54491,11 +54511,13 @@ class NotificationController {
     }
     handleOfflineMessagesReceived(messages) {
         // provide visual notifications if do not disturb is not on
-        if (this.doNotDisturb)
-            return;
         if (messages.length === 0)
             return;
-        _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show("Offline messages received", `You have received ${messages.length} messages since you last logged out.`);
+        if (this.notificationOptions.showOfflineMessageNotification)
+            _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show("Offline messages received", `You have received ${messages.length} messages since you last logged out.`);
+    }
+    setOptions(options) {
+        this.notificationOptions = options;
     }
 }
 //# sourceMappingURL=NotificationController.js.map

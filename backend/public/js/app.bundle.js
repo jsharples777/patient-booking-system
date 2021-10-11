@@ -3235,8 +3235,8 @@ class ClinicChatDetailView {
     this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
     this.handleChatStarted = this.handleChatStarted.bind(this);
     this.handlePatientDrop = this.handlePatientDrop.bind(this);
-    this.eventUserSelected = this.eventUserSelected.bind(this);
     this.handlePatientSelected = this.handlePatientSelected.bind(this);
+    this.handleAttachmentClicked = this.handleAttachmentClicked.bind(this);
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this);
     this.stateManager.addChangeListenerForName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users, this);
     this.stateManager.addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_5__.STATE_NAMES.patientSearch, this);
@@ -3386,7 +3386,7 @@ class ClinicChatDetailView {
           displayText: `${draggedObject.name.firstname} ${draggedObject.name.surname}`,
           iconClasses: 'fas fa-male'
         };
-        let sentMessage = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().sendMessage(roomName, '', ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.Normal, simpleAttachment, {});
+        let sentMessage = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().sendMessage(roomName, simpleAttachment.displayText, ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.Normal, simpleAttachment, {});
 
         if (sentMessage) {
           // add the message to our display
@@ -3415,11 +3415,19 @@ class ClinicChatDetailView {
       this.commentEl.value = '';
       let priority = parseInt(this.priorityEl.value);
       if (isNaN(priority)) priority = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.Normal;
-      const simpleAttachment = {
+      let simpleAttachment = {
         identifier: '',
         type: '',
         displayText: ''
       };
+
+      if (this.currentlySelectedPatient) {
+        simpleAttachment.identifier = this.currentlySelectedPatient._id;
+        simpleAttachment.type = _AppTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE.typePatientSummary;
+        simpleAttachment.displayText = `${this.currentlySelectedPatient.name.firstname} ${this.currentlySelectedPatient.name.surname}`;
+        simpleAttachment.iconClasses = 'fas fa-male';
+      }
+
       let sentMessage = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, priority, simpleAttachment, {});
       logger(sentMessage);
 
@@ -3430,37 +3438,9 @@ class ClinicChatDetailView {
         if (messageEl) ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].scrollSmoothTo(messageEl);
       }
 
-      if (this.currentlySelectedPatient) {
-        simpleAttachment.identifier = this.currentlySelectedPatient._id;
-        simpleAttachment.type = _AppTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE.typePatientSummary;
-        simpleAttachment.displayText = `${this.currentlySelectedPatient.name.firstname} ${this.currentlySelectedPatient.name.surname}`;
-        simpleAttachment.iconClasses = 'fas fa-male'; //send a second message with the patient attachment
-
-        sentMessage = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, '', priority, simpleAttachment, {});
-        logger(sentMessage);
-
-        if (sentMessage) {
-          // add the message to our display
-          let messageEl = this.addChatMessage(sentMessage); // scroll to bottom
-
-          if (messageEl) ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].scrollSmoothTo(messageEl);
-        }
-      }
-
       this.currentlySelectedPatient = null;
       this.fastPatientSearch.value = '';
     }
-  }
-
-  eventUserSelected(event, ui) {
-    event.preventDefault();
-    event.stopPropagation();
-    logger(`User ${ui.item.label} with id ${ui.item.value} selected`); // @ts-ignore
-
-    event.target.innerText = ''; // add to the chat, if one selected
-
-    if (this.selectedChatLog) ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().sendInvite(ui.item.label, this.selectedChatLog.roomName);
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show('Chat', `Invited ${ui.item.label} to the chat.`);
   }
 
   addChatMessage(message) {
@@ -3480,34 +3460,44 @@ class ClinicChatDetailView {
       messageSenderEl.innerText = message.from + '   ' + moment__WEBPACK_IMPORTED_MODULE_4___default()(message.created, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm');
       chatMessageEl.appendChild(messageSenderEl); // message content
 
-      let contentEl = document.createElement('div'); // are we displaying a (simple) attachment?
+      let contentEl = document.createElement('div'); // just a text message
 
-      if (message.simpleAttachment.identifier.trim().length === 0) {
-        // just a text message
-        let classesTextAppend = '';
+      let classesTextAppend = '';
 
-        switch (message.priority) {
-          case ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.High:
-            {
-              classesTextAppend = '-high';
-              break;
-            }
+      switch (message.priority) {
+        case ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.High:
+          {
+            classesTextAppend = '-high';
+            break;
+          }
 
-          case ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.Urgent:
-            {
-              classesTextAppend = '-urgent';
-              break;
-            }
-        }
+        case ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Priority.Urgent:
+          {
+            classesTextAppend = '-urgent';
+            break;
+          }
+      }
+
+      if (message.from === ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getCurrentUser()) {
+        ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `my-message-content${classesTextAppend}`);
+      } else {
+        ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `message-content${classesTextAppend}`);
+      }
+
+      contentEl.innerText = message.message;
+      chatMessageEl.appendChild(contentEl);
+      this.chatLogDiv.appendChild(chatMessageEl); // do we have a simple attachement?
+
+      if (message.simpleAttachment.identifier.trim().length > 0) {
+        chatMessageEl = document.createElement('div');
+        ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(chatMessageEl, "message");
 
         if (message.from === ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getCurrentUser()) {
-          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `my-message-content${classesTextAppend}`);
-        } else {
-          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `message-content${classesTextAppend}`);
-        }
+          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(chatMessageEl, 'my-message');
+        } // message content
 
-        contentEl.innerText = message.message;
-      } else {
+
+        let contentEl = document.createElement('div');
         const attachment = message.simpleAttachment; // simple attachment - should be a patient summary
 
         let attachmentLinkEl = document.createElement('a');
@@ -3518,28 +3508,26 @@ class ClinicChatDetailView {
           name: 'data-id',
           value: `${attachment.identifier}`
         }]);
+        let buffer = '';
 
         if (attachment.iconClasses) {
-          let iconEl = document.createElement('i');
-          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, attachment.iconClasses);
-          attachmentLinkEl.appendChild(iconEl);
+          buffer += `<i class="${attachment.iconClasses}"></i>`;
         }
 
-        let textEl = document.createElement('span');
-        textEl.innerText = attachment.displayText;
-        attachmentLinkEl.appendChild(textEl);
+        buffer += `&nbsp;&nbsp;${attachment.displayText}`;
+        attachmentLinkEl.innerHTML = buffer;
 
         if (message.from === ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getCurrentUser()) {
-          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `my-message-content`);
+          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `my-message-content-${attachment.type}`);
         } else {
-          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `message-content`);
+          ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, `message-content-${attachment.type}`);
         }
 
         contentEl.appendChild(attachmentLinkEl);
+        attachmentLinkEl.addEventListener('click', this.handleAttachmentClicked);
+        chatMessageEl.appendChild(contentEl);
+        this.chatLogDiv.appendChild(chatMessageEl);
       }
-
-      chatMessageEl.appendChild(contentEl);
-      this.chatLogDiv.appendChild(chatMessageEl);
     }
 
     return chatMessageEl;
@@ -3697,6 +3685,13 @@ class ClinicChatDetailView {
     logger(this.currentlySelectedPatient);
   }
 
+  handleAttachmentClicked(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    logger(`Handling attachment clicked`);
+    logger(event.target);
+  }
+
 }
 
 /***/ }),
@@ -3776,6 +3771,7 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
     }
   };
   selectedChatLog = null;
+  doNotDisturbEl = null;
 
   constructor() {
     super(ClinicChatListView.DOMConfig, new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.MemoryBufferStateManager(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.isSameRoom), ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.chatLogs);
@@ -3785,9 +3781,31 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
     this.handleChatLogUpdated = this.handleChatLogUpdated.bind(this);
     this.handleChatStarted = this.handleChatStarted.bind(this);
     this.stateChanged = this.stateChanged.bind(this);
+    this.toggleDoNotDisturb = this.toggleDoNotDisturb.bind(this);
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this); // load all users into the list view
 
     _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addChangeListenerForName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users, this);
+  }
+
+  toggleDoNotDisturb(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (this.doNotDisturbEl) {
+      logger(`Toggling Do Not Disturb ${this.doNotDisturbEl.checked}`);
+      const doNotDisturb = !this.doNotDisturbEl.checked;
+      ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().setOptions({
+        showNormalPriorityMessageNotifications: doNotDisturb,
+        showHighPriorityMessageNotifications: doNotDisturb,
+        showUrgentPriorityMessageNotifications: true,
+        showInvitationDeclinedNotifications: false,
+        showInvitedNotifications: false,
+        showOfflineMessageNotification: true,
+        showFavouriteUserLoggedInNotification: false,
+        showFavouriteUserLoggedOutNotification: false,
+        showUserJoinLeaveChatNotification: false
+      });
+    }
   }
 
   handleLoggedInUsersUpdated(usernames) {
@@ -3818,6 +3836,14 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
 
   onDocumentLoaded() {
     super.onDocumentLoaded();
+    this.doNotDisturbEl = document.getElementById('doNotDisturb');
+
+    if (this.doNotDisturbEl) {
+      // @ts-ignore
+      mobiscroll5.enhance(this.doNotDisturbEl);
+    }
+
+    this.doNotDisturbEl.addEventListener('change', this.toggleDoNotDisturb);
     this.addEventCollectionListener(this);
     this.updateStateManager();
   }
@@ -4326,6 +4352,17 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.ContextualInformationHelper.getInstance().onDocumentLoaded();
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SecurityManager.getInstance().onDocumentLoaded(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.NotificationController.getInstance().setOptions({
+      showNormalPriorityMessageNotifications: true,
+      showHighPriorityMessageNotifications: true,
+      showUrgentPriorityMessageNotifications: true,
+      showInvitationDeclinedNotifications: false,
+      showInvitedNotifications: false,
+      showOfflineMessageNotification: true,
+      showFavouriteUserLoggedInNotification: false,
+      showFavouriteUserLoggedOutNotification: false,
+      showUserJoinLeaveChatNotification: false
+    });
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
   }
 
