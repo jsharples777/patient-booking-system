@@ -2438,7 +2438,7 @@ class AppointmentController {
   }
 
   stateChangedItemUpdated(managerName, name, itemUpdated, appointment) {
-    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates && appointment.createdBy !== ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.SecurityManager.getInstance().getLoggedInUsername()) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.createdBy !== ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.SecurityManager.getInstance().getLoggedInUsername()) {
       logger('Appointment updated by another user');
       logger(appointment);
 
@@ -2465,7 +2465,7 @@ class AppointmentController {
       _patient: event.patientId,
       isDNA: event.isDNA,
       isCancelled: event.isCancelled,
-      createdBy: event.createdBy,
+      createdBy: _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getLoggedInUsername(),
       created: event.created,
       modified: event.modified,
       arrivalTime: event.arrivalTime,
@@ -3725,6 +3725,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('clinic-chat-list-view');
+const dLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('clinic-chat-list-view:detail');
 class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.AbstractStatefulCollectionView {
   static getInstance() {
     if (!ClinicChatListView._instance) {
@@ -3777,6 +3778,37 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
       thirdBadge: {
         type: 'span',
         classes: 'badge badge-pill badge-danger mr-1'
+      },
+      icons: (name, item) => {
+        let results = [];
+
+        if (item.users.length == 2) {
+          let filter = {
+            attributeName: 'username',
+            value: item.users[1],
+            comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals
+          }; // find the user in the state
+
+          const users = _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().findItemsInState(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users, [filter]);
+          dLogger(`Found users with filter`);
+          dLogger(users);
+
+          if (users && users.length > 0) {
+            const user = users[0];
+            dLogger(`Getting icons for user`);
+            dLogger(user);
+
+            if (user.isAdmin) {
+              results.push("fas fa-user-cog");
+            }
+
+            if (user.providerNo.trim().length > 0) {
+              results.push("fas fa-user-md");
+            }
+          }
+        }
+
+        return results;
       }
     }
   };
@@ -3792,7 +3824,8 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
     this.handleChatStarted = this.handleChatStarted.bind(this);
     this.stateChanged = this.stateChanged.bind(this);
     this.toggleDoNotDisturb = this.toggleDoNotDisturb.bind(this);
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this); // load all users into the list view
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addUserListener(this); // load all users into the list view
 
     _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addChangeListenerForName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users, this);
   }
@@ -3823,9 +3856,15 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
     this.updateStateManager();
   }
 
-  handleFavouriteUserLoggedIn(username) {}
+  handleFavouriteUserLoggedIn(username) {
+    logger(`Handling logged in users changed`);
+    this.updateStateManager();
+  }
 
-  handleFavouriteUserLoggedOut(username) {}
+  handleFavouriteUserLoggedOut(username) {
+    logger(`Handling logged in users changed`);
+    this.updateStateManager();
+  }
 
   handleFavouriteUsersChanged(usernames) {}
 
@@ -3862,19 +3901,31 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
 
   renderDisplayForItemInNamedCollection(containerEl, name, item) {
     let chatLog = item;
-    containerEl.innerHTML = chatLog.users[1];
+
+    if (chatLog.users.length > 1) {
+      containerEl.innerHTML = chatLog.users[1] + "&nbsp;&nbsp;&nbsp;";
+    } else {
+      containerEl.innerHTML = 'Chat closed by other user';
+    }
   }
 
   getModifierForItemInNamedCollection(name, item) {
-    let result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal; // if the user is currently logged out make the item inactive
+    dLogger('Checking modifiers for item');
+    dLogger(item);
+    let result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.inactive;
 
-    if (!ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().isUserLoggedIn(item.username)) {
-      result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.inactive;
+    if (item.users.length == 2) {
+      // if the user is currently logged out make the item inactive
+      dLogger(`user ${item.users[1]} is logged in? ${ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().isUserLoggedIn(item.users[1])}`);
+
+      if (ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().isUserLoggedIn(item.users[1])) {
+        result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.active;
+      }
     }
 
     if (this.selectedChatLog) {
       if (this.selectedChatLog.roomName === item.roomName) {
-        result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.active;
+        result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal;
       }
     }
 
@@ -3988,6 +4039,7 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
       // load a chat room for each other user
       newValue.forEach(user => {
         if (user.username !== ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.SecurityManager.getInstance().getLoggedInUsername()) {
+          ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().addUserToFavouriteList(user.username);
           ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().startChatWithUser(user.username);
         }
       });
@@ -4468,7 +4520,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
 } //localStorage.debug = 'app api-ts-results bootstrap-form-config-helper';
 
-localStorage.debug = 'api-ts-results clinic-chat-list-view socket-ts clinic-chat-detail-view';
+localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {

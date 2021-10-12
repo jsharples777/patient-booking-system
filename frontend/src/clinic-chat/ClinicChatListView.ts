@@ -3,26 +3,32 @@ import {
     AbstractStatefulCollectionView,
     ChatEventListener,
     ChatLog,
-    ChatManager, ChatUserEventListener,
+    ChatManager,
+    ChatUserEventListener,
     CollectionView,
     CollectionViewDOMConfig,
     CollectionViewListener,
     CollectionViewListenerForwarder,
+    ComparisonType,
+    FilterItem,
     Invitation,
     isSameRoom,
     KeyType,
     ListViewRenderer,
     MemoryBufferStateManager,
     Message,
-    Modifier, NotificationController, SecurityManager, STATE_NAMES,
-    View, VIEW_NAME
+    Modifier,
+    NotificationController,
+    SecurityManager,
+    STATE_NAMES,
+    View,
+    VIEW_NAME
 } from "ui-framework-jps";
 import Controller from "../Controller";
-import {AttachmentListener} from "./AttachmentListener";
-
 
 
 const logger = debug('clinic-chat-list-view');
+const dLogger = debug('clinic-chat-list-view:detail');
 
 export class ClinicChatListView extends AbstractStatefulCollectionView implements ChatEventListener, CollectionViewListener, ChatUserEventListener {
     private static _instance: ClinicChatListView;
@@ -77,6 +83,32 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
             thirdBadge: {
                 type: 'span',
                 classes: 'badge badge-pill badge-danger mr-1',
+            },
+            icons: (name:string,item:any) => {
+                let results:string[] = [];
+                if (item.users.length == 2) {
+                    let filter: FilterItem = {
+                        attributeName: 'username',
+                        value: item.users[1],
+                        comparison: ComparisonType.equals,
+                    }
+                    // find the user in the state
+                    const users = Controller.getInstance().getStateManager().findItemsInState(STATE_NAMES.users, [filter]);
+                    dLogger(`Found users with filter`);
+                    dLogger(users);
+                    if (users && users.length > 0) {
+                        const user = users[0];
+                        dLogger(`Getting icons for user`);
+                        dLogger(user);
+                        if (user.isAdmin) {
+                            results.push("fas fa-user-cog");
+                        }
+                        if (user.providerNo.trim().length > 0) {
+                            results.push("fas fa-user-md");
+                        }
+                    }
+                }
+                return results;
             }
         },
     };
@@ -97,6 +129,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         this.toggleDoNotDisturb = this.toggleDoNotDisturb.bind(this);
 
         NotificationController.getInstance().addListener(this);
+        NotificationController.getInstance().addUserListener(this);
 
         // load all users into the list view
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.users,this);
@@ -128,8 +161,14 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         logger(`Handling logged in users changed`);
         this.updateStateManager();
     }
-    handleFavouriteUserLoggedIn(username: string): void {}
-    handleFavouriteUserLoggedOut(username: string): void {}
+    handleFavouriteUserLoggedIn(username: string): void {
+        logger(`Handling logged in users changed`);
+        this.updateStateManager();
+    }
+    handleFavouriteUserLoggedOut(username: string): void {
+        logger(`Handling logged in users changed`);
+        this.updateStateManager();
+    }
     handleFavouriteUsersChanged(usernames: string[]): void {}
     handleBlockedUsersChanged(usernames: string[]): void {}
 
@@ -165,18 +204,28 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
 
     renderDisplayForItemInNamedCollection(containerEl: HTMLElement, name: string, item: any): void {
         let chatLog = <ChatLog>item;
-        containerEl.innerHTML = chatLog.users[1];
+        if (chatLog.users.length > 1) {
+            containerEl.innerHTML = chatLog.users[1] + "&nbsp;&nbsp;&nbsp;";
+        }
+        else {
+            containerEl.innerHTML = 'Chat closed by other user';
+        }
     }
 
     getModifierForItemInNamedCollection(name: string, item: any) {
-        let result = Modifier.normal;
-        // if the user is currently logged out make the item inactive
-        if (!ChatManager.getInstance().isUserLoggedIn(item.username)) {
-            result = Modifier.inactive;
+        dLogger('Checking modifiers for item');
+        dLogger(item);
+        let result = Modifier.inactive;
+        if (item.users.length == 2) {
+            // if the user is currently logged out make the item inactive
+            dLogger(`user ${item.users[1]} is logged in? ${ChatManager.getInstance().isUserLoggedIn(item.users[1])}`);
+            if (ChatManager.getInstance().isUserLoggedIn(item.users[1])) {
+                result = Modifier.active;
+            }
         }
         if (this.selectedChatLog) {
             if (this.selectedChatLog.roomName === item.roomName) {
-                result = Modifier.active;
+                result = Modifier.normal;
             }
 
         }
@@ -291,6 +340,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
             // load a chat room for each other user
             newValue.forEach((user:any) => {
                 if (user.username !== SecurityManager.getInstance().getLoggedInUsername()) {
+                    ChatManager.getInstance().addUserToFavouriteList(user.username);
                     ChatManager.getInstance().startChatWithUser(user.username);
                 }
             })

@@ -298,7 +298,7 @@ export class AppointmentController implements StateChangeListener {
     }
 
     stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, appointment: any): void {
-        if ((name === STATE_NAMES.appointmentTemplates) && (appointment.createdBy !== SecurityManager.getInstance().getLoggedInUsername())) {
+        if ((name === STATE_NAMES.appointments) && (appointment.createdBy !== SecurityManager.getInstance().getLoggedInUsername())) {
             logger('Appointment updated by another user');
             logger(appointment);
 
@@ -329,7 +329,7 @@ export class AppointmentController implements StateChangeListener {
             _patient: event.patientId,
             isDNA: event.isDNA,
             isCancelled: event.isCancelled,
-            createdBy: event.createdBy,
+            createdBy: Controller.getInstance().getLoggedInUsername(),
             created: event.created,
             modified: event.modified,
             arrivalTime: event.arrivalTime,

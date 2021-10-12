@@ -54843,6 +54843,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const smLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('state-manager-ts');
+const smLoggerDetail = debug__WEBPACK_IMPORTED_MODULE_0___default()('state-manager-ts:detail');
 class AbstractStateManager {
     constructor(managerName, defaultEquality, fnPerState = null) {
         this.forceSaves = true;
@@ -54894,42 +54895,54 @@ class AbstractStateManager {
         const state = this._getState(name);
         try {
             state.value.forEach((item) => {
-                let isMatch = true;
+                let isMatch = false;
                 filters.forEach((filter) => {
-                    if (isMatch) { // don't bother with other filters if we have already failed
+                    smLogger(`filter, finding state value for ${state.name} with filter and item`);
+                    smLoggerDetail(filter);
+                    smLoggerDetail(filter);
+                    if (!isMatch) { // don't bother with other filters if we have already failed
                         let attributeValue = item[filter.attributeName];
+                        smLoggerDetail(`filter, finding state value for ${state.name} with attribute value ${attributeValue}`);
                         if (filter.evaluator) {
                             isMatch = filter.evaluator(item, filter);
+                            smLoggerDetail(`filter (evaluator), with attribute ${attributeValue}`);
                         }
                         else {
                             switch (filter.comparison) {
                                 case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.isNull: {
+                                    smLoggerDetail(`filter (is Null), with attribute ${attributeValue}`);
                                     isMatch = !(attributeValue);
                                     break;
                                 }
                                 case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.isNotNull: {
+                                    smLoggerDetail(`filter (is Not Null), with attribute ${attributeValue}`);
                                     if (attributeValue) {
                                         isMatch = true;
                                     }
                                     break;
                                 }
                                 case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.equals: {
+                                    smLoggerDetail(`filter (===), with attribute ${attributeValue} and filter value ${filter.value}`);
                                     isMatch = ((attributeValue) && (attributeValue === filter.value));
                                     break;
                                 }
                                 case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThan: {
+                                    smLoggerDetail(`filter (<), with attribute ${attributeValue} and filter value ${filter.value}`);
                                     isMatch = ((attributeValue) && (attributeValue < filter.value));
                                     break;
                                 }
                                 case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThan: {
+                                    smLoggerDetail(`filter (>), with attribute ${attributeValue} and filter value ${filter.value}`);
                                     isMatch = ((attributeValue) && (attributeValue > filter.value));
                                     break;
                                 }
                                 case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThanEqual: {
+                                    smLoggerDetail(`filter (<=), with attribute ${attributeValue} and filter value ${filter.value}`);
                                     isMatch = ((attributeValue) && (attributeValue <= filter.value));
                                     break;
                                 }
                                 case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThanEqual: {
+                                    smLoggerDetail(`filter (>=), with attribute ${attributeValue} and filter value ${filter.value}`);
                                     isMatch = ((attributeValue) && (attributeValue >= filter.value));
                                     break;
                                 }
@@ -54937,6 +54950,7 @@ class AbstractStateManager {
                         }
                     }
                 });
+                smLoggerDetail(`filter, finding state value for ${state.name} is match? ${isMatch}`);
                 if (isMatch)
                     results.push(item);
             });
@@ -54944,6 +54958,8 @@ class AbstractStateManager {
         catch (err) {
             smLogger(`filter, state value for ${state.name} is not any array`);
         }
+        smLoggerDetail('Match results');
+        smLoggerDetail(results);
         return results;
     }
     addStateByName(name, stateObjForName) {
@@ -55170,10 +55186,11 @@ class AggregateStateManager extends _AbstractStateManager__WEBPACK_IMPORTED_MODU
             }
         });
         // assuming the state manager is holding all the values
+        let results = [];
         if (this.stateManagers.length > 0) {
-            state = this.stateManagers[0].manager._getState(name);
+            results = this.stateManagers[0].manager._findItemsInState(name, filters);
         }
-        return state.value;
+        return results;
     }
     _findItemInState(name, item) {
         let result = {};
@@ -58785,14 +58802,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "AbstractForm": () => (/* binding */ AbstractForm)
 /* harmony export */ });
 /* harmony import */ var _FormListener__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormListener */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormListener.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js");
-/* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../alert/AlertListener */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertListener.js");
-/* harmony import */ var _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../alert/AlertManager */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertManager.js");
-/* harmony import */ var _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./factory/FieldInputElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/form/factory/FieldInputElementFactory.js");
+/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js");
+/* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../alert/AlertListener */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertListener.js");
+/* harmony import */ var _alert_AlertManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../alert/AlertManager */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertManager.js");
+/* harmony import */ var _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./factory/FieldInputElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/form/factory/FieldInputElementFactory.js");
 
 
 
@@ -58801,9 +58819,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form');
-const dlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail');
-const vlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail-validation');
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('abstract-form');
+const dlogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('abstract-form-detail');
+const vlogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('abstract-form-detail-validation');
 class AbstractForm {
     constructor(containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl = false) {
         this.formListeners = [];
@@ -58813,7 +58832,6 @@ class AbstractForm {
         this.fields = [];
         this.isInitialised = false;
         this.hasChangedBoolean = false;
-        this.isDisplayOnly = false;
         this.containerEl = document.getElementById(containerId);
         if (!(this.containerEl))
             throw new Error(`container ${containerId} for form ${dataObjDef.id} does not exist`);
@@ -58823,10 +58841,14 @@ class AbstractForm {
         this.hasExternalControl = hasExternalControl;
         this.permissionChecker = permissionChecker;
         this.currentDataObj = {};
-        this.id = (0,uuid__WEBPACK_IMPORTED_MODULE_7__["default"])();
+        this.id = (0,uuid__WEBPACK_IMPORTED_MODULE_8__["default"])();
+        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.unset;
         // sub-classes need to create the form and it's fields
         // listen to ourselves
         this.addFormListener(this);
+    }
+    getFormMode() {
+        return this.formMode;
     }
     cancel() {
         if (this.uiDef) {
@@ -58864,12 +58886,12 @@ class AbstractForm {
     getName() {
         return this.dataObjDef.displayName;
     }
-    valueChanged(formId, field, fieldDef, newValue) {
+    valueChanged(form, field, fieldDef, newValue) {
         this.hasChangedBoolean = true;
         this.setUnsavedMessage();
         logger(`Form has changed`);
     }
-    failedValidation(formId, field, currentValue, message) {
+    failedValidation(form, field, currentValue, message) {
         this.hasChangedBoolean = true;
         logger(`Form has changed`);
     }
@@ -58888,7 +58910,7 @@ class AbstractForm {
     reset() {
         logger(`Resetting form`);
         this.clearUnsavedMessage();
-        this.isDisplayOnly = false;
+        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.unset;
         this.hasChangedBoolean = false;
         // inform the listeners
         if (this.uiDef) {
@@ -58927,9 +58949,9 @@ class AbstractForm {
             };
             this.informFormListeners(formEvent, this.currentDataObj);
         }
-        if (isVisible && !this.isDisplayOnly)
+        if (isVisible && !(this.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly))
             this.checkFormValidationOnDisplay();
-        if (isVisible && this.isDisplayOnly)
+        if (isVisible && (this.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly))
             this.checkForVisualValidationForDisplayOnly();
     }
     startCreateNew() {
@@ -58937,7 +58959,7 @@ class AbstractForm {
         logger(`Starting create new`);
         this.reset();
         this.currentDataObj = {};
-        this.isDisplayOnly = false;
+        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.create;
         this.hasChangedBoolean = false;
         if (this.uiDef) {
             let eventType = _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CREATING;
@@ -58956,7 +58978,7 @@ class AbstractForm {
     startUpdate(objectToEdit) {
         this.clearUnsavedMessage();
         logger(`Starting modify existing on `);
-        this.isDisplayOnly = false;
+        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.update;
         this.hasChangedBoolean = false;
         logger(objectToEdit);
         this.currentDataObj = Object.assign({}, objectToEdit); // take a copy
@@ -58977,7 +58999,7 @@ class AbstractForm {
         this.clearUnsavedMessage();
         logger(`Starting display only `);
         logger(objectToView);
-        this.isDisplayOnly = true;
+        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly;
         this.hasChangedBoolean = false;
         this.currentDataObj = Object.assign({}, objectToView); // take a copy
         if (this.uiDef) {
@@ -58991,9 +59013,9 @@ class AbstractForm {
         switch (event.eventType) {
             case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING): {
                 logger(`Form is cancelling`);
-                if (this.hasChangedBoolean && !this.isDisplayOnly) {
+                if (this.hasChangedBoolean && !(this.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly)) {
                     if (this.uiDef) {
-                        _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Lose any unsaved changes?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING);
+                        _alert_AlertManager__WEBPACK_IMPORTED_MODULE_5__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Lose any unsaved changes?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING);
                     }
                 }
                 else {
@@ -59015,7 +59037,7 @@ class AbstractForm {
             case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLED): {
                 logger(`Form is cancelled - resetting`);
                 // user cancelled the form, will become invisible
-                this.isDisplayOnly = true;
+                this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly;
                 this.reset(); // reset the form state
                 this.setReadOnly();
                 break;
@@ -59023,7 +59045,7 @@ class AbstractForm {
             case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING): {
                 logger(`Form is deleting`);
                 if (this.uiDef) {
-                    _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Are you sure you want to delete this information?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING);
+                    _alert_AlertManager__WEBPACK_IMPORTED_MODULE_5__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Are you sure you want to delete this information?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING);
                 }
                 break;
             }
@@ -59046,7 +59068,7 @@ class AbstractForm {
                 this._saveFinishedOrAborted();
                 logger(`Form is saved with data`);
                 logger(formValues);
-                this.isDisplayOnly = false;
+                this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.update;
                 this.hasChangedBoolean = false;
                 break;
             }
@@ -59065,11 +59087,10 @@ class AbstractForm {
                         }
                         else {
                             // does the field fulfil any rules from the Validation manager
-                            // @ts-ignore
-                            const response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this.id, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.invalid);
+                            const response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__.ValidationManager.getInstance().applyRulesToTargetField(this, this.formMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__.ConditionResponse.invalid);
                             if (response.ruleFailed) {
-                                // @ts-ignore
-                                field.setInvalid(response.message);
+                                if (response.message)
+                                    field.setInvalid(response.message);
                                 vlogger(`Field ${field.getId()} is invalid from validation manager with message ${response.message}`);
                                 allFieldsValid = false;
                             }
@@ -59125,7 +59146,7 @@ class AbstractForm {
         if (event.context && this.uiDef) {
             switch (event.context) {
                 case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING): {
-                    if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__.AlertType.confirmed) {
+                    if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__.AlertType.confirmed) {
                         let formEvent = {
                             formId: this.id,
                             target: this,
@@ -59144,7 +59165,7 @@ class AbstractForm {
                     break;
                 }
                 case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING): {
-                    if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__.AlertType.confirmed) {
+                    if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__.AlertType.confirmed) {
                         let formEvent = {
                             formId: this.id,
                             target: this,
@@ -59189,7 +59210,7 @@ class AbstractForm {
         return false;
     }
     isReadOnly() {
-        return this.isDisplayOnly;
+        return (this.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly);
     }
     informFormListeners(formEvent, dataObj) {
         this.formListeners.forEach((listener) => listener.formChanged(formEvent, dataObj));
@@ -59215,10 +59236,8 @@ class AbstractForm {
         logger(`Checking display validation for display only`);
         this.fields.forEach((field) => {
             field.show();
-            // @ts-ignore
-            let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this.id, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.hide);
+            let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__.ValidationManager.getInstance().applyRulesToTargetField(this, this.formMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__.ConditionResponse.hide);
             if (response.ruleFailed) {
-                // @ts-ignore
                 field.hide();
                 vlogger(`Field ${field.getId()} is hidden from validation manager with message ${response.message}`);
             }
@@ -59235,17 +59254,14 @@ class AbstractForm {
             }
             else {
                 // does the field fulfil any rules from the Validation manager
-                // @ts-ignore
-                let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this.id, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.invalid);
+                let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__.ValidationManager.getInstance().applyRulesToTargetField(this, this.formMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__.ConditionResponse.invalid);
                 if (response.ruleFailed) {
-                    // @ts-ignore
-                    field.setInvalid(response.message);
+                    if (response.message)
+                        field.setInvalid(response.message);
                     vlogger(`Field ${field.getId()} is invalid from validation manager with message ${response.message}`);
                 }
-                // @ts-ignore
-                response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this.id, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.hide);
+                response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__.ValidationManager.getInstance().applyRulesToTargetField(this, this.formMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__.ConditionResponse.hide);
                 if (response.ruleFailed) {
-                    // @ts-ignore
                     field.hide();
                     vlogger(`Field ${field.getId()} is hidden from validation manager with message ${response.message}`);
                 }
@@ -59253,7 +59269,7 @@ class AbstractForm {
         });
     }
     getElementIdForField(fieldId) {
-        return _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_6__.FieldInputElementFactory.getElementIdForFieldId(this, fieldId);
+        return _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_7__.FieldInputElementFactory.getElementIdForFieldId(this, fieldId);
     }
 }
 //# sourceMappingURL=AbstractForm.js.map
@@ -59345,23 +59361,23 @@ class BasicFormImplementation extends _AbstractForm__WEBPACK_IMPORTED_MODULE_1__
                         let field;
                         switch (fieldUIConfig.elementType) {
                             case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.textarea: {
-                                field = new _field_TextAreaField__WEBPACK_IMPORTED_MODULE_6__.TextAreaField(this.id, fieldUIConfig, fieldDef, fieldEl);
+                                field = new _field_TextAreaField__WEBPACK_IMPORTED_MODULE_6__.TextAreaField(this, fieldUIConfig, fieldDef, fieldEl);
                                 break;
                             }
                             case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup: {
-                                field = new _field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_7__.RadioButtonGroupField(this.id, fieldUIConfig, fieldDef, fieldEl, subElements);
+                                field = new _field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_7__.RadioButtonGroupField(this, fieldUIConfig, fieldDef, fieldEl, subElements);
                                 break;
                             }
                             case _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.select: {
-                                field = new _field_SelectField__WEBPACK_IMPORTED_MODULE_8__.SelectField(this.id, fieldUIConfig, fieldDef, fieldEl);
+                                field = new _field_SelectField__WEBPACK_IMPORTED_MODULE_8__.SelectField(this, fieldUIConfig, fieldDef, fieldEl);
                                 break;
                             }
                             default: {
                                 if (fieldDef.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.colour) {
-                                    field = new _field_ColourInputField__WEBPACK_IMPORTED_MODULE_10__.ColourInputField(this.id, fieldUIConfig, fieldDef, fieldEl);
+                                    field = new _field_ColourInputField__WEBPACK_IMPORTED_MODULE_10__.ColourInputField(this, fieldUIConfig, fieldDef, fieldEl);
                                 }
                                 else {
-                                    field = new _field_InputField__WEBPACK_IMPORTED_MODULE_9__.InputField(this.id, fieldUIConfig, fieldDef, fieldEl);
+                                    field = new _field_InputField__WEBPACK_IMPORTED_MODULE_9__.InputField(this, fieldUIConfig, fieldDef, fieldEl);
                                 }
                                 break;
                             }
@@ -59738,6 +59754,8 @@ var FormMode;
     FormMode[FormMode["unset"] = -1] = "unset";
     FormMode[FormMode["create"] = 0] = "create";
     FormMode[FormMode["update"] = 1] = "update";
+    FormMode[FormMode["displayOnly"] = 2] = "displayOnly";
+    FormMode[FormMode["any"] = 3] = "any";
 })(FormMode || (FormMode = {}));
 const DATA_ID_ATTRIBUTE = 'data-id';
 //# sourceMappingURL=FormUITypeDefs.js.map
@@ -59756,8 +59774,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "EditingEventListener": () => (/* binding */ EditingEventListener)
 /* harmony export */ });
 class EditingEventListener {
-    constructor(formId, field, fieldConfig, listeners) {
-        this.formId = formId;
+    constructor(form, field, fieldConfig, listeners) {
+        this.form = form;
+        this.formId = form.getId();
         this.field = field;
         this.fieldConfig = fieldConfig;
         this.listeners = listeners;
@@ -59775,7 +59794,7 @@ class EditingEventListener {
             const newValue = this.fieldConfig.editor.editValue(this.field, fieldDef, value);
             if (newValue && (newValue !== value)) {
                 fieldElement.value = newValue;
-                this.listeners.forEach((listener) => listener.valueChanged(this.formId, this.field, fieldDef, newValue));
+                this.listeners.forEach((listener) => listener.valueChanged(this.form, this.field, fieldDef, newValue));
             }
         }
     }
@@ -59804,8 +59823,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "RenderingEventListener": () => (/* binding */ RenderingEventListener)
 /* harmony export */ });
 class RenderingEventListener {
-    constructor(formId, field, fieldConfig, listeners, subElements = null) {
-        this.formId = formId;
+    constructor(form, field, fieldConfig, listeners, subElements = null) {
+        this.form = form;
+        this.formId = form.getId();
         this.field = field;
         this.fieldConfig = fieldConfig;
         this.listeners = listeners;
@@ -59822,7 +59842,7 @@ class RenderingEventListener {
             newValue = this.fieldConfig.renderer.renderValue(this.field, fieldDef, value);
             if (newValue) {
                 fieldElement.value = newValue;
-                this.listeners.forEach((listener) => listener.valueChanged(this.formId, this.field, fieldDef, newValue));
+                this.listeners.forEach((listener) => listener.valueChanged(this.form, this.field, fieldDef, newValue));
             }
         }
         if (newValue) {
@@ -59862,8 +59882,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class ValidationEventHandler {
-    constructor(formId, fieldConfig, listeners, subElements = null) {
-        this.formId = formId;
+    constructor(form, fieldConfig, listeners, subElements = null) {
+        this.form = form;
+        this.formId = form.getId();
         this.fieldConfig = fieldConfig;
         this.listeners = listeners;
         this.subElements = subElements;
@@ -59985,9 +60006,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
 /* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../event-handlers/ValidationEventHandler */ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/ValidationEventHandler.js");
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
-
+/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
 
 
 
@@ -60032,22 +60051,23 @@ class FieldInputElementFactory {
         /*
         setup event handlers
         */
-        if (fieldConfig.validator) { // is the value in the field valid
-            const eventHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(formId, fieldConfig, listeners, subElements);
-            if (subElements) { // event for the subelements
-                subElements.forEach((subElement) => {
-                    subElement.addEventListener('blur', eventHandler);
-                });
-            }
-            else {
-                fieldElement.addEventListener('blur', eventHandler);
-            }
-        }
+        // if (fieldConfig.validator) { // is the value in the field valid
+        //     const eventHandler = new ValidationEventHandler(formId, fieldConfig, listeners, subElements);
+        //     if (subElements) { // event for the subelements
+        //         subElements.forEach((subElement) => {
+        //             subElement.addEventListener('blur', eventHandler);
+        //         });
+        //
+        //     } else {
+        //         fieldElement.addEventListener('blur', eventHandler);
+        //     }
+        //
+        // }
         // if (fieldConfig.editor) { // render the value when the field gains focus
         //     fieldElement.addEventListener('focus', new EditingEventListener(formId, fieldConfig, listeners));
         // } // care for endless loops here, renderer needs to return null if no changes
         // date picker for date fields
-        if (fieldConfig.field.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_3__.FieldType.date) {
+        if (fieldConfig.field.type === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date) {
             $(fieldElement).datepicker();
             $(fieldElement).datepicker("option", "dateFormat", 'dd/mm/yy');
         }
@@ -60443,24 +60463,36 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_4___default()('abstract-field');
 class AbstractField {
-    constructor(formId, config, fieldDef, element, subElements = null) {
+    constructor(form, config, fieldDef, element, subElements = null) {
         this.config = null;
         this.subElements = [];
         this.listeners = [];
         this.hidden = false;
-        this.formId = formId;
+        this.form = form;
+        this.formId = form.getId();
         this.config = config;
         this.definition = fieldDef;
         this.element = element;
         if (subElements)
             this.subElements = subElements;
-        this.validationHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(formId, config, [this], subElements);
-        this.renderingHandler = new _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__.RenderingEventListener(formId, this, config, [this], subElements);
-        const editingHandler = new _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_5__.EditingEventListener(formId, this, config, [this]);
+        this.validationHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(form, config, [this], subElements);
+        this.renderingHandler = new _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__.RenderingEventListener(form, this, config, [this], subElements);
+        const editingHandler = new _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_5__.EditingEventListener(form, this, config, [this]);
         if (config.editor) { // render the value when the field gains focus
             this.element.addEventListener('focus', editingHandler.handleEditEvent);
             this.element.addEventListener('blur', editingHandler.handleEditCompletedEvent);
             this.element.addEventListener('click', editingHandler.handleEditEvent);
+        }
+        if (config.validator) { // is the value in the field valid
+            const eventHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(this.form, config, this.listeners, subElements);
+            if (subElements) { // event for the subelements
+                subElements.forEach((subElement) => {
+                    subElement.addEventListener('blur', eventHandler);
+                });
+            }
+            else {
+                this.element.addEventListener('blur', eventHandler);
+            }
         }
         // listen for our own change events
         this.handleChangeEvent = this.handleChangeEvent.bind(this);
@@ -60659,9 +60691,9 @@ class AbstractField {
         }
         return result;
     }
-    failedValidation(formId, field, currentValue, message) {
+    failedValidation(form, field, currentValue, message) {
     }
-    valueChanged(formId, field, fieldDef, newValue) {
+    valueChanged(form, field, fieldDef, newValue) {
     }
     getName() {
         return this.definition.displayName;
@@ -60734,7 +60766,7 @@ class AbstractField {
         if (this.config) {
             let value = this.getValue();
             logger(`Handling change event - informing listeners`);
-            this.listeners.forEach((listener) => listener.valueChanged(this.formId, this, this.definition, value));
+            this.listeners.forEach((listener) => listener.valueChanged(this.form, this, this.definition, value));
         }
     }
     getElement() {
@@ -60767,8 +60799,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('colour-input-field');
 class ColourInputField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(formId, config, fieldDef, element) {
-        super(formId, config, fieldDef, element);
+    constructor(form, config, fieldDef, element) {
+        super(form, config, fieldDef, element);
         this.setValue = this.setValue.bind(this);
     }
     setValue(newValue) {
@@ -60801,8 +60833,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
 
 class InputField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(formId, config, fieldDef, element) {
-        super(formId, config, fieldDef, element);
+    constructor(form, config, fieldDef, element) {
+        super(form, config, fieldDef, element);
     }
 }
 //# sourceMappingURL=InputField.js.map
@@ -60823,8 +60855,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
 
 class RadioButtonGroupField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(formId, config, fieldDef, element, subElements) {
-        super(formId, config, fieldDef, element, subElements);
+    constructor(form, config, fieldDef, element, subElements) {
+        super(form, config, fieldDef, element);
     }
 }
 //# sourceMappingURL=RadioButtonGroupField.js.map
@@ -60845,8 +60877,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
 
 class SelectField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(formId, config, fieldDef, element) {
-        super(formId, config, fieldDef, element);
+    constructor(form, config, fieldDef, element) {
+        super(form, config, fieldDef, element);
     }
 }
 //# sourceMappingURL=SelectField.js.map
@@ -60867,8 +60899,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
 
 class TextAreaField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(formId, config, fieldDef, element) {
-        super(formId, config, fieldDef, element);
+    constructor(form, config, fieldDef, element) {
+        super(form, config, fieldDef, element);
     }
 }
 //# sourceMappingURL=TextAreaField.js.map
@@ -60891,6 +60923,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
 /* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
+/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
+
 
 
 
@@ -60924,6 +60958,7 @@ class ValidationManager {
             return false;
         }
         let convertedRule = {
+            formMode: rule.formMode,
             targetField: targetField,
             response: rule.response,
             fieldConditions: [],
@@ -61037,12 +61072,12 @@ class ValidationManager {
         logger(formRuleSet);
         return true;
     }
-    failedValidation(formId, field, currentValue, message) {
+    failedValidation(form, field, currentValue, message) {
     } // ignored, we might be causing
-    applyRulesToTargetField(formId, field, onlyRulesOfType) {
-        logger(`Checking rules for form ${formId}, data field ${field.id} of type ${onlyRulesOfType}`);
+    applyRulesToTargetField(form, formMode, field, onlyRulesOfType) {
+        logger(`Checking rules for form ${form.getId()}, data field ${field.id} of type ${onlyRulesOfType}`);
         // which rules apply?
-        let rules = this.getRulesForFieldChange(formId, field.id, false);
+        let rules = this.getRulesForFieldChange(form, field.id, false);
         let result = {
             ruleFailed: false
         };
@@ -61059,18 +61094,18 @@ class ValidationManager {
         rules.forEach((rule) => {
             let response = this.executeRule(rule);
             if (response.ruleFailed) {
-                flogger(`Rule failed for form ${formId} with field ${field.displayName} with message ${response.message}`);
+                flogger(`Rule failed for form ${form.getId()} with field ${field.displayName} with message ${response.message}`);
                 result.ruleFailed = true;
                 result.message = response.message;
             }
         });
         return result;
     }
-    valueChanged(formId, field, fieldDef, newValue) {
-        logger(`Handling field change - form ${formId}, data field ${fieldDef.id}, value ${newValue}`);
+    valueChanged(form, field, fieldDef, newValue) {
+        logger(`Handling field change - form ${form}, data field ${fieldDef.id}, value ${newValue}`);
         // a field we are listening to has changed
         // which rules apply?
-        const rules = this.getRulesForFieldChange(formId, fieldDef.id, true);
+        const rules = this.getRulesForFieldChange(form, fieldDef.id, true);
         // execute each rule and collect the responses
         let failedResponses = [];
         rules.forEach((rule) => {
@@ -61344,39 +61379,46 @@ class ValidationManager {
         }
         return response;
     }
-    getRulesForFieldChange(formId, dataFieldId, includeSourceFields) {
+    getRulesForFieldChange(form, dataFieldId, includeSourceFields) {
         let rules = [];
+        const formMode = form.getFormMode();
         // lets go through the rules for the form
-        logger(`Finding rules for form ${formId} and data field ${dataFieldId}`);
-        let index = this.formRules.findIndex((formRule) => formRule.form.getId() === formId);
+        logger(`Finding rules for form ${form} and data field ${dataFieldId}`);
+        let index = this.formRules.findIndex((formRule) => formRule.form.getId() === form.getId());
         if (index >= 0) {
             const ruleSet = this.formRules[index];
             // the dataFieldId could be the target or one of the sources
             ruleSet.rules.forEach((rule) => {
-                if (rule.targetField.getId() === dataFieldId) {
-                    logger(`Found rule where data field ${dataFieldId} is target`);
-                    if (rule.targetField.isValid()) {
-                        rules.push(rule);
+                // check the rule applies to the current form mode
+                const ruleFormMode = rule.formMode;
+                logger(`Rule applies to mode ${ruleFormMode} (any? ${(ruleFormMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_4__.FormMode.any)}) and current form mode is ${formMode}`);
+                if ((ruleFormMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_4__.FormMode.any) ||
+                    (ruleFormMode === formMode)) {
+                    if (rule.targetField.getId() === dataFieldId) {
+                        logger(`Found rule where data field ${dataFieldId} is target`);
+                        if (rule.targetField.isValid()) {
+                            rules.push(rule);
+                        }
+                        else {
+                            flogger(`Found rule where data field ${dataFieldId} is target but value is not currently valid`);
+                        }
                     }
                     else {
-                        flogger(`Found rule where data field ${dataFieldId} is target but value is not currently valid`);
-                    }
-                }
-                else {
-                    if (includeSourceFields) {
-                        rule.fieldConditions.every((value) => {
-                            if (value.sourceField.getId() === dataFieldId) {
-                                logger(`Found rule where data field ${dataFieldId} is source`);
-                                if (value.sourceField.isValid()) {
-                                    rules.push(rule);
+                        if (includeSourceFields) {
+                            rule.fieldConditions.every((value) => {
+                                if (value.sourceField.getId() === dataFieldId) {
+                                    logger(`Found rule where data field ${dataFieldId} is source`);
+                                    if (value.sourceField.isValid()) {
+                                        rules.push(rule);
+                                    }
+                                    else {
+                                        flogger(`Found rule where data field ${dataFieldId} is source but value is not currently valid`);
+                                    }
+                                    return false;
                                 }
-                                else {
-                                    flogger(`Found rule where data field ${dataFieldId} is source but value is not currently valid`);
-                                }
-                                return false;
-                            }
-                            return true;
-                        });
+                                return true;
+                            });
+                        }
                     }
                 }
             });
