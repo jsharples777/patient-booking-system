@@ -21,6 +21,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "PatientSearchSidebarContainers": () => (/* binding */ PatientSearchSidebarContainers),
 /* harmony export */   "AppointmentTypesSidebarPrefs": () => (/* binding */ AppointmentTypesSidebarPrefs),
 /* harmony export */   "AppointmentTypesSidebarContainers": () => (/* binding */ AppointmentTypesSidebarContainers),
+/* harmony export */   "UsersSidebarPrefs": () => (/* binding */ UsersSidebarPrefs),
+/* harmony export */   "UsersSidebarContainers": () => (/* binding */ UsersSidebarContainers),
 /* harmony export */   "SELECT": () => (/* binding */ SELECT)
 /* harmony export */ });
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
@@ -64,7 +66,8 @@ const NAVIGATION = {
   clinicChat: 'navigationItemChat',
   patientRecords: 'navigationItemPatientRecords',
   logout: 'navigationItemLogout',
-  appointmentTypes: 'navigationItemAppointmentTypes'
+  appointmentTypes: 'navigationItemAppointmentTypes',
+  users: 'navigationItemUsers'
 };
 const DRAGGABLE = {
   typeUser: 'user',
@@ -80,7 +83,9 @@ const VIEW_NAME = {
   userSearch: 'userSearch',
   patientSearch: 'patientSearch',
   appointmentTypes: 'appointmentTypes',
-  appointmentTypeDetail: 'appointmentTypeDetail'
+  appointmentTypeDetail: 'appointmentTypeDetail',
+  users: 'usersList',
+  userDetail: 'userDetail'
 };
 const VIEW_CONTAINER = {
   calendarControl: 'calendarControl',
@@ -103,6 +108,15 @@ const AppointmentTypesSidebarContainers = {
   list: 'appointmentTypes',
   detail: 'appointmentTypeDetail',
   colourPicker: 'appointmentTypeColour'
+};
+const UsersSidebarPrefs = {
+  id: 'usersSideBar',
+  expandedSize: '40%',
+  location: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.right
+};
+const UsersSidebarContainers = {
+  list: 'usersList',
+  detail: 'userDetail'
 };
 const SELECT = {
   appointmentType: 'event-appt-type',
@@ -487,7 +501,6 @@ class Controller {
   filterResults(managerName, name, filterResults) {}
 
   setupDataObjectDefinitions() {
-    // create the object definitions for the exercise type and workout
     let apptTypeDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTypes, 'Appointment Type', true, true, false, '_id');
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "name", "Name", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.text, true, "Name");
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "colour", "Colour", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.colour, true, "Choose color from below");
@@ -496,6 +509,14 @@ class Controller {
     statusFieldDef.displayOnly = true;
     cLogger(`Appointment type data object definition`);
     cLogger(apptTypeDef);
+    let userDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, 'Users', true, true, false, '_id');
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "username", "Username", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.text, true, "Username");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "providerNo", "Provider Number", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.text, false, "Provider Number");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "icon", "Icon", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.text, false, "Font Awesome icon classes");
+    let isProviderFieldDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addDerivedFieldToObjDefinition(userDef, "isProvider", "Is Provider", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.boolean, ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.KeyType.string, new IsProviderDerivedField(), false, "Is the user a provider");
+    isProviderFieldDef.displayOnly = true;
+    cLogger(`Users type data object definition`);
+    cLogger(userDef);
   }
   /*
   *
@@ -510,6 +531,21 @@ class Controller {
     if (window.ENV && window.ENV.serverURL) {
       // @ts-ignore
       result = window.ENV.serverURL;
+    }
+
+    return result;
+  }
+
+}
+
+class IsProviderDerivedField {
+  getValue(dataObj, field, isCreate) {
+    let result = 'false';
+
+    if (dataObj.providerNo) {
+      if (dataObj.providerNo.trim().length > 0) {
+        result = 'true';
+      }
     }
 
     return result;
@@ -1847,38 +1883,6 @@ class AppointmentTypesCompositeView {
           break;
         }
     }
-  }
-
-}
-
-/***/ }),
-
-/***/ "./src/appointment-types/AppointmentTypesSidebar.ts":
-/*!**********************************************************!*\
-  !*** ./src/appointment-types/AppointmentTypesSidebar.ts ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AppointmentTypesSidebar": () => (/* binding */ AppointmentTypesSidebar)
-/* harmony export */ });
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
-/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
-
-
-class AppointmentTypesSidebar extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarViewContainer {
-  constructor() {
-    super(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.AppointmentTypesSidebarPrefs);
-  }
-
-  static getInstance() {
-    if (!AppointmentTypesSidebar._instance) {
-      AppointmentTypesSidebar._instance = new AppointmentTypesSidebar();
-    }
-
-    return AppointmentTypesSidebar._instance;
   }
 
 }
@@ -4358,10 +4362,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
 /* harmony import */ var _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./patients/PatientSearchSidebar */ "./src/patients/PatientSearchSidebar.ts");
 /* harmony import */ var _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./appointment-types/AppointmentTypesCompositeView */ "./src/appointment-types/AppointmentTypesCompositeView.ts");
-/* harmony import */ var _appointment_types_AppointmentTypesSidebar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./appointment-types/AppointmentTypesSidebar */ "./src/appointment-types/AppointmentTypesSidebar.ts");
-/* harmony import */ var _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./clinic-chat/ClinicChatSidebar */ "./src/clinic-chat/ClinicChatSidebar.ts");
-/* harmony import */ var _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./clinic-chat/ClinicChatListView */ "./src/clinic-chat/ClinicChatListView.ts");
-
+/* harmony import */ var _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./clinic-chat/ClinicChatSidebar */ "./src/clinic-chat/ClinicChatSidebar.ts");
+/* harmony import */ var _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./clinic-chat/ClinicChatListView */ "./src/clinic-chat/ClinicChatListView.ts");
 
 
 
@@ -4380,6 +4382,7 @@ const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('app');
 class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   thisEl = null;
   chatNavigationItem = null;
+  apptTypeSidebar = null;
 
   constructor() {
     // @ts-ignore
@@ -4405,8 +4408,9 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
     this.thisEl = document.getElementById('root');
     _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().onDocumentLoaded();
-    new _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__.AppointmentTypesCompositeView(_appointment_types_AppointmentTypesSidebar__WEBPACK_IMPORTED_MODULE_12__.AppointmentTypesSidebar.getInstance()).onDocumentLoaded();
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_13__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).onDocumentLoaded();
+    this.apptTypeSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.AppointmentTypesSidebarPrefs);
+    new _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__.AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).onDocumentLoaded();
     this.setupNavigationItemHandling();
     _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
     _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
@@ -4431,7 +4435,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
   hideAllSideBars() {
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_13__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).eventHide(null);
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).eventHide(null);
     _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().eventHide(null);
   }
 
@@ -4444,10 +4448,10 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
       return;
     }
 
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_13__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).eventShow(null);
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).eventShow(null);
 
     if (roomName) {
-      _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_14__.ClinicChatListView.getInstance().selectChatRoom(roomName);
+      _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_13__.ClinicChatListView.getInstance().selectChatRoom(roomName);
     }
   }
 
@@ -4493,7 +4497,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
   handleShowAppointmentTypes(event) {
     logger(`Showing patient search`);
-    _appointment_types_AppointmentTypesSidebar__WEBPACK_IMPORTED_MODULE_12__.AppointmentTypesSidebar.getInstance().eventShow(null);
+    if (this.apptTypeSidebar) this.apptTypeSidebar.eventShow(null);
   }
 
   setupNavigationItemHandling() {

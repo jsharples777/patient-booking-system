@@ -9,11 +9,12 @@ import {
     ChatManager,
     DataObjectController,
     DataObjectDefinition,
-    DataObjectListener,
-    DownloadManager,
+    DataObjectListener, DerivedField,
+    DownloadManager, FieldDefinition,
     FieldType,
     GraphQLApiStateManager,
     isSameMongo,
+    KeyType,
     MemoryBufferStateManager,
     NotificationController,
     ObjectDefinitionRegistry,
@@ -527,7 +528,6 @@ export default class Controller implements StateChangeListener, DataObjectListen
     }
 
     private setupDataObjectDefinitions() {
-        // create the object definitions for the exercise type and workout
         let apptTypeDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.appointmentTypes, 'Appointment Type', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "name", "Name", FieldType.text, true, "Name");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "colour", "Colour", FieldType.colour, true, "Choose color from below");
@@ -539,6 +539,15 @@ export default class Controller implements StateChangeListener, DataObjectListen
         cLogger(apptTypeDef);
 
 
+        let userDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.users, 'Users', true, true, false, '_id');
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "username", "Username", FieldType.text, true, "Username");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "providerNo", "Provider Number", FieldType.text, false, "Provider Number");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "icon", "Icon", FieldType.text, false, "Font Awesome icon classes");
+        let isProviderFieldDef = BasicObjectDefinitionFactory.getInstance().addDerivedFieldToObjDefinition(userDef, "isProvider", "Is Provider", FieldType.boolean, KeyType.string, new IsProviderDerivedField(), false, "Is the user a provider");
+        isProviderFieldDef.displayOnly = true;
+
+        cLogger(`Users type data object definition`);
+        cLogger(userDef);
 
 
 
@@ -555,6 +564,19 @@ export default class Controller implements StateChangeListener, DataObjectListen
         if ((window.ENV) && (window.ENV.serverURL)) {
             // @ts-ignore
             result = window.ENV.serverURL;
+        }
+        return result;
+    }
+
+}
+
+class IsProviderDerivedField implements DerivedField {
+    getValue(dataObj: any, field: FieldDefinition, isCreate: boolean): string {
+        let result = 'false';
+        if (dataObj.providerNo) {
+            if (dataObj.providerNo.trim().length > 0) {
+                result = 'true';
+            }
         }
         return result;
     }

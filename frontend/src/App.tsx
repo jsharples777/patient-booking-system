@@ -1,14 +1,14 @@
 import debug from 'debug';
 import Controller from './Controller';
 
-import {API_Config, NAVIGATION, STATE_NAMES,} from "./AppTypes";
+import {API_Config, AppointmentTypesSidebarPrefs, NAVIGATION, STATE_NAMES,} from "./AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
 import {AppointmentController} from "./appointments/AppointmentController";
 import {
     ChatRoomsSidebar,
     ContextualInformationHelper, NotificationController,
-    SecurityManager,
+    SecurityManager, SidebarViewContainer,
     UnreadMessageCountListener
 } from "ui-framework-jps";
 import {setOptions} from "@mobiscroll/javascript";
@@ -16,7 +16,6 @@ import {AppointmentTemplateController} from "./appointment-templates/Appointment
 import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 import {PatientSearchSidebar} from "./patients/PatientSearchSidebar";
 import {AppointmentTypesCompositeView} from "./appointment-types/AppointmentTypesCompositeView";
-import {AppointmentTypesSidebar} from "./appointment-types/AppointmentTypesSidebar";
 import {ClinicChatSidebar} from "./clinic-chat/ClinicChatSidebar";
 import {ClinicChatListView} from "./clinic-chat/ClinicChatListView";
 
@@ -27,6 +26,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     private thisEl: HTMLDivElement | null = null;
     private chatNavigationItem: HTMLAnchorElement | null = null;
+    private apptTypeSidebar: SidebarViewContainer | null = null;
 
 
     public constructor() {
@@ -59,7 +59,9 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
         PatientSearchSidebar.getInstance().onDocumentLoaded();
 
-        new AppointmentTypesCompositeView(AppointmentTypesSidebar.getInstance()).onDocumentLoaded();
+        this.apptTypeSidebar = new SidebarViewContainer(AppointmentTypesSidebarPrefs);
+
+        new AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
 
         ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).onDocumentLoaded();
 
@@ -153,7 +155,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     protected handleShowAppointmentTypes(event: Event): void {
         logger(`Showing patient search`);
-        AppointmentTypesSidebar.getInstance().eventShow(null);
+        if (this.apptTypeSidebar) this.apptTypeSidebar.eventShow(null);
 
     }
 

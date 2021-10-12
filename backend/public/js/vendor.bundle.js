@@ -52646,6 +52646,17 @@ class BasicObjectDefinitionFactory {
     addNumericFieldToObjDefinition(objDef, id, displayName, type, isMandatory = false, description = null, datasource = null) {
         return this.addNumericFieldToArray(objDef.fields, id, displayName, type, isMandatory, description, datasource);
     }
+    addDerivedFieldToObjDefinition(objDef, id, displayName, type, keyType, calculator, isMandatory = false, description = null, dataSource = null) {
+        let fieldDef;
+        if (keyType === _ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.KeyType.number) {
+            fieldDef = this.addNumericFieldToObjDefinition(objDef, id, displayName, type, isMandatory, description, dataSource);
+        }
+        else {
+            fieldDef = this.addStringFieldToObjDefinition(objDef, id, displayName, type, isMandatory, description, dataSource);
+        }
+        fieldDef.derivedValue = calculator;
+        return fieldDef;
+    }
     addCreatedDateToArray(fields) {
         let fieldDef = this.addStringFieldToArray(fields, FIELD_CreatedOn, FIELD_CreatedOn_Desc, _DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime, true, FIELD_CreatedOn_Desc);
         // add generator
@@ -58850,6 +58861,9 @@ class AbstractForm {
     getFormMode() {
         return this.formMode;
     }
+    getCurrentDataObj() {
+        return this.currentDataObj;
+    }
     cancel() {
         if (this.uiDef) {
             let formEvent = {
@@ -60532,29 +60546,35 @@ class AbstractField {
     getValue() {
         let result = null;
         if (this.config && this.element) {
-            switch (this.config.elementType) {
-                case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup): {
-                    logger(`${this.definition.id} - getting value - rbg`);
-                    if (this.subElements) {
-                        this.subElements.forEach((subElement) => {
-                            if (subElement.checked) {
-                                logger(`${this.definition.id} - getting value - rbg - checked ${subElement.value}`);
-                                result = subElement.value;
-                                subElement.checked = true;
-                            }
-                        });
+            // derived values are calculated from the data object overall
+            if (this.definition.derivedValue) {
+                result = this.definition.derivedValue.getValue(this.form.getCurrentDataObj(), this.definition, this.form.getFormMode() === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.FormMode.create);
+            }
+            else {
+                switch (this.config.elementType) {
+                    case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup): {
+                        logger(`${this.definition.id} - getting value - rbg`);
+                        if (this.subElements) {
+                            this.subElements.forEach((subElement) => {
+                                if (subElement.checked) {
+                                    logger(`${this.definition.id} - getting value - rbg - checked ${subElement.value}`);
+                                    result = subElement.value;
+                                    subElement.checked = true;
+                                }
+                            });
+                        }
+                        break;
                     }
-                    break;
-                }
-                case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox): {
-                    // @ts-ignore
-                    result = '' + this.element.checked;
-                    break;
-                }
-                default: {
-                    // @ts-ignore
-                    result = this.element.value;
-                    break;
+                    case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox): {
+                        // @ts-ignore
+                        result = '' + this.element.checked;
+                        break;
+                    }
+                    default: {
+                        // @ts-ignore
+                        result = this.element.value;
+                        break;
+                    }
                 }
             }
         }
@@ -60594,6 +60614,9 @@ class AbstractField {
     setValue(newValue) {
         newValue = '' + newValue;
         if (this.element && this.config) {
+            // derived fields have no "setter"
+            if (this.definition.derivedValue)
+                return;
             // @ts-ignore
             switch (this.config.elementType) {
                 case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup): {
@@ -64707,12 +64730,23 @@ class TabularViewRendererUsingContext {
                 }
             }
             else {
-                if (fieldDataType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__.FieldType.colour) {
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, [{ name: "style", value: `background-color:${fieldValue}` }]);
-                    tdEl.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
-                }
-                else {
-                    tdEl.innerText = fieldValue;
+                switch (fieldDataType) {
+                    case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__.FieldType.colour: {
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, [{ name: "style", value: `background-color:${fieldValue}` }]);
+                        tdEl.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
+                        break;
+                    }
+                    case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__.FieldType.boolean: {
+                        let checkboxEl = document.createElement('input');
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(checkboxEl, [{ name: 'type', value: 'checkbox' }]);
+                        if (fieldValue === 'true') {
+                            checkboxEl.checked = true;
+                        }
+                        tdEl.appendChild(checkboxEl);
+                    }
+                    default: {
+                        tdEl.innerText = fieldValue;
+                    }
                 }
             }
             tableRowEl.appendChild(tdEl);

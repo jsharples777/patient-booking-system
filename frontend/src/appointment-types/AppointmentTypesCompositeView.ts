@@ -65,6 +65,7 @@ export class AppointmentTypesCompositeView implements DataObjectListener {
             let viewLinker: LinkedCollectionDetailController = new LinkedCollectionDetailController(STATE_NAMES.appointmentTypes, apptTypes);
             viewLinker.addLinkedDetailView(apptTypeDetailView);
             this.sideBar.onDocumentLoaded();
+
             let startingDisplayOrder = BasicObjectDefinitionFactory.getInstance().generateStartingDisplayOrder(apptTypeDefinition);
             apptTypeDetailView.initialise(startingDisplayOrder, false, true);
 
