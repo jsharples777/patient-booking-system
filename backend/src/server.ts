@@ -39,6 +39,7 @@ import apiRoutes from './routes/api';
 import DataSource from "./graphql/DataSource";
 import {setupPassport} from "./passport/passport";
 import {SocketManager} from "server-socket-framework-jps";
+import {MongooseDataSource} from "./db/MongooseDataSource";
 //dotenv.config({ path: __dirname+'/.env' });
 dotenv.config();
 
@@ -51,7 +52,7 @@ const enablePeer = ((process.env.ENABLE_PEER === 'Y') || true);
 
 
 if (isDevelopment) {
-    debug.enable('data-source-appointments server db api route socket mongo-data-source my-passport data-source-appointment-templates data-source-appointment-types');
+    debug.enable('data-source-appointments mongoose-ds server db api route socket mongo-data-source my-passport data-source-appointment-templates data-source-appointment-types');
 } else {
     debug.enable('server api route');
 }
@@ -127,6 +128,7 @@ if (isDevelopment) {
 
 serverDebug('Installing routes');
 MongoDataSource.getInstance();
+MongooseDataSource.getInstance();
 
 app.use('/', routes);// add the middleware path routing
 

@@ -265,8 +265,8 @@ class Controller {
       serverURL: '',
       apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
       apis: {
-        findAll: 'query {getUsers {_id,username,providerNo,isCurrent,isAdmin}}',
-        create: 'mutation addUser($data: UserInput!){addUser(user: $data) {_id,username,providerNo,isCurrent,isAdmin}}',
+        findAll: 'query {getUsers {_id,username,providerNo,isCurrent,isAdmin,isProvider,resetPassword,password}}',
+        create: 'mutation addUser($data: UserInput!){addUser(user: $data) {_id,username,providerNo,isCurrent,isAdmin,isProvider,resetPassword,password}}',
         destroy: '',
         update: 'mutation updateUser($data: UserInput!){updateUser(user: $data)}',
         find: ''
@@ -4522,9 +4522,9 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.chatNavigationItem.addEventListener('click', this.handleShowChat);
   }
 
-} //localStorage.debug = 'app api-ts-results bootstrap-form-config-helper';
+}
+localStorage.debug = 'app api-ts-results bootstrap-form-config-helper'; //localStorage.debug = 'socket-listener';
 
-localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {

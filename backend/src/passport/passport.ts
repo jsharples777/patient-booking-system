@@ -5,6 +5,7 @@ import {MongoDataSource} from "../db/MongoDataSource";
 import {Db, Document} from "mongodb";
 import {v4} from "uuid";
 import {SocketManager} from "server-socket-framework-jps";
+import {generateHash} from "../Utils";
 
 const logger = debug('my-passport');
 
@@ -21,9 +22,7 @@ export function setupPassport(passport: any) {
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
         function (req: Request, username: string, password: string, done: any) {
-            const generateHash = function (password: string): string {
-                return bCrypt.hashSync(password, bCrypt.genSaltSync(8));
-            };
+
             const db: Db = MongoDataSource.getInstance().getDatabase();
             const collection = process.env.DB_COLLECTION_USERS || 'pms-users';
             const projection = {

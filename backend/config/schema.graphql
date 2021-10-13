@@ -737,7 +737,10 @@ type User {
     username:String,
     providerNo:String,
     isCurrent:Boolean,
-    isAdmin:Boolean
+    isAdmin:Boolean,
+    isProvider:Boolean,
+    resetPassword:Boolean,
+    password:String
 }
 
 input UserInput {
@@ -746,8 +749,8 @@ input UserInput {
     providerNo:String,
     isCurrent:Boolean,
     isAdmin:Boolean,
-    isResettingPassword:Boolean,
-    newPassword:String
+    resetPassword:Boolean,
+    password:String
 }
 
 

@@ -281,8 +281,8 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 serverURL: '',
                 apiURL: API_Config.graphQL,
                 apis: {
-                    findAll: 'query {getUsers {_id,username,providerNo,isCurrent,isAdmin}}',
-                    create: 'mutation addUser($data: UserInput!){addUser(user: $data) {_id,username,providerNo,isCurrent,isAdmin}}',
+                    findAll: 'query {getUsers {_id,username,providerNo,isCurrent,isAdmin,isProvider,resetPassword,password}}',
+                    create: 'mutation addUser($data: UserInput!){addUser(user: $data) {_id,username,providerNo,isCurrent,isAdmin,isProvider,resetPassword,password}}',
                     destroy: '',
                     update: 'mutation updateUser($data: UserInput!){updateUser(user: $data)}',
                     find: '',
