@@ -541,11 +541,13 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
         let userDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.users, 'Users', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "username", "Username", FieldType.text, true, "Username");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "providerNo", "Provider Number", FieldType.text, false, "Provider Number");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "icon", "Icon", FieldType.text, false, "Font Awesome icon classes");
-        let isProviderFieldDef = BasicObjectDefinitionFactory.getInstance().addDerivedFieldToObjDefinition(userDef, "isProvider", "Is Provider", FieldType.boolean, KeyType.string, new IsProviderDerivedField(), false, "Is the user a provider");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isCurrent", "Active?", FieldType.boolean, true, "Is this a current user?");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isAdmin", "Admin?", FieldType.boolean, true, "Does the user have admin privilege?");
+        let isProviderFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isProvider", "Is Provider", FieldType.boolean, false, "Is the user a provider");
         isProviderFieldDef.displayOnly = true;
-
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "providerNo", "Provider Number", FieldType.text, false, "Provider Number");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "resetPassword", "Reset Password?", FieldType.boolean, false, "Reset the users password ");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "password", "New Password", FieldType.text, false, "New password");
         cLogger(`Users type data object definition`);
         cLogger(userDef);
 
