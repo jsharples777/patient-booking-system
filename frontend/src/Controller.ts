@@ -11,7 +11,7 @@ import {
     DataObjectDefinition,
     DataObjectListener, DerivedField,
     DownloadManager, FieldDefinition,
-    FieldType,
+    FieldType, FieldValueGenerator,
     GraphQLApiStateManager,
     isSameMongo,
     KeyType,
@@ -27,6 +27,32 @@ import {
 
 const cLogger = debug('controller-ts');
 const cLoggerDetail = debug('controller-ts-detail');
+
+class DefaultUserValueGenerator implements FieldValueGenerator {
+    generate(field: FieldDefinition, isCreate: boolean): string {
+        let result = '';
+        if (isCreate) {
+            switch (field.id) {
+                case 'isCurrent': {
+                    result = 'true';
+                    break;
+                }
+                case 'resetPassword': {
+                    result = 'true';
+                    break;
+                }
+                case 'password': {
+                    result = 'password';
+                    break;
+                }
+            }
+
+        }
+
+        return result;
+    }
+
+}
 
 export default class Controller implements StateChangeListener, DataObjectListener {
 
@@ -541,17 +567,33 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
         let userDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.users, 'Users', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "username", "Username", FieldType.text, true, "Username");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isCurrent", "Active?", FieldType.boolean, true, "Is this a current user?");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isAdmin", "Admin?", FieldType.boolean, true, "Does the user have admin privilege?");
+        let isCurrentFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isCurrent", "Active?", FieldType.boolean, false, "Is this a current user?");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isAdmin", "Admin?", FieldType.boolean, false, "Does the user have admin privilege?");
         let isProviderFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isProvider", "Is Provider", FieldType.boolean, false, "Is the user a provider");
         isProviderFieldDef.displayOnly = true;
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "providerNo", "Provider Number", FieldType.text, false, "Provider Number");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "resetPassword", "Reset Password?", FieldType.boolean, false, "Reset the users password ");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "password", "New Password", FieldType.text, false, "New password");
+        let resetPasswordFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "resetPassword", "Reset Password?", FieldType.boolean, false, "Reset the users password ");
+        let passwordFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "password", "New Password", FieldType.text, false, "New password");
         cLogger(`Users type data object definition`);
         cLogger(userDef);
 
-
+        const generator = new DefaultUserValueGenerator();
+        // setup default values for new user
+        isCurrentFieldDef.generator = {
+            onCreation:true,
+            onModify:true,
+            generator: generator
+        };
+        resetPasswordFieldDef.generator = {
+            onCreation:true,
+            onModify:true,
+            generator: generator
+        };
+        passwordFieldDef.generator = {
+            onCreation:true,
+            onModify:true,
+            generator: generator
+        };
 
     }
 

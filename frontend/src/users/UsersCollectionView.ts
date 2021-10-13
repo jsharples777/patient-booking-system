@@ -22,7 +22,7 @@ import {
 } from "ui-framework-jps";
 
 
-const logger = debug('appointment-types-view');
+const logger = debug('users-view');
 
 export class UsersCollectionView extends AbstractStatefulCollectionView implements CollectionViewListener {
 
@@ -63,7 +63,7 @@ export class UsersCollectionView extends AbstractStatefulCollectionView implemen
                 if (item.isAdmin) {
                     results.push("fas fa-user-cog");
                 }
-                if (item.providerNo.trim().length > 0) {
+                if (item.isProvider) {
                     results.push("fas fa-user-md");
                 }
 
@@ -71,36 +71,39 @@ export class UsersCollectionView extends AbstractStatefulCollectionView implemen
                 return results;
             },
         },
-        sorter: UsersCollectionView.sortAppointmentTypes
+        sorter: UsersCollectionView.sortUsers
     };
 
     constructor(stateManager: StateManager) {
         super(UsersCollectionView.DOMConfig, stateManager, STATE_NAMES.users);
 
-        let apptTypeDef: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.users);
-        if (apptTypeDef) {
+        let userDef: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.users);
+        if (userDef) {
             let displayOrders: DisplayOrder[] = [];
-            displayOrders.push({fieldId: 'name', displayOrder: 1});
-            displayOrders.push({fieldId: 'colour', displayOrder: 2});
-            displayOrders.push({fieldId: 'icon', displayOrder: 3});
-            //displayOrders.push({ fieldId:'isStatus',displayOrder:4});
-            let tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableRowConfig(apptTypeDef, displayOrders, 1, false, true);
-            // tableUIConfig.headerColumns[0].element.classes += ' text-center';
+            displayOrders.push({fieldId: 'username', displayOrder: 1});
+            displayOrders.push({fieldId: 'isCurrent', displayOrder: 2});
+            displayOrders.push({fieldId: 'isAdmin', displayOrder: 3});
+            displayOrders.push({fieldId: 'isProvider', displayOrder: 4});
+            displayOrders.push({fieldId: 'providerNo', displayOrder: 5});
+
+            let tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableRowConfig(userDef, displayOrders, 1, false, true);
+
             tableUIConfig.headerColumns[1].element.classes += ' text-center';
             tableUIConfig.headerColumns[2].element.classes += ' text-center';
+            tableUIConfig.headerColumns[3].element.classes += ' text-center';
+            tableUIConfig.headerColumns[4].element.classes += ' text-center';
 
             this.renderer = new TabularViewRendererUsingContext(this, this, tableUIConfig);
-            //this.renderer = new ListViewRendererUsingContext(this,this);
             this.eventHandlerDelegate = new CollectionViewEventHandlerDelegateUsingContext(this, <CollectionViewListenerForwarder>this.eventForwarder);
             this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);
             this.getItemId = this.getItemId.bind(this);
 
-            ContextualInformationHelper.getInstance().addContextFromView(this, STATE_NAMES.appointmentTypes, 'Appointment Types');
+            ContextualInformationHelper.getInstance().addContextFromView(this, STATE_NAMES.users, 'Users');
 
         }
     }
 
-    private static sortAppointmentTypes(item1: any, item2: any) {
+    private static sortUsers(item1: any, item2: any) {
         let result = -1;
         if (item1.name > item2.name) result = 1;
         return result;
@@ -108,7 +111,7 @@ export class UsersCollectionView extends AbstractStatefulCollectionView implemen
 
     getItemDescription(from: string, item: any): string {
         let buffer = '';
-        buffer += `<strong style="text-colour:${item.colour}">` + item.name + '</strong> ';
+        buffer += `<strong style="text-colour:${item.colour}">` + item.username + '</strong> ';
         buffer += '<br/>';
         return buffer;
     }
@@ -128,7 +131,7 @@ export class UsersCollectionView extends AbstractStatefulCollectionView implemen
     }
 
     renderDisplayForItemInNamedCollection(containerEl: HTMLElement, name: string, item: any): void {
-        containerEl.innerHTML = item.name;
+        containerEl.innerHTML = item.username;
     }
 
     hasPermissionToDeleteItemInNamedCollection(name: string, item: any): boolean {
@@ -138,10 +141,10 @@ export class UsersCollectionView extends AbstractStatefulCollectionView implemen
 
 
     getModifierForItemInNamedCollection(name: string, item: any): Modifier {
-        if (item.isStatus) {
-            return Modifier.inactive;
+        if (item.isCurrent) {
+            return Modifier.normal;
         }
-        return Modifier.normal
+        return Modifier.inactive
     }
 
 

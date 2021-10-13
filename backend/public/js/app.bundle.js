@@ -149,6 +149,38 @@ __webpack_require__.r(__webpack_exports__);
 
 const cLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('controller-ts');
 const cLoggerDetail = debug__WEBPACK_IMPORTED_MODULE_0___default()('controller-ts-detail');
+
+class DefaultUserValueGenerator {
+  generate(field, isCreate) {
+    let result = '';
+
+    if (isCreate) {
+      switch (field.id) {
+        case 'isCurrent':
+          {
+            result = 'true';
+            break;
+          }
+
+        case 'resetPassword':
+          {
+            result = 'true';
+            break;
+          }
+
+        case 'password':
+          {
+            result = 'password';
+            break;
+          }
+      }
+    }
+
+    return result;
+  }
+
+}
+
 class Controller {
   static patientQuery = 'query getPatient($identifier: String!){\n' + '  getPatient(id: $identifier) {\n' + '    _id,\n' + '    lastSeen,\n' + '    lastSeenBy,\n' + '    dob,\n' + '    dod,\n' + '    gender,\n' + '    ethnicity,\n' + '    countryofbirth,\n' + '    created,\n' + '    modified,\n' + '    name{\n' + '      _id,\n' + '    \ttitle,\n' + '    \tfirstname,\n' + '    \tmiddlename,\n' + '    \tsurname,\n' + '    \taka\n' + '  \t},\n' + '    contact{\n' + '    \t_id,\n' + '    \tline1,\n' + '    \tline2,\n' + '    \tsuburb,\n' + '    \tpostcode,\n' + '    \tstate,\n' + '    \tcountry,\n' + '    \thome,\n' + '    \twork,\n' + '    \tmobile,\n' + '    \tnokname,\n' + '    \tnokphone\n' + '    },\n' + '    identifiers {\n' + '      _id,\n' + '    \tmedicare,\n' + '    \tmedicareRef,\n' + '    \tlegacyId,\n' + '   \t \tdva,\n' + '   \t \tdvaColour,\n' + '    \thcc,\n' + '    \tihi\n' + '    },\n' + '    flags {\n' + '      _id,\n' + '    \tisAcountHolder,\n' + '    \tlegacyAccountHolderId,\n' + '    \tisDeceased,\n' + '    \tisInactive,\n' + '    \tshouldSMS,\n' + '    \tisMarried,\n' + '    \tisCTGRegistered,\n' + '    \thasWarnings\n' + '    },\n' + '    warnings {\n' + '      _id, warnings\n' + '    },\n' + '    allergies {\n' + '      _id,\n' + '    \tname,\n' + '    \treaction,\n' + '    \tcreated,\n' + '    \tmodified\n' + '    },\n' + '    consults {\n' + '      _id, date, time, doctor, history, diagnosis, plan, findings, created, modified\n' + '    },\n' + '    history {\n' + '      _id, diagnosis, note, isConfidential, date, created, modified\n' + '    },\n' + '    results {\n' + '      _id, lab, labref, test, orderedBy, copies, requested, collected, reported, collectedTime, imported, received, result, isLinked, reviewedBy, isNormal, isLast\n' + '    },\n' + '    scripts {\n' + '      _id, by, name, on, dose, frequency, instructions, repeats, quantity, drugCode, lastPrinted, created, modified\n' + '    },\n' + '    scriptHistory {\n' + '      _id, changed, dose, change, reason, drugCode, name\n' + '    },\n' + '    scriptArchive {\n' + '      _id, medication, dose, scriptNumber, repeats, quantity, approvalCode, drugCode, note, created, modified\n' + '    },\n' + '    recalls{\n' + '      _id, reason, interval, isRecurring, due, isCompleted, created, modified\n' + '    },\n' + '    tasks {\n' + '      _id, by, isUrgent, isCompleted, isRead, title, details, completed, for, created, modified\n' + '    },\n' + '    documents {\n' + '      _id, title, type, from, reviewed, reviewedBy, data, created, modified\n' + '    },\n' + '    letters {\n' + '      _id, creator, isPrinted, isReviewd, from, type, data, to, created, modified\n' + '    },\n' + '    vaccinations {\n' + '      _id, vaccine, on, by, providerNum, batch, expiry, site, shouldSendtoAIR, airCode, created\n' + '    },\n' + '    forms {\n' + '      _id, title, from, category, data, created, modified\n' + '    },\n' + '    wcc {\n' + '      _id,\n' + '      employer {\n' + '        name, \n' + '        contact {\n' + '          line1, line2, suburb, state, postCode\n' + '        },\n' + '        insurer\n' + '      },\n' + '      claim {\n' + '        number, injury, injuryTime, injuryDate, claimDate, mechanism\n' + '      },\n' + '      date,time,reviewed, type, diagnosis, comment, treatment, isReturnToNormalDuties, returnToNormalDuties, isRestrictedDuties, restrictedDutiesFrom, restrictedDutiesTo, isNoCapacity, noCapacityFrom, noCapacityTo\n' + '    },\n' + '    modifiedDates {\n' + '      identifiers, warnings, allergies, consults, history, results, scripts, recalls, documents,letters,vaccinations\n' + '    }\n' + '  }\n' + '}';
 
@@ -511,12 +543,32 @@ class Controller {
     cLogger(apptTypeDef);
     let userDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, 'Users', true, true, false, '_id');
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "username", "Username", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.text, true, "Username");
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "providerNo", "Provider Number", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.text, false, "Provider Number");
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "icon", "Icon", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.text, false, "Font Awesome icon classes");
-    let isProviderFieldDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addDerivedFieldToObjDefinition(userDef, "isProvider", "Is Provider", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.boolean, ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.KeyType.string, new IsProviderDerivedField(), false, "Is the user a provider");
+    let isCurrentFieldDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isCurrent", "Active?", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.boolean, false, "Is this a current user?");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isAdmin", "Admin?", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.boolean, false, "Does the user have admin privilege?");
+    let isProviderFieldDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isProvider", "Is Provider", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.boolean, false, "Is the user a provider");
     isProviderFieldDef.displayOnly = true;
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "providerNo", "Provider Number", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.text, false, "Provider Number");
+    let resetPasswordFieldDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "resetPassword", "Reset Password?", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.boolean, false, "Reset the users password ");
+    let passwordFieldDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "password", "New Password", ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.FieldType.text, false, "New password");
     cLogger(`Users type data object definition`);
     cLogger(userDef);
+    const generator = new DefaultUserValueGenerator(); // setup default values for new user
+
+    isCurrentFieldDef.generator = {
+      onCreation: true,
+      onModify: true,
+      generator: generator
+    };
+    resetPasswordFieldDef.generator = {
+      onCreation: true,
+      onModify: true,
+      generator: generator
+    };
+    passwordFieldDef.generator = {
+      onCreation: true,
+      onModify: true,
+      generator: generator
+    };
   }
   /*
   *
@@ -1788,7 +1840,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('exercise-types-composite-view');
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('appointment-types-composite-view');
 class ApptTypePermissionChecker {
   hasPermissionToUpdateItem(item) {
     return true;
@@ -4338,6 +4390,332 @@ class PatientSearchView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Ab
 
 /***/ }),
 
+/***/ "./src/users/UserValidationHelper.ts":
+/*!*******************************************!*\
+  !*** ./src/users/UserValidationHelper.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "UserValidationHelper": () => (/* binding */ UserValidationHelper)
+/* harmony export */ });
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+
+class UserValidationHelper {
+  static getInstance() {
+    if (!UserValidationHelper._instance) {
+      UserValidationHelper._instance = new UserValidationHelper();
+    }
+
+    return UserValidationHelper._instance;
+  }
+
+  constructor() {}
+
+  setupValidationForDetailsForm(form) {
+    let rule = {
+      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.create,
+      targetDataFieldId: 'resetPassword',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
+      conditions: [{
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
+        values: 'x'
+      }]
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    rule = {
+      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.create,
+      targetDataFieldId: 'isProvider',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
+      conditions: [{
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
+        values: 'x'
+      }]
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    rule = {
+      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.create,
+      targetDataFieldId: 'password',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid,
+      conditions: [{
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.isNotNull,
+        values: ''
+      }]
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/users/UsersCollectionView.ts":
+/*!******************************************!*\
+  !*** ./src/users/UsersCollectionView.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "UsersCollectionView": () => (/* binding */ UsersCollectionView)
+/* harmony export */ });
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('users-view');
+class UsersCollectionView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.AbstractStatefulCollectionView {
+  static DOMConfig = {
+    viewConfig: {
+      resultsContainerId: _AppTypes__WEBPACK_IMPORTED_MODULE_0__.UsersSidebarContainers.list,
+      dataSourceId: _AppTypes__WEBPACK_IMPORTED_MODULE_0__.VIEW_NAME.users
+    },
+    resultsElement: {
+      type: 'tr',
+      attributes: [{
+        name: 'href',
+        value: '#'
+      }],
+      classes: ''
+    },
+    keyId: '_id',
+    keyType: ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.KeyType.string,
+    modifiers: {
+      normal: '',
+      inactive: 'table-secondary',
+      active: 'table-success',
+      warning: 'table-danger'
+    },
+    icons: {
+      normal: '',
+      inactive: '',
+      active: '',
+      warning: ''
+    },
+    detail: {
+      containerClasses: 'd-flex w-100 justify-content-between',
+      textElement: {
+        type: 'span',
+        classes: 'mb-1'
+      },
+      select: true,
+      icons: (name, item) => {
+        let results = [];
+
+        if (item.isAdmin) {
+          results.push("fas fa-user-cog");
+        }
+
+        if (item.isProvider) {
+          results.push("fas fa-user-md");
+        }
+
+        return results;
+      }
+    },
+    sorter: UsersCollectionView.sortUsers
+  };
+
+  constructor(stateManager) {
+    super(UsersCollectionView.DOMConfig, stateManager, _AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.users);
+    let userDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.ObjectDefinitionRegistry.getInstance().findDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.users);
+
+    if (userDef) {
+      let displayOrders = [];
+      displayOrders.push({
+        fieldId: 'username',
+        displayOrder: 1
+      });
+      displayOrders.push({
+        fieldId: 'isCurrent',
+        displayOrder: 2
+      });
+      displayOrders.push({
+        fieldId: 'isAdmin',
+        displayOrder: 3
+      });
+      displayOrders.push({
+        fieldId: 'isProvider',
+        displayOrder: 4
+      });
+      displayOrders.push({
+        fieldId: 'providerNo',
+        displayOrder: 5
+      });
+      let tableUIConfig = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableConfigHelper.getInstance().generateTableRowConfig(userDef, displayOrders, 1, false, true);
+      tableUIConfig.headerColumns[1].element.classes += ' text-center';
+      tableUIConfig.headerColumns[2].element.classes += ' text-center';
+      tableUIConfig.headerColumns[3].element.classes += ' text-center';
+      tableUIConfig.headerColumns[4].element.classes += ' text-center';
+      this.renderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.TabularViewRendererUsingContext(this, this, tableUIConfig);
+      this.eventHandlerDelegate = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.CollectionViewEventHandlerDelegateUsingContext(this, this.eventForwarder);
+      this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);
+      this.getItemId = this.getItemId.bind(this);
+      ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.ContextualInformationHelper.getInstance().addContextFromView(this, _AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.users, 'Users');
+    }
+  }
+
+  static sortUsers(item1, item2) {
+    let result = -1;
+    if (item1.name > item2.name) result = 1;
+    return result;
+  }
+
+  getItemDescription(from, item) {
+    let buffer = '';
+    buffer += `<strong style="text-colour:${item.colour}">` + item.username + '</strong> ';
+    buffer += '<br/>';
+    return buffer;
+  }
+
+  canDeleteItem(view, selectedItem) {
+    logger(`Can Delete ${selectedItem}`);
+    return false;
+  }
+
+  compareItemsForEquality(item1, item2) {
+    return (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.isSameMongo)(item1, item2);
+  }
+
+  getIdForItemInNamedCollection(name, item) {
+    return item._id;
+  }
+
+  renderDisplayForItemInNamedCollection(containerEl, name, item) {
+    containerEl.innerHTML = item.username;
+  }
+
+  hasPermissionToDeleteItemInNamedCollection(name, item) {
+    logger(`Has delete permission ${item}`);
+    return false;
+  }
+
+  getModifierForItemInNamedCollection(name, item) {
+    if (item.isCurrent) {
+      return ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.Modifier.normal;
+    }
+
+    return ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.Modifier.inactive;
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/users/UsersCompositeView.ts":
+/*!*****************************************!*\
+  !*** ./src/users/UsersCompositeView.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "UsersCompositeView": () => (/* binding */ UsersCompositeView)
+/* harmony export */ });
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var ui_framework_jps_dist_framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
+/* harmony import */ var _UsersCollectionView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./UsersCollectionView */ "./src/users/UsersCollectionView.ts");
+/* harmony import */ var _UserValidationHelper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./UserValidationHelper */ "./src/users/UserValidationHelper.ts");
+
+
+
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('users-composite-view');
+class UsersCompositeView {
+  constructor(sideBar) {
+    this.sideBar = sideBar;
+  }
+
+  onDocumentLoaded() {
+    const apptTypes = new _UsersCollectionView__WEBPACK_IMPORTED_MODULE_5__.UsersCollectionView(_Controller__WEBPACK_IMPORTED_MODULE_0__["default"].getInstance().getStateManager());
+    this.sideBar.addView(apptTypes, {
+      containerId: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.UsersSidebarContainers.list
+    });
+    const userDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.ObjectDefinitionRegistry.getInstance().findDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users);
+
+    if (userDef) {
+      let detailRenderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.FormDetailViewRenderer(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.UsersSidebarContainers.detail, userDef, new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DefaultFormFieldPermissionChecker(), ui_framework_jps_dist_framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_4__.BootstrapFormConfigHelper.getInstance(), false);
+      let usersDetailView = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DetailViewImplementation({
+        resultsContainerId: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.UsersSidebarContainers.detail,
+        dataSourceId: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.VIEW_NAME.userDetail
+      }, detailRenderer);
+      let viewLinker = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.LinkedCollectionDetailController(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users, apptTypes);
+      viewLinker.addLinkedDetailView(usersDetailView);
+      this.sideBar.onDocumentLoaded();
+      let startingDisplayOrder = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BasicObjectDefinitionFactory.getInstance().generateStartingDisplayOrder(userDef);
+      usersDetailView.initialise(startingDisplayOrder, false, true);
+      const detailForm = detailRenderer.getForm();
+
+      if (detailForm) {
+        logger(`Setting up validation rules for ${detailForm.getId()}`);
+        logger(detailForm);
+        _UserValidationHelper__WEBPACK_IMPORTED_MODULE_6__.UserValidationHelper.getInstance().setupValidationForDetailsForm(detailForm);
+      } // setup the event handling for the create new exercise type button
+
+
+      let createUser = document.getElementById('addNewUser');
+      logger(`Setting up button for creating users`);
+      logger(createUser);
+
+      if (createUser) {
+        createUser.addEventListener('click', event => {
+          logger(`Asking view linker to start a new object`);
+          viewLinker.startNewObject();
+        });
+      }
+
+      viewLinker.addListener(this);
+    }
+  }
+
+  create(controller, typeName, dataObj) {
+    logger(`Handling create`);
+
+    switch (typeName) {
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users:
+        {
+          logger(`Handling create new user`);
+          logger(dataObj);
+          _Controller__WEBPACK_IMPORTED_MODULE_0__["default"].getInstance().getStateManager().addNewItemToState(typeName, dataObj, false);
+          break;
+        }
+    }
+  }
+
+  delete(controller, typeName, dataObj) {}
+
+  update(controller, typeName, dataObj) {
+    logger(`Handling update`);
+
+    switch (typeName) {
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users:
+        {
+          logger(`Handling update user`);
+          logger(dataObj);
+          _Controller__WEBPACK_IMPORTED_MODULE_0__["default"].getInstance().getStateManager().updateItemInState(typeName, dataObj, false);
+          break;
+        }
+    }
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/App.tsx":
 /*!*********************!*\
   !*** ./src/App.tsx ***!
@@ -4364,6 +4742,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./appointment-types/AppointmentTypesCompositeView */ "./src/appointment-types/AppointmentTypesCompositeView.ts");
 /* harmony import */ var _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./clinic-chat/ClinicChatSidebar */ "./src/clinic-chat/ClinicChatSidebar.ts");
 /* harmony import */ var _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./clinic-chat/ClinicChatListView */ "./src/clinic-chat/ClinicChatListView.ts");
+/* harmony import */ var _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./users/UsersCompositeView */ "./src/users/UsersCompositeView.ts");
+
 
 
 
@@ -4383,6 +4763,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   thisEl = null;
   chatNavigationItem = null;
   apptTypeSidebar = null;
+  usersSidebar = null;
 
   constructor() {
     // @ts-ignore
@@ -4394,6 +4775,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.handleShowPatientRecords = this.handleShowPatientRecords.bind(this);
     this.handleShowPatientSearch = this.handleShowPatientSearch.bind(this);
     this.handleShowAppointmentTypes = this.handleShowAppointmentTypes.bind(this);
+    this.handleShowUsers = this.handleShowUsers.bind(this);
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().connectToApplication(this, window.localStorage);
   }
 
@@ -4410,6 +4792,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().onDocumentLoaded();
     this.apptTypeSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.AppointmentTypesSidebarPrefs);
     new _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__.AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
+    this.usersSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.UsersSidebarPrefs);
+    new _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__.UsersCompositeView(this.usersSidebar).onDocumentLoaded();
     _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).onDocumentLoaded();
     this.setupNavigationItemHandling();
     _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
@@ -4437,6 +4821,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   hideAllSideBars() {
     _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).eventHide(null);
     _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().eventHide(null);
+    this.usersSidebar.eventHide(null);
+    this.apptTypeSidebar.eventHide(null);
   }
 
   handleShowChat(roomName) {
@@ -4496,8 +4882,13 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
   handleShowAppointmentTypes(event) {
-    logger(`Showing patient search`);
+    logger(`Showing appointment types`);
     if (this.apptTypeSidebar) this.apptTypeSidebar.eventShow(null);
+  }
+
+  handleShowUsers(event) {
+    logger(`Showing users`);
+    if (this.usersSidebar) this.usersSidebar.eventShow(null);
   }
 
   setupNavigationItemHandling() {
@@ -4515,7 +4906,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     }
 
     document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientRecords).addEventListener('click', this.handleShowPatientRecords);
-    document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch); // @ts-ignore
+    document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch);
+    document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.users).addEventListener('click', this.handleShowUsers); // @ts-ignore
 
     this.chatNavigationItem = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.clinicChat); // @ts-ignore
 
@@ -4523,7 +4915,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results bootstrap-form-config-helper'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'app api-ts-results validation-manager validation-manager-rule-failure abstract-form abstract-form-detail abstract-form-detail-validation'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);

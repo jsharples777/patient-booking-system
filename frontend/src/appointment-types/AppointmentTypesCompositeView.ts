@@ -19,7 +19,7 @@ import {AppointmentTypesCollectionView} from "./AppointmentTypesCollectionView";
 import {BootstrapFormConfigHelper} from "ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper";
 
 
-const logger = debug('exercise-types-composite-view');
+const logger = debug('appointment-types-composite-view');
 
 export class ApptTypePermissionChecker implements FormFieldPermissionChecker {
     hasPermissionToUpdateItem(item: any): boolean {

@@ -1,7 +1,7 @@
 import debug from 'debug';
 import Controller from './Controller';
 
-import {API_Config, AppointmentTypesSidebarPrefs, NAVIGATION, STATE_NAMES,} from "./AppTypes";
+import {API_Config, AppointmentTypesSidebarPrefs, NAVIGATION, STATE_NAMES, UsersSidebarPrefs,} from "./AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
 import {AppointmentController} from "./appointments/AppointmentController";
@@ -18,6 +18,7 @@ import {PatientSearchSidebar} from "./patients/PatientSearchSidebar";
 import {AppointmentTypesCompositeView} from "./appointment-types/AppointmentTypesCompositeView";
 import {ClinicChatSidebar} from "./clinic-chat/ClinicChatSidebar";
 import {ClinicChatListView} from "./clinic-chat/ClinicChatListView";
+import {UsersCompositeView} from "./users/UsersCompositeView";
 
 
 const logger = debug('app');
@@ -27,6 +28,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     private thisEl: HTMLDivElement | null = null;
     private chatNavigationItem: HTMLAnchorElement | null = null;
     private apptTypeSidebar: SidebarViewContainer | null = null;
+    private usersSidebar: SidebarViewContainer | null = null;
 
 
     public constructor() {
@@ -39,6 +41,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.handleShowPatientRecords = this.handleShowPatientRecords.bind(this);
         this.handleShowPatientSearch = this.handleShowPatientSearch.bind(this);
         this.handleShowAppointmentTypes = this.handleShowAppointmentTypes.bind(this);
+        this.handleShowUsers = this.handleShowUsers.bind(this);
 
         Controller.getInstance().connectToApplication(this, window.localStorage);
     }
@@ -60,8 +63,10 @@ export default class App extends React.Component implements UnreadMessageCountLi
         PatientSearchSidebar.getInstance().onDocumentLoaded();
 
         this.apptTypeSidebar = new SidebarViewContainer(AppointmentTypesSidebarPrefs);
-
         new AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
+
+        this.usersSidebar = new SidebarViewContainer(UsersSidebarPrefs);
+        new UsersCompositeView(this.usersSidebar).onDocumentLoaded();
 
         ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).onDocumentLoaded();
 
@@ -94,6 +99,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
     hideAllSideBars() {
         ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).eventHide(null);
         PatientSearchSidebar.getInstance().eventHide(null);
+        this.usersSidebar.eventHide(null);
+        this.apptTypeSidebar.eventHide(null);
     }
 
 
@@ -154,8 +161,14 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 
     protected handleShowAppointmentTypes(event: Event): void {
-        logger(`Showing patient search`);
+        logger(`Showing appointment types`);
         if (this.apptTypeSidebar) this.apptTypeSidebar.eventShow(null);
+
+    }
+
+    protected handleShowUsers(event: Event): void {
+        logger(`Showing users`);
+        if (this.usersSidebar) this.usersSidebar.eventShow(null);
 
     }
 
@@ -172,7 +185,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         }
         document.getElementById(NAVIGATION.patientRecords).addEventListener('click', this.handleShowPatientRecords);
         document.getElementById(NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch);
-
+        document.getElementById(NAVIGATION.users).addEventListener('click', this.handleShowUsers);
 
         // @ts-ignore
         this.chatNavigationItem = document.getElementById(NAVIGATION.clinicChat);
@@ -184,7 +197,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results bootstrap-form-config-helper';
+localStorage.debug = 'app api-ts-results validation-manager validation-manager-rule-failure abstract-form abstract-form-detail abstract-form-detail-validation';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 

@@ -64739,10 +64739,12 @@ class TabularViewRendererUsingContext {
                     case _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_4__.FieldType.boolean: {
                         let checkboxEl = document.createElement('input');
                         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(checkboxEl, [{ name: 'type', value: 'checkbox' }]);
-                        if (fieldValue === 'true') {
+                        logger(`Field type is boolean, with value ${fieldValue}`);
+                        if (fieldValue) {
                             checkboxEl.checked = true;
                         }
                         tdEl.appendChild(checkboxEl);
+                        break;
                     }
                     default: {
                         tdEl.innerText = fieldValue;
