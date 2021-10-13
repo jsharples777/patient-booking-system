@@ -61389,7 +61389,7 @@ class ValidationManager {
             rule.valueConditions.forEach((condition) => {
                 logger('value condition rule');
                 logger(condition);
-                let ruleCheck = this.compareFields(rule.targetField, rule.targetField, _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.hasValue, condition.values);
+                let ruleCheck = this.compareFields(rule.targetField, rule.targetField, condition.comparison, condition.values);
                 if (ruleCheck.ruleFailed) {
                     flogger('value condition rule FAILED');
                     response.ruleFailed = true;

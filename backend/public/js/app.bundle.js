@@ -4441,7 +4441,7 @@ class UserValidationHelper {
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid,
       conditions: [{
         comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.isNotNull,
-        values: ''
+        values: 'x'
       }]
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);

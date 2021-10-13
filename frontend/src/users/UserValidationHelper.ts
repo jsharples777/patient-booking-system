@@ -56,7 +56,7 @@ export class UserValidationHelper {
             conditions: [
                 {
                     comparison: ComparisonType.isNotNull,
-                    values: ''
+                    values: 'x'
                 }
             ]
         }
