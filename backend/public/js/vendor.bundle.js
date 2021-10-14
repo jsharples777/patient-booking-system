@@ -58864,6 +58864,9 @@ class AbstractForm {
     getCurrentDataObj() {
         return this.currentDataObj;
     }
+    getDataObjectDefinition() {
+        return this.dataObjDef;
+    }
     cancel() {
         if (this.uiDef) {
             let formEvent = {
@@ -59892,9 +59895,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
 /* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
 /* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_3___default()('validation-event-handler');
 class ValidationEventHandler {
     constructor(form, fieldConfig, listeners, subElements = null) {
         this.form = form;
@@ -59905,7 +59912,10 @@ class ValidationEventHandler {
         this.handleEvent = this.handleEvent.bind(this);
     }
     setValidationStatusAndMessage(fieldElement, isValid, value, message = undefined, resetOnFailure = false) {
+        logger(`Handling validation for field ${this.fieldConfig.field.id}: ${isValid} with message ${message}`);
+        logger(this.fieldConfig);
         if (this.fieldConfig.validator && fieldElement) {
+            logger(`Handling validation for field ${this.fieldConfig.field.id}: ${isValid} with message ${message} - have validator and element`);
             const field = this.fieldConfig.field;
             let validationElementTarget = fieldElement; // we are providing user feedback on the field element, unless...
             if (this.subElements) { // sub elements change the validation target
@@ -59923,8 +59933,10 @@ class ValidationEventHandler {
                     }
                 }
             }
-            const errorMessageDiv = document.getElementById(`${this.formId}.field.${this.fieldConfig.field.id}.error`);
-            const errorMessageEl = document.getElementById(`${this.formId}.field.${this.fieldConfig.field.id}.error.message`);
+            let divId = `${this.form.getDataObjectDefinition().id}.field.${this.fieldConfig.field.id}.error`;
+            logger(`Handling validation for field ${this.fieldConfig.field.id}: ${isValid} with message ${message} - div is ${divId}`);
+            const errorMessageDiv = document.getElementById(divId);
+            const errorMessageEl = document.getElementById(`${divId}.message`);
             // clear any previous message
             errorMessageDiv === null || errorMessageDiv === void 0 ? void 0 : errorMessageDiv.setAttribute('style', 'display:none');
             if (errorMessageEl)
@@ -61278,7 +61290,7 @@ class ValidationManager {
     isSourceNotNull(sourceField) {
         let targetValue = sourceField.getValue();
         // @ts-ignore
-        if ((!targetValue) || (targetValue.trim().length > 0)) {
+        if ((!targetValue) || (targetValue.trim().length <= 0)) {
             return {
                 ruleFailed: true,
                 message: `${sourceField.getName()} must not be empty`,

@@ -4907,7 +4907,12 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
     document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientRecords).addEventListener('click', this.handleShowPatientRecords);
     document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch);
-    document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.users).addEventListener('click', this.handleShowUsers); // @ts-ignore
+    let usersEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.users);
+
+    if (usersEl) {
+      usersEl.addEventListener('click', this.handleShowUsers);
+    } // @ts-ignore
+
 
     this.chatNavigationItem = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.clinicChat); // @ts-ignore
 
@@ -4915,7 +4920,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results validation-manager validation-manager-rule-failure abstract-form abstract-form-detail abstract-form-detail-validation'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'app api-ts-results validation-event-handler validation-manager validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);

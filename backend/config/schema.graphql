@@ -749,6 +749,7 @@ input UserInput {
     providerNo:String,
     isCurrent:Boolean,
     isAdmin:Boolean,
+    isProvider:Boolean,
     resetPassword:Boolean,
     password:String
 }

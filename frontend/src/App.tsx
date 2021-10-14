@@ -185,7 +185,10 @@ export default class App extends React.Component implements UnreadMessageCountLi
         }
         document.getElementById(NAVIGATION.patientRecords).addEventListener('click', this.handleShowPatientRecords);
         document.getElementById(NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch);
-        document.getElementById(NAVIGATION.users).addEventListener('click', this.handleShowUsers);
+        let usersEl = document.getElementById(NAVIGATION.users);
+        if (usersEl) {
+            usersEl.addEventListener('click', this.handleShowUsers);
+        }
 
         // @ts-ignore
         this.chatNavigationItem = document.getElementById(NAVIGATION.clinicChat);
@@ -197,7 +200,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results validation-manager validation-manager-rule-failure abstract-form abstract-form-detail abstract-form-detail-validation';
+localStorage.debug = 'app api-ts-results validation-event-handler validation-manager validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 
