@@ -10,6 +10,10 @@
                 <li class="nav-item pr-2"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="bottom"
                                              title="Show the appointment book" id="navigationItemAppointmentBook">Appointment
                     Book <i class="fas fa-calendar-check"></i></a></li>
+                {{#if user.isProvider}}
+                    <li class="nav-item pr-2"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="bottom"
+                                                 title="Show todays details"
+                                                 id="navigationItemToday">Today <i class="fas fa-calendar-day"></i></a></li>{{/if}}
                 {{#if user.isAdmin}}
                     <li class="nav-item pr-2"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="bottom"
                                                  title="Show the appointment templating"

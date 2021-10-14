@@ -67,7 +67,8 @@ const NAVIGATION = {
   patientRecords: 'navigationItemPatientRecords',
   logout: 'navigationItemLogout',
   appointmentTypes: 'navigationItemAppointmentTypes',
-  users: 'navigationItemUsers'
+  users: 'navigationItemUsers',
+  today: 'navigationItemToday'
 };
 const DRAGGABLE = {
   typeUser: 'user',
@@ -466,6 +467,21 @@ class Controller {
     } catch (error) {}
 
     cLoggerDetail(`Logged in user is ${result}`);
+    return result;
+  }
+
+  isProvider() {
+    let result = false;
+
+    try {
+      // @ts-ignore
+      if (loggedInUser) {
+        // @ts-ignore
+        result = loggedInUser.isProvider;
+      }
+    } catch (error) {}
+
+    cLoggerDetail(`Logged in user is a provider? ${result}`);
     return result;
   }
 
@@ -4828,6 +4844,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.handleShowPatientSearch = this.handleShowPatientSearch.bind(this);
     this.handleShowAppointmentTypes = this.handleShowAppointmentTypes.bind(this);
     this.handleShowUsers = this.handleShowUsers.bind(this);
+    this.handleShowToday = this.handleShowToday.bind(this);
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().connectToApplication(this, window.localStorage);
   }
 
@@ -4864,6 +4881,12 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
       showUserJoinLeaveChatNotification: false
     });
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
+
+    if (_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().isProvider()) {
+      this.handleShowToday(null);
+    } else {
+      this.handleShowAppointmentBook(null);
+    }
   }
 
   getCurrentUser() {
@@ -4913,20 +4936,50 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
   handleShowAppointmentBook(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     logger(`Showing appointment book`);
     logger(_appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().getModel().clinicConfig);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
   }
 
   handleShowAppointmentTemplates(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     logger(`Showing appointment templates`);
     logger(_appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().getModel().clinicConfig);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
   }
 
-  handleShowPatientRecords(event) {}
+  handleShowToday(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    logger(`Showing today`);
+    logger(_appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().getModel().clinicConfig);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', false);
+  }
+
+  handleShowPatientRecords(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
 
   handleShowPatientSearch(event) {
     logger(`Showing patient search`);
@@ -4963,6 +5016,12 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
     if (usersEl) {
       usersEl.addEventListener('click', this.handleShowUsers);
+    }
+
+    let todayEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.today);
+
+    if (todayEl) {
+      todayEl.addEventListener('click', this.handleShowToday);
     } // @ts-ignore
 
 

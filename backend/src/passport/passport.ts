@@ -110,6 +110,18 @@ export function setupPassport(passport: any) {
                         message: 'Username and/or password is incorrect'
                     });
                 }
+                if (user.providerNo) {
+                    if (user.providerNo.trim().length > 0) {
+                        user.isProvider = true;
+                    }
+                    else {
+                        user.isProvider = false;
+                    }
+                }
+                else {
+                    user.isProvider = false;
+                }
+                logger(user);
                 if (!isValidPassword(user.password, password)) {
                     return done(null, false, {
                         message: 'Username and/or password is incorrect'

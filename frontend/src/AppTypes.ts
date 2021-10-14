@@ -41,7 +41,8 @@ export const NAVIGATION = {
     patientRecords: 'navigationItemPatientRecords',
     logout: 'navigationItemLogout',
     appointmentTypes: 'navigationItemAppointmentTypes',
-    users: 'navigationItemUsers'
+    users: 'navigationItemUsers',
+    today: 'navigationItemToday'
 }
 
 export const DRAGGABLE = {

@@ -42,6 +42,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.handleShowPatientSearch = this.handleShowPatientSearch.bind(this);
         this.handleShowAppointmentTypes = this.handleShowAppointmentTypes.bind(this);
         this.handleShowUsers = this.handleShowUsers.bind(this);
+        this.handleShowToday = this.handleShowToday.bind(this);
 
         Controller.getInstance().connectToApplication(this, window.localStorage);
     }
@@ -90,6 +91,15 @@ export default class App extends React.Component implements UnreadMessageCountLi
         })
         Controller.getInstance().onDocumentLoaded();
 
+        if (Controller.getInstance().isProvider()) {
+            this.handleShowToday(null);
+        }
+        else {
+            this.handleShowAppointmentBook(null);
+        }
+
+
+
     }
 
     getCurrentUser() {
@@ -134,23 +144,47 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 
     protected handleShowAppointmentBook(event: Event): void {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
         logger(`Showing appointment book`);
         logger(AppointmentController.getInstance().getModel().clinicConfig);
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
-
-
+        browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', true);
     }
 
     protected handleShowAppointmentTemplates(event: Event): void {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
         logger(`Showing appointment templates`);
         logger(AppointmentController.getInstance().getModel().clinicConfig);
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
+        browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', true);
 
     }
 
+    protected handleShowToday(event: Event): void {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        logger(`Showing today`);
+        logger(AppointmentController.getInstance().getModel().clinicConfig);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+        browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', false);
+
+    }
     protected handleShowPatientRecords(event: Event): void {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
 
     }
 
@@ -188,6 +222,10 @@ export default class App extends React.Component implements UnreadMessageCountLi
         let usersEl = document.getElementById(NAVIGATION.users);
         if (usersEl) {
             usersEl.addEventListener('click', this.handleShowUsers);
+        }
+        let todayEl = document.getElementById(NAVIGATION.today);
+        if (todayEl) {
+            todayEl.addEventListener('click',this.handleShowToday);
         }
 
         // @ts-ignore

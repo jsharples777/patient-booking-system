@@ -85,7 +85,7 @@ export default class UsersQLDelegate {
         logger(data);
         return new Promise((resolve, reject) => {
             const collection = process.env.DB_COLLECTION_USERS || 'pms-users';
-            if (data.user.resetPassword) {
+            if (data.user.resetPassword && data.user.password.trim().length > 0) {
                 data.user.password = generateHash(data.user.password);
                 MongoDataSource.getInstance().getDatabase().collection(collection).findOneAndUpdate({_id: data.user._id},{
                     $set: {
@@ -145,17 +145,6 @@ export default class UsersQLDelegate {
                     });
 
             }
-            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: data.user._id}, data.user).then((value) => {
-                logger(value);
-                const message: DataMessage = {type: "update", stateName: "user", data: data.user, user: "-1"}
-                SocketManager.getInstance().sendDataMessage(message);
-
-                resolve(true);
-            })
-            .catch((err) => {
-                logger(err);
-                reject(err);
-            });
         });
     }
 

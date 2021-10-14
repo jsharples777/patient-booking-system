@@ -19,6 +19,7 @@
 <div id="main">
     {{> components/appointment-book }}
     {{> components/appointment-templates }}
+    {{> components/today }}
 </div>
 <div id="root"></div>
 {{> footers/footer-main }}
@@ -27,7 +28,8 @@
     <script>
         const loggedInUser = {
             _id: '{{user._id}}',
-            username: '{{user.username}}'
+            username: '{{user.username}}',
+            isProvider: {{user.isProvider}}
         };
     </script>
 {{/if}}

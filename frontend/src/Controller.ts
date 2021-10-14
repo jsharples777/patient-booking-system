@@ -490,6 +490,20 @@ export default class Controller implements StateChangeListener, DataObjectListen
         return result;
     }
 
+    public isProvider(): boolean {
+        let result = false;
+        try {
+            // @ts-ignore
+            if (loggedInUser) {
+                // @ts-ignore
+                result = loggedInUser.isProvider;
+            }
+        } catch (error) {
+        }
+        cLoggerDetail(`Logged in user is a provider? ${result}`);
+        return result;
+    }
+
     public handleMessage(message: string): void {
         cLogger(message);
     }
