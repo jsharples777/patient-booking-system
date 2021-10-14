@@ -61290,7 +61290,7 @@ class ValidationManager {
     isSourceNotNull(sourceField) {
         let targetValue = sourceField.getValue();
         // @ts-ignore
-        if ((!targetValue) || (targetValue.trim().length <= 0)) {
+        if (targetValue && (targetValue.trim().length === 0)) {
             return {
                 ruleFailed: true,
                 message: `${sourceField.getName()} must not be empty`,

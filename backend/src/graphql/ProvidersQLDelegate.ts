@@ -20,7 +20,7 @@ export default class ProvidersQLDelegate {
                     '$match': {
                         'isCurrent': true,
                         'providerNo': {
-                            '$exists': '',
+                            '$ne':''
                         }
                     }
                 }, {

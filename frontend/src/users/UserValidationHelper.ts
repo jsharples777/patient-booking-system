@@ -20,6 +20,11 @@ export class UserValidationHelper {
     private constructor() {}
 
     public setupValidationForDetailsForm(form:Form) {
+        /*
+        *
+        * Create user rules
+        *
+         */
 
 
         let rule = {
@@ -57,6 +62,20 @@ export class UserValidationHelper {
                 {
                     comparison: ComparisonType.isNotNull,
                     values: 'x'
+                }
+            ]
+        }
+        ValidationManager.getInstance().addRuleToForm(form, rule);
+
+        rule = {
+            formMode: FormMode.update,
+            targetDataFieldId: 'password',
+            response: ConditionResponse.show,
+            conditions: [
+                {
+                    sourceDataFieldId: 'resetPassword',
+                    comparison: ComparisonType.hasValue,
+                    values: 'false'
                 }
             ]
         }

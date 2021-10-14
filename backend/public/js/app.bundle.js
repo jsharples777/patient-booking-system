@@ -4415,6 +4415,11 @@ class UserValidationHelper {
   constructor() {}
 
   setupValidationForDetailsForm(form) {
+    /*
+    *
+    * Create user rules
+    *
+     */
     let rule = {
       formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.create,
       targetDataFieldId: 'resetPassword',
@@ -4442,6 +4447,17 @@ class UserValidationHelper {
       conditions: [{
         comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.isNotNull,
         values: 'x'
+      }]
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    rule = {
+      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.update,
+      targetDataFieldId: 'password',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show,
+      conditions: [{
+        sourceDataFieldId: 'resetPassword',
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
+        values: 'false'
       }]
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
