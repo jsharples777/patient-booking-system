@@ -55694,7 +55694,7 @@ class GraphQLApiStateManager {
         }
         else {
             let config = this.getConfigurationForStateName(name);
-            if (config.isActive) {
+            if (config.isActive && (config.apis.findAll.trim().length > 0)) {
                 let query = config.apis.findAll;
                 const jsonRequest = {
                     url: config.serverURL + config.apiURL,
@@ -55725,7 +55725,7 @@ class GraphQLApiStateManager {
         logger(`Adding item to ${name}`);
         logger(stateObj);
         let config = this.getConfigurationForStateName(name);
-        if (config.isActive) {
+        if (config.isActive && (config.apis.create.trim().length > 0)) {
             _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__.DownloadManager.getInstance().addQLApiRequest(config.serverURL + config.apiURL, config.apis.create, { data: stateObj }, GraphQLApiStateManager.FUNCTION_ID_ADD_ITEM, name, false);
         }
         else {
@@ -55753,7 +55753,7 @@ class GraphQLApiStateManager {
         logger(`Removing item to ${name}`);
         logger(stateObj);
         let config = this.getConfigurationForStateName(name);
-        if (config.isActive) {
+        if (config.isActive && (config.apis.destroy.trim().length > 0)) {
             let identifier = stateObj.id;
             if (config.idField) {
                 identifier = stateObj[config.idField];
@@ -55770,7 +55770,7 @@ class GraphQLApiStateManager {
         logger(`Updating item in ${name}`);
         logger(stateObj);
         let config = this.getConfigurationForStateName(name);
-        if (config.isActive) {
+        if (config.isActive && (config.apis.update.trim().length > 0)) {
             _network_DownloadManager__WEBPACK_IMPORTED_MODULE_2__.DownloadManager.getInstance().addQLApiRequest(config.serverURL + config.apiURL, config.apis.update, { data: stateObj }, GraphQLApiStateManager.FUNCTION_ID_UPDATE_ITEM, name, false);
         }
         else {
@@ -56483,7 +56483,7 @@ class RESTApiStateManager {
         }
         else {
             let config = this.getConfigurationForStateName(name);
-            if (config.isActive) {
+            if (config.isActive && config.findAll) {
                 const jsonRequest = {
                     url: config.serverURL + config.api,
                     type: _network_Types__WEBPACK_IMPORTED_MODULE_1__.RequestType.GET,
@@ -56512,7 +56512,7 @@ class RESTApiStateManager {
         logger(`Adding item to ${name}`);
         logger(stateObj);
         let config = this.getConfigurationForStateName(name);
-        if (config.isActive) {
+        if (config.isActive && config.create) {
             const jsonRequest = {
                 url: config.serverURL + config.api,
                 type: _network_Types__WEBPACK_IMPORTED_MODULE_1__.RequestType.POST,
@@ -56536,7 +56536,7 @@ class RESTApiStateManager {
         if (config.idField) {
             identifier = stateObj[config.idField];
         }
-        if (config.isActive) {
+        if (config.isActive && config.destroy) {
             const jsonRequest = {
                 url: config.serverURL + config.api,
                 type: _network_Types__WEBPACK_IMPORTED_MODULE_1__.RequestType.DELETE,
@@ -56558,7 +56558,7 @@ class RESTApiStateManager {
         logger(`Updating item in ${name}`);
         logger(stateObj);
         let config = this.getConfigurationForStateName(name);
-        if (config.isActive) {
+        if (config.isActive && config.update) {
             const jsonRequest = {
                 url: config.serverURL + config.api,
                 type: _network_Types__WEBPACK_IMPORTED_MODULE_1__.RequestType.PUT,
@@ -56623,7 +56623,12 @@ class RESTApiStateManager {
             stateName: name,
             serverURL: '',
             api: '',
-            isActive: false
+            isActive: false,
+            find: false,
+            findAll: false,
+            create: false,
+            update: false,
+            destroy: false
         };
         let foundIndex = this.configuration.findIndex((config) => config.stateName === name);
         if (foundIndex >= 0) {
@@ -56685,7 +56690,7 @@ class RESTApiStateManager {
         if (config.idField) {
             identifier = item[config.idField];
         }
-        if (config.isActive) {
+        if (config.isActive && config.find) {
             const jsonRequest = {
                 url: config.serverURL + config.api,
                 type: _network_Types__WEBPACK_IMPORTED_MODULE_1__.RequestType.GET,
@@ -60511,7 +60516,7 @@ class AbstractField {
         }
         if (config.validator) { // is the value in the field valid
             const eventHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(this.form, config, this.listeners, subElements);
-            if (subElements) { // event for the subelements
+            if (subElements && subElements.length > 0) { // event for the subelements
                 subElements.forEach((subElement) => {
                     subElement.addEventListener('blur', eventHandler);
                 });
@@ -60522,7 +60527,8 @@ class AbstractField {
         }
         // listen for our own change events
         this.handleChangeEvent = this.handleChangeEvent.bind(this);
-        if (this.subElements) {
+        if (this.subElements && (this.subElements.length > 0)) {
+            logger(`Adding change listeners to subelements of ${config.field.id}`);
             this.subElements.forEach((subElement) => {
                 subElement.addEventListener('change', this.handleChangeEvent);
             });
@@ -60566,7 +60572,7 @@ class AbstractField {
                 switch (this.config.elementType) {
                     case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup): {
                         logger(`${this.definition.id} - getting value - rbg`);
-                        if (this.subElements) {
+                        if (this.subElements && (this.subElements.length > 0)) {
                             this.subElements.forEach((subElement) => {
                                 if (subElement.checked) {
                                     logger(`${this.definition.id} - getting value - rbg - checked ${subElement.value}`);
@@ -60632,7 +60638,7 @@ class AbstractField {
             // @ts-ignore
             switch (this.config.elementType) {
                 case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup): {
-                    if (this.subElements) {
+                    if (this.subElements && (this.subElements.length > 0)) {
                         this.subElements.forEach((subElement) => {
                             if (subElement.value === newValue) {
                                 subElement.checked = true;
@@ -60692,7 +60698,7 @@ class AbstractField {
                     break;
                 }
                 case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.limitedChoice): {
-                    if (this.subElements) {
+                    if (this.subElements && (this.subElements.length > 0)) {
                         this.subElements.forEach((subElement) => {
                             subElement.checked = false;
                         });
@@ -60778,7 +60784,7 @@ class AbstractField {
         this.element.removeAttribute('readonly');
         this.element.removeAttribute('disabled');
         // do the same for subelements
-        if (this.subElements) {
+        if (this.subElements && (this.subElements.length > 0)) {
             this.subElements.forEach((subElement) => {
                 subElement.removeAttribute('readonly');
                 subElement.removeAttribute('disabled');
@@ -60789,7 +60795,7 @@ class AbstractField {
         this.element.setAttribute('readonly', 'true');
         this.element.setAttribute('disabled', 'true');
         // do the same for subelements
-        if (this.subElements) {
+        if (this.subElements && (this.subElements.length > 0)) {
             this.subElements.forEach((subElement) => {
                 subElement.setAttribute('readonly', 'true');
                 subElement.setAttribute('disabled', 'true');
@@ -60891,7 +60897,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class RadioButtonGroupField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
     constructor(form, config, fieldDef, element, subElements) {
-        super(form, config, fieldDef, element);
+        super(form, config, fieldDef, element, subElements);
     }
 }
 //# sourceMappingURL=RadioButtonGroupField.js.map
@@ -60942,6 +60948,350 @@ class TextAreaField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.Abstract
 
 /***/ }),
 
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationHelperFunctions.js":
+/*!******************************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationHelperFunctions.js ***!
+  \******************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ValidationHelperFunctions": () => (/* binding */ ValidationHelperFunctions)
+/* harmony export */ });
+/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
+/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('validation-helper-functions');
+class ValidationHelperFunctions {
+    constructor() { }
+    static getInstance() {
+        if (!(ValidationHelperFunctions._instance)) {
+            ValidationHelperFunctions._instance = new ValidationHelperFunctions();
+        }
+        return ValidationHelperFunctions._instance;
+    }
+    areTwoFieldsEqual(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        if (targetField.getValue() !== sourceField.getValue()) {
+            result = {
+                ruleFailed: true,
+                message: `${targetField.getName()} must be equal to ${sourceField.getName()}`,
+            };
+        }
+        return result;
+    }
+    isFieldAndValueEqual(field, value) {
+        let result = { ruleFailed: false };
+        if (field.getValue() !== value) {
+            result = {
+                ruleFailed: true,
+                message: `${field.getName()} must be equal to ${value}`,
+            };
+        }
+        return result;
+    }
+    compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, comparison) {
+        if (!(targetValue) || !(sourceValue))
+            return false; // no null comparisons
+        logger(`Comparing two values with types and comparison ${comparison} - target value (type:${targetType},value:${targetValue}), source value (type:${sourceType},value:${sourceValue})`);
+        switch (targetType) {
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.date): {
+                targetValue += ' 00:00:00';
+                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.date) {
+                    sourceValue += ' 00:00:00';
+                }
+                break;
+            }
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.datetime): {
+                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.date) {
+                    sourceValue += ' 00:00:00';
+                }
+                break;
+            }
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.time): {
+                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.shortTime) {
+                    sourceValue += ':00';
+                }
+                break;
+            }
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.shortTime): {
+                targetValue += ':00';
+                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.shortTime) {
+                    sourceValue += ':00';
+                }
+                break;
+            }
+        }
+        logger(`Comparing ${targetValue} of type ${targetType} against ${sourceValue} of type ${sourceType}`);
+        switch (comparison) {
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan: {
+                return (targetValue < sourceValue);
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThanEqual: {
+                return (targetValue <= sourceValue);
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThanEqual: {
+                return (targetValue >= sourceValue);
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan: {
+                return (targetValue > sourceValue);
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals: {
+                return (targetValue === sourceValue);
+            }
+        }
+        return false;
+    }
+    isTargetLessThanSource(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        let sourceType = sourceField.getFieldDefinition().type;
+        let targetType = targetField.getFieldDefinition().type;
+        let sourceValue = sourceField.getValue();
+        let targetValue = targetField.getValue();
+        if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan)) {
+            result = {
+                ruleFailed: true,
+                message: `${targetField.getName()} must be less than ${sourceField.getName()}`,
+            };
+        }
+        return result;
+    }
+    isFieldLessThanValue(field, value) {
+        let result = { ruleFailed: false };
+        let type = field.getFieldDefinition().type;
+        let sourceValue = field.getValue();
+        if (!this.compareTwoValuesWithTypes(type, sourceValue, type, value, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan)) {
+            result = {
+                ruleFailed: true,
+                message: `${field.getName()} must be less than ${value}`,
+            };
+        }
+        return result;
+    }
+    isFieldLessThanEqualValue(field, value) {
+        let result = { ruleFailed: false };
+        let check = this.isFieldAndValueEqual(field, value);
+        if (check.ruleFailed) {
+            check = this.isFieldLessThanValue(field, value);
+            if (check.ruleFailed) {
+                result = {
+                    ruleFailed: true,
+                    message: `${field.getName()} must be less than or equal to ${value}`,
+                };
+            }
+        }
+        return result;
+    }
+    isFieldGreaterThanValue(field, value) {
+        let result = { ruleFailed: false };
+        let type = field.getFieldDefinition().type;
+        let sourceValue = field.getValue();
+        if (!this.compareTwoValuesWithTypes(type, sourceValue, type, value, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan)) {
+            result = {
+                ruleFailed: true,
+                message: `${field.getName()} must be greater than ${value}`,
+            };
+        }
+        return result;
+    }
+    isFieldGreaterThanEqualValue(field, value) {
+        let result = { ruleFailed: false };
+        let check = this.isFieldAndValueEqual(field, value);
+        if (check.ruleFailed) {
+            check = this.isFieldGreaterThanValue(field, value);
+            if (check.ruleFailed) {
+                result = {
+                    ruleFailed: true,
+                    message: `${field.getName()} must be greater than or equal to ${value}`,
+                };
+            }
+        }
+        return result;
+    }
+    isTargetLessThanEqualSource(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        let check = this.areTwoFieldsEqual(targetField, sourceField);
+        if (check.ruleFailed) {
+            check = this.isTargetLessThanSource(targetField, sourceField);
+            if (check.ruleFailed) {
+                result = {
+                    ruleFailed: true,
+                    message: `${targetField.getName()} must be less than or equal to ${sourceField.getName()}`,
+                };
+            }
+        }
+        return result;
+    }
+    isTargetGreaterThan(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        let sourceType = sourceField.getFieldDefinition().type;
+        let targetType = targetField.getFieldDefinition().type;
+        let sourceValue = sourceField.getValue();
+        let targetValue = targetField.getValue();
+        if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan)) {
+            result = {
+                ruleFailed: true,
+                message: `${targetField.getName()} must be greater than ${sourceField.getName()}`,
+            };
+        }
+        return result;
+    }
+    isFieldNull(sourceField) {
+        let result = { ruleFailed: false };
+        let targetValue = sourceField.getValue();
+        // @ts-ignore
+        logger(`field ${field.getId()} is null - current value is '${targetValue}'`);
+        if ((targetValue) && (targetValue.trim().length > 0)) {
+            result = {
+                ruleFailed: true,
+                message: `${sourceField.getName()} must be empty`,
+            };
+        }
+        return result;
+    }
+    isFieldNotNull(field) {
+        let result = { ruleFailed: false };
+        let targetValue = field.getValue();
+        logger(`field ${field.getId()} is NOT null - current value is '${targetValue}'`);
+        // @ts-ignore
+        if (targetValue) {
+            if (targetValue.trim().length === 0) {
+                result = {
+                    ruleFailed: true,
+                    message: `${field.getName()} must not be empty`,
+                };
+            }
+        }
+        else {
+            result = {
+                ruleFailed: true,
+                message: `${field.getName()} must not be empty`,
+            };
+        }
+        return result;
+    }
+    doesFieldHaveValue(field, values) {
+        let result = { ruleFailed: false };
+        let targetValue = field.getValue();
+        logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue}`);
+        if (targetValue) {
+            // split the values by commas
+            let splits = values.split(',');
+            let foundInValue = false;
+            splits.forEach((split) => {
+                if (targetValue === split) {
+                    logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue} - found in value(s)`);
+                    foundInValue = true;
+                }
+            });
+            if (!foundInValue) {
+                result = {
+                    ruleFailed: true,
+                    message: `${field.getName()} must be have a value in ${values}`,
+                };
+            }
+        }
+        return result;
+    }
+    doesSourceFieldHaveValue(field, values) {
+        return this.doesFieldHaveValue(field, values);
+    }
+    isTargetGreaterThanEqualSource(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        let check = this.areTwoFieldsEqual(targetField, sourceField);
+        if (check.ruleFailed) {
+            check = this.isTargetGreaterThan(targetField, sourceField);
+            if (check.ruleFailed) {
+                result = {
+                    ruleFailed: true,
+                    message: `${targetField.getName()} must be greater than or equal to ${sourceField.getName()}`,
+                };
+            }
+        }
+        return result;
+    }
+    compareFields(targetField, sourceField, comparison, value) {
+        switch (comparison) {
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals: {
+                return this.areTwoFieldsEqual(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan: {
+                return this.isTargetLessThanSource(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThanEqual: {
+                return this.isTargetLessThanEqualSource(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan: {
+                return this.isTargetGreaterThan(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThanEqual: {
+                return this.isTargetGreaterThanEqualSource(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNull: {
+                return this.isFieldNull(sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNotNull: {
+                return this.isFieldNotNull(sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.hasValue: {
+                return this.doesSourceFieldHaveValue(sourceField, value);
+                break;
+            }
+        }
+    }
+    compareFieldWithValue(field, comparison, value) {
+        switch (comparison) {
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals: {
+                return this.isFieldAndValueEqual(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan: {
+                return this.isFieldLessThanValue(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThanEqual: {
+                return this.isFieldLessThanEqualValue(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan: {
+                return this.isFieldGreaterThanValue(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThanEqual: {
+                return this.isFieldGreaterThanEqualValue(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNull: {
+                return this.isFieldNull(field);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNotNull: {
+                return this.isFieldNotNull(field);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.hasValue: {
+                return this.doesSourceFieldHaveValue(field, value);
+                break;
+            }
+        }
+    }
+}
+//# sourceMappingURL=ValidationHelperFunctions.js.map
+
+/***/ }),
+
 /***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js":
 /*!**********************************************************************************************!*\
   !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js ***!
@@ -60957,8 +61307,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
+/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
+/* harmony import */ var _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ValidationHelperFunctions */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationHelperFunctions.js");
 
 
 
@@ -60966,6 +61316,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager');
 const flogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-rule-failure');
+const erLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-execute-rule');
+const merLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-multiple-condition-rule-results');
 class ValidationManager {
     constructor() {
         this.formRules = [];
@@ -60996,9 +61348,14 @@ class ValidationManager {
             formMode: rule.formMode,
             targetField: targetField,
             response: rule.response,
-            fieldConditions: [],
-            valueConditions: []
+            conditions: [],
+            multipleConditionLogic: _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails
+            //fieldConditions: [],
+            //valueConditions: []
         };
+        if (rule.multipleConditionLogic) {
+            convertedRule.multipleConditionLogic = rule.multipleConditionLogic;
+        }
         rule.conditions.forEach((condition) => {
             // do we have one of values or source field?
             if (!(condition.values) && !(condition.sourceDataFieldId)) {
@@ -61013,7 +61370,8 @@ class ValidationManager {
                     flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
                     return false;
                 }
-                convertedRule.fieldConditions.push({
+                //                convertedRule.fieldConditions.push({
+                convertedRule.conditions.push({
                     sourceField: sourceField,
                     comparison: condition.comparison,
                     values: condition.values
@@ -61023,9 +61381,10 @@ class ValidationManager {
             else if ((condition.values) && !(condition.sourceDataFieldId)) { // is this a value comparison?
                 logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - values ${condition.values}`);
                 // add a new value rule to the internal structure
-                convertedRule.valueConditions.push({ values: condition.values, comparison: condition.comparison });
-                // @ts-ignore
-                targetField.addFieldListener(this);
+                // convertedRule.valueConditions.push({values: condition.values, comparison: condition.comparison});
+                convertedRule.conditions.push({ values: condition.values, comparison: condition.comparison });
+                if (targetField)
+                    targetField.addFieldListener(this);
             }
             else if ((condition.sourceDataFieldId) && (!condition.values)) { // is this a field vs field comparison
                 logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId}`);
@@ -61082,7 +61441,8 @@ class ValidationManager {
                         break;
                     }
                 }
-                convertedRule.fieldConditions.push({ sourceField: sourceField, comparison: condition.comparison });
+                // convertedRule.fieldConditions.push({sourceField: sourceField, comparison: condition.comparison});
+                convertedRule.conditions.push({ sourceField: sourceField, comparison: condition.comparison });
                 sourceField.addFieldListener(this);
             }
         });
@@ -61177,201 +61537,6 @@ class ValidationManager {
             }
         });
     }
-    areTwoFieldsEqual(targetField, sourceField) {
-        if (targetField.getValue() !== sourceField.getValue()) {
-            return {
-                ruleFailed: true,
-                message: `${targetField.getName()} must be equal to ${sourceField.getName()}`,
-            };
-        }
-        return { ruleFailed: false };
-    }
-    compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, comparison) {
-        if (!(targetValue) || !(sourceValue))
-            return false; // no null comparisons
-        switch (targetType) {
-            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date): {
-                targetValue += ' 00:00:00';
-                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date) {
-                    sourceValue += ' 00:00:00';
-                }
-                break;
-            }
-            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime): {
-                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date) {
-                    sourceValue += ' 00:00:00';
-                }
-                break;
-            }
-            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time): {
-                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime) {
-                    sourceValue += ':00';
-                }
-                break;
-            }
-            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime): {
-                targetValue += ':00';
-                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime) {
-                    sourceValue += ':00';
-                }
-                break;
-            }
-        }
-        logger(`Comparing ${targetValue} of type ${targetType} against ${sourceValue} of type ${sourceType}`);
-        switch (comparison) {
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThan: {
-                return (targetValue < sourceValue);
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThanEqual: {
-                return (targetValue <= sourceValue);
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThanEqual: {
-                return (targetValue >= sourceValue);
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThan: {
-                return (targetValue > sourceValue);
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.equals: {
-                return (targetValue === sourceValue);
-            }
-        }
-        return false;
-    }
-    isTargetLessThanSource(targetField, sourceField) {
-        let sourceType = sourceField.getFieldDefinition().type;
-        let targetType = targetField.getFieldDefinition().type;
-        let sourceValue = sourceField.getValue();
-        let targetValue = targetField.getValue();
-        if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThan)) {
-            return {
-                ruleFailed: true,
-                message: `${targetField.getName()} must be less than ${sourceField.getName()}`,
-            };
-        }
-        return { ruleFailed: false };
-    }
-    isTargetLessThanEqualSource(targetField, sourceField) {
-        let check = this.areTwoFieldsEqual(targetField, sourceField);
-        if (check.ruleFailed) {
-            check = this.isTargetLessThanSource(targetField, sourceField);
-            if (check.ruleFailed) {
-                return {
-                    ruleFailed: true,
-                    message: `${targetField.getName()} must be less than or equal to ${sourceField.getName()}`,
-                };
-            }
-        }
-        return { ruleFailed: false };
-    }
-    isTargetGreaterThan(targetField, sourceField) {
-        let sourceType = sourceField.getFieldDefinition().type;
-        let targetType = targetField.getFieldDefinition().type;
-        let sourceValue = sourceField.getValue();
-        let targetValue = targetField.getValue();
-        if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThan)) {
-            return {
-                ruleFailed: true,
-                message: `${targetField.getName()} must be greater than ${sourceField.getName()}`,
-            };
-        }
-        return { ruleFailed: false };
-    }
-    isSourceNull(sourceField) {
-        let targetValue = sourceField.getValue();
-        // @ts-ignore
-        if ((targetValue) && (targetValue.trim().length > 0)) {
-            return {
-                ruleFailed: true,
-                message: `${sourceField.getName()} must be empty`,
-            };
-        }
-        return { ruleFailed: false };
-    }
-    isSourceNotNull(sourceField) {
-        let targetValue = sourceField.getValue();
-        // @ts-ignore
-        if (targetValue && (targetValue.trim().length === 0)) {
-            return {
-                ruleFailed: true,
-                message: `${sourceField.getName()} must not be empty`,
-            };
-        }
-        return { ruleFailed: false };
-    }
-    doesFieldHaveValue(field, values) {
-        let targetValue = field.getValue();
-        logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue}`);
-        if (targetValue) {
-            // split the values by commas
-            let splits = values.split(',');
-            let foundInValue = false;
-            splits.forEach((split) => {
-                if (targetValue === split) {
-                    logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue} - found in value(s)`);
-                    foundInValue = true;
-                }
-            });
-            if (foundInValue) {
-                return { ruleFailed: false };
-            }
-        }
-        return {
-            ruleFailed: true,
-            message: `${field.getName()} must be have a value in ${values}`,
-        };
-    }
-    doesSourceFieldHaveValue(field, values) {
-        return this.doesFieldHaveValue(field, values);
-    }
-    isTargetGreaterThanEqualSource(targetField, sourceField) {
-        let check = this.areTwoFieldsEqual(targetField, sourceField);
-        if (check.ruleFailed) {
-            check = this.isTargetGreaterThan(targetField, sourceField);
-            if (check.ruleFailed) {
-                return {
-                    ruleFailed: true,
-                    message: `${targetField.getName()} must be greater than or equal to ${sourceField.getName()}`,
-                };
-            }
-        }
-        return { ruleFailed: false };
-    }
-    compareFields(targetField, sourceField, comparison, value) {
-        switch (comparison) {
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.equals: {
-                return this.areTwoFieldsEqual(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThan: {
-                return this.isTargetLessThanSource(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.lessThanEqual: {
-                return this.isTargetLessThanEqualSource(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThan: {
-                return this.isTargetGreaterThan(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.greaterThanEqual: {
-                return this.isTargetGreaterThanEqualSource(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.isNull: {
-                return this.isSourceNull(sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.isNotNull: {
-                return this.isSourceNotNull(sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.hasValue: {
-                return this.doesSourceFieldHaveValue(sourceField, value);
-                break;
-            }
-        }
-    }
     executeRule(rule) {
         let response = {
             field: rule.targetField,
@@ -61379,38 +61544,106 @@ class ValidationManager {
             response: rule.response,
         };
         // run each field comparison
-        logger(`Executing rule for target ${rule.targetField.getId()}`);
-        logger(rule);
-        rule.fieldConditions.every((condition) => {
-            logger('field condition rule');
-            logger(condition);
+        erLogger(`Executing rule with response ${rule.response} for target ${rule.targetField.getId()}`);
+        erLogger(rule);
+        let ruleChecks = [];
+        rule.conditions.forEach((condition) => {
+            erLogger('condition rule');
+            erLogger(condition);
             let values = (condition.values) ? condition.values : '';
-            let ruleCheck = this.compareFields(rule.targetField, condition.sourceField, condition.comparison, values);
-            if (ruleCheck.ruleFailed) {
-                flogger('field condition rule FAILED');
-                response.ruleFailed = true;
-                // only need messages for invalid responses
-                response.message = ruleCheck.message;
-                return false;
+            let ruleCheck;
+            if (condition.sourceField) {
+                erLogger('condition rule - source field present');
+                ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFields(rule.targetField, condition.sourceField, condition.comparison, values);
             }
-            flogger('field condition rule PASSED');
-            return true;
+            else {
+                erLogger(`condition rule - target field value check - ${values}`);
+                ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFieldWithValue(rule.targetField, condition.comparison, values);
+            }
+            ruleChecks.push(ruleCheck);
+            if (ruleCheck.ruleFailed) {
+                flogger('condition rule FAILED');
+            }
+            else {
+                flogger('condition rule PASSED');
+            }
         });
-        // run each value comparison if we haven't already failed
-        if (!response.ruleFailed) {
-            rule.valueConditions.forEach((condition) => {
-                logger('value condition rule');
-                logger(condition);
-                let ruleCheck = this.compareFields(rule.targetField, rule.targetField, condition.comparison, condition.values);
+        // are we dealing with one rule check or multiple?
+        if (ruleChecks.length === 1) {
+            flogger(`Single rule check - status ${ruleChecks[0].ruleFailed}`);
+            response.message = ruleChecks[0].message;
+            response.ruleFailed = ruleChecks[0].ruleFailed;
+        }
+        else {
+            let errorMessageBuffer = '';
+            let failedRuleChecks = [];
+            ruleChecks.forEach((ruleCheck, index) => {
                 if (ruleCheck.ruleFailed) {
-                    flogger('value condition rule FAILED');
-                    response.ruleFailed = true;
-                    response.message = ruleCheck.message;
-                    return false;
+                    ruleCheck.index = index;
+                    failedRuleChecks.push(ruleCheck);
+                    errorMessageBuffer += ruleCheck.message + ', ';
                 }
-                flogger('value condition rule PASSED');
-                return true;
             });
+            if (errorMessageBuffer.length > 0) {
+                errorMessageBuffer = errorMessageBuffer.substr(0, errorMessageBuffer.length - 2);
+            }
+            merLogger(`Multiple rule check - number of failures ${failedRuleChecks.length} with message ${errorMessageBuffer}`);
+            switch (rule.multipleConditionLogic) {
+                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails: {
+                    if (failedRuleChecks.length > 0) {
+                        flogger(`Multiple rule check - when any conditions fail - rule FAILED`);
+                        merLogger(`Multiple rule check - when any conditions fail - rule FAILED`);
+                        response.message = errorMessageBuffer;
+                        response.ruleFailed = true;
+                    }
+                    break;
+                }
+                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.onlyFailIfAllConditionsFail: {
+                    if (failedRuleChecks.length === ruleChecks.length) {
+                        flogger(`Multiple rule check - when all conditions fail - rule FAILED`);
+                        merLogger(`Multiple rule check - when all conditions fail - rule FAILED`);
+                        response.ruleFailed = true;
+                        response.message = errorMessageBuffer;
+                    }
+                    break;
+                }
+                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failWhenTheNextInSequenceFails: {
+                    if (failedRuleChecks.length > 0) {
+                        flogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
+                        merLogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
+                        response.message = errorMessageBuffer;
+                        response.ruleFailed = true;
+                    }
+                    break;
+                }
+                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.whenAllConditionsFailRuleShouldNotBeApplied: {
+                    if ((failedRuleChecks.length === ruleChecks.length) || (failedRuleChecks.length === 0)) {
+                        merLogger(`Multiple rule check - when all fail rule does not apply - rule PASSED`);
+                        response.ruleFailed = false;
+                        response.message = errorMessageBuffer;
+                    }
+                    else {
+                        flogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
+                        merLogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
+                        response.ruleFailed = true;
+                        response.message = errorMessageBuffer;
+                    }
+                    break;
+                }
+                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails: {
+                    if (failedRuleChecks.length === 1) {
+                        const failedRuleIndex = failedRuleChecks[0].index;
+                        // is this the last rule in the chain of conditions?
+                        if (failedRuleIndex === (ruleChecks.length - 1)) {
+                            flogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
+                            merLogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
+                            response.message = errorMessageBuffer;
+                            response.ruleFailed = true;
+                        }
+                    }
+                    break;
+                }
+            }
         }
         return response;
     }
@@ -61426,8 +61659,8 @@ class ValidationManager {
             ruleSet.rules.forEach((rule) => {
                 // check the rule applies to the current form mode
                 const ruleFormMode = rule.formMode;
-                logger(`Rule applies to mode ${ruleFormMode} (any? ${(ruleFormMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_4__.FormMode.any)}) and current form mode is ${formMode}`);
-                if ((ruleFormMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_4__.FormMode.any) ||
+                logger(`Rule applies to mode ${ruleFormMode} (any? ${(ruleFormMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_3__.FormMode.any)}) and current form mode is ${formMode}`);
+                if ((ruleFormMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_3__.FormMode.any) ||
                     (ruleFormMode === formMode)) {
                     if (rule.targetField.getId() === dataFieldId) {
                         logger(`Found rule where data field ${dataFieldId} is target`);
@@ -61440,18 +61673,19 @@ class ValidationManager {
                     }
                     else {
                         if (includeSourceFields) {
-                            rule.fieldConditions.every((value) => {
-                                if (value.sourceField.getId() === dataFieldId) {
-                                    logger(`Found rule where data field ${dataFieldId} is source`);
-                                    if (value.sourceField.isValid()) {
-                                        rules.push(rule);
+                            // rule.fieldConditions.every((value: { sourceField: Field, comparison: ComparisonType }) => {
+                            rule.conditions.forEach((condition) => {
+                                if (condition.sourceField) {
+                                    if (condition.sourceField.getId() === dataFieldId) {
+                                        logger(`Found rule where data field ${dataFieldId} is source`);
+                                        if (condition.sourceField.isValid()) {
+                                            rules.push(rule);
+                                        }
+                                        else {
+                                            flogger(`Found rule where data field ${dataFieldId} is source but value is not currently valid`);
+                                        }
                                     }
-                                    else {
-                                        flogger(`Found rule where data field ${dataFieldId} is source but value is not currently valid`);
-                                    }
-                                    return false;
                                 }
-                                return true;
                             });
                         }
                     }
@@ -61474,7 +61708,8 @@ class ValidationManager {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ConditionResponse": () => (/* binding */ ConditionResponse)
+/* harmony export */   "ConditionResponse": () => (/* binding */ ConditionResponse),
+/* harmony export */   "MultipleConditionLogic": () => (/* binding */ MultipleConditionLogic)
 /* harmony export */ });
 var ConditionResponse;
 (function (ConditionResponse) {
@@ -61483,6 +61718,14 @@ var ConditionResponse;
     ConditionResponse[ConditionResponse["invalid"] = 2] = "invalid";
     ConditionResponse[ConditionResponse["valid"] = 3] = "valid";
 })(ConditionResponse || (ConditionResponse = {}));
+var MultipleConditionLogic;
+(function (MultipleConditionLogic) {
+    MultipleConditionLogic[MultipleConditionLogic["onlyFailIfAllConditionsFail"] = 0] = "onlyFailIfAllConditionsFail";
+    MultipleConditionLogic[MultipleConditionLogic["failIfAnyConditionFails"] = 1] = "failIfAnyConditionFails";
+    MultipleConditionLogic[MultipleConditionLogic["failWhenTheNextInSequenceFails"] = 2] = "failWhenTheNextInSequenceFails";
+    MultipleConditionLogic[MultipleConditionLogic["whenAllConditionsFailRuleShouldNotBeApplied"] = 3] = "whenAllConditionsFailRuleShouldNotBeApplied";
+    MultipleConditionLogic[MultipleConditionLogic["failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails"] = 4] = "failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails";
+})(MultipleConditionLogic || (MultipleConditionLogic = {}));
 //# sourceMappingURL=ValidationTypeDefs.js.map
 
 /***/ }),
@@ -65355,6 +65598,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "RadioButtonGroupField": () => (/* reexport safe */ _framework_ui_form_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_50__.RadioButtonGroupField),
 /* harmony export */   "ColourInputField": () => (/* reexport safe */ _framework_ui_form_field_ColourInputField__WEBPACK_IMPORTED_MODULE_51__.ColourInputField),
 /* harmony export */   "ConditionResponse": () => (/* reexport safe */ _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_52__.ConditionResponse),
+/* harmony export */   "MultipleConditionLogic": () => (/* reexport safe */ _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_52__.MultipleConditionLogic),
 /* harmony export */   "ValidationManager": () => (/* reexport safe */ _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_53__.ValidationManager),
 /* harmony export */   "DefaultFormFieldPermissionChecker": () => (/* reexport safe */ _framework_ui_form_DefaultFormFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_54__.DefaultFormFieldPermissionChecker),
 /* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_55__.BootstrapFormConfigHelper),

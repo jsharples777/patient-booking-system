@@ -203,13 +203,23 @@ class Controller {
       stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.clinicConfig,
       serverURL: '',
       api: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.clinicConfig,
-      isActive: true
+      isActive: true,
+      find: false,
+      findAll: true,
+      create: true,
+      update: true,
+      destroy: true
     }, {
       stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients,
       serverURL: '',
       api: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.patients,
       isActive: true,
-      idField: '_id'
+      idField: '_id',
+      find: true,
+      findAll: true,
+      create: true,
+      update: true,
+      destroy: true
     }]);
     let qlSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.GraphQLApiStateManager.getInstance();
     qlSM.initialise([{
@@ -556,17 +566,17 @@ class Controller {
 
     isCurrentFieldDef.generator = {
       onCreation: true,
-      onModify: true,
+      onModify: false,
       generator: generator
     };
     resetPasswordFieldDef.generator = {
       onCreation: true,
-      onModify: true,
+      onModify: false,
       generator: generator
     };
     passwordFieldDef.generator = {
       onCreation: true,
-      onModify: true,
+      onModify: false,
       generator: generator
     };
   }
@@ -4455,9 +4465,35 @@ class UserValidationHelper {
       targetDataFieldId: 'password',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show,
       conditions: [{
-        sourceDataFieldId: 'resetPassword',
         comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
+        sourceDataFieldId: 'resetPassword',
         values: 'false'
+      }]
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    rule = {
+      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.update,
+      targetDataFieldId: 'password',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
+      conditions: [{
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
+        sourceDataFieldId: 'resetPassword',
+        values: 'true'
+      }]
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    rule = {
+      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.any,
+      targetDataFieldId: 'password',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid,
+      multipleConditionLogic: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails,
+      conditions: [{
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
+        sourceDataFieldId: 'resetPassword',
+        values: 'true'
+      }, {
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.isNotNull,
+        values: 'x'
       }]
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
@@ -4936,7 +4972,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results validation-event-handler validation-manager validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'app api-ts-results validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);

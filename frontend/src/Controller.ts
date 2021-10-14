@@ -206,14 +206,24 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 stateName: STATE_NAMES.clinicConfig,
                 serverURL: '',
                 api: API_Config.clinicConfig,
-                isActive: true
+                isActive: true,
+                find:false,
+                findAll: true,
+                create: true,
+                update: true,
+                destroy: true
             },
             {
                 stateName: STATE_NAMES.patients,
                 serverURL: '',
                 api: API_Config.patients,
                 isActive: true,
-                idField: '_id'
+                idField: '_id',
+                find:true,
+                findAll: true,
+                create: true,
+                update: true,
+                destroy: true
             },
         ]);
         let qlSM = GraphQLApiStateManager.getInstance();
@@ -581,17 +591,17 @@ export default class Controller implements StateChangeListener, DataObjectListen
         // setup default values for new user
         isCurrentFieldDef.generator = {
             onCreation:true,
-            onModify:true,
+            onModify:false,
             generator: generator
         };
         resetPasswordFieldDef.generator = {
             onCreation:true,
-            onModify:true,
+            onModify:false,
             generator: generator
         };
         passwordFieldDef.generator = {
             onCreation:true,
-            onModify:true,
+            onModify:false,
             generator: generator
         };
 

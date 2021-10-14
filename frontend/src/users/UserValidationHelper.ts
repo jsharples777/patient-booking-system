@@ -3,8 +3,9 @@ import {
     ConditionResponse,
     Form,
     FormMode,
-    ValidationCondition,
-    ValidationManager
+    MultipleConditionLogic,
+    ValidationManager,
+    ValidationRule
 } from "ui-framework-jps";
 
 export class UserValidationHelper {
@@ -27,7 +28,7 @@ export class UserValidationHelper {
          */
 
 
-        let rule = {
+        let rule:ValidationRule = {
             formMode: FormMode.create,
             targetDataFieldId: 'resetPassword',
             response: ConditionResponse.hide,
@@ -73,9 +74,40 @@ export class UserValidationHelper {
             response: ConditionResponse.show,
             conditions: [
                 {
-                    sourceDataFieldId: 'resetPassword',
                     comparison: ComparisonType.hasValue,
+                    sourceDataFieldId: 'resetPassword',
                     values: 'false'
+                }
+            ]
+        }
+        ValidationManager.getInstance().addRuleToForm(form, rule);
+        rule = {
+            formMode: FormMode.update,
+            targetDataFieldId: 'password',
+            response: ConditionResponse.hide,
+            conditions: [
+                {
+                    comparison: ComparisonType.hasValue,
+                    sourceDataFieldId: 'resetPassword',
+                    values: 'true'
+                }
+            ]
+        }
+        ValidationManager.getInstance().addRuleToForm(form, rule);
+        rule = {
+            formMode: FormMode.any,
+            targetDataFieldId: 'password',
+            response: ConditionResponse.invalid,
+            multipleConditionLogic: MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails,
+            conditions: [
+                {
+                    comparison: ComparisonType.hasValue,
+                    sourceDataFieldId: 'resetPassword',
+                    values: 'true'
+                },
+                {
+                    comparison: ComparisonType.isNotNull,
+                    values:'x'
                 }
             ]
         }

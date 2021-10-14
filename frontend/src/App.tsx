@@ -200,7 +200,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results validation-event-handler validation-manager validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 
