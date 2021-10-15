@@ -759,7 +759,6 @@ class SocketListenerDelegate {
               case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users:
                 {
                   _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.users, stateObj, true);
-                  ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.NotificationManager.getInstance().show(stateObj.username, `${stateObj.username} has just registered.`, ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.NotificationType.info);
                   break;
                 }
 
@@ -4428,7 +4427,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "UserValidationHelper": () => (/* binding */ UserValidationHelper)
 /* harmony export */ });
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
 
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('user-validation-helper');
 class UserValidationHelper {
   static getInstance() {
     if (!UserValidationHelper._instance) {
@@ -4497,22 +4502,73 @@ class UserValidationHelper {
         values: 'true'
       }]
     };
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
-    rule = {
-      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.any,
-      targetDataFieldId: 'password',
-      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid,
-      multipleConditionLogic: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails,
-      conditions: [{
-        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
-        sourceDataFieldId: 'resetPassword',
-        values: 'true'
-      }, {
-        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.isNotNull,
-        values: 'x'
-      }]
-    };
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule); // rule = {
+    //     formMode: FormMode.any,
+    //     targetDataFieldId: 'password',
+    //     response: ConditionResponse.invalid,
+    //     multipleConditionLogic: MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails,
+    //     conditions: [
+    //         {
+    //             comparison: ComparisonType.hasValue,
+    //             sourceDataFieldId: 'resetPassword',
+    //             values: 'true'
+    //         },
+    //         {
+    //             comparison: ComparisonType.isNotNull,
+    //             values:'x'
+    //         }
+    //     ]
+    // }
+    // ValidationManager.getInstance().addRuleToForm(form, rule);
+
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addFormValidator(this);
+  }
+
+  applyRulesToTargetField(form, formMode, fieldDef, onlyRulesOfType) {
+    let result = {
+      ruleFailed: false
+    }; // are we dealing with the form for users?
+
+    if (form.getDataObjectDefinition().id === _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users) {
+      // we are only checking for invalid state
+      if (onlyRulesOfType && onlyRulesOfType === ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid || !onlyRulesOfType) {
+        // are we dealing with the reset password field?
+        if (fieldDef.id === 'password') {
+          logger('User form, password field, invalid check'); // what is the value of the field reset password
+
+          let resetField = form.getFieldFromDataFieldId('resetPassword');
+
+          if (resetField) {
+            let resetValue = resetField.getValue();
+            logger(`User form, password field, invalid check - reset is ${resetValue}`);
+
+            if (resetValue && resetValue === 'true') {
+              // check the password value
+              let passwordField = form.getFieldFromDataFieldId(fieldDef.id);
+
+              if (passwordField) {
+                let passwordValue = passwordField.getValue();
+                logger(`User form, password field, invalid check - reset is ${resetValue}, password is "${passwordValue}"`);
+
+                if (passwordValue) {
+                  if (passwordValue.trim().length === 0) {
+                    logger(`User form, password field, invalid check - FAILED`);
+                    result.ruleFailed = true;
+                    result.message = 'Password must be supplied.';
+                  }
+                } else {
+                  logger(`User form, password field, invalid check - FAILED`);
+                  result.ruleFailed = true;
+                  result.message = 'Password must be supplied.';
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return result;
   }
 
 }
@@ -5031,7 +5087,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'app api-ts-results user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);

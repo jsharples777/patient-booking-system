@@ -28,7 +28,14 @@ export default class ProvidersQLDelegate {
                         '_id': 1,
                         'name': '$username',
                         'providerNo': 1,
-                        'isCurrent': 1
+                        'isCurrent': 1,
+                        'isProvider': {
+                            $cond: {
+                                if: { $ne: ["$providerNo",""]},
+                                then: true,
+                                else: false
+                            }
+                        }
                     }
                 }
             ];

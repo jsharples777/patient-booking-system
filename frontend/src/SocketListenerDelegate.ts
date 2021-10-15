@@ -29,7 +29,6 @@ export default class SocketListenerDelegate implements SocketListener {
                     switch (message.stateName) {
                         case STATE_NAMES.users: {
                             Controller.getInstance().getStateManager().addNewItemToState(STATE_NAMES.users, stateObj, true);
-                            NotificationManager.getInstance().show(stateObj.username, `${stateObj.username} has just registered.`, NotificationType.info);
                             break;
                         }
                         case STATE_NAMES.appointments: {

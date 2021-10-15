@@ -32,7 +32,14 @@ export function setupPassport(passport: any) {
                     password: 1,
                     providerNo: 1,
                     isCurrent: 1,
-                    isAdmin: 1
+                    isAdmin: 1,
+                    isProvider: {
+                        $cond: {
+                            if: { $ne: ["$providerNo",""]},
+                            then: true,
+                            else: false
+                        }
+                    }
                 }
             };
 
@@ -95,7 +102,14 @@ export function setupPassport(passport: any) {
                     password: 1,
                     providerNo: 1,
                     isCurrent: 1,
-                    isAdmin: 1
+                    isAdmin: 1,
+                    isProvider: {
+                        $cond: {
+                            if: { $ne: ["$providerNo",""]},
+                            then: true,
+                            else: false
+                        }
+                    }
                 }
             };
 
@@ -115,16 +129,9 @@ export function setupPassport(passport: any) {
                         message: 'Username and/or password is incorrect'
                     });
                 }
-                let loggedInUser = {...user};
-                loggedInUser['isProvider'] = 'false';
-                if (loggedInUser.providerNo) {
-                    if (loggedInUser.providerNo.trim().length > 0) {
-                        loggedInUser['isProvider'] = 'true';
-                    }
-                }
-                logger(loggedInUser);
 
-                return done(null, loggedInUser);
+
+                return done(null, user);
             }).catch(function (err: Error) {
                 return done(err);
             });
@@ -154,7 +161,15 @@ export function setupPassport(passport: any) {
                     password: 1,
                     providerNo: 1,
                     isCurrent: 1,
-                    isAdmin: 1
+                    isAdmin: 1,
+
+                isProvider: {
+                    $cond: {
+                        if: { $ne: ["$providerNo",""]},
+                        then: true,
+                        else: false
+                    }
+                }
                 }
             };
 
@@ -210,7 +225,14 @@ export function setupPassport(passport: any) {
                 password: 1,
                 providerNo: 1,
                 isCurrent: 1,
-                isAdmin: 1
+                isAdmin: 1,
+                isProvider: {
+                    $cond: {
+                        if: { $ne: ["$providerNo",""]},
+                        then: true,
+                        else: false
+                    }
+                }
             }
         };
         db.collection(collection).findOne({_id: id}, projection).then((user) => {

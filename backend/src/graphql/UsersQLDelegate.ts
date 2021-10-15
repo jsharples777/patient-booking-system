@@ -22,7 +22,14 @@ export default class UsersQLDelegate {
                     username: 1,
                     isCurrent: 1,
                     providerNo:1,
-                    isAdmin:1
+                    isAdmin:1,
+                    isProvider: {
+                        $cond: {
+                            if: { $ne: ["$providerNo",""]},
+                            then: true,
+                            else: false
+                        }
+                    }
 
                 }
             };

@@ -6,7 +6,6 @@ import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
 import {AppointmentController} from "./appointments/AppointmentController";
 import {
-    ChatRoomsSidebar,
     ContextualInformationHelper, NotificationController,
     SecurityManager, SidebarViewContainer,
     UnreadMessageCountListener
@@ -238,7 +237,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 
