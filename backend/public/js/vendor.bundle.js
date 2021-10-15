@@ -61357,102 +61357,97 @@ class ValidationManager {
             response: rule.response,
             conditions: [],
             multipleConditionLogic: _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails
-            //fieldConditions: [],
-            //valueConditions: []
         };
         if (rule.multipleConditionLogic) {
             convertedRule.multipleConditionLogic = rule.multipleConditionLogic;
         }
-        rule.conditions.forEach((condition) => {
-            // do we have one of values or source field?
-            if (!(condition.values) && !(condition.sourceDataFieldId)) {
-                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - a condition is missing both values and source field`);
-                return false;
-            }
-            // is this a target field value comparison?
-            if ((condition.values) && (condition.sourceDataFieldId)) {
-                logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} with values ${condition.values}`);
-                let sourceField = form.getFieldFromDataFieldId(condition.sourceDataFieldId);
-                if (!sourceField) {
-                    flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
+        if (rule.conditions)
+            rule.conditions.forEach((condition) => {
+                // do we have one of values or source field?
+                if (!(condition.values) && !(condition.sourceDataFieldId)) {
+                    flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - a condition is missing both values and source field`);
                     return false;
                 }
-                //                convertedRule.fieldConditions.push({
-                convertedRule.conditions.push({
-                    sourceField: sourceField,
-                    comparison: condition.comparison,
-                    values: condition.values
-                });
-                sourceField.addFieldListener(this);
-            }
-            else if ((condition.values) && !(condition.sourceDataFieldId)) { // is this a value comparison?
-                logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - values ${condition.values}`);
-                // add a new value rule to the internal structure
-                // convertedRule.valueConditions.push({values: condition.values, comparison: condition.comparison});
-                convertedRule.conditions.push({ values: condition.values, comparison: condition.comparison });
-                if (targetField)
-                    targetField.addFieldListener(this);
-            }
-            else if ((condition.sourceDataFieldId) && (!condition.values)) { // is this a field vs field comparison
-                logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId}`);
-                let sourceField = form.getFieldFromDataFieldId(condition.sourceDataFieldId);
-                if (!sourceField) {
-                    flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
-                    return false;
+                // is this a target field value comparison?
+                if ((condition.values) && (condition.sourceDataFieldId)) {
+                    logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} with values ${condition.values}`);
+                    let sourceField = form.getFieldFromDataFieldId(condition.sourceDataFieldId);
+                    if (!sourceField) {
+                        flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
+                        return false;
+                    }
+                    convertedRule.conditions.push({
+                        sourceField: sourceField,
+                        comparison: condition.comparison,
+                        values: condition.values
+                    });
+                    sourceField.addFieldListener(this);
                 }
-                /*
-                   are we comparing two fields that can be compared?
-                   allowed combinations are:
-                   date|datetime vs date|datetime
-                   time|short time vs time|short time
-                   boolean vs boolean
-                   integer|float vs number|float
-                   any other vs any other
-                 */
-                let sourceType = sourceField.getFieldDefinition().type;
-                // @ts-ignore
-                let targetType = targetField.getFieldDefinition().type;
-                switch (targetType) {
-                    case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date):
-                    case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime): {
-                        if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime) &&
-                            (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date)) {
-                            flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is date(time), source is NOT`);
-                            return false;
-                        }
-                        break;
-                    }
-                    case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time):
-                    case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime): {
-                        if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time) &&
-                            (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime)) {
-                            flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is time, source is NOT`);
-                            return false;
-                        }
-                        break;
-                    }
-                    case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean): {
-                        if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean)) {
-                            flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is boolean, source is NOT`);
-                            return false;
-                        }
-                        break;
-                    }
-                    case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer):
-                    case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float): {
-                        if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer) &&
-                            (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float)) {
-                            flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is number, source is NOT`);
-                            return false;
-                        }
-                        break;
-                    }
+                else if ((condition.values) && !(condition.sourceDataFieldId)) { // is this a value comparison?
+                    logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - values ${condition.values}`);
+                    // add a new value rule to the internal structure
+                    convertedRule.conditions.push({ values: condition.values, comparison: condition.comparison });
+                    if (targetField)
+                        targetField.addFieldListener(this);
                 }
-                // convertedRule.fieldConditions.push({sourceField: sourceField, comparison: condition.comparison});
-                convertedRule.conditions.push({ sourceField: sourceField, comparison: condition.comparison });
-                sourceField.addFieldListener(this);
-            }
-        });
+                else if ((condition.sourceDataFieldId) && (!condition.values)) { // is this a field vs field comparison
+                    logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId}`);
+                    let sourceField = form.getFieldFromDataFieldId(condition.sourceDataFieldId);
+                    if (!sourceField) {
+                        flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
+                        return false;
+                    }
+                    /*
+                       are we comparing two fields that can be compared?
+                       allowed combinations are:
+                       date|datetime vs date|datetime
+                       time|short time vs time|short time
+                       boolean vs boolean
+                       integer|float vs number|float
+                       any other vs any other
+                     */
+                    let sourceType = sourceField.getFieldDefinition().type;
+                    let targetType = targetField === null || targetField === void 0 ? void 0 : targetField.getFieldDefinition().type;
+                    switch (targetType) {
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date):
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime): {
+                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime) &&
+                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date)) {
+                                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is date(time), source is NOT`);
+                                return false;
+                            }
+                            break;
+                        }
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time):
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime): {
+                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time) &&
+                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime)) {
+                                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is time, source is NOT`);
+                                return false;
+                            }
+                            break;
+                        }
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean): {
+                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean)) {
+                                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is boolean, source is NOT`);
+                                return false;
+                            }
+                            break;
+                        }
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer):
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float): {
+                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer) &&
+                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float)) {
+                                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is number, source is NOT`);
+                                return false;
+                            }
+                            break;
+                        }
+                    }
+                    convertedRule.conditions.push({ sourceField: sourceField, comparison: condition.comparison });
+                    sourceField.addFieldListener(this);
+                }
+            });
         logger(`Converted rule to `);
         logger(convertedRule);
         let index = this.formRules.findIndex((formRule) => formRule.form.getId() === form.getId());
@@ -61495,7 +61490,7 @@ class ValidationManager {
             rules = ruleSubset;
         }
         rules.forEach((rule) => {
-            let response = this.executeRule(rule);
+            let response = this.executeRule(formMode, rule);
             if (response.ruleFailed) {
                 flogger(`Rule failed for form ${form.getId()} with field ${field.displayName} with message ${response.message}`);
                 result.ruleFailed = true;
@@ -61521,7 +61516,7 @@ class ValidationManager {
         // execute each rule and collect the responses
         let failedResponses = [];
         rules.forEach((rule) => {
-            let response = this.executeRule(rule);
+            let response = this.executeRule(form.getFormMode(), rule);
             if (response.ruleFailed) {
                 failedResponses.push(response);
             }
@@ -61554,7 +61549,7 @@ class ValidationManager {
             }
         });
     }
-    executeRule(rule) {
+    executeRule(formMode, rule) {
         let response = {
             field: rule.targetField,
             ruleFailed: false,
@@ -61564,103 +61559,118 @@ class ValidationManager {
         erLogger(`Executing rule with response ${rule.response} for target ${rule.targetField.getId()}`);
         erLogger(rule);
         let ruleChecks = [];
-        rule.conditions.forEach((condition) => {
-            erLogger('condition rule');
-            erLogger(condition);
-            let values = (condition.values) ? condition.values : '';
-            let ruleCheck;
-            if (condition.sourceField) {
-                erLogger('condition rule - source field present');
-                ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFields(rule.targetField, condition.sourceField, condition.comparison, values);
-            }
-            else {
-                erLogger(`condition rule - target field value check - ${values}`);
-                ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFieldWithValue(rule.targetField, condition.comparison, values);
-            }
-            ruleChecks.push(ruleCheck);
-            if (ruleCheck.ruleFailed) {
-                flogger('condition rule FAILED');
-            }
-            else {
-                flogger('condition rule PASSED');
-            }
-        });
-        // are we dealing with one rule check or multiple?
-        if (ruleChecks.length === 1) {
-            flogger(`Single rule check - rule failed? ${ruleChecks[0].ruleFailed}`);
-            response.message = ruleChecks[0].message;
-            response.ruleFailed = ruleChecks[0].ruleFailed;
-        }
-        else {
-            let errorMessageBuffer = '';
-            let failedRuleChecks = [];
-            ruleChecks.forEach((ruleCheck, index) => {
+        if (rule.conditions.length > 0) {
+            rule.conditions.forEach((condition) => {
+                erLogger('condition rule');
+                erLogger(condition);
+                let values = (condition.values) ? condition.values : '';
+                let ruleCheck;
+                if (condition.sourceField) {
+                    erLogger('condition rule - source field present');
+                    ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFields(rule.targetField, condition.sourceField, condition.comparison, values);
+                }
+                else {
+                    erLogger(`condition rule - target field value check - ${values}`);
+                    ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFieldWithValue(rule.targetField, condition.comparison, values);
+                }
+                ruleChecks.push(ruleCheck);
                 if (ruleCheck.ruleFailed) {
-                    ruleCheck.index = index;
-                    failedRuleChecks.push(ruleCheck);
-                    errorMessageBuffer += ruleCheck.message + ', ';
+                    flogger('condition rule FAILED');
+                }
+                else {
+                    flogger('condition rule PASSED');
                 }
             });
-            if (errorMessageBuffer.length > 0) {
-                errorMessageBuffer = errorMessageBuffer.substr(0, errorMessageBuffer.length - 2);
+            // are we dealing with one rule check or multiple?
+            if (ruleChecks.length === 1) {
+                flogger(`Single rule check - rule failed? ${ruleChecks[0].ruleFailed}`);
+                response.message = ruleChecks[0].message;
+                response.ruleFailed = ruleChecks[0].ruleFailed;
             }
-            merLogger(`Multiple rule check - number of failures ${failedRuleChecks.length} with message ${errorMessageBuffer}`);
-            switch (rule.multipleConditionLogic) {
-                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails: {
-                    if (failedRuleChecks.length > 0) {
-                        flogger(`Multiple rule check - when any conditions fail - rule FAILED`);
-                        merLogger(`Multiple rule check - when any conditions fail - rule FAILED`);
-                        response.message = errorMessageBuffer;
-                        response.ruleFailed = true;
+            else {
+                let errorMessageBuffer = '';
+                let failedRuleChecks = [];
+                ruleChecks.forEach((ruleCheck, index) => {
+                    if (ruleCheck.ruleFailed) {
+                        ruleCheck.index = index;
+                        failedRuleChecks.push(ruleCheck);
+                        errorMessageBuffer += ruleCheck.message + ', ';
                     }
-                    break;
+                });
+                if (errorMessageBuffer.length > 0) {
+                    errorMessageBuffer = errorMessageBuffer.substr(0, errorMessageBuffer.length - 2);
                 }
-                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.onlyFailIfAllConditionsFail: {
-                    if (failedRuleChecks.length === ruleChecks.length) {
-                        flogger(`Multiple rule check - when all conditions fail - rule FAILED`);
-                        merLogger(`Multiple rule check - when all conditions fail - rule FAILED`);
-                        response.ruleFailed = true;
-                        response.message = errorMessageBuffer;
-                    }
-                    break;
-                }
-                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failWhenTheNextInSequenceFails: {
-                    if (failedRuleChecks.length > 0) {
-                        flogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
-                        merLogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
-                        response.message = errorMessageBuffer;
-                        response.ruleFailed = true;
-                    }
-                    break;
-                }
-                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.whenAllConditionsFailRuleShouldNotBeApplied: {
-                    if ((failedRuleChecks.length === ruleChecks.length) || (failedRuleChecks.length === 0)) {
-                        merLogger(`Multiple rule check - when all fail rule does not apply - rule PASSED`);
-                        response.ruleFailed = false;
-                        response.message = errorMessageBuffer;
-                    }
-                    else {
-                        flogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
-                        merLogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
-                        response.ruleFailed = true;
-                        response.message = errorMessageBuffer;
-                    }
-                    break;
-                }
-                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails: {
-                    if (failedRuleChecks.length === 1) {
-                        const failedRuleIndex = failedRuleChecks[0].index;
-                        // is this the last rule in the chain of conditions?
-                        if (failedRuleIndex === (ruleChecks.length - 1)) {
-                            flogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
-                            merLogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
+                merLogger(`Multiple rule check - number of failures ${failedRuleChecks.length} with message ${errorMessageBuffer}`);
+                switch (rule.multipleConditionLogic) {
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails: {
+                        if (failedRuleChecks.length > 0) {
+                            flogger(`Multiple rule check - when any conditions fail - rule FAILED`);
+                            merLogger(`Multiple rule check - when any conditions fail - rule FAILED`);
                             response.message = errorMessageBuffer;
                             response.ruleFailed = true;
                         }
+                        break;
                     }
-                    break;
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.onlyFailIfAllConditionsFail: {
+                        if (failedRuleChecks.length === ruleChecks.length) {
+                            flogger(`Multiple rule check - when all conditions fail - rule FAILED`);
+                            merLogger(`Multiple rule check - when all conditions fail - rule FAILED`);
+                            response.ruleFailed = true;
+                            response.message = errorMessageBuffer;
+                        }
+                        break;
+                    }
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failWhenTheNextInSequenceFails: {
+                        if (failedRuleChecks.length > 0) {
+                            flogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
+                            merLogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
+                            response.message = errorMessageBuffer;
+                            response.ruleFailed = true;
+                        }
+                        break;
+                    }
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.whenAllConditionsFailRuleShouldNotBeApplied: {
+                        if ((failedRuleChecks.length === ruleChecks.length) || (failedRuleChecks.length === 0)) {
+                            merLogger(`Multiple rule check - when all fail rule does not apply - rule PASSED`);
+                            response.ruleFailed = false;
+                            response.message = errorMessageBuffer;
+                        }
+                        else {
+                            flogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
+                            merLogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
+                            response.ruleFailed = true;
+                            response.message = errorMessageBuffer;
+                        }
+                        break;
+                    }
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails: {
+                        if (failedRuleChecks.length === 1) {
+                            const failedRuleIndex = failedRuleChecks[0].index;
+                            // is this the last rule in the chain of conditions?
+                            if (failedRuleIndex === (ruleChecks.length - 1)) {
+                                flogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
+                                merLogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
+                                response.message = errorMessageBuffer;
+                                response.ruleFailed = true;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
+        }
+        else {
+            // no conditions, should be based on the form mode only
+            if ((rule.formMode === formMode) || (rule.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_3__.FormMode.any)) {
+                response.ruleFailed = true;
+                response.message = '';
+                erLogger(`Zero condition rule applied with matching form mode`);
+            }
+        }
+        // for show and hide rules, we want the opposite effect (i.e. a success on conditions show cause the action)
+        if ((response.response === _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide) || (response.response === _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show)) {
+            response.ruleFailed = !response.ruleFailed;
+            erLogger(`Changing show/hide rule result to opposite boolean value to cause activation if the conditions were PASSED`);
         }
         return response;
     }

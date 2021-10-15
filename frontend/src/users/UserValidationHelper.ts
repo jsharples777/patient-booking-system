@@ -39,12 +39,7 @@ export class UserValidationHelper implements FormFieldValidator {
             formMode: FormMode.create,
             targetDataFieldId: 'resetPassword',
             response: ConditionResponse.hide,
-            conditions: [
-                {
-                    comparison: ComparisonType.hasValue,
-                    values: 'x'
-                }
-            ]
+            conditions: []
         }
         ValidationManager.getInstance().addRuleToForm(form, rule);
 
@@ -52,12 +47,7 @@ export class UserValidationHelper implements FormFieldValidator {
             formMode: FormMode.create,
             targetDataFieldId: 'isProvider',
             response: ConditionResponse.hide,
-            conditions: [
-                {
-                    comparison: ComparisonType.hasValue,
-                    values: 'x'
-                }
-            ]
+            conditions: []
         }
         ValidationManager.getInstance().addRuleToForm(form, rule);
 
@@ -68,8 +58,7 @@ export class UserValidationHelper implements FormFieldValidator {
             response: ConditionResponse.invalid,
             conditions: [
                 {
-                    comparison: ComparisonType.isNotNull,
-                    values: 'x'
+                    comparison: ComparisonType.isNotNull
                 }
             ]
         }
@@ -83,7 +72,7 @@ export class UserValidationHelper implements FormFieldValidator {
                 {
                     comparison: ComparisonType.hasValue,
                     sourceDataFieldId: 'resetPassword',
-                    values: 'false'
+                    values: 'true'
                 }
             ]
         }
@@ -96,29 +85,12 @@ export class UserValidationHelper implements FormFieldValidator {
                 {
                     comparison: ComparisonType.hasValue,
                     sourceDataFieldId: 'resetPassword',
-                    values: 'true'
+                    values: 'false'
                 }
             ]
         }
         ValidationManager.getInstance().addRuleToForm(form, rule);
-        // rule = {
-        //     formMode: FormMode.any,
-        //     targetDataFieldId: 'password',
-        //     response: ConditionResponse.invalid,
-        //     multipleConditionLogic: MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails,
-        //     conditions: [
-        //         {
-        //             comparison: ComparisonType.hasValue,
-        //             sourceDataFieldId: 'resetPassword',
-        //             values: 'true'
-        //         },
-        //         {
-        //             comparison: ComparisonType.isNotNull,
-        //             values:'x'
-        //         }
-        //     ]
-        // }
-        // ValidationManager.getInstance().addRuleToForm(form, rule);
+
         ValidationManager.getInstance().addFormValidator(this);
     }
 

@@ -4455,20 +4455,14 @@ class UserValidationHelper {
       formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.create,
       targetDataFieldId: 'resetPassword',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
-      conditions: [{
-        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
-        values: 'x'
-      }]
+      conditions: []
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
     rule = {
       formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.create,
       targetDataFieldId: 'isProvider',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
-      conditions: [{
-        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
-        values: 'x'
-      }]
+      conditions: []
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
     rule = {
@@ -4476,8 +4470,7 @@ class UserValidationHelper {
       targetDataFieldId: 'password',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid,
       conditions: [{
-        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.isNotNull,
-        values: 'x'
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.isNotNull
       }]
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
@@ -4488,7 +4481,7 @@ class UserValidationHelper {
       conditions: [{
         comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
         sourceDataFieldId: 'resetPassword',
-        values: 'false'
+        values: 'true'
       }]
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
@@ -4499,28 +4492,10 @@ class UserValidationHelper {
       conditions: [{
         comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
         sourceDataFieldId: 'resetPassword',
-        values: 'true'
+        values: 'false'
       }]
     };
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule); // rule = {
-    //     formMode: FormMode.any,
-    //     targetDataFieldId: 'password',
-    //     response: ConditionResponse.invalid,
-    //     multipleConditionLogic: MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails,
-    //     conditions: [
-    //         {
-    //             comparison: ComparisonType.hasValue,
-    //             sourceDataFieldId: 'resetPassword',
-    //             values: 'true'
-    //         },
-    //         {
-    //             comparison: ComparisonType.isNotNull,
-    //             values:'x'
-    //         }
-    //     ]
-    // }
-    // ValidationManager.getInstance().addRuleToForm(form, rule);
-
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addFormValidator(this);
   }
 

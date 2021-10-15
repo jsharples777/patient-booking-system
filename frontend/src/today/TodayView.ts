@@ -63,18 +63,18 @@ export class TodayView {
         let options: any;
         if (TodayController.getInstance().getModel().clinicConfig) {
             logger('Using clinic config options');
-            options = {
-                clickToCreate: false,
-                dragToCreate: false,
-                dragToMove: false,
-                dragToResize: false,
-                min: moment().subtract(AppointmentController.getInstance().getModel().clinicConfig.min, "months"),
-                controls: AppointmentController.getInstance().getModel().clinicConfig.controls,
-                showControls: AppointmentController.getInstance().getModel().clinicConfig.showControls,
-                view: AppointmentController.getInstance().getModel().clinicConfig.view,
-                invalidateEvent: AppointmentController.getInstance().getModel().clinicConfig.invalidateEvent,
-                invalid: AppointmentController.getInstance().getModel().clinicConfig.invalid,
-            }
+            // options = {
+            //     clickToCreate: false,
+            //     dragToCreate: false,
+            //     dragToMove: false,
+            //     dragToResize: false,
+            //     min: moment().subtract(AppointmentController.getInstance().getModel().clinicConfig.min, "months"),
+            //     controls: AppointmentController.getInstance().getModel().clinicConfig.controls,
+            //     showControls: AppointmentController.getInstance().getModel().clinicConfig.showControls,
+            //     view: AppointmentController.getInstance().getModel().clinicConfig.view,
+            //     invalidateEvent: AppointmentController.getInstance().getModel().clinicConfig.invalidateEvent,
+            //     invalid: AppointmentController.getInstance().getModel().clinicConfig.invalid,
+            // }
         } else {
             logger('Using DEFAULT config options');
             options = {
@@ -130,50 +130,50 @@ export class TodayView {
         }
         options.renderScheduleEvent = this.handleAppointmentRendering;
 
-        if (AppointmentController.getInstance().getModel().providers) {
-            let providers: any[] = [];
-
-            AppointmentController.getInstance().getModel().providers.forEach((provider: any) => {
-                if (provider.isCurrent) providers.push({
-                    text: provider.name,
-                    value: provider.name,
-                    id: provider.name,
-                    name: provider.name
-                });
-            });
-
-            if (this.viewElements.calendar) this.viewElements.calendar.setOptions(
-                {
-                    resources: providers,
-                    groupBy: 'date'
-                }
-            );
-
-        }
+        // if (AppointmentController.getInstance().getModel().providers) {
+        //     let providers: any[] = [];
+        //
+        //     AppointmentController.getInstance().getModel().providers.forEach((provider: any) => {
+        //         if (provider.isCurrent) providers.push({
+        //             text: provider.name,
+        //             value: provider.name,
+        //             id: provider.name,
+        //             name: provider.name
+        //         });
+        //     });
+        //
+        //     if (this.viewElements.calendar) this.viewElements.calendar.setOptions(
+        //         {
+        //             resources: providers,
+        //             groupBy: 'date'
+        //         }
+        //     );
+        //
+        // }
 
         // @ts-ignore
-        this.viewElements.calendar = eventcalendar(document.getElementById(VIEW_CONTAINER.), options);
+        //this.viewElements.calendar = eventcalendar(document.getElementById(VIEW_CONTAINER.), options);
     }
 
     public applyClinicConfig(clinicConfig: any) {
-        if (this.viewElements.calendar) {
-            logger('State changed, using clinic config options');
+        // if (this.viewElements.calendar) {
+        //     logger('State changed, using clinic config options');
+        //
+        //     this.viewElements.calendar.setOptions({
+        //         clickToCreate: clinicConfig.clickToCreate,
+        //         dragTimeStep: clinicConfig.dragTimeStep,
+        //         dragToCreate: clinicConfig.dragToCreate,
+        //         dragToMove: clinicConfig.dragToMove,
+        //         dragToResize: clinicConfig.dragToResize,
+        //         min: moment().subtract(clinicConfig.min, "months"),
+        //         showControls: clinicConfig.showControls,
+        //         view: clinicConfig.view,
+        //         invalidateEvent: clinicConfig.invalidateEvent,
+        //         invalid: clinicConfig.invalid,
+        //     });
+        //
 
-            this.viewElements.calendar.setOptions({
-                clickToCreate: clinicConfig.clickToCreate,
-                dragTimeStep: clinicConfig.dragTimeStep,
-                dragToCreate: clinicConfig.dragToCreate,
-                dragToMove: clinicConfig.dragToMove,
-                dragToResize: clinicConfig.dragToResize,
-                min: moment().subtract(clinicConfig.min, "months"),
-                showControls: clinicConfig.showControls,
-                view: clinicConfig.view,
-                invalidateEvent: clinicConfig.invalidateEvent,
-                invalid: clinicConfig.invalid,
-            });
-
-
-        }
+        //}
 
 
     }
