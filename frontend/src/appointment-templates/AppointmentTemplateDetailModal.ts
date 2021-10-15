@@ -7,6 +7,7 @@ import {AppointmentTemplateView} from "./AppointmentTemplateView";
 import {v4} from "uuid";
 import {SecurityManager} from "ui-framework-jps";
 import debug from "debug";
+import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 
 const logger = debug('appointment-template-detail-view');
 
@@ -173,7 +174,7 @@ export class AppointmentTemplateDetailModal {
                         // generate a new UUID
                         let appointmentId = v4();
                         // get the colour for the event type
-                        let colour = AppointmentTemplateController.getInstance().getColourForAppointmentType('Consulting');
+                        let colour = AppointmentControllerHelper.getInstance().getColourForAppointmentType('Consulting');
 
                         let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
 
@@ -200,7 +201,7 @@ export class AppointmentTemplateDetailModal {
                         AppointmentTemplateView.getInstance().getCalender().addEvent(updatedEvent);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointmentTemplates,
-                            AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(updatedEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentTemplateFromEvent(updatedEvent),
                             false);
 
                         // navigate the calendar to the correct view
@@ -270,14 +271,15 @@ export class AppointmentTemplateDetailModal {
                             provider: ev.provider
                         };
 
+
                         // @ts-ignore
-                        updatedEvent.color = AppointmentTemplateController.getInstance().getColourForAppointmentTemplate(updatedEvent);
+                        updatedEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointmentTemplate(updatedEvent);
                         logger('updated');
                         logger(updatedEvent)
                         AppointmentTemplateView.getInstance().getCalender().updateEvent(updatedEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointmentTemplates,
-                            AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(updatedEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentTemplateFromEvent(updatedEvent),
                             false);
                         // navigate the calendar to the correct view
 
@@ -314,7 +316,7 @@ export class AppointmentTemplateDetailModal {
             AppointmentTemplateView.getInstance().getCalender().removeEvent(AppointmentTemplateController.getInstance().getModel().tempEvent);
             Controller.getInstance().getStateManager().removeItemFromState(
                 STATE_NAMES.appointmentTemplates,
-                AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(AppointmentTemplateController.getInstance().getModel().tempEvent),
+                AppointmentControllerHelper.getInstance().getAppointmentTemplateFromEvent(AppointmentTemplateController.getInstance().getModel().tempEvent),
                 false);
 
             AppointmentTemplateDetailModal.getInstance().close();
@@ -330,7 +332,7 @@ export class AppointmentTemplateDetailModal {
                         AppointmentTemplateView.getInstance().getCalender().addEvent(deletedEvent);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointmentTemplates,
-                            AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(deletedEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentTemplateFromEvent(deletedEvent),
                             false);
                     },
                     text: 'Undo'

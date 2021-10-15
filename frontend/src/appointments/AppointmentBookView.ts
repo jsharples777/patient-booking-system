@@ -5,6 +5,7 @@ import {STATE_NAMES, VIEW_CONTAINER} from "../AppTypes";
 import moment from "moment";
 import Controller from "../Controller";
 import {AppointmentDetailModal} from "./AppointmentDetailModal";
+import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 
 const logger = debug('appointment-view');
 
@@ -20,9 +21,7 @@ export class AppointmentBookView {
         calendar: null,
     }
 
-    private constructor() {
-        this.handleAppointmentRendering = this.handleAppointmentRendering.bind(this);
-    }
+    private constructor() {}
 
     public static getInstance(): AppointmentBookView {
         if (!(AppointmentBookView._instance)) {
@@ -35,35 +34,6 @@ export class AppointmentBookView {
         return this.viewElements.calendar;
     }
 
-    handleAppointmentRendering(data: any) {
-        logger(`Rendering event`);
-        logger(data);
-        const icons = AppointmentController.getInstance().getIconsForEvent(data.original);
-        logger(`Applicable icons`);
-        logger(icons);
-
-        let buffer = '' +
-            '<div class="md-custom-event-cont" style="border-left: 5px solid ' + data.color + ';background:' + data.color + '">' +
-            '  <div class="md-custom-event-wrapper">' +
-            '    <div class="container-fluid">' +
-            '    <div class="row ">' +
-            `      <div style="background:${data.color}" class="col-sm-12 col-md-2 md-custom-event-type">${data.original.type}</div>` +
-            `      <div class="col-sm-4 col-md-6 md-custom-event-title">${data.title}</div>` +
-            '      <div class="col-sm-6 col-md-4 d-flex w-100 justify-content-between md-custom-event-time">' +
-            `        <span>${data.start} - ${data.end}</span>`;
-        if (icons.trim().length > 0) {
-            buffer += '' +
-                `        <span class="md-custom-event-img-cont">${icons}</span>` +
-                '      </div>' +
-                '  </div>' +
-                '</div>';
-        } else {
-            buffer += '' +
-                '  </div>' +
-                '</div>';
-        }
-        return buffer;
-    }
 
     public onDocumentLoaded() {
 
@@ -71,64 +41,9 @@ export class AppointmentBookView {
         AppointmentDetailModal.getInstance().onDocumentLoaded();
 
 
-        let options: any;
-        if (AppointmentController.getInstance().getModel().clinicConfig) {
-            logger('Using clinic config options');
-            options = {
-                clickToCreate: AppointmentController.getInstance().getModel().clinicConfig.clickToCreate,
-                dragTimeStep: AppointmentController.getInstance().getModel().clinicConfig.dragTimeStep,
-                dragToCreate: AppointmentController.getInstance().getModel().clinicConfig.dragToCreate,
-                dragToMove: AppointmentController.getInstance().getModel().clinicConfig.dragToMove,
-                dragToResize: AppointmentController.getInstance().getModel().clinicConfig.dragToResize,
-                min: moment().subtract(AppointmentController.getInstance().getModel().clinicConfig.min, "months"),
-                controls: AppointmentController.getInstance().getModel().clinicConfig.controls,
-                showControls: AppointmentController.getInstance().getModel().clinicConfig.showControls,
-                view: AppointmentController.getInstance().getModel().clinicConfig.view,
-                invalidateEvent: AppointmentController.getInstance().getModel().clinicConfig.invalidateEvent,
-                invalid: AppointmentController.getInstance().getModel().clinicConfig.invalid,
-            }
-        } else {
-            logger('Using DEFAULT config options');
-            options = {
-                clickToCreate: 'double',
-                dragTimeStep: 5,
-                dragToCreate: true,
-                dragToMove: true,
-                dragToResize: true,
-                min: moment().subtract(3, "months"),
-                controls: ['calendar'],
-                showControls: true,
-                view: {
-                    schedule: {
-                        type: 'day',
-                        startDay: 1,
-                        endDay: 5,
-                        startTime: '09:00',
-                        endTime: '17:00',
-                        timeCellStep: 15,
-                        timeLabelStep: 60
-                    }
-                },
-                invalidateEvent: 'strict',
-                invalid: [{
-                    recurring: {
-                        repeat: 'weekly',
-                        weekDays: 'SA,SU'
-                    }
-                },
-                    {
-                        start: '12:00',
-                        end: '13:00',
-                        title: 'Lunch Break',
-                        recurring: {
-                            repeat: 'weekly',
-                            weekDays: 'MO,TU,WE,TH,FR'
-                        }
-                    }
-                ]
+        let options = AppointmentControllerHelper.getInstance().getClinicConfig();
+        logger('Using clinic config options');
 
-            }
-        }
 
 
         options.onSelectedDateChange = (event: any, inst: any) => {
@@ -155,7 +70,7 @@ export class AppointmentBookView {
                         AppointmentBookView.getInstance().viewElements.calendar.addEvent(event.event);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointments,
-                            AppointmentController.getInstance().getAppointmentFromEvent(event.event),
+                            AppointmentControllerHelper.getInstance().getAppointmentFromEvent(event.event),
                             false);
                     },
                     text: 'Undo'
@@ -175,20 +90,20 @@ export class AppointmentBookView {
                 }
             }
         }
-        options.renderScheduleEvent = this.handleAppointmentRendering;
+        options.renderScheduleEvent = AppointmentControllerHelper.getInstance().handleAppointmentRendering;
         options.onEventUpdated = (args: any) => {
             // user has dragged event - update the appointment
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
-                AppointmentController.getInstance().getAppointmentFromEvent(args.event),
+                AppointmentControllerHelper.getInstance().getAppointmentFromEvent(args.event),
                 false);
 
         }
 
-        if (AppointmentController.getInstance().getModel().providers) {
+        if (AppointmentControllerHelper.getInstance().haveProvidersLoaded()) {
             let providers: any[] = [];
 
-            AppointmentController.getInstance().getModel().providers.forEach((provider: any) => {
+            AppointmentControllerHelper.getInstance().getProviders().forEach((provider: any) => {
                 if (provider.isCurrent) providers.push({
                     text: provider.name,
                     value: provider.name,

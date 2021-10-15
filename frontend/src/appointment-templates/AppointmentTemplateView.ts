@@ -2,9 +2,9 @@ import {AppointmentTemplateController} from "./AppointmentTemplateController";
 import {eventcalendar, Eventcalendar, snackbar} from "@mobiscroll/javascript";
 import debug from "debug";
 import {STATE_NAMES} from "../AppTypes";
-import moment from "moment";
 import Controller from "../Controller";
 import {AppointmentTemplateDetailModal} from "./AppointmentTemplateDetailModal";
+import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 
 const logger = debug('appointment-template-view');
 
@@ -19,7 +19,6 @@ export class AppointmentTemplateView {
     }
 
     private constructor() {
-        this.handleAppointmentTemplateRendering = this.handleAppointmentTemplateRendering.bind(this);
     }
 
     public static getInstance(): AppointmentTemplateView {
@@ -33,100 +32,15 @@ export class AppointmentTemplateView {
         return this.viewElements.calendar;
     }
 
-    handleAppointmentTemplateRendering(data: any) {
-        logger(`Rendering event`);
-        logger(data);
-        const icons = AppointmentTemplateController.getInstance().getIconsForEventTemplate(data.original);
-        logger(`Applicable icons`);
-        logger(icons);
-
-        let buffer = '' +
-            '<div class="md-custom-event-cont" style="border-left: 5px solid ' + data.color + ';background:' + data.color + '">' +
-            '  <div class="md-custom-event-wrapper">' +
-            '    <div class="container-fluid">' +
-            '    <div class="row ">' +
-            `      <div style="background:${data.color}" class="col-12 md-custom-event-template-type">${data.original.type}</div>` +
-            '      <div class="col-12 d-flex w-100 justify-content-between md-custom-event-time">' +
-            `        <span>${data.start} - ${data.end}</span>`;
-        if (icons.trim().length > 0) {
-            buffer += '' +
-                `        <span class="md-custom-event-img-cont">${icons}</span>` +
-                '      </div>' +
-                '  </div>' +
-                '</div>';
-        } else {
-            buffer += '' +
-                '  </div>' +
-                '</div>';
-        }
-        return buffer;
-    }
-
 
     public onDocumentLoaded() {
 
         AppointmentTemplateDetailModal.getInstance().onDocumentLoaded();
 
 
-        let options: any;
-        if (AppointmentTemplateController.getInstance().getModel().clinicConfig) {
-            logger('Using clinic config options');
-            options = {
-                clickToCreate: AppointmentTemplateController.getInstance().getModel().clinicConfig.clickToCreate,
-                dragTimeStep: AppointmentTemplateController.getInstance().getModel().clinicConfig.dragTimeStep,
-                dragToCreate: AppointmentTemplateController.getInstance().getModel().clinicConfig.dragToCreate,
-                dragToMove: AppointmentTemplateController.getInstance().getModel().clinicConfig.dragToMove,
-                dragToResize: AppointmentTemplateController.getInstance().getModel().clinicConfig.dragToResize,
-                min: moment().subtract(AppointmentTemplateController.getInstance().getModel().clinicConfig.min, "months"),
-                controls: AppointmentTemplateController.getInstance().getModel().clinicConfig.controls,
-                showControls: AppointmentTemplateController.getInstance().getModel().clinicConfig.showControls,
-                view: AppointmentTemplateController.getInstance().getModel().clinicConfig.view,
-                invalidateEvent: AppointmentTemplateController.getInstance().getModel().clinicConfig.invalidateEvent,
-                invalid: AppointmentTemplateController.getInstance().getModel().clinicConfig.invalid,
-            }
-            options.view.schedule.type = 'week';
-        } else {
-            logger('Using DEFAULT config options');
-            options = {
-                clickToCreate: 'double',
-                dragTimeStep: 5,
-                dragToCreate: true,
-                dragToMove: true,
-                dragToResize: true,
-                min: moment().subtract(3, "months"),
-                controls: ['calendar'],
-                showControls: true,
-                view: {
-                    schedule: {
-                        type: 'week',
-                        startDay: 1,
-                        endDay: 5,
-                        startTime: '09:00',
-                        endTime: '17:00',
-                        timeCellStep: 15,
-                        timeLabelStep: 60
-                    }
-                },
-                invalidateEvent: 'strict',
-                invalid: [{
-                    recurring: {
-                        repeat: 'weekly',
-                        weekDays: 'SA,SU'
-                    }
-                },
-                    {
-                        start: '12:00',
-                        end: '13:00',
-                        title: 'Lunch Break',
-                        recurring: {
-                            repeat: 'weekly',
-                            weekDays: 'MO,TU,WE,TH,FR'
-                        }
-                    }
-                ]
-
-            }
-        }
+        let options = AppointmentControllerHelper.getInstance().getClinicConfig();
+        logger('Using clinic config options');
+        options.view.schedule.type = 'week';
 
 
         options.onPageLoading = (event: any, inst: any) => {
@@ -150,7 +64,7 @@ export class AppointmentTemplateView {
                         AppointmentTemplateView.getInstance().viewElements.calendar.addEvent(event.event);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointmentTemplates,
-                            AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(event.event),
+                            AppointmentControllerHelper.getInstance().getAppointmentTemplateFromEvent(event.event),
                             false);
                     },
                     text: 'Undo'
@@ -168,20 +82,20 @@ export class AppointmentTemplateView {
                 AppointmentTemplateDetailModal.getInstance().updateAppointmentTemplate(args);
             }
         }
-        options.renderScheduleEvent = this.handleAppointmentTemplateRendering;
+        options.renderScheduleEvent = AppointmentControllerHelper.getInstance().handleAppointmentTemplateRendering;
         options.onEventUpdated = (args: any) => {
 
             // user has dragged event - update the appointment
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointmentTemplates,
-                AppointmentTemplateController.getInstance().getAppointmentTemplateFromEvent(args.event),
+                AppointmentControllerHelper.getInstance().getAppointmentTemplateFromEvent(args.event),
                 false);
         }
 
-        if (AppointmentTemplateController.getInstance().getModel().providers) {
+        if (AppointmentControllerHelper.getInstance().haveProvidersLoaded()) {
             let providers: any[] = [];
 
-            AppointmentTemplateController.getInstance().getModel().providers.forEach((provider: any) => {
+            AppointmentControllerHelper.getInstance().getProviders().forEach((provider: any) => {
                 if (provider.isCurrent) providers.push({
                     text: provider.name,
                     value: provider.name,
@@ -207,22 +121,20 @@ export class AppointmentTemplateView {
     public applyClinicConfig(clinicConfig: any) {
         if (this.viewElements.calendar) {
             logger('State changed, using clinic config options');
-            const config = JSON.parse(JSON.stringify(clinicConfig));
-            config.view.schedule.type = 'week';
+
+            clinicConfig.view.schedule.type = 'week';
 
             this.viewElements.calendar.setOptions({
-                clickToCreate: config.clickToCreate,
-                dragTimeStep: config.dragTimeStep,
-                dragToCreate: config.dragToCreate,
-                dragToMove: config.dragToMove,
-                dragToResize: config.dragToResize,
-                showControls: config.showControls,
-                view: config.view,
-                invalidateEvent: config.invalidateEvent,
-                invalid: config.invalid,
+                clickToCreate: clinicConfig.clickToCreate,
+                dragTimeStep: clinicConfig.dragTimeStep,
+                dragToCreate: clinicConfig.dragToCreate,
+                dragToMove: clinicConfig.dragToMove,
+                dragToResize: clinicConfig.dragToResize,
+                showControls: clinicConfig.showControls,
+                view: clinicConfig.view,
+                invalidateEvent: clinicConfig.invalidateEvent,
+                invalid: clinicConfig.invalid,
             });
-
-
         }
         AppointmentTemplateDetailModal.getInstance().applyClinicConfig(clinicConfig);
 

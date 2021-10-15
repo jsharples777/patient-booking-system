@@ -18,6 +18,7 @@ import {AppointmentTypesCompositeView} from "./appointment-types/AppointmentType
 import {ClinicChatSidebar} from "./clinic-chat/ClinicChatSidebar";
 import {ClinicChatListView} from "./clinic-chat/ClinicChatListView";
 import {UsersCompositeView} from "./users/UsersCompositeView";
+import {TodayController} from "./today/TodayController";
 
 
 const logger = debug('app');
@@ -75,6 +76,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
         AppointmentController.getInstance().onDocumentLoaded();
         AppointmentTemplateController.getInstance().onDocumentLoaded();
+        TodayController.getInstance().onDocumentLoaded();
         ContextualInformationHelper.getInstance().onDocumentLoaded();
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         NotificationController.getInstance().setOptions({
@@ -148,7 +150,6 @@ export default class App extends React.Component implements UnreadMessageCountLi
             event.stopPropagation();
         }
         logger(`Showing appointment book`);
-        logger(AppointmentController.getInstance().getModel().clinicConfig);
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
         browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', true);
@@ -160,7 +161,6 @@ export default class App extends React.Component implements UnreadMessageCountLi
             event.stopPropagation();
         }
         logger(`Showing appointment templates`);
-        logger(AppointmentController.getInstance().getModel().clinicConfig);
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
         browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', true);
@@ -173,7 +173,6 @@ export default class App extends React.Component implements UnreadMessageCountLi
             event.stopPropagation();
         }
         logger(`Showing today`);
-        logger(AppointmentController.getInstance().getModel().clinicConfig);
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
         browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', false);

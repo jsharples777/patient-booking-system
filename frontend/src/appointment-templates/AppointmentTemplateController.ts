@@ -8,15 +8,14 @@ import {AppointmentTemplateView} from "./AppointmentTemplateView";
 import {AppointmentTemplateFilterView} from "./AppointmentTemplateFilterView";
 import {AppointmentTemplateDetailModal} from "./AppointmentTemplateDetailModal";
 import {computeTimeStringFromStartTimeAndDurationInSeconds} from "../DurationFunctions";
+import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
+import {ScheduleLoadedListener} from "../helper/ScheduleLoadedListener";
 
 
 const logger = debug('appointment-template-controller');
 
 
 type AppointmentTemplateDataElements = {
-    appointmentTypes: any[] | null,
-    clinicConfig: any | null,
-    providers: any[] | null,
     oldEvent: any | null,
     tempEvent: any,
     currentFirstDate: number,
@@ -24,12 +23,9 @@ type AppointmentTemplateDataElements = {
     currentLastDate: number
 }
 
-export class AppointmentTemplateController implements StateChangeListener {
+export class AppointmentTemplateController implements StateChangeListener,ScheduleLoadedListener {
     private static _instance: AppointmentTemplateController;
     private dataElements: AppointmentTemplateDataElements = {
-        appointmentTypes: null,
-        clinicConfig: null,
-        providers: null,
         oldEvent: null,
         tempEvent: {},
         currentFirstDate: 0,
@@ -40,11 +36,24 @@ export class AppointmentTemplateController implements StateChangeListener {
     private constructor() {
         this.onPageLoading = this.onPageLoading.bind(this);
 
-        Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.clinicConfig, this);
-        Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.appointmentTypes, this);
-        Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.providers, this);
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.appointmentTemplates, this);
+        AppointmentControllerHelper.getInstance().addListener(this);
 
+    }
+
+    loadedPatientSearch(patientSearch: any[]): void {}
+
+    loadedProviders(providers: any[]): void {
+        AppointmentTemplateFilterView.getInstance().populateProviders(providers);
+        AppointmentTemplateView.getInstance().setupProviders(providers);
+    }
+
+    loadedClinicAppointmentBookConfig(clinicConfig: any): void {
+        AppointmentTemplateView.getInstance().applyClinicConfig(clinicConfig);
+    }
+
+    loadedAppointmentTypes(appointmentTypes: any[]): void {
+        AppointmentTemplateDetailModal.getInstance().setupAppointmentTypeDropDown(appointmentTypes);
     }
 
     public static getInstance(): AppointmentTemplateController {
@@ -63,70 +72,6 @@ export class AppointmentTemplateController implements StateChangeListener {
         AppointmentTemplateFilterView.getInstance().onDocumentLoaded();
     }
 
-    public getIconForAppointmentType(appointmentType: string) {
-        logger(`Getting icon for appoint type ${appointmentType}`);
-        let result = ``;
-        if (this.dataElements.appointmentTypes) {
-            let foundIndex = this.dataElements.appointmentTypes.findIndex((type) => type.name === appointmentType);
-            if (foundIndex >= 0) {
-                if (this.dataElements.appointmentTypes[foundIndex].icon) {
-                    result = `<i class="md-custom-event-icon ${this.dataElements.appointmentTypes[foundIndex].icon}"></i>`;
-                }
-
-            }
-        }
-        return result;
-    }
-
-
-    public getIconsForEventTemplate(event: any): string {
-        return this.getIconForAppointmentType(event.type);
-    }
-
-    public getColourForAppointmentType(appointmentType: string) {
-        let result = `rgba(10, 100, 100, 50)`;
-        if (this.dataElements.appointmentTypes) {
-            let foundIndex = this.dataElements.appointmentTypes.findIndex((type) => type.name === appointmentType);
-            if (foundIndex >= 0) result = this.dataElements.appointmentTypes[foundIndex].colour;
-        }
-        return result;
-    }
-
-    public getColourForAppointmentTemplate(appointment: any) {
-        return this.getColourForAppointmentType(appointment.type);
-
-    }
-
-    public getEventForAppointmentTemplateForDate(startDate: number, dayNumber: number, template: any): any {
-        logger(`Creating event for appointment template on date ${startDate} with ${dayNumber}`);
-        logger(template);
-        if (template.day < dayNumber) return null;
-        const loadDate = startDate + (template.day - dayNumber);
-
-        const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(template.time, template.duration);
-
-
-        let result = {
-            id: template._id,
-            start: moment(`${startDate}${template.time}`, 'YYYYMMDDHHmmss'),
-            end: moment(`${startDate}${timeString}`, 'YYYYMMDDHHmm'),
-            color: this.getColourForAppointmentTemplate(template),
-            allDay: false,
-            editable: true,
-            resource: template.provider,
-            createdBy: template.createdBy,
-            created: template.created,
-            modified: template.modified,
-            type: template.type,
-            provider: template.provider
-        }
-        logger('Converted to event');
-        logger(result);
-
-        return result;
-
-    }
-
 
     public getEventForAppointmentTemplate(template: any): any {
         logger(`Creating event for appointment template with first day number of ${this.dataElements.currentFirstDateDayNumber}`);
@@ -135,7 +80,7 @@ export class AppointmentTemplateController implements StateChangeListener {
         const loadDate = this.dataElements.currentFirstDate + (template.day - this.dataElements.currentFirstDateDayNumber);
 
 
-        let result = this.getEventForAppointmentTemplateForDate(loadDate, template.day, template);
+        let result = AppointmentControllerHelper.getInstance().getEventForAppointmentTemplateForDate(loadDate, template.day, template);
         logger('Converted to template event');
         logger(result);
 
@@ -173,27 +118,6 @@ export class AppointmentTemplateController implements StateChangeListener {
         logger(`Handling state changed ${name}`);
 
         switch (name) {
-            case STATE_NAMES.clinicConfig: {
-                this.dataElements.clinicConfig = newValue[0];
-                AppointmentTemplateView.getInstance().applyClinicConfig(this.dataElements.clinicConfig);
-                break;
-            }
-            case (STATE_NAMES.appointmentTypes): {
-                this.dataElements.appointmentTypes = newValue;
-                AppointmentTemplateDetailModal.getInstance().setupAppointmentTypeDropDown(newValue);
-                break;
-
-            }
-            case (STATE_NAMES.providers): {
-                this.dataElements.providers = newValue;
-
-                AppointmentTemplateFilterView.getInstance().populateProviders(newValue);
-
-                AppointmentTemplateView.getInstance().setupProviders(newValue);
-
-                break;
-
-            }
             case (STATE_NAMES.appointmentTemplates): {
                 const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
                 let results: any[] = [];
@@ -240,25 +164,6 @@ export class AppointmentTemplateController implements StateChangeListener {
         }
     }
 
-    public getAppointmentTemplateFromEvent(event: any): any {
-        let day = parseInt(moment(event.start).format('d'));
-        let time = moment(event.start).format('HHmmss');
-        let duration = moment(event.end).diff(moment(event.start), 'seconds');
-
-
-        let appointment = {
-            _id: event.id,
-            day: day,
-            time: time,
-            duration: duration,
-            createdBy: event.createdBy,
-            created: event.created,
-            modified: event.modified,
-            type: event.type,
-            provider: event.resource
-        };
-        return appointment;
-    }
 
 
 }

@@ -9,6 +9,7 @@ import {SecurityManager} from "ui-framework-jps";
 import debug from "debug";
 import {AppointmentTemplateView} from "../appointment-templates/AppointmentTemplateView";
 import {AppointmentTemplateController} from "../appointment-templates/AppointmentTemplateController";
+import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 
 const logger = debug('appointment-detail-view');
 
@@ -225,7 +226,7 @@ export class AppointmentDetailModal {
                         // generate a new UUID
                         let appointmentId = v4();
                         // get the colour for the event type
-                        let colour = AppointmentController.getInstance().getColourForAppointmentType('Consulting');
+                        let colour = AppointmentControllerHelper.getInstance().getColourForAppointmentType('Consulting');
 
                         let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
 
@@ -258,7 +259,7 @@ export class AppointmentDetailModal {
                         AppointmentBookView.getInstance().getCalender().addEvent(updatedEvent);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointments,
-                            AppointmentController.getInstance().getAppointmentFromEvent(updatedEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentFromEvent(updatedEvent),
                             false);
 
                         // navigate the calendar to the correct view
@@ -348,13 +349,13 @@ export class AppointmentDetailModal {
                             provider: ev.provider
                         };
                         // @ts-ignore
-                        updatedEvent.color = AppointmentController.getInstance().getColourForAppointment(updatedEvent);
+                        updatedEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointment(updatedEvent);
                         logger('updated');
                         logger(updatedEvent)
                         AppointmentBookView.getInstance().getCalender().updateEvent(updatedEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
-                            AppointmentController.getInstance().getAppointmentFromEvent(updatedEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentFromEvent(updatedEvent),
                             false);
                         // navigate the calendar to the correct view
 
@@ -427,7 +428,7 @@ export class AppointmentDetailModal {
             AppointmentBookView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
             Controller.getInstance().getStateManager().removeItemFromState(
                 STATE_NAMES.appointments,
-                AppointmentController.getInstance().getAppointmentFromEvent(AppointmentController.getInstance().getModel().tempEvent),
+                AppointmentControllerHelper.getInstance().getAppointmentFromEvent(AppointmentController.getInstance().getModel().tempEvent),
                 false);
 
             AppointmentDetailModal.getInstance().close();
@@ -443,7 +444,7 @@ export class AppointmentDetailModal {
                         AppointmentBookView.getInstance().getCalender().addEvent(deletedEvent);
                         Controller.getInstance().getStateManager().addNewItemToState(
                             STATE_NAMES.appointments,
-                            AppointmentController.getInstance().getAppointmentFromEvent(deletedEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentFromEvent(deletedEvent),
                             false);
                     },
                     text: 'Undo'
@@ -461,16 +462,16 @@ export class AppointmentDetailModal {
             let originalNote = originalEvent.note;
 
             originalEvent.isCancelled = true;
-            originalEvent.type = AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED;
-            originalEvent.note = AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED;
+            originalEvent.type = AppointmentControllerHelper.APPOINTMENT_TYPE_PATIENT_CANCELLED;
+            originalEvent.note = AppointmentControllerHelper.APPOINTMENT_TYPE_PATIENT_CANCELLED;
             originalEvent.editable = false;
-            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_CANCELLED);
+            originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointmentType(AppointmentControllerHelper.APPOINTMENT_TYPE_PATIENT_CANCELLED);
 
             //
             AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
-                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                 false);
 
             AppointmentDetailModal.getInstance().close();
@@ -484,11 +485,11 @@ export class AppointmentDetailModal {
                         originalEvent.type = originalType;
                         originalEvent.note = originalNote;
                         originalEvent.editable = true;
-                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
+                        originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointment(originalEvent);
                         AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
-                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                             false);
                     },
                     text: 'Undo'
@@ -503,12 +504,12 @@ export class AppointmentDetailModal {
             let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
 
             originalEvent.arrivalTime = moment().format('HHmmss');
-            originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
+            originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointment(originalEvent);
 
             AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
-                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                 false);
 
             AppointmentDetailModal.getInstance().close();
@@ -519,11 +520,11 @@ export class AppointmentDetailModal {
                 button: {
                     action: function () {
                         originalEvent.arrivalTime = '';
-                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
+                        originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointment(originalEvent);
                         AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
-                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                             false);
                     },
                     text: 'Undo'
@@ -540,16 +541,16 @@ export class AppointmentDetailModal {
             let originalType = originalEvent.type;
 
             originalEvent.isDNA = true;
-            originalEvent.type = AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA;
-            originalEvent.note = AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA;
+            originalEvent.type = AppointmentControllerHelper.APPOINTMENT_TYPE_PATIENT_DNA;
+            originalEvent.note = AppointmentControllerHelper.APPOINTMENT_TYPE_PATIENT_DNA;
             originalEvent.editable = false;
-            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_TYPE_PATIENT_DNA);
+            originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointmentType(AppointmentControllerHelper.APPOINTMENT_TYPE_PATIENT_DNA);
 
             //
             AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
-                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                 false);
 
             AppointmentDetailModal.getInstance().close();
@@ -561,11 +562,11 @@ export class AppointmentDetailModal {
                         originalEvent.type = originalType;
                         originalEvent.note = originalNote;
                         originalEvent.editable = true;
-                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
+                        originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointment(originalEvent);
                         AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
-                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                             false);
                     },
                     text: 'Undo'
@@ -580,13 +581,13 @@ export class AppointmentDetailModal {
 
 
             originalEvent.readyForBilling = true;
-            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_READY_FOR_BILLING);
+            originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointmentType(AppointmentControllerHelper.APPOINTMENT_STATUS_READY_FOR_BILLING);
 
             //
             AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
-                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                 false);
 
             AppointmentDetailModal.getInstance().close();
@@ -595,11 +596,11 @@ export class AppointmentDetailModal {
                 button: {
                     action: function () {
                         originalEvent.readyForBilling = false;
-                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
+                        originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointment(originalEvent);
                         AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
-                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                             false);
                     },
                     text: 'Undo'
@@ -615,13 +616,13 @@ export class AppointmentDetailModal {
 
             originalEvent.isBilled = true;
             originalEvent.editable = false;
-            originalEvent.color = AppointmentController.getInstance().getColourForAppointmentType(AppointmentController.APPOINTMENT_STATUS_BILLING_COMPLETE);
+            originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointmentType(AppointmentControllerHelper.APPOINTMENT_STATUS_BILLING_COMPLETE);
 
             //
             AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
             Controller.getInstance().getStateManager().updateItemInState(
                 STATE_NAMES.appointments,
-                AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                 false);
 
             AppointmentDetailModal.getInstance().close();
@@ -631,11 +632,11 @@ export class AppointmentDetailModal {
                     action: function () {
                         originalEvent.isBilled = false;
                         originalEvent.editable = true;
-                        originalEvent.color = AppointmentController.getInstance().getColourForAppointment(originalEvent);
+                        originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointment(originalEvent);
                         AppointmentBookView.getInstance().getCalender().updateEvent(originalEvent);
                         Controller.getInstance().getStateManager().updateItemInState(
                             STATE_NAMES.appointments,
-                            AppointmentController.getInstance().getAppointmentFromEvent(originalEvent),
+                            AppointmentControllerHelper.getInstance().getAppointmentFromEvent(originalEvent),
                             false);
                     },
                     text: 'Undo'
