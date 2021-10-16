@@ -9,10 +9,9 @@ import {
     DetailViewImplementation,
     Field,
     FormDetailViewRenderer,
-    FormFieldPermissionChecker,
     LinkedCollectionDetailController,
     ObjectDefinitionRegistry,
-    SidebarViewContainer
+    SidebarViewContainer, ViewFieldPermissionChecker
 } from "ui-framework-jps";
 import {AppointmentTypesSidebarContainers, STATE_NAMES, VIEW_NAME} from "../AppTypes";
 import {AppointmentTypesCollectionView} from "./AppointmentTypesCollectionView";
@@ -21,7 +20,7 @@ import {BootstrapFormConfigHelper} from "ui-framework-jps/dist/framework/ui/help
 
 const logger = debug('appointment-types-composite-view');
 
-export class ApptTypePermissionChecker implements FormFieldPermissionChecker {
+export class ApptTypePermissionChecker implements ViewFieldPermissionChecker {
     hasPermissionToUpdateItem(item: any): boolean {
         return true;
     }

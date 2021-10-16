@@ -19,6 +19,7 @@ import {ClinicChatSidebar} from "./clinic-chat/ClinicChatSidebar";
 import {ClinicChatListView} from "./clinic-chat/ClinicChatListView";
 import {UsersCompositeView} from "./users/UsersCompositeView";
 import {TodayController} from "./today/TodayController";
+import {PatientRecordTabularView} from "./patients/PatientRecordTabularView";
 
 
 const logger = debug('app');
@@ -38,7 +39,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.handleShowChat = this.handleShowChat.bind(this);
         this.handleShowAppointmentBook = this.handleShowAppointmentBook.bind(this);
         this.handleShowAppointmentTemplates = this.handleShowAppointmentTemplates.bind(this);
-        this.handleShowPatientRecords = this.handleShowPatientRecords.bind(this);
+        this.handleShowPatientRecord = this.handleShowPatientRecord.bind(this);
         this.handleShowPatientSearch = this.handleShowPatientSearch.bind(this);
         this.handleShowAppointmentTypes = this.handleShowAppointmentTypes.bind(this);
         this.handleShowUsers = this.handleShowUsers.bind(this);
@@ -70,6 +71,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
         new UsersCompositeView(this.usersSidebar).onDocumentLoaded();
 
         ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).onDocumentLoaded();
+
+        new PatientRecordTabularView().onDocumentLoaded();
 
 
         this.setupNavigationItemHandling();
@@ -153,6 +156,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
         browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', true);
+        browserUtil.addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
     }
 
     protected handleShowAppointmentTemplates(event: Event): void {
@@ -164,6 +168,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
         browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', true);
+        browserUtil.addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
 
     }
 
@@ -176,14 +181,19 @@ export default class App extends React.Component implements UnreadMessageCountLi
         browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
         browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
         browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', false);
+        browserUtil.addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
 
     }
-    protected handleShowPatientRecords(event: Event): void {
+    protected handleShowPatientRecord(event: Event): void {
         if (event) {
             event.preventDefault();
             event.stopPropagation();
         }
-
+        logger(`Showing patient record`);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+        browserUtil.addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+        browserUtil.addRemoveClasses(document.getElementById('today'), 'd-none', true);
+        browserUtil.addRemoveClasses(document.getElementById('patientRecord'), 'd-none', false);
     }
 
     protected handleShowPatientSearch(event: Event): void {
@@ -215,7 +225,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         if (apptTypesEl) {
             apptTypesEl.addEventListener('click', this.handleShowAppointmentTypes);
         }
-        document.getElementById(NAVIGATION.patientRecords).addEventListener('click', this.handleShowPatientRecords);
+        document.getElementById(NAVIGATION.patientRecord).addEventListener('click', this.handleShowPatientRecord);
         document.getElementById(NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch);
         let usersEl = document.getElementById(NAVIGATION.users);
         if (usersEl) {
@@ -236,7 +246,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 

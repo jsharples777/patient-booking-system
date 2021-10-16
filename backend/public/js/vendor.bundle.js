@@ -52125,7 +52125,8 @@ if (false) {} else {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ComparisonType": () => (/* binding */ ComparisonType)
+/* harmony export */   "ComparisonType": () => (/* binding */ ComparisonType),
+/* harmony export */   "ViewMode": () => (/* binding */ ViewMode)
 /* harmony export */ });
 var ComparisonType;
 (function (ComparisonType) {
@@ -52138,6 +52139,14 @@ var ComparisonType;
     ComparisonType[ComparisonType["isNotNull"] = 6] = "isNotNull";
     ComparisonType[ComparisonType["hasValue"] = 7] = "hasValue";
 })(ComparisonType || (ComparisonType = {}));
+var ViewMode;
+(function (ViewMode) {
+    ViewMode[ViewMode["unset"] = -1] = "unset";
+    ViewMode[ViewMode["create"] = 0] = "create";
+    ViewMode[ViewMode["update"] = 1] = "update";
+    ViewMode[ViewMode["displayOnly"] = 2] = "displayOnly";
+    ViewMode[ViewMode["any"] = 3] = "any";
+})(ViewMode || (ViewMode = {}));
 //# sourceMappingURL=CommonTypes.js.map
 
 /***/ }),
@@ -58512,6 +58521,188 @@ class SidebarViewContainer {
 
 /***/ }),
 
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/container/TabularViewContainer.js":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/container/TabularViewContainer.js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TabularViewContainer": () => (/* binding */ TabularViewContainer)
+/* harmony export */ });
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('tabular-view-container');
+class TabularViewContainer {
+    constructor(config) {
+        this.config = config;
+        this.views = [];
+        this.listeners = [];
+        this.tabElements = [];
+        this.tabViewElements = [];
+        this.handleTabClicked = this.handleTabClicked.bind(this);
+    }
+    addViewToTab(tabId, view) {
+        logger(`Adding view to tabular view, with containing tab of ${tabId}`);
+        const foundIndex = this.config.tabs.findIndex((tab) => tab.id === tabId);
+        if (foundIndex >= 0) {
+            this.views.push({ tabId: tabId, view: view });
+        }
+    }
+    onDocumentLoaded() {
+        logger(`On document loaded`);
+        const containedByEl = document.getElementById(this.config.containedById);
+        if (containedByEl === null)
+            return;
+        logger(`Found contained by ${this.config.containedById} constructing elements`);
+        // construct the tab view container and sub containers
+        let tabViewContainerEl = document.createElement(this.config.tabularViewContainer.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabViewContainerEl, this.config.tabularViewContainer.attributes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabViewContainerEl, this.config.tabularViewContainer.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabViewContainerEl, [{ name: 'id', value: this.config.containerId }]);
+        // construct the tabs
+        let tabBarContainerEl = document.createElement(this.config.tabBarContainer.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabBarContainerEl, this.config.tabBarContainer.attributes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabBarContainerEl, this.config.tabBarContainer.classes);
+        tabViewContainerEl.append(tabBarContainerEl);
+        let tabBarEl = document.createElement(this.config.tabBarElement.type);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabBarEl, this.config.tabBarElement.attributes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabBarEl, this.config.tabBarElement.classes);
+        tabBarContainerEl.appendChild(tabBarEl);
+        // create each item and add event handlers
+        this.config.tabs.forEach((tab) => {
+            logger(`Constructing tab ${tab.id} `);
+            let tabEl = document.createElement(tab.element.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabEl, tab.element.attributes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabEl, tab.element.classes);
+            tabBarEl.appendChild(tabEl);
+            if (tab.subElement) {
+                let subTabEl = document.createElement(tab.subElement.type);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(subTabEl, tab.subElement.attributes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(subTabEl, tab.subElement.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(subTabEl, [{ name: 'id', value: `${this.config.containerId}.tab.${tab.id}` }]);
+                tabEl.appendChild(subTabEl);
+                if (tab.subElement.innerHTML)
+                    subTabEl.innerHTML = tab.subElement.innerHTML;
+                subTabEl.addEventListener('click', this.handleTabClicked);
+                if (tab.isDefaultActive) {
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(subTabEl, [{ name: 'active', value: 'true' }]);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(subTabEl, 'active');
+                }
+                else {
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAttributes(subTabEl, ['active']);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(subTabEl, 'active');
+                }
+                this.tabElements.push(subTabEl);
+            }
+            else {
+                if (tab.element.innerHTML)
+                    tabEl.innerHTML = tab.element.innerHTML;
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabEl, [{ name: 'id', value: `${this.config.containerId}.tab.${tab.id}` }]);
+                tabEl.addEventListener('click', this.handleTabClicked);
+                if (tab.isDefaultActive) {
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabEl, [{ name: 'active', value: 'true' }]);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabEl, 'active');
+                }
+                else {
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAttributes(tabEl, ['active']);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tabEl, 'active');
+                }
+                this.tabElements.push(tabEl);
+            }
+        });
+        // create the view containers and let the views know what contains them
+        this.config.tabs.forEach((tab) => {
+            logger(`Constructing tab ${tab.id} view`);
+            // find the view and let it know about the containing element
+            const foundIndex = this.views.findIndex((tabView) => tabView.tabId === tab.id);
+            let view = null;
+            if (foundIndex >= 0) {
+                view = this.views[foundIndex].view;
+            }
+            let tabViewEl = document.createElement(this.config.tabViewContainer.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabViewEl, this.config.tabViewContainer.attributes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabViewEl, this.config.tabViewContainer.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabViewEl, [{ name: 'id', value: `${this.config.containerId}.view.${tab.id}` }]);
+            tabViewContainerEl.appendChild(tabViewEl);
+            if (view) {
+                view.setContainedBy(tabViewEl);
+                view.onDocumentLoaded();
+            }
+            if (tab.isDefaultActive) {
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tabViewEl, 'd-none');
+                if (view)
+                    view.show();
+            }
+            else {
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabViewEl, 'd-none');
+                if (view)
+                    view.hidden();
+            }
+            this.tabViewElements.push(tabViewEl);
+        });
+        containedByEl.appendChild(tabViewContainerEl);
+    }
+    handleTabClicked(event) {
+        logger(`handling tab clicked`);
+        event.stopPropagation();
+        event.preventDefault();
+        if (event.target) {
+            const targetEl = (event.target);
+            const targetId = targetEl.getAttribute('id');
+            const targetActive = targetEl.getAttribute('active');
+            logger(`Tab ${targetId} with active status ${targetActive}`);
+            if (targetId) {
+                const idComponents = targetId.split('.');
+                const tabId = idComponents[idComponents.length - 1];
+                logger(`tab id ${tabId} has been clicked`);
+                if (targetActive) {
+                    logger(`tab ${targetId} is already active - doing nothing`);
+                }
+                else {
+                    logger(`tab ${targetId} is not active - setting active and letting the views know`);
+                    this.tabElements.forEach((tabElement, index) => {
+                        const tabViewElement = this.tabViewElements[index];
+                        const foundIndex = this.views.findIndex((tabView) => tabView.tabId === tabId);
+                        let view = null;
+                        if (foundIndex >= 0) {
+                            view = this.views[foundIndex].view;
+                        }
+                        let tabElementId = tabElement.getAttribute('id');
+                        if (tabElementId) {
+                            if (tabElementId === targetId) {
+                                // mark the tab as active and let the view know
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabElement, [{ name: 'active', value: 'true' }]);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tabViewElement, 'd-none');
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabElement, 'active');
+                                if (view)
+                                    view.show();
+                            }
+                            else {
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAttributes(tabElement, ['active']);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabViewElement, 'd-none');
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tabElement, 'active');
+                                if (view)
+                                    view.hidden();
+                            }
+                        }
+                    });
+                }
+                // let the listeners know
+                this.listeners.forEach((listener) => listener.tabChanged(this, tabId));
+            }
+        }
+    }
+}
+//# sourceMappingURL=TabularViewContainer.js.map
+
+/***/ }),
+
 /***/ "./node_modules/ui-framework-jps/dist/framework/ui/context/ContextualInformationHelper.js":
 /*!************************************************************************************************!*\
   !*** ./node_modules/ui-framework-jps/dist/framework/ui/context/ContextualInformationHelper.js ***!
@@ -58806,6 +58997,728 @@ ContextualInformationHelper.BOOTSTRAP_PLACEMENT_LEFT = 'left';
 
 /***/ }),
 
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "AbstractField": () => (/* binding */ AbstractField)
+/* harmony export */ });
+/* harmony import */ var _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../form/FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
+/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
+/* harmony import */ var _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./event-handlers/ValidationEventHandler */ "./node_modules/ui-framework-jps/dist/framework/ui/field/event-handlers/ValidationEventHandler.js");
+/* harmony import */ var _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./event-handlers/RenderingEventListener */ "./node_modules/ui-framework-jps/dist/framework/ui/field/event-handlers/RenderingEventListener.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./event-handlers/EditingEventListener */ "./node_modules/ui-framework-jps/dist/framework/ui/field/event-handlers/EditingEventListener.js");
+/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
+
+
+
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_4___default()('abstract-field');
+class AbstractField {
+    constructor(view, config, fieldDef, element, subElements = null) {
+        this.config = null;
+        this.subElements = [];
+        this.listeners = [];
+        this.hidden = false;
+        this.view = view;
+        this.formId = view.getId();
+        this.config = config;
+        this.definition = fieldDef;
+        this.element = element;
+        if (subElements)
+            this.subElements = subElements;
+        this.validationHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(view, config, [this], subElements);
+        this.renderingHandler = new _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__.RenderingEventListener(view, this, config, [this], subElements);
+        const editingHandler = new _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_5__.EditingEventListener(view, this, config, [this]);
+        if (config.editor) { // render the value when the field gains focus
+            this.element.addEventListener('focus', editingHandler.handleEditEvent);
+            this.element.addEventListener('blur', editingHandler.handleEditCompletedEvent);
+            this.element.addEventListener('click', editingHandler.handleEditEvent);
+        }
+        if (config.validator) { // is the value in the field valid
+            const eventHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(this.view, config, this.listeners, subElements);
+            if (subElements && subElements.length > 0) { // event for the subelements
+                subElements.forEach((subElement) => {
+                    subElement.addEventListener('blur', eventHandler);
+                });
+            }
+            else {
+                this.element.addEventListener('blur', eventHandler);
+            }
+        }
+        // listen for our own change events
+        this.handleChangeEvent = this.handleChangeEvent.bind(this);
+        if (this.subElements && (this.subElements.length > 0)) {
+            logger(`Adding change listeners to subelements of ${config.field.id}`);
+            this.subElements.forEach((subElement) => {
+                subElement.addEventListener('change', this.handleChangeEvent);
+            });
+        }
+        else {
+            this.element.addEventListener('change', this.handleChangeEvent);
+        }
+    }
+    isHidden() {
+        return this.hidden;
+    }
+    addFieldListener(listener) {
+        logger(`${this.getName()} - adding listener ${listener.getName()}`);
+        // don't duplicate listeners
+        let index = this.listeners.findIndex((listenerInList) => listenerInList.getName() === listener.getName());
+        if (index < 0) {
+            this.listeners.push(listener);
+        }
+        else {
+            logger(`${this.getName()} - duplicate listener ${listener.getName()} ignored`);
+        }
+    }
+    getFieldDefinition() {
+        return this.definition;
+    }
+    setInvalid(message) {
+        this.validationHandler.setValidationStatusAndMessage(this.element, false, '', message, false);
+        // @ts-ignore
+        this.listeners.forEach((listener) => listener.failedValidation(this.formId, this.definition, this.getValue(), message));
+    }
+    initialise() {
+    }
+    getValue() {
+        let result = null;
+        if (this.config && this.element) {
+            // derived values are calculated from the data object overall
+            if (this.definition.derivedValue) {
+                result = this.definition.derivedValue.getValue(this.view.getCurrentDataObj(), this.definition, this.view.getViewMode() === _CommonTypes__WEBPACK_IMPORTED_MODULE_6__.ViewMode.create);
+            }
+            else {
+                switch (this.config.elementType) {
+                    case (_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup): {
+                        logger(`${this.definition.id} - getting value - rbg`);
+                        if (this.subElements && (this.subElements.length > 0)) {
+                            this.subElements.forEach((subElement) => {
+                                if (subElement.checked) {
+                                    logger(`${this.definition.id} - getting value - rbg - checked ${subElement.value}`);
+                                    result = subElement.value;
+                                    subElement.checked = true;
+                                }
+                            });
+                        }
+                        break;
+                    }
+                    case (_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox): {
+                        // @ts-ignore
+                        result = '' + this.element.checked;
+                        break;
+                    }
+                    default: {
+                        // @ts-ignore
+                        result = this.element.value;
+                        break;
+                    }
+                }
+            }
+        }
+        logger(`${this.definition.id} - getting value - ${result}`);
+        return result;
+    }
+    getFormattedValue() {
+        let result = null;
+        if (this.config && this.element) {
+            // @ts-ignore
+            result = this.element.value;
+            if (this.config.elementType === _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox) { // @ts-ignore
+                result = '' + this.element.checked;
+            }
+            if (this.config.formatter) {
+                result = this.config.formatter.formatValue(this.definition, result);
+            }
+        }
+        return result;
+    }
+    isValid() {
+        let result = true;
+        if (this.config && this.element) {
+            if (this.config.validator) {
+                if (this.config.validator.validator) {
+                    const validator = this.config.validator.validator;
+                    const response = validator.isValidValue(this.definition, this.getValue());
+                    result = response.isValid;
+                }
+            }
+        }
+        return result;
+    }
+    getId() {
+        return this.definition.id;
+    }
+    setValue(newValue) {
+        newValue = '' + newValue;
+        if (this.element && this.config) {
+            // derived fields have no "setter"
+            if (this.definition.derivedValue)
+                return;
+            // @ts-ignore
+            switch (this.config.elementType) {
+                case (_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup): {
+                    if (this.subElements && (this.subElements.length > 0)) {
+                        this.subElements.forEach((subElement) => {
+                            if (subElement.value === newValue) {
+                                subElement.checked = true;
+                            }
+                        });
+                    }
+                    break;
+                }
+                case (_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox): {
+                    // @ts-ignore
+                    this.element.checked = (newValue.toLowerCase() === 'true');
+                    break;
+                }
+                case (_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.select): {
+                    logger(`${this.definition.id} - setting value - ${newValue}`);
+                    const selectEl = this.element;
+                    let selectedIndex = -1;
+                    for (let index = 0; index < selectEl.options.length; index++) {
+                        // @ts-ignore
+                        const option = selectEl.options.item(index);
+                        logger(`${this.definition.id} - option value - ${option.value}`);
+                        if (option.value === newValue) {
+                            logger(`${this.definition.id} - option value - ${option.value} - SELECTED`);
+                            option.selected = true;
+                            selectedIndex = index;
+                        }
+                    }
+                    logger(`${this.definition.id} - selected index ${selectedIndex}`);
+                    selectEl.selectedIndex = selectedIndex;
+                    break;
+                }
+                default: {
+                    logger(`${this.definition.id} - setting value - ${newValue}`);
+                    // @ts-ignore
+                    this.element.value = newValue;
+                    break;
+                }
+            }
+        }
+    }
+    reset() {
+        if (this.element) {
+            switch (this.definition.type) {
+                case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.boolean): {
+                    // @ts-ignore
+                    this.element.checked = false;
+                    break;
+                }
+                case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.integer): {
+                    // @ts-ignore
+                    this.element.value = '0';
+                    break;
+                }
+                case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.float): {
+                    // @ts-ignore
+                    this.element.value = '0.0';
+                    break;
+                }
+                case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.limitedChoice): {
+                    if (this.subElements && (this.subElements.length > 0)) {
+                        this.subElements.forEach((subElement) => {
+                            subElement.checked = false;
+                        });
+                    }
+                    break;
+                }
+                default: {
+                    // @ts-ignore
+                    this.element.value = '';
+                    break;
+                }
+            }
+        }
+        this.show();
+    }
+    clearValue() {
+        this.reset();
+    }
+    validate() {
+        if (this.element) {
+            this.validationHandler.processValidation(this.element);
+        }
+    }
+    render(currentValue) {
+        var _a;
+        let result = currentValue;
+        if ((_a = this.config) === null || _a === void 0 ? void 0 : _a.renderer) {
+            let value = this.config.renderer.renderValue(this, this.definition, currentValue);
+            if (value)
+                result = value;
+        }
+        return result;
+    }
+    failedValidation(view, field, currentValue, message) {
+    }
+    valueChanged(view, field, fieldDef, newValue) {
+    }
+    getName() {
+        return this.definition.displayName;
+    }
+    hide() {
+        /*
+          if we have an enclosing container (per the config) then we can hide
+          otherwise we become readonly and disabled
+         */
+        if (this.config) {
+            if (this.config.containedBy) {
+                const parentEl = this.element.parentElement;
+                if (parentEl) {
+                    parentEl.setAttribute('style', 'display:none');
+                }
+            }
+            else {
+                this.setReadOnly();
+            }
+        }
+        this.hidden = true;
+    }
+    setValid() {
+        this.validationHandler.setValidationStatusAndMessage(this.element, true, '');
+    }
+    show() {
+        /*
+          if we have an enclosing container (per the config) then we can hide
+          otherwise we become readonly and disabled
+         */
+        if (this.config) {
+            if (this.config.containedBy) {
+                const parentEl = this.element.parentElement;
+                if (parentEl) {
+                    parentEl.removeAttribute('style');
+                }
+            }
+            else {
+                this.clearReadOnly();
+            }
+        }
+        this.hidden = true;
+    }
+    clearReadOnly() {
+        if (this.definition.displayOnly)
+            return;
+        this.element.removeAttribute('readonly');
+        this.element.removeAttribute('disabled');
+        // do the same for subelements
+        if (this.subElements && (this.subElements.length > 0)) {
+            this.subElements.forEach((subElement) => {
+                subElement.removeAttribute('readonly');
+                subElement.removeAttribute('disabled');
+            });
+        }
+    }
+    setReadOnly() {
+        this.element.setAttribute('readonly', 'true');
+        this.element.setAttribute('disabled', 'true');
+        // do the same for subelements
+        if (this.subElements && (this.subElements.length > 0)) {
+            this.subElements.forEach((subElement) => {
+                subElement.setAttribute('readonly', 'true');
+                subElement.setAttribute('disabled', 'true');
+            });
+        }
+    }
+    getElement() {
+        return this.element;
+    }
+    handleChangeEvent(event) {
+        logger(`Handling change event`);
+        if (this.config) {
+            let value = this.getValue();
+            logger(`Handling change event - informing listeners`);
+            this.listeners.forEach((listener) => listener.valueChanged(this.view, this, this.definition, value));
+        }
+    }
+}
+//# sourceMappingURL=AbstractField.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/field/ColourInputField.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/field/ColourInputField.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ColourInputField": () => (/* binding */ ColourInputField)
+/* harmony export */ });
+/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js");
+/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _util_MiscFunctions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('colour-input-field');
+class ColourInputField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
+    constructor(view, config, fieldDef, element) {
+        super(view, config, fieldDef, element);
+        this.setValue = this.setValue.bind(this);
+    }
+    setValue(newValue) {
+        logger(`Setting background style to colour ${newValue}`);
+        super.setValue(newValue);
+        // special case of colour types
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAttributes(this.element, ["style"]);
+        let styleOptions = [{ name: "style", value: `background-color:${newValue};colour:black` }];
+        if ((0,_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_3__.isHexValueDark)(newValue)) {
+            styleOptions = [{ name: "style", value: `background-color:${newValue};color:white` }];
+        }
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(this.element, styleOptions);
+    }
+}
+//# sourceMappingURL=ColourInputField.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/field/InputField.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/field/InputField.js ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "InputField": () => (/* binding */ InputField)
+/* harmony export */ });
+/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js");
+
+class InputField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
+    constructor(view, config, fieldDef, element) {
+        super(view, config, fieldDef, element);
+    }
+}
+//# sourceMappingURL=InputField.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/field/RadioButtonGroupField.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/field/RadioButtonGroupField.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RadioButtonGroupField": () => (/* binding */ RadioButtonGroupField)
+/* harmony export */ });
+/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js");
+
+class RadioButtonGroupField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
+    constructor(view, config, fieldDef, element, subElements) {
+        super(view, config, fieldDef, element, subElements);
+    }
+}
+//# sourceMappingURL=RadioButtonGroupField.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/field/SelectField.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/field/SelectField.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "SelectField": () => (/* binding */ SelectField)
+/* harmony export */ });
+/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js");
+
+class SelectField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
+    constructor(view, config, fieldDef, element) {
+        super(view, config, fieldDef, element);
+    }
+}
+//# sourceMappingURL=SelectField.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/field/TextAreaField.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/field/TextAreaField.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TextAreaField": () => (/* binding */ TextAreaField)
+/* harmony export */ });
+/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js");
+
+class TextAreaField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
+    constructor(view, config, fieldDef, element) {
+        super(view, config, fieldDef, element);
+    }
+}
+//# sourceMappingURL=TextAreaField.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/field/event-handlers/EditingEventListener.js":
+/*!******************************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/field/event-handlers/EditingEventListener.js ***!
+  \******************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "EditingEventListener": () => (/* binding */ EditingEventListener)
+/* harmony export */ });
+class EditingEventListener {
+    constructor(view, field, fieldConfig, listeners) {
+        this.view = view;
+        this.formId = view.getId();
+        this.field = field;
+        this.fieldConfig = fieldConfig;
+        this.listeners = listeners;
+        this.handleEditEvent = this.handleEditEvent.bind(this);
+        this.handleEditCompletedEvent = this.handleEditCompletedEvent.bind(this);
+    }
+    handleEditEvent(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        // @ts-ignore
+        const fieldElement = event.target;
+        if (this.fieldConfig.editor) {
+            const fieldDef = this.fieldConfig.field;
+            const value = fieldElement.value;
+            const newValue = this.fieldConfig.editor.editValue(this.field, fieldDef, value);
+            if (newValue && (newValue !== value)) {
+                fieldElement.value = newValue;
+                this.listeners.forEach((listener) => listener.valueChanged(this.view, this.field, fieldDef, newValue));
+            }
+        }
+    }
+    handleEditCompletedEvent(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.fieldConfig.editor) {
+            const fieldDef = this.fieldConfig.field;
+            this.fieldConfig.editor.editCompleted(this.field, fieldDef);
+        }
+    }
+}
+//# sourceMappingURL=EditingEventListener.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/field/event-handlers/RenderingEventListener.js":
+/*!********************************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/field/event-handlers/RenderingEventListener.js ***!
+  \********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RenderingEventListener": () => (/* binding */ RenderingEventListener)
+/* harmony export */ });
+class RenderingEventListener {
+    constructor(view, field, fieldConfig, listeners, subElements = null) {
+        this.view = view;
+        this.formId = view.getId();
+        this.field = field;
+        this.fieldConfig = fieldConfig;
+        this.listeners = listeners;
+        this.subElements = subElements;
+        this.handleEvent = this.handleEvent.bind(this);
+    }
+    processRendering(fieldElement) {
+        let newValue = '';
+        if (this.fieldConfig.renderer) {
+            const fieldDef = this.fieldConfig.field;
+            const value = fieldElement.value;
+            if (this.subElements)
+                this.fieldConfig.renderer.setSubElements(this.subElements);
+            newValue = this.fieldConfig.renderer.renderValue(this.field, fieldDef, value);
+            if (newValue) {
+                fieldElement.value = newValue;
+                this.listeners.forEach((listener) => listener.valueChanged(this.view, this.field, fieldDef, newValue));
+            }
+        }
+        if (newValue) {
+            return newValue;
+        }
+        else {
+            return '';
+        }
+    }
+    handleEvent(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        // @ts-ignore
+        const fieldElement = event.target;
+        this.processRendering(fieldElement);
+    }
+}
+//# sourceMappingURL=RenderingEventListener.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/field/event-handlers/ValidationEventHandler.js":
+/*!********************************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/field/event-handlers/ValidationEventHandler.js ***!
+  \********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ValidationEventHandler": () => (/* binding */ ValidationEventHandler)
+/* harmony export */ });
+/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
+/* harmony import */ var _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../form/FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
+/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_3___default()('validation-event-handler');
+class ValidationEventHandler {
+    constructor(view, fieldConfig, listeners, subElements = null) {
+        this.view = view;
+        this.formId = view.getId();
+        this.fieldConfig = fieldConfig;
+        this.listeners = listeners;
+        this.subElements = subElements;
+        this.handleEvent = this.handleEvent.bind(this);
+    }
+    setValidationStatusAndMessage(fieldElement, isValid, value, message = undefined, resetOnFailure = false) {
+        logger(`Handling validation for field ${this.fieldConfig.field.id}: ${isValid} with message ${message}`);
+        logger(this.fieldConfig);
+        if (this.fieldConfig.validator && fieldElement) {
+            logger(`Handling validation for field ${this.fieldConfig.field.id}: ${isValid} with message ${message} - have validator and element`);
+            const field = this.fieldConfig.field;
+            let validationElementTarget = fieldElement; // we are providing user feedback on the field element, unless...
+            if (this.subElements) { // sub elements change the validation target
+                this.fieldConfig.validator.validator.setSubElements(this.subElements);
+                if (this.fieldConfig.subElement) { // should be targetting the parentelement
+                    let parentEl = fieldElement.parentElement;
+                    if (parentEl) {
+                        validationElementTarget = parentEl;
+                        if (this.fieldConfig.subElement.container) { // another layer up required
+                            parentEl = parentEl.parentElement;
+                            if (parentEl) {
+                                validationElementTarget = parentEl;
+                            }
+                        }
+                    }
+                }
+            }
+            let divId = `${this.view.getDataObjectDefinition().id}.field.${this.fieldConfig.field.id}.error`;
+            logger(`Handling validation for field ${this.fieldConfig.field.id}: ${isValid} with message ${message} - div is ${divId}`);
+            const errorMessageDiv = document.getElementById(divId);
+            const errorMessageEl = document.getElementById(`${divId}.message`);
+            // clear any previous message
+            errorMessageDiv === null || errorMessageDiv === void 0 ? void 0 : errorMessageDiv.setAttribute('style', 'display:none');
+            if (errorMessageEl)
+                errorMessageEl.innerHTML = '';
+            if (this.fieldConfig.validator.invalidClasses)
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses, false);
+            if (this.fieldConfig.validator.validClasses)
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.validClasses);
+            if (!isValid) {
+                if (this.fieldConfig.validator.invalidClasses)
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses);
+                if (this.fieldConfig.validator.validClasses)
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.validClasses, false);
+                if (!message) {
+                    message = `${field.displayName} does not have a valid value.`;
+                }
+                // show the error message
+                errorMessageDiv === null || errorMessageDiv === void 0 ? void 0 : errorMessageDiv.setAttribute('style', 'display:block');
+                if (errorMessageEl)
+                    errorMessageEl.innerHTML = message;
+                if (resetOnFailure) {
+                    switch (field.type) {
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.boolean): {
+                            // @ts-ignore
+                            fieldElement.checked = false;
+                            break;
+                        }
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.integer): {
+                            // @ts-ignore
+                            fieldElement.value = '0';
+                            break;
+                        }
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.float): {
+                            // @ts-ignore
+                            fieldElement.value = '0.0';
+                            break;
+                        }
+                        default: {
+                            // @ts-ignore
+                            fieldElement.value = '';
+                            break;
+                        }
+                    }
+                }
+                // @ts-ignore
+                this.listeners.forEach((listener) => listener.failedValidation(this.formId, field, value, message));
+            }
+        }
+    }
+    processValidation(fieldElement) {
+        if (this.fieldConfig.validator && fieldElement) {
+            const field = this.fieldConfig.field;
+            // @ts-ignore
+            let value = fieldElement.value;
+            // checkboxes store values differently
+            if (this.fieldConfig.elementType === _form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.UIFieldType.checkbox) { // @ts-ignore
+                value = '' + fieldElement.checked;
+            }
+            if (this.subElements) {
+                value = '';
+                this.subElements.forEach((subElement) => {
+                    if (subElement.checked) {
+                        value = subElement.value;
+                    }
+                });
+            }
+            const validationResp = this.fieldConfig.validator.validator.isValidValue(field, value);
+            this.setValidationStatusAndMessage(fieldElement, validationResp.isValid, value, validationResp.message, validationResp.resetOnFailure);
+        }
+    }
+    handleEvent(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        // @ts-ignore
+        const fieldElement = event.target;
+        this.processValidation(fieldElement);
+    }
+}
+//# sourceMappingURL=ValidationEventHandler.js.map
+
+/***/ }),
+
 /***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/AbstractForm.js":
 /*!******************************************************************************!*\
   !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/AbstractForm.js ***!
@@ -58818,15 +59731,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "AbstractForm": () => (/* binding */ AbstractForm)
 /* harmony export */ });
 /* harmony import */ var _FormListener__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormListener */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormListener.js");
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js");
-/* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../alert/AlertListener */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertListener.js");
-/* harmony import */ var _alert_AlertManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../alert/AlertManager */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertManager.js");
-/* harmony import */ var _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationManager.js");
+/* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../alert/AlertListener */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertListener.js");
+/* harmony import */ var _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../alert/AlertManager */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertManager.js");
+/* harmony import */ var _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationTypeDefs.js");
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
-/* harmony import */ var _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./factory/FieldInputElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/form/factory/FieldInputElementFactory.js");
+/* harmony import */ var _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./factory/FieldInputElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/form/factory/FieldInputElementFactory.js");
+/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
 
 
 
@@ -58836,9 +59749,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('abstract-form');
-const dlogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('abstract-form-detail');
-const vlogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('abstract-form-detail-validation');
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form');
+const dlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail');
+const vlogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('abstract-form-detail-validation');
 class AbstractForm {
     constructor(containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl = false) {
         this.formListeners = [];
@@ -58858,7 +59771,7 @@ class AbstractForm {
         this.permissionChecker = permissionChecker;
         this.currentDataObj = {};
         this.id = (0,uuid__WEBPACK_IMPORTED_MODULE_8__["default"])();
-        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.unset;
+        this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.unset;
         // sub-classes need to create the form and it's fields
         // listen to ourselves
         this.addFormListener(this);
@@ -58866,8 +59779,8 @@ class AbstractForm {
     getFields() {
         return this.fields;
     }
-    getFormMode() {
-        return this.formMode;
+    getViewMode() {
+        return this.viewMode;
     }
     getCurrentDataObj() {
         return this.currentDataObj;
@@ -58911,12 +59824,12 @@ class AbstractForm {
     getName() {
         return this.dataObjDef.displayName;
     }
-    valueChanged(form, field, fieldDef, newValue) {
+    valueChanged(view, field, fieldDef, newValue) {
         this.hasChangedBoolean = true;
         this.setUnsavedMessage();
         logger(`Form has changed`);
     }
-    failedValidation(form, field, currentValue, message) {
+    failedValidation(view, field, currentValue, message) {
         this.hasChangedBoolean = true;
         logger(`Form has changed`);
     }
@@ -58935,7 +59848,7 @@ class AbstractForm {
     reset() {
         logger(`Resetting form`);
         this.clearUnsavedMessage();
-        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.unset;
+        this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.unset;
         this.hasChangedBoolean = false;
         // inform the listeners
         if (this.uiDef) {
@@ -58974,9 +59887,9 @@ class AbstractForm {
             };
             this.informFormListeners(formEvent, this.currentDataObj);
         }
-        if (isVisible && !(this.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly))
+        if (isVisible && !(this.viewMode === _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.displayOnly))
             this.checkFormValidationOnDisplay();
-        if (isVisible && (this.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly))
+        if (isVisible && (this.viewMode === _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.displayOnly))
             this.checkForVisualValidationForDisplayOnly();
     }
     startCreateNew() {
@@ -58984,7 +59897,7 @@ class AbstractForm {
         logger(`Starting create new`);
         this.reset();
         this.currentDataObj = {};
-        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.create;
+        this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.create;
         this.hasChangedBoolean = false;
         if (this.uiDef) {
             let eventType = _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CREATING;
@@ -59003,7 +59916,7 @@ class AbstractForm {
     startUpdate(objectToEdit) {
         this.clearUnsavedMessage();
         logger(`Starting modify existing on `);
-        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.update;
+        this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.update;
         this.hasChangedBoolean = false;
         logger(objectToEdit);
         this.currentDataObj = Object.assign({}, objectToEdit); // take a copy
@@ -59024,7 +59937,7 @@ class AbstractForm {
         this.clearUnsavedMessage();
         logger(`Starting display only `);
         logger(objectToView);
-        this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly;
+        this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.displayOnly;
         this.hasChangedBoolean = false;
         this.currentDataObj = Object.assign({}, objectToView); // take a copy
         if (this.uiDef) {
@@ -59038,9 +59951,9 @@ class AbstractForm {
         switch (event.eventType) {
             case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING): {
                 logger(`Form is cancelling`);
-                if (this.hasChangedBoolean && !(this.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly)) {
+                if (this.hasChangedBoolean && !(this.viewMode === _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.displayOnly)) {
                     if (this.uiDef) {
-                        _alert_AlertManager__WEBPACK_IMPORTED_MODULE_5__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Lose any unsaved changes?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING);
+                        _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Lose any unsaved changes?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING);
                     }
                 }
                 else {
@@ -59062,7 +59975,7 @@ class AbstractForm {
             case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLED): {
                 logger(`Form is cancelled - resetting`);
                 // user cancelled the form, will become invisible
-                this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly;
+                this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.displayOnly;
                 this.reset(); // reset the form state
                 this.setReadOnly();
                 break;
@@ -59070,7 +59983,7 @@ class AbstractForm {
             case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING): {
                 logger(`Form is deleting`);
                 if (this.uiDef) {
-                    _alert_AlertManager__WEBPACK_IMPORTED_MODULE_5__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Are you sure you want to delete this information?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING);
+                    _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Are you sure you want to delete this information?`, _FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING);
                 }
                 break;
             }
@@ -59093,7 +60006,7 @@ class AbstractForm {
                 this._saveFinishedOrAborted();
                 logger(`Form is saved with data`);
                 logger(formValues);
-                this.formMode = _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.update;
+                this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.update;
                 this.hasChangedBoolean = false;
                 break;
             }
@@ -59112,7 +60025,7 @@ class AbstractForm {
                         }
                         else {
                             // does the field fulfil any rules from the Validation manager
-                            const response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__.ValidationManager.getInstance().applyRulesToTargetField(this, this.formMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__.ConditionResponse.invalid);
+                            const response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this, this.viewMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.invalid);
                             if (response.ruleFailed) {
                                 if (response.message)
                                     field.setInvalid(response.message);
@@ -59171,7 +60084,7 @@ class AbstractForm {
         if (event.context && this.uiDef) {
             switch (event.context) {
                 case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.CANCELLING): {
-                    if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__.AlertType.confirmed) {
+                    if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__.AlertType.confirmed) {
                         let formEvent = {
                             formId: this.id,
                             target: this,
@@ -59190,7 +60103,7 @@ class AbstractForm {
                     break;
                 }
                 case (_FormListener__WEBPACK_IMPORTED_MODULE_0__.FormEventType.DELETING): {
-                    if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__.AlertType.confirmed) {
+                    if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_3__.AlertType.confirmed) {
                         let formEvent = {
                             formId: this.id,
                             target: this,
@@ -59235,7 +60148,10 @@ class AbstractForm {
         return false;
     }
     isReadOnly() {
-        return (this.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.FormMode.displayOnly);
+        return (this.viewMode === _CommonTypes__WEBPACK_IMPORTED_MODULE_7__.ViewMode.displayOnly);
+    }
+    getElementIdForField(fieldId) {
+        return _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_6__.FieldInputElementFactory.getElementIdForFieldId(this, fieldId);
     }
     informFormListeners(formEvent, dataObj) {
         this.formListeners.forEach((listener) => listener.formChanged(formEvent, dataObj));
@@ -59261,7 +60177,7 @@ class AbstractForm {
         logger(`Checking display validation for display only`);
         this.fields.forEach((field) => {
             field.show();
-            let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__.ValidationManager.getInstance().applyRulesToTargetField(this, this.formMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__.ConditionResponse.hide);
+            let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this, this.viewMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.hide);
             if (response.ruleFailed) {
                 field.hide();
                 vlogger(`Field ${field.getId()} is hidden from validation manager with message ${response.message}`);
@@ -59279,22 +60195,19 @@ class AbstractForm {
             }
             else {
                 // does the field fulfil any rules from the Validation manager
-                let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__.ValidationManager.getInstance().applyRulesToTargetField(this, this.formMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__.ConditionResponse.invalid);
+                let response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this, this.viewMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.invalid);
                 if (response.ruleFailed) {
                     if (response.message)
                         field.setInvalid(response.message);
                     vlogger(`Field ${field.getId()} is invalid from validation manager with message ${response.message}`);
                 }
-                response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_3__.ValidationManager.getInstance().applyRulesToTargetField(this, this.formMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_6__.ConditionResponse.hide);
+                response = _validation_ValidationManager__WEBPACK_IMPORTED_MODULE_2__.ValidationManager.getInstance().applyRulesToTargetField(this, this.viewMode, field.getFieldDefinition(), _validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_5__.ConditionResponse.hide);
                 if (response.ruleFailed) {
                     field.hide();
                     vlogger(`Field ${field.getId()} is hidden from validation manager with message ${response.message}`);
                 }
             }
         });
-    }
-    getElementIdForField(fieldId) {
-        return _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_7__.FieldInputElementFactory.getElementIdForFieldId(this, fieldId);
     }
 }
 //# sourceMappingURL=AbstractForm.js.map
@@ -59319,11 +60232,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _field_TextAreaField__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./field/TextAreaField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/TextAreaField.js");
-/* harmony import */ var _field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./field/RadioButtonGroupField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/RadioButtonGroupField.js");
-/* harmony import */ var _field_SelectField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./field/SelectField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/SelectField.js");
-/* harmony import */ var _field_InputField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./field/InputField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/InputField.js");
-/* harmony import */ var _field_ColourInputField__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./field/ColourInputField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/ColourInputField.js");
+/* harmony import */ var _field_TextAreaField__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../field/TextAreaField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/TextAreaField.js");
+/* harmony import */ var _field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../field/RadioButtonGroupField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/RadioButtonGroupField.js");
+/* harmony import */ var _field_SelectField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../field/SelectField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/SelectField.js");
+/* harmony import */ var _field_InputField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../field/InputField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/InputField.js");
+/* harmony import */ var _field_ColourInputField__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../field/ColourInputField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/ColourInputField.js");
 
 
 
@@ -59749,7 +60662,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "UIFieldType": () => (/* binding */ UIFieldType),
 /* harmony export */   "defaultGetValue": () => (/* binding */ defaultGetValue),
-/* harmony export */   "FormMode": () => (/* binding */ FormMode),
 /* harmony export */   "DATA_ID_ATTRIBUTE": () => (/* binding */ DATA_ID_ATTRIBUTE)
 /* harmony export */ });
 var UIFieldType;
@@ -59774,256 +60686,8 @@ const defaultGetValue = (fieldUIConfig, currentValue) => {
     }
     return result;
 };
-var FormMode;
-(function (FormMode) {
-    FormMode[FormMode["unset"] = -1] = "unset";
-    FormMode[FormMode["create"] = 0] = "create";
-    FormMode[FormMode["update"] = 1] = "update";
-    FormMode[FormMode["displayOnly"] = 2] = "displayOnly";
-    FormMode[FormMode["any"] = 3] = "any";
-})(FormMode || (FormMode = {}));
 const DATA_ID_ATTRIBUTE = 'data-id';
 //# sourceMappingURL=FormUITypeDefs.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/EditingEventListener.js":
-/*!*****************************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/EditingEventListener.js ***!
-  \*****************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "EditingEventListener": () => (/* binding */ EditingEventListener)
-/* harmony export */ });
-class EditingEventListener {
-    constructor(form, field, fieldConfig, listeners) {
-        this.form = form;
-        this.formId = form.getId();
-        this.field = field;
-        this.fieldConfig = fieldConfig;
-        this.listeners = listeners;
-        this.handleEditEvent = this.handleEditEvent.bind(this);
-        this.handleEditCompletedEvent = this.handleEditCompletedEvent.bind(this);
-    }
-    handleEditEvent(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        // @ts-ignore
-        const fieldElement = event.target;
-        if (this.fieldConfig.editor) {
-            const fieldDef = this.fieldConfig.field;
-            const value = fieldElement.value;
-            const newValue = this.fieldConfig.editor.editValue(this.field, fieldDef, value);
-            if (newValue && (newValue !== value)) {
-                fieldElement.value = newValue;
-                this.listeners.forEach((listener) => listener.valueChanged(this.form, this.field, fieldDef, newValue));
-            }
-        }
-    }
-    handleEditCompletedEvent(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (this.fieldConfig.editor) {
-            const fieldDef = this.fieldConfig.field;
-            this.fieldConfig.editor.editCompleted(this.field, fieldDef);
-        }
-    }
-}
-//# sourceMappingURL=EditingEventListener.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/RenderingEventListener.js":
-/*!*******************************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/RenderingEventListener.js ***!
-  \*******************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "RenderingEventListener": () => (/* binding */ RenderingEventListener)
-/* harmony export */ });
-class RenderingEventListener {
-    constructor(form, field, fieldConfig, listeners, subElements = null) {
-        this.form = form;
-        this.formId = form.getId();
-        this.field = field;
-        this.fieldConfig = fieldConfig;
-        this.listeners = listeners;
-        this.subElements = subElements;
-        this.handleEvent = this.handleEvent.bind(this);
-    }
-    processRendering(fieldElement) {
-        let newValue = '';
-        if (this.fieldConfig.renderer) {
-            const fieldDef = this.fieldConfig.field;
-            const value = fieldElement.value;
-            if (this.subElements)
-                this.fieldConfig.renderer.setSubElements(this.subElements);
-            newValue = this.fieldConfig.renderer.renderValue(this.field, fieldDef, value);
-            if (newValue) {
-                fieldElement.value = newValue;
-                this.listeners.forEach((listener) => listener.valueChanged(this.form, this.field, fieldDef, newValue));
-            }
-        }
-        if (newValue) {
-            return newValue;
-        }
-        else {
-            return '';
-        }
-    }
-    handleEvent(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        // @ts-ignore
-        const fieldElement = event.target;
-        this.processRendering(fieldElement);
-    }
-}
-//# sourceMappingURL=RenderingEventListener.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/ValidationEventHandler.js":
-/*!*******************************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/ValidationEventHandler.js ***!
-  \*******************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ValidationEventHandler": () => (/* binding */ ValidationEventHandler)
-/* harmony export */ });
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_3___default()('validation-event-handler');
-class ValidationEventHandler {
-    constructor(form, fieldConfig, listeners, subElements = null) {
-        this.form = form;
-        this.formId = form.getId();
-        this.fieldConfig = fieldConfig;
-        this.listeners = listeners;
-        this.subElements = subElements;
-        this.handleEvent = this.handleEvent.bind(this);
-    }
-    setValidationStatusAndMessage(fieldElement, isValid, value, message = undefined, resetOnFailure = false) {
-        logger(`Handling validation for field ${this.fieldConfig.field.id}: ${isValid} with message ${message}`);
-        logger(this.fieldConfig);
-        if (this.fieldConfig.validator && fieldElement) {
-            logger(`Handling validation for field ${this.fieldConfig.field.id}: ${isValid} with message ${message} - have validator and element`);
-            const field = this.fieldConfig.field;
-            let validationElementTarget = fieldElement; // we are providing user feedback on the field element, unless...
-            if (this.subElements) { // sub elements change the validation target
-                this.fieldConfig.validator.validator.setSubElements(this.subElements);
-                if (this.fieldConfig.subElement) { // should be targetting the parentelement
-                    let parentEl = fieldElement.parentElement;
-                    if (parentEl) {
-                        validationElementTarget = parentEl;
-                        if (this.fieldConfig.subElement.container) { // another layer up required
-                            parentEl = parentEl.parentElement;
-                            if (parentEl) {
-                                validationElementTarget = parentEl;
-                            }
-                        }
-                    }
-                }
-            }
-            let divId = `${this.form.getDataObjectDefinition().id}.field.${this.fieldConfig.field.id}.error`;
-            logger(`Handling validation for field ${this.fieldConfig.field.id}: ${isValid} with message ${message} - div is ${divId}`);
-            const errorMessageDiv = document.getElementById(divId);
-            const errorMessageEl = document.getElementById(`${divId}.message`);
-            // clear any previous message
-            errorMessageDiv === null || errorMessageDiv === void 0 ? void 0 : errorMessageDiv.setAttribute('style', 'display:none');
-            if (errorMessageEl)
-                errorMessageEl.innerHTML = '';
-            if (this.fieldConfig.validator.invalidClasses)
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses, false);
-            if (this.fieldConfig.validator.validClasses)
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.validClasses);
-            if (!isValid) {
-                if (this.fieldConfig.validator.invalidClasses)
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses);
-                if (this.fieldConfig.validator.validClasses)
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.validClasses, false);
-                if (!message) {
-                    message = `${field.displayName} does not have a valid value.`;
-                }
-                // show the error message
-                errorMessageDiv === null || errorMessageDiv === void 0 ? void 0 : errorMessageDiv.setAttribute('style', 'display:block');
-                if (errorMessageEl)
-                    errorMessageEl.innerHTML = message;
-                if (resetOnFailure) {
-                    switch (field.type) {
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.boolean): {
-                            // @ts-ignore
-                            fieldElement.checked = false;
-                            break;
-                        }
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.integer): {
-                            // @ts-ignore
-                            fieldElement.value = '0';
-                            break;
-                        }
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.float): {
-                            // @ts-ignore
-                            fieldElement.value = '0.0';
-                            break;
-                        }
-                        default: {
-                            // @ts-ignore
-                            fieldElement.value = '';
-                            break;
-                        }
-                    }
-                }
-                // @ts-ignore
-                this.listeners.forEach((listener) => listener.failedValidation(this.formId, field, value, message));
-            }
-        }
-    }
-    processValidation(fieldElement) {
-        if (this.fieldConfig.validator && fieldElement) {
-            const field = this.fieldConfig.field;
-            // @ts-ignore
-            let value = fieldElement.value;
-            // checkboxes store values differently
-            if (this.fieldConfig.elementType === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_1__.UIFieldType.checkbox) { // @ts-ignore
-                value = '' + fieldElement.checked;
-            }
-            if (this.subElements) {
-                value = '';
-                this.subElements.forEach((subElement) => {
-                    if (subElement.checked) {
-                        value = subElement.value;
-                    }
-                });
-            }
-            const validationResp = this.fieldConfig.validator.validator.isValidValue(field, value);
-            this.setValidationStatusAndMessage(fieldElement, validationResp.isValid, value, validationResp.message, validationResp.resetOnFailure);
-        }
-    }
-    handleEvent(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        // @ts-ignore
-        const fieldElement = event.target;
-        this.processValidation(fieldElement);
-    }
-}
-//# sourceMappingURL=ValidationEventHandler.js.map
 
 /***/ }),
 
@@ -60468,1292 +61132,6 @@ class FormElementFactory {
     }
 }
 //# sourceMappingURL=FormElementFactory.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js":
-/*!*************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js ***!
-  \*************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AbstractField": () => (/* binding */ AbstractField)
-/* harmony export */ });
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../event-handlers/ValidationEventHandler */ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/ValidationEventHandler.js");
-/* harmony import */ var _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../event-handlers/RenderingEventListener */ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/RenderingEventListener.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../event-handlers/EditingEventListener */ "./node_modules/ui-framework-jps/dist/framework/ui/form/event-handlers/EditingEventListener.js");
-
-
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_4___default()('abstract-field');
-class AbstractField {
-    constructor(form, config, fieldDef, element, subElements = null) {
-        this.config = null;
-        this.subElements = [];
-        this.listeners = [];
-        this.hidden = false;
-        this.form = form;
-        this.formId = form.getId();
-        this.config = config;
-        this.definition = fieldDef;
-        this.element = element;
-        if (subElements)
-            this.subElements = subElements;
-        this.validationHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(form, config, [this], subElements);
-        this.renderingHandler = new _event_handlers_RenderingEventListener__WEBPACK_IMPORTED_MODULE_3__.RenderingEventListener(form, this, config, [this], subElements);
-        const editingHandler = new _event_handlers_EditingEventListener__WEBPACK_IMPORTED_MODULE_5__.EditingEventListener(form, this, config, [this]);
-        if (config.editor) { // render the value when the field gains focus
-            this.element.addEventListener('focus', editingHandler.handleEditEvent);
-            this.element.addEventListener('blur', editingHandler.handleEditCompletedEvent);
-            this.element.addEventListener('click', editingHandler.handleEditEvent);
-        }
-        if (config.validator) { // is the value in the field valid
-            const eventHandler = new _event_handlers_ValidationEventHandler__WEBPACK_IMPORTED_MODULE_2__.ValidationEventHandler(this.form, config, this.listeners, subElements);
-            if (subElements && subElements.length > 0) { // event for the subelements
-                subElements.forEach((subElement) => {
-                    subElement.addEventListener('blur', eventHandler);
-                });
-            }
-            else {
-                this.element.addEventListener('blur', eventHandler);
-            }
-        }
-        // listen for our own change events
-        this.handleChangeEvent = this.handleChangeEvent.bind(this);
-        if (this.subElements && (this.subElements.length > 0)) {
-            logger(`Adding change listeners to subelements of ${config.field.id}`);
-            this.subElements.forEach((subElement) => {
-                subElement.addEventListener('change', this.handleChangeEvent);
-            });
-        }
-        else {
-            this.element.addEventListener('change', this.handleChangeEvent);
-        }
-    }
-    isHidden() {
-        return this.hidden;
-    }
-    addFieldListener(listener) {
-        logger(`${this.getName()} - adding listener ${listener.getName()}`);
-        // don't duplicate listeners
-        let index = this.listeners.findIndex((listenerInList) => listenerInList.getName() === listener.getName());
-        if (index < 0) {
-            this.listeners.push(listener);
-        }
-        else {
-            logger(`${this.getName()} - duplicate listener ${listener.getName()} ignored`);
-        }
-    }
-    getFieldDefinition() {
-        return this.definition;
-    }
-    setInvalid(message) {
-        this.validationHandler.setValidationStatusAndMessage(this.element, false, '', message, false);
-        // @ts-ignore
-        this.listeners.forEach((listener) => listener.failedValidation(this.formId, this.definition, this.getValue(), message));
-    }
-    initialise() {
-    }
-    getValue() {
-        let result = null;
-        if (this.config && this.element) {
-            // derived values are calculated from the data object overall
-            if (this.definition.derivedValue) {
-                result = this.definition.derivedValue.getValue(this.form.getCurrentDataObj(), this.definition, this.form.getFormMode() === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.FormMode.create);
-            }
-            else {
-                switch (this.config.elementType) {
-                    case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup): {
-                        logger(`${this.definition.id} - getting value - rbg`);
-                        if (this.subElements && (this.subElements.length > 0)) {
-                            this.subElements.forEach((subElement) => {
-                                if (subElement.checked) {
-                                    logger(`${this.definition.id} - getting value - rbg - checked ${subElement.value}`);
-                                    result = subElement.value;
-                                    subElement.checked = true;
-                                }
-                            });
-                        }
-                        break;
-                    }
-                    case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox): {
-                        // @ts-ignore
-                        result = '' + this.element.checked;
-                        break;
-                    }
-                    default: {
-                        // @ts-ignore
-                        result = this.element.value;
-                        break;
-                    }
-                }
-            }
-        }
-        logger(`${this.definition.id} - getting value - ${result}`);
-        return result;
-    }
-    getFormattedValue() {
-        let result = null;
-        if (this.config && this.element) {
-            // @ts-ignore
-            result = this.element.value;
-            if (this.config.elementType === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox) { // @ts-ignore
-                result = '' + this.element.checked;
-            }
-            if (this.config.formatter) {
-                result = this.config.formatter.formatValue(this.definition, result);
-            }
-        }
-        return result;
-    }
-    isValid() {
-        let result = true;
-        if (this.config && this.element) {
-            if (this.config.validator) {
-                if (this.config.validator.validator) {
-                    const validator = this.config.validator.validator;
-                    const response = validator.isValidValue(this.definition, this.getValue());
-                    result = response.isValid;
-                }
-            }
-        }
-        return result;
-    }
-    getId() {
-        return this.definition.id;
-    }
-    setValue(newValue) {
-        newValue = '' + newValue;
-        if (this.element && this.config) {
-            // derived fields have no "setter"
-            if (this.definition.derivedValue)
-                return;
-            // @ts-ignore
-            switch (this.config.elementType) {
-                case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.radioGroup): {
-                    if (this.subElements && (this.subElements.length > 0)) {
-                        this.subElements.forEach((subElement) => {
-                            if (subElement.value === newValue) {
-                                subElement.checked = true;
-                            }
-                        });
-                    }
-                    break;
-                }
-                case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.checkbox): {
-                    // @ts-ignore
-                    this.element.checked = (newValue.toLowerCase() === 'true');
-                    break;
-                }
-                case (_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_0__.UIFieldType.select): {
-                    logger(`${this.definition.id} - setting value - ${newValue}`);
-                    const selectEl = this.element;
-                    let selectedIndex = -1;
-                    for (let index = 0; index < selectEl.options.length; index++) {
-                        // @ts-ignore
-                        const option = selectEl.options.item(index);
-                        logger(`${this.definition.id} - option value - ${option.value}`);
-                        if (option.value === newValue) {
-                            logger(`${this.definition.id} - option value - ${option.value} - SELECTED`);
-                            option.selected = true;
-                            selectedIndex = index;
-                        }
-                    }
-                    logger(`${this.definition.id} - selected index ${selectedIndex}`);
-                    selectEl.selectedIndex = selectedIndex;
-                    break;
-                }
-                default: {
-                    logger(`${this.definition.id} - setting value - ${newValue}`);
-                    // @ts-ignore
-                    this.element.value = newValue;
-                    break;
-                }
-            }
-        }
-    }
-    reset() {
-        if (this.element) {
-            switch (this.definition.type) {
-                case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.boolean): {
-                    // @ts-ignore
-                    this.element.checked = false;
-                    break;
-                }
-                case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.integer): {
-                    // @ts-ignore
-                    this.element.value = '0';
-                    break;
-                }
-                case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.float): {
-                    // @ts-ignore
-                    this.element.value = '0.0';
-                    break;
-                }
-                case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.limitedChoice): {
-                    if (this.subElements && (this.subElements.length > 0)) {
-                        this.subElements.forEach((subElement) => {
-                            subElement.checked = false;
-                        });
-                    }
-                    break;
-                }
-                default: {
-                    // @ts-ignore
-                    this.element.value = '';
-                    break;
-                }
-            }
-        }
-        this.show();
-    }
-    clearValue() {
-        this.reset();
-    }
-    validate() {
-        if (this.element) {
-            this.validationHandler.processValidation(this.element);
-        }
-    }
-    render(currentValue) {
-        var _a;
-        let result = currentValue;
-        if ((_a = this.config) === null || _a === void 0 ? void 0 : _a.renderer) {
-            let value = this.config.renderer.renderValue(this, this.definition, currentValue);
-            if (value)
-                result = value;
-        }
-        return result;
-    }
-    failedValidation(form, field, currentValue, message) {
-    }
-    valueChanged(form, field, fieldDef, newValue) {
-    }
-    getName() {
-        return this.definition.displayName;
-    }
-    hide() {
-        /*
-          if we have an enclosing container (per the config) then we can hide
-          otherwise we become readonly and disabled
-         */
-        if (this.config) {
-            if (this.config.containedBy) {
-                const parentEl = this.element.parentElement;
-                if (parentEl) {
-                    parentEl.setAttribute('style', 'display:none');
-                }
-            }
-            else {
-                this.setReadOnly();
-            }
-        }
-        this.hidden = true;
-    }
-    setValid() {
-        this.validationHandler.setValidationStatusAndMessage(this.element, true, '');
-    }
-    show() {
-        /*
-          if we have an enclosing container (per the config) then we can hide
-          otherwise we become readonly and disabled
-         */
-        if (this.config) {
-            if (this.config.containedBy) {
-                const parentEl = this.element.parentElement;
-                if (parentEl) {
-                    parentEl.removeAttribute('style');
-                }
-            }
-            else {
-                this.clearReadOnly();
-            }
-        }
-        this.hidden = true;
-    }
-    clearReadOnly() {
-        if (this.definition.displayOnly)
-            return;
-        this.element.removeAttribute('readonly');
-        this.element.removeAttribute('disabled');
-        // do the same for subelements
-        if (this.subElements && (this.subElements.length > 0)) {
-            this.subElements.forEach((subElement) => {
-                subElement.removeAttribute('readonly');
-                subElement.removeAttribute('disabled');
-            });
-        }
-    }
-    setReadOnly() {
-        this.element.setAttribute('readonly', 'true');
-        this.element.setAttribute('disabled', 'true');
-        // do the same for subelements
-        if (this.subElements && (this.subElements.length > 0)) {
-            this.subElements.forEach((subElement) => {
-                subElement.setAttribute('readonly', 'true');
-                subElement.setAttribute('disabled', 'true');
-            });
-        }
-    }
-    handleChangeEvent(event) {
-        logger(`Handling change event`);
-        if (this.config) {
-            let value = this.getValue();
-            logger(`Handling change event - informing listeners`);
-            this.listeners.forEach((listener) => listener.valueChanged(this.form, this, this.definition, value));
-        }
-    }
-    getElement() {
-        return this.element;
-    }
-}
-//# sourceMappingURL=AbstractField.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/ColourInputField.js":
-/*!****************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/field/ColourInputField.js ***!
-  \****************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ColourInputField": () => (/* binding */ ColourInputField)
-/* harmony export */ });
-/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
-/* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _util_MiscFunctions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('colour-input-field');
-class ColourInputField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(form, config, fieldDef, element) {
-        super(form, config, fieldDef, element);
-        this.setValue = this.setValue.bind(this);
-    }
-    setValue(newValue) {
-        logger(`Setting background style to colour ${newValue}`);
-        super.setValue(newValue);
-        // special case of colour types
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAttributes(this.element, ["style"]);
-        let styleOptions = [{ name: "style", value: `background-color:${newValue};colour:black` }];
-        if ((0,_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_3__.isHexValueDark)(newValue)) {
-            styleOptions = [{ name: "style", value: `background-color:${newValue};color:white` }];
-        }
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(this.element, styleOptions);
-    }
-}
-//# sourceMappingURL=ColourInputField.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/InputField.js":
-/*!**********************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/field/InputField.js ***!
-  \**********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "InputField": () => (/* binding */ InputField)
-/* harmony export */ });
-/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
-
-class InputField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(form, config, fieldDef, element) {
-        super(form, config, fieldDef, element);
-    }
-}
-//# sourceMappingURL=InputField.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/RadioButtonGroupField.js":
-/*!*********************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/field/RadioButtonGroupField.js ***!
-  \*********************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "RadioButtonGroupField": () => (/* binding */ RadioButtonGroupField)
-/* harmony export */ });
-/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
-
-class RadioButtonGroupField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(form, config, fieldDef, element, subElements) {
-        super(form, config, fieldDef, element, subElements);
-    }
-}
-//# sourceMappingURL=RadioButtonGroupField.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/SelectField.js":
-/*!***********************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/field/SelectField.js ***!
-  \***********************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "SelectField": () => (/* binding */ SelectField)
-/* harmony export */ });
-/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
-
-class SelectField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(form, config, fieldDef, element) {
-        super(form, config, fieldDef, element);
-    }
-}
-//# sourceMappingURL=SelectField.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/TextAreaField.js":
-/*!*************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/field/TextAreaField.js ***!
-  \*************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "TextAreaField": () => (/* binding */ TextAreaField)
-/* harmony export */ });
-/* harmony import */ var _AbstractField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
-
-class TextAreaField extends _AbstractField__WEBPACK_IMPORTED_MODULE_0__.AbstractField {
-    constructor(form, config, fieldDef, element) {
-        super(form, config, fieldDef, element);
-    }
-}
-//# sourceMappingURL=TextAreaField.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationHelperFunctions.js":
-/*!******************************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationHelperFunctions.js ***!
-  \******************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ValidationHelperFunctions": () => (/* binding */ ValidationHelperFunctions)
-/* harmony export */ });
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('validation-helper-functions');
-class ValidationHelperFunctions {
-    constructor() { }
-    static getInstance() {
-        if (!(ValidationHelperFunctions._instance)) {
-            ValidationHelperFunctions._instance = new ValidationHelperFunctions();
-        }
-        return ValidationHelperFunctions._instance;
-    }
-    areTwoFieldsEqual(targetField, sourceField) {
-        let result = { ruleFailed: false };
-        if (targetField.getValue() !== sourceField.getValue()) {
-            result = {
-                ruleFailed: true,
-                message: `${targetField.getName()} must be equal to ${sourceField.getName()}`,
-            };
-        }
-        return result;
-    }
-    isFieldAndValueEqual(field, value) {
-        let result = { ruleFailed: false };
-        if (field.getValue() !== value) {
-            result = {
-                ruleFailed: true,
-                message: `${field.getName()} must be equal to ${value}`,
-            };
-        }
-        return result;
-    }
-    compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, comparison) {
-        if (!(targetValue) || !(sourceValue))
-            return false; // no null comparisons
-        logger(`Comparing two values with types and comparison ${comparison} - target value (type:${targetType},value:${targetValue}), source value (type:${sourceType},value:${sourceValue})`);
-        switch (targetType) {
-            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.date): {
-                targetValue += ' 00:00:00';
-                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.date) {
-                    sourceValue += ' 00:00:00';
-                }
-                break;
-            }
-            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.datetime): {
-                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.date) {
-                    sourceValue += ' 00:00:00';
-                }
-                break;
-            }
-            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.time): {
-                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.shortTime) {
-                    sourceValue += ':00';
-                }
-                break;
-            }
-            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.shortTime): {
-                targetValue += ':00';
-                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.shortTime) {
-                    sourceValue += ':00';
-                }
-                break;
-            }
-        }
-        logger(`Comparing ${targetValue} of type ${targetType} against ${sourceValue} of type ${sourceType}`);
-        switch (comparison) {
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan: {
-                return (targetValue < sourceValue);
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThanEqual: {
-                return (targetValue <= sourceValue);
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThanEqual: {
-                return (targetValue >= sourceValue);
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan: {
-                return (targetValue > sourceValue);
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals: {
-                return (targetValue === sourceValue);
-            }
-        }
-        return false;
-    }
-    isTargetLessThanSource(targetField, sourceField) {
-        let result = { ruleFailed: false };
-        let sourceType = sourceField.getFieldDefinition().type;
-        let targetType = targetField.getFieldDefinition().type;
-        let sourceValue = sourceField.getValue();
-        let targetValue = targetField.getValue();
-        if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan)) {
-            result = {
-                ruleFailed: true,
-                message: `${targetField.getName()} must be less than ${sourceField.getName()}`,
-            };
-        }
-        return result;
-    }
-    isFieldLessThanValue(field, value) {
-        let result = { ruleFailed: false };
-        let type = field.getFieldDefinition().type;
-        let sourceValue = field.getValue();
-        if (!this.compareTwoValuesWithTypes(type, sourceValue, type, value, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan)) {
-            result = {
-                ruleFailed: true,
-                message: `${field.getName()} must be less than ${value}`,
-            };
-        }
-        return result;
-    }
-    isFieldLessThanEqualValue(field, value) {
-        let result = { ruleFailed: false };
-        let check = this.isFieldAndValueEqual(field, value);
-        if (check.ruleFailed) {
-            check = this.isFieldLessThanValue(field, value);
-            if (check.ruleFailed) {
-                result = {
-                    ruleFailed: true,
-                    message: `${field.getName()} must be less than or equal to ${value}`,
-                };
-            }
-        }
-        return result;
-    }
-    isFieldGreaterThanValue(field, value) {
-        let result = { ruleFailed: false };
-        let type = field.getFieldDefinition().type;
-        let sourceValue = field.getValue();
-        if (!this.compareTwoValuesWithTypes(type, sourceValue, type, value, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan)) {
-            result = {
-                ruleFailed: true,
-                message: `${field.getName()} must be greater than ${value}`,
-            };
-        }
-        return result;
-    }
-    isFieldGreaterThanEqualValue(field, value) {
-        let result = { ruleFailed: false };
-        let check = this.isFieldAndValueEqual(field, value);
-        if (check.ruleFailed) {
-            check = this.isFieldGreaterThanValue(field, value);
-            if (check.ruleFailed) {
-                result = {
-                    ruleFailed: true,
-                    message: `${field.getName()} must be greater than or equal to ${value}`,
-                };
-            }
-        }
-        return result;
-    }
-    isTargetLessThanEqualSource(targetField, sourceField) {
-        let result = { ruleFailed: false };
-        let check = this.areTwoFieldsEqual(targetField, sourceField);
-        if (check.ruleFailed) {
-            check = this.isTargetLessThanSource(targetField, sourceField);
-            if (check.ruleFailed) {
-                result = {
-                    ruleFailed: true,
-                    message: `${targetField.getName()} must be less than or equal to ${sourceField.getName()}`,
-                };
-            }
-        }
-        return result;
-    }
-    isTargetGreaterThan(targetField, sourceField) {
-        let result = { ruleFailed: false };
-        let sourceType = sourceField.getFieldDefinition().type;
-        let targetType = targetField.getFieldDefinition().type;
-        let sourceValue = sourceField.getValue();
-        let targetValue = targetField.getValue();
-        if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan)) {
-            result = {
-                ruleFailed: true,
-                message: `${targetField.getName()} must be greater than ${sourceField.getName()}`,
-            };
-        }
-        return result;
-    }
-    isFieldNull(sourceField) {
-        let result = { ruleFailed: false };
-        let targetValue = sourceField.getValue();
-        // @ts-ignore
-        logger(`field ${field.getId()} is null - current value is '${targetValue}'`);
-        if ((targetValue) && (targetValue.trim().length > 0)) {
-            result = {
-                ruleFailed: true,
-                message: `${sourceField.getName()} must be empty`,
-            };
-        }
-        return result;
-    }
-    isFieldNotNull(field) {
-        let result = { ruleFailed: false };
-        let targetValue = field.getValue();
-        logger(`field ${field.getId()} is NOT null - current value is '${targetValue}'`);
-        // @ts-ignore
-        if (targetValue) {
-            if (targetValue.trim().length === 0) {
-                result = {
-                    ruleFailed: true,
-                    message: `${field.getName()} must not be empty`,
-                };
-            }
-        }
-        else {
-            result = {
-                ruleFailed: true,
-                message: `${field.getName()} must not be empty`,
-            };
-        }
-        return result;
-    }
-    doesFieldHaveValue(field, values) {
-        let result = { ruleFailed: false };
-        let targetValue = field.getValue();
-        logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue}`);
-        if (targetValue) {
-            // split the values by commas
-            let splits = values.split(',');
-            let foundInValue = false;
-            splits.forEach((split) => {
-                if (targetValue === split) {
-                    logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue} - found in value(s)`);
-                    foundInValue = true;
-                }
-            });
-            if (!foundInValue) {
-                result = {
-                    ruleFailed: true,
-                    message: `${field.getName()} must be have a value in ${values}`,
-                };
-            }
-        }
-        return result;
-    }
-    doesSourceFieldHaveValue(field, values) {
-        return this.doesFieldHaveValue(field, values);
-    }
-    isTargetGreaterThanEqualSource(targetField, sourceField) {
-        let result = { ruleFailed: false };
-        let check = this.areTwoFieldsEqual(targetField, sourceField);
-        if (check.ruleFailed) {
-            check = this.isTargetGreaterThan(targetField, sourceField);
-            if (check.ruleFailed) {
-                result = {
-                    ruleFailed: true,
-                    message: `${targetField.getName()} must be greater than or equal to ${sourceField.getName()}`,
-                };
-            }
-        }
-        return result;
-    }
-    compareFields(targetField, sourceField, comparison, value) {
-        switch (comparison) {
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals: {
-                return this.areTwoFieldsEqual(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan: {
-                return this.isTargetLessThanSource(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThanEqual: {
-                return this.isTargetLessThanEqualSource(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan: {
-                return this.isTargetGreaterThan(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThanEqual: {
-                return this.isTargetGreaterThanEqualSource(targetField, sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNull: {
-                return this.isFieldNull(sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNotNull: {
-                return this.isFieldNotNull(sourceField);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.hasValue: {
-                return this.doesSourceFieldHaveValue(sourceField, value);
-                break;
-            }
-        }
-    }
-    compareFieldWithValue(field, comparison, value) {
-        switch (comparison) {
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals: {
-                return this.isFieldAndValueEqual(field, value);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan: {
-                return this.isFieldLessThanValue(field, value);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThanEqual: {
-                return this.isFieldLessThanEqualValue(field, value);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan: {
-                return this.isFieldGreaterThanValue(field, value);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThanEqual: {
-                return this.isFieldGreaterThanEqualValue(field, value);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNull: {
-                return this.isFieldNull(field);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNotNull: {
-                return this.isFieldNotNull(field);
-                break;
-            }
-            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.hasValue: {
-                return this.doesSourceFieldHaveValue(field, value);
-                break;
-            }
-        }
-    }
-}
-//# sourceMappingURL=ValidationHelperFunctions.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js":
-/*!**********************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js ***!
-  \**********************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ValidationManager": () => (/* binding */ ValidationManager)
-/* harmony export */ });
-/* harmony import */ var _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
-/* harmony import */ var _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ValidationHelperFunctions */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationHelperFunctions.js");
-
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager');
-const flogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-rule-failure');
-const erLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-execute-rule');
-const merLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-multiple-condition-rule-results');
-class ValidationManager {
-    constructor() {
-        this.formRules = [];
-        this.formValidators = [];
-    }
-    static getInstance() {
-        if (!(ValidationManager._instance)) {
-            ValidationManager._instance = new ValidationManager();
-        }
-        return ValidationManager._instance;
-    }
-    addFormValidator(validator) {
-        this.formValidators.push(validator);
-    }
-    getName() {
-        return "Validation Manager";
-    }
-    addRuleToForm(form, rule) {
-        logger(`Adding rule on form ${form.getId()} for target field ${rule.targetDataFieldId}`);
-        /*
-         validate the rule
-         1. does the rule have a comparison field or static for each condition?
-         2. do the fields exist?
-         3. are the comparisons valid types to compare?
-        */
-        let targetField = form.getFieldFromDataFieldId(rule.targetDataFieldId);
-        if (!targetField) {
-            flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - NOT FOUND in form`);
-            return false;
-        }
-        let convertedRule = {
-            formMode: rule.formMode,
-            targetField: targetField,
-            response: rule.response,
-            conditions: [],
-            multipleConditionLogic: _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails
-        };
-        if (rule.multipleConditionLogic) {
-            convertedRule.multipleConditionLogic = rule.multipleConditionLogic;
-        }
-        if (rule.conditions)
-            rule.conditions.forEach((condition) => {
-                // do we have one of values or source field?
-                if (!(condition.values) && !(condition.sourceDataFieldId)) {
-                    flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - a condition is missing both values and source field`);
-                    return false;
-                }
-                // is this a target field value comparison?
-                if ((condition.values) && (condition.sourceDataFieldId)) {
-                    logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} with values ${condition.values}`);
-                    let sourceField = form.getFieldFromDataFieldId(condition.sourceDataFieldId);
-                    if (!sourceField) {
-                        flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
-                        return false;
-                    }
-                    convertedRule.conditions.push({
-                        sourceField: sourceField,
-                        comparison: condition.comparison,
-                        values: condition.values
-                    });
-                    sourceField.addFieldListener(this);
-                }
-                else if ((condition.values) && !(condition.sourceDataFieldId)) { // is this a value comparison?
-                    logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - values ${condition.values}`);
-                    // add a new value rule to the internal structure
-                    convertedRule.conditions.push({ values: condition.values, comparison: condition.comparison });
-                    if (targetField)
-                        targetField.addFieldListener(this);
-                }
-                else if ((condition.sourceDataFieldId) && (!condition.values)) { // is this a field vs field comparison
-                    logger(`Rule adding for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId}`);
-                    let sourceField = form.getFieldFromDataFieldId(condition.sourceDataFieldId);
-                    if (!sourceField) {
-                        flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
-                        return false;
-                    }
-                    /*
-                       are we comparing two fields that can be compared?
-                       allowed combinations are:
-                       date|datetime vs date|datetime
-                       time|short time vs time|short time
-                       boolean vs boolean
-                       integer|float vs number|float
-                       any other vs any other
-                     */
-                    let sourceType = sourceField.getFieldDefinition().type;
-                    let targetType = targetField === null || targetField === void 0 ? void 0 : targetField.getFieldDefinition().type;
-                    switch (targetType) {
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date):
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime): {
-                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime) &&
-                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date)) {
-                                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is date(time), source is NOT`);
-                                return false;
-                            }
-                            break;
-                        }
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time):
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime): {
-                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time) &&
-                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime)) {
-                                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is time, source is NOT`);
-                                return false;
-                            }
-                            break;
-                        }
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean): {
-                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean)) {
-                                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is boolean, source is NOT`);
-                                return false;
-                            }
-                            break;
-                        }
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer):
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float): {
-                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer) &&
-                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float)) {
-                                flogger(`Rule not added for form ${form.getId()} for target field ${rule.targetDataFieldId} - target is number, source is NOT`);
-                                return false;
-                            }
-                            break;
-                        }
-                    }
-                    convertedRule.conditions.push({ sourceField: sourceField, comparison: condition.comparison });
-                    sourceField.addFieldListener(this);
-                }
-            });
-        logger(`Converted rule to `);
-        logger(convertedRule);
-        let index = this.formRules.findIndex((formRule) => formRule.form.getId() === form.getId());
-        let formRuleSet;
-        // store the rules for later execution
-        if (index < 0) {
-            formRuleSet = {
-                form: form,
-                rules: []
-            };
-            formRuleSet.rules.push(convertedRule);
-            this.formRules.push(formRuleSet);
-        }
-        else {
-            formRuleSet = this.formRules[index];
-            formRuleSet.rules.push(convertedRule);
-        }
-        logger(`Current set of rules for form ${form.getId()}`);
-        logger(formRuleSet);
-        return true;
-    }
-    failedValidation(form, field, currentValue, message) {
-    } // ignored, we might be causing
-    applyRulesToTargetField(form, formMode, field, onlyRulesOfType) {
-        logger(`Checking rules for form ${form.getId()}, data field ${field.id} of type ${onlyRulesOfType}`);
-        // which rules apply?
-        let rules = this.getRulesForFieldChange(form, field.id, false);
-        let result = {
-            ruleFailed: false
-        };
-        // get the rules for the field, filtered by the condition response type
-        if (onlyRulesOfType) {
-            logger(`Only validating rules of type ${onlyRulesOfType}`);
-            let ruleSubset = [];
-            rules.forEach((rule) => {
-                if (rule.response === onlyRulesOfType) {
-                    ruleSubset.push(rule);
-                }
-            });
-            rules = ruleSubset;
-        }
-        rules.forEach((rule) => {
-            let response = this.executeRule(formMode, rule);
-            if (response.ruleFailed) {
-                flogger(`Rule failed for form ${form.getId()} with field ${field.displayName} with message ${response.message}`);
-                result.ruleFailed = true;
-                result.message = response.message;
-            }
-        });
-        // if we haven't failed yet and we have validators
-        this.formValidators.forEach((validator) => {
-            let ruleCheck = validator.applyRulesToTargetField(form, formMode, field, onlyRulesOfType);
-            if (ruleCheck.ruleFailed) {
-                flogger(`FormFieldValidator - Rule failed for form ${form.getId()} with field ${field.displayName} with message ${ruleCheck.message}`);
-                result.ruleFailed = true;
-                result.message = ruleCheck.message;
-            }
-        });
-        return result;
-    }
-    valueChanged(form, field, fieldDef, newValue) {
-        logger(`Handling field change - form ${form}, data field ${fieldDef.id}, value ${newValue}`);
-        // a field we are listening to has changed
-        // which rules apply?
-        const rules = this.getRulesForFieldChange(form, fieldDef.id, true);
-        // execute each rule and collect the responses
-        let failedResponses = [];
-        rules.forEach((rule) => {
-            let response = this.executeRule(form.getFormMode(), rule);
-            if (response.ruleFailed) {
-                failedResponses.push(response);
-            }
-        });
-        logger(`Have ${failedResponses.length} failed rules - applying each`);
-        // for each failed response let the target field know based on the response type
-        failedResponses.forEach((response) => {
-            switch (response.response) {
-                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide: {
-                    logger(`Apply hide ${response.field.getId()}`);
-                    response.field.hide();
-                    break;
-                }
-                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show: {
-                    logger(`Apply show ${response.field.getId()}`);
-                    response.field.show();
-                    break;
-                }
-                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid: {
-                    logger(`Apply invalid ${response.field.getId()}`);
-                    if (response.message)
-                        response.field.setInvalid(response.message);
-                    break;
-                }
-                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.valid: {
-                    logger(`Apply valid ${response.field.getId()}`);
-                    response.field.setValid();
-                    break;
-                }
-            }
-        });
-    }
-    executeRule(formMode, rule) {
-        let response = {
-            field: rule.targetField,
-            ruleFailed: false,
-            response: rule.response,
-        };
-        // run each field comparison
-        erLogger(`Executing rule with response ${rule.response} for target ${rule.targetField.getId()}`);
-        erLogger(rule);
-        let ruleChecks = [];
-        if (rule.conditions.length > 0) {
-            rule.conditions.forEach((condition) => {
-                erLogger('condition rule');
-                erLogger(condition);
-                let values = (condition.values) ? condition.values : '';
-                let ruleCheck;
-                if (condition.sourceField) {
-                    erLogger('condition rule - source field present');
-                    ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFields(rule.targetField, condition.sourceField, condition.comparison, values);
-                }
-                else {
-                    erLogger(`condition rule - target field value check - ${values}`);
-                    ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFieldWithValue(rule.targetField, condition.comparison, values);
-                }
-                ruleChecks.push(ruleCheck);
-                if (ruleCheck.ruleFailed) {
-                    flogger('condition rule FAILED');
-                }
-                else {
-                    flogger('condition rule PASSED');
-                }
-            });
-            // are we dealing with one rule check or multiple?
-            if (ruleChecks.length === 1) {
-                flogger(`Single rule check - rule failed? ${ruleChecks[0].ruleFailed}`);
-                response.message = ruleChecks[0].message;
-                response.ruleFailed = ruleChecks[0].ruleFailed;
-            }
-            else {
-                let errorMessageBuffer = '';
-                let failedRuleChecks = [];
-                ruleChecks.forEach((ruleCheck, index) => {
-                    if (ruleCheck.ruleFailed) {
-                        ruleCheck.index = index;
-                        failedRuleChecks.push(ruleCheck);
-                        errorMessageBuffer += ruleCheck.message + ', ';
-                    }
-                });
-                if (errorMessageBuffer.length > 0) {
-                    errorMessageBuffer = errorMessageBuffer.substr(0, errorMessageBuffer.length - 2);
-                }
-                merLogger(`Multiple rule check - number of failures ${failedRuleChecks.length} with message ${errorMessageBuffer}`);
-                switch (rule.multipleConditionLogic) {
-                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails: {
-                        if (failedRuleChecks.length > 0) {
-                            flogger(`Multiple rule check - when any conditions fail - rule FAILED`);
-                            merLogger(`Multiple rule check - when any conditions fail - rule FAILED`);
-                            response.message = errorMessageBuffer;
-                            response.ruleFailed = true;
-                        }
-                        break;
-                    }
-                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.onlyFailIfAllConditionsFail: {
-                        if (failedRuleChecks.length === ruleChecks.length) {
-                            flogger(`Multiple rule check - when all conditions fail - rule FAILED`);
-                            merLogger(`Multiple rule check - when all conditions fail - rule FAILED`);
-                            response.ruleFailed = true;
-                            response.message = errorMessageBuffer;
-                        }
-                        break;
-                    }
-                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failWhenTheNextInSequenceFails: {
-                        if (failedRuleChecks.length > 0) {
-                            flogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
-                            merLogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
-                            response.message = errorMessageBuffer;
-                            response.ruleFailed = true;
-                        }
-                        break;
-                    }
-                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.whenAllConditionsFailRuleShouldNotBeApplied: {
-                        if ((failedRuleChecks.length === ruleChecks.length) || (failedRuleChecks.length === 0)) {
-                            merLogger(`Multiple rule check - when all fail rule does not apply - rule PASSED`);
-                            response.ruleFailed = false;
-                            response.message = errorMessageBuffer;
-                        }
-                        else {
-                            flogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
-                            merLogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
-                            response.ruleFailed = true;
-                            response.message = errorMessageBuffer;
-                        }
-                        break;
-                    }
-                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails: {
-                        if (failedRuleChecks.length === 1) {
-                            const failedRuleIndex = failedRuleChecks[0].index;
-                            // is this the last rule in the chain of conditions?
-                            if (failedRuleIndex === (ruleChecks.length - 1)) {
-                                flogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
-                                merLogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
-                                response.message = errorMessageBuffer;
-                                response.ruleFailed = true;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        else {
-            // no conditions, should be based on the form mode only
-            if ((rule.formMode === formMode) || (rule.formMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_3__.FormMode.any)) {
-                response.ruleFailed = true;
-                response.message = '';
-                erLogger(`Zero condition rule applied with matching form mode`);
-            }
-        }
-        // for show and hide rules, we want the opposite effect (i.e. a success on conditions show cause the action)
-        if ((response.response === _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide) || (response.response === _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show)) {
-            response.ruleFailed = !response.ruleFailed;
-            erLogger(`Changing show/hide rule result to opposite boolean value to cause activation if the conditions were PASSED`);
-        }
-        return response;
-    }
-    getRulesForFieldChange(form, dataFieldId, includeSourceFields) {
-        let rules = [];
-        const formMode = form.getFormMode();
-        // lets go through the rules for the form
-        logger(`Finding rules for form ${form} and data field ${dataFieldId}`);
-        let index = this.formRules.findIndex((formRule) => formRule.form.getId() === form.getId());
-        if (index >= 0) {
-            const ruleSet = this.formRules[index];
-            // the dataFieldId could be the target or one of the sources
-            ruleSet.rules.forEach((rule) => {
-                // check the rule applies to the current form mode
-                const ruleFormMode = rule.formMode;
-                logger(`Rule applies to mode ${ruleFormMode} (any? ${(ruleFormMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_3__.FormMode.any)}) and current form mode is ${formMode}`);
-                if ((ruleFormMode === _FormUITypeDefs__WEBPACK_IMPORTED_MODULE_3__.FormMode.any) ||
-                    (ruleFormMode === formMode)) {
-                    if (rule.targetField.getId() === dataFieldId) {
-                        logger(`Found rule where data field ${dataFieldId} is target`);
-                        if (rule.targetField.isValid()) {
-                            rules.push(rule);
-                        }
-                        else {
-                            flogger(`Found rule where data field ${dataFieldId} is target but value is not currently valid`);
-                        }
-                    }
-                    else {
-                        if (includeSourceFields) {
-                            // rule.fieldConditions.every((value: { sourceField: Field, comparison: ComparisonType }) => {
-                            rule.conditions.forEach((condition) => {
-                                if (condition.sourceField) {
-                                    if (condition.sourceField.getId() === dataFieldId) {
-                                        logger(`Found rule where data field ${dataFieldId} is source`);
-                                        if (condition.sourceField.isValid()) {
-                                            rules.push(rule);
-                                        }
-                                        else {
-                                            flogger(`Found rule where data field ${dataFieldId} is source but value is not currently valid`);
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-        }
-        return rules;
-    }
-}
-//# sourceMappingURL=ValidationManager.js.map
-
-/***/ }),
-
-/***/ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js":
-/*!***********************************************************************************************!*\
-  !*** ./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js ***!
-  \***********************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ConditionResponse": () => (/* binding */ ConditionResponse),
-/* harmony export */   "MultipleConditionLogic": () => (/* binding */ MultipleConditionLogic)
-/* harmony export */ });
-var ConditionResponse;
-(function (ConditionResponse) {
-    ConditionResponse[ConditionResponse["show"] = 0] = "show";
-    ConditionResponse[ConditionResponse["hide"] = 1] = "hide";
-    ConditionResponse[ConditionResponse["invalid"] = 2] = "invalid";
-    ConditionResponse[ConditionResponse["valid"] = 3] = "valid";
-})(ConditionResponse || (ConditionResponse = {}));
-var MultipleConditionLogic;
-(function (MultipleConditionLogic) {
-    MultipleConditionLogic[MultipleConditionLogic["onlyFailIfAllConditionsFail"] = 0] = "onlyFailIfAllConditionsFail";
-    MultipleConditionLogic[MultipleConditionLogic["failIfAnyConditionFails"] = 1] = "failIfAnyConditionFails";
-    MultipleConditionLogic[MultipleConditionLogic["failWhenTheNextInSequenceFails"] = 2] = "failWhenTheNextInSequenceFails";
-    MultipleConditionLogic[MultipleConditionLogic["whenAllConditionsFailRuleShouldNotBeApplied"] = 3] = "whenAllConditionsFailRuleShouldNotBeApplied";
-    MultipleConditionLogic[MultipleConditionLogic["failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails"] = 4] = "failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails";
-})(MultipleConditionLogic || (MultipleConditionLogic = {}));
-//# sourceMappingURL=ValidationTypeDefs.js.map
 
 /***/ }),
 
@@ -62595,6 +61973,812 @@ class SimpleValueDataSource {
     }
 }
 //# sourceMappingURL=SimpleValueDataSource.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationHelperFunctions.js":
+/*!*************************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationHelperFunctions.js ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ValidationHelperFunctions": () => (/* binding */ ValidationHelperFunctions)
+/* harmony export */ });
+/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
+/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('validation-helper-functions');
+class ValidationHelperFunctions {
+    constructor() { }
+    static getInstance() {
+        if (!(ValidationHelperFunctions._instance)) {
+            ValidationHelperFunctions._instance = new ValidationHelperFunctions();
+        }
+        return ValidationHelperFunctions._instance;
+    }
+    areTwoFieldsEqual(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        if (targetField.getValue() !== sourceField.getValue()) {
+            result = {
+                ruleFailed: true,
+                message: `${targetField.getName()} must be equal to ${sourceField.getName()}`,
+            };
+        }
+        return result;
+    }
+    isFieldAndValueEqual(field, value) {
+        let result = { ruleFailed: false };
+        if (field.getValue() !== value) {
+            result = {
+                ruleFailed: true,
+                message: `${field.getName()} must be equal to ${value}`,
+            };
+        }
+        return result;
+    }
+    compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, comparison) {
+        if (!(targetValue) || !(sourceValue))
+            return false; // no null comparisons
+        logger(`Comparing two values with types and comparison ${comparison} - target value (type:${targetType},value:${targetValue}), source value (type:${sourceType},value:${sourceValue})`);
+        switch (targetType) {
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.date): {
+                targetValue += ' 00:00:00';
+                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.date) {
+                    sourceValue += ' 00:00:00';
+                }
+                break;
+            }
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.datetime): {
+                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.date) {
+                    sourceValue += ' 00:00:00';
+                }
+                break;
+            }
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.time): {
+                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.shortTime) {
+                    sourceValue += ':00';
+                }
+                break;
+            }
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.shortTime): {
+                targetValue += ':00';
+                if (sourceType === _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_0__.FieldType.shortTime) {
+                    sourceValue += ':00';
+                }
+                break;
+            }
+        }
+        logger(`Comparing ${targetValue} of type ${targetType} against ${sourceValue} of type ${sourceType}`);
+        switch (comparison) {
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan: {
+                return (targetValue < sourceValue);
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThanEqual: {
+                return (targetValue <= sourceValue);
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThanEqual: {
+                return (targetValue >= sourceValue);
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan: {
+                return (targetValue > sourceValue);
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals: {
+                return (targetValue === sourceValue);
+            }
+        }
+        return false;
+    }
+    isTargetLessThanSource(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        let sourceType = sourceField.getFieldDefinition().type;
+        let targetType = targetField.getFieldDefinition().type;
+        let sourceValue = sourceField.getValue();
+        let targetValue = targetField.getValue();
+        if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan)) {
+            result = {
+                ruleFailed: true,
+                message: `${targetField.getName()} must be less than ${sourceField.getName()}`,
+            };
+        }
+        return result;
+    }
+    isFieldLessThanValue(field, value) {
+        let result = { ruleFailed: false };
+        let type = field.getFieldDefinition().type;
+        let sourceValue = field.getValue();
+        if (!this.compareTwoValuesWithTypes(type, sourceValue, type, value, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan)) {
+            result = {
+                ruleFailed: true,
+                message: `${field.getName()} must be less than ${value}`,
+            };
+        }
+        return result;
+    }
+    isFieldLessThanEqualValue(field, value) {
+        let result = { ruleFailed: false };
+        let check = this.isFieldAndValueEqual(field, value);
+        if (check.ruleFailed) {
+            check = this.isFieldLessThanValue(field, value);
+            if (check.ruleFailed) {
+                result = {
+                    ruleFailed: true,
+                    message: `${field.getName()} must be less than or equal to ${value}`,
+                };
+            }
+        }
+        return result;
+    }
+    isFieldGreaterThanValue(field, value) {
+        let result = { ruleFailed: false };
+        let type = field.getFieldDefinition().type;
+        let sourceValue = field.getValue();
+        if (!this.compareTwoValuesWithTypes(type, sourceValue, type, value, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan)) {
+            result = {
+                ruleFailed: true,
+                message: `${field.getName()} must be greater than ${value}`,
+            };
+        }
+        return result;
+    }
+    isFieldGreaterThanEqualValue(field, value) {
+        let result = { ruleFailed: false };
+        let check = this.isFieldAndValueEqual(field, value);
+        if (check.ruleFailed) {
+            check = this.isFieldGreaterThanValue(field, value);
+            if (check.ruleFailed) {
+                result = {
+                    ruleFailed: true,
+                    message: `${field.getName()} must be greater than or equal to ${value}`,
+                };
+            }
+        }
+        return result;
+    }
+    isTargetLessThanEqualSource(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        let check = this.areTwoFieldsEqual(targetField, sourceField);
+        if (check.ruleFailed) {
+            check = this.isTargetLessThanSource(targetField, sourceField);
+            if (check.ruleFailed) {
+                result = {
+                    ruleFailed: true,
+                    message: `${targetField.getName()} must be less than or equal to ${sourceField.getName()}`,
+                };
+            }
+        }
+        return result;
+    }
+    isTargetGreaterThan(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        let sourceType = sourceField.getFieldDefinition().type;
+        let targetType = targetField.getFieldDefinition().type;
+        let sourceValue = sourceField.getValue();
+        let targetValue = targetField.getValue();
+        if (!this.compareTwoValuesWithTypes(targetType, targetValue, sourceType, sourceValue, _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan)) {
+            result = {
+                ruleFailed: true,
+                message: `${targetField.getName()} must be greater than ${sourceField.getName()}`,
+            };
+        }
+        return result;
+    }
+    isFieldNull(sourceField) {
+        let result = { ruleFailed: false };
+        let targetValue = sourceField.getValue();
+        // @ts-ignore
+        logger(`field ${field.getId()} is null - current value is '${targetValue}'`);
+        if ((targetValue) && (targetValue.trim().length > 0)) {
+            result = {
+                ruleFailed: true,
+                message: `${sourceField.getName()} must be empty`,
+            };
+        }
+        return result;
+    }
+    isFieldNotNull(field) {
+        let result = { ruleFailed: false };
+        let targetValue = field.getValue();
+        logger(`field ${field.getId()} is NOT null - current value is '${targetValue}'`);
+        // @ts-ignore
+        if (targetValue) {
+            if (targetValue.trim().length === 0) {
+                result = {
+                    ruleFailed: true,
+                    message: `${field.getName()} must not be empty`,
+                };
+            }
+        }
+        else {
+            result = {
+                ruleFailed: true,
+                message: `${field.getName()} must not be empty`,
+            };
+        }
+        return result;
+    }
+    doesFieldHaveValue(field, values) {
+        let result = { ruleFailed: false };
+        let targetValue = field.getValue();
+        logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue}`);
+        if (targetValue) {
+            // split the values by commas
+            let splits = values.split(',');
+            let foundInValue = false;
+            splits.forEach((split) => {
+                if (targetValue === split) {
+                    logger(`does field ${field.getId()} have value from ${values} - current value is ${targetValue} - found in value(s)`);
+                    foundInValue = true;
+                }
+            });
+            if (!foundInValue) {
+                result = {
+                    ruleFailed: true,
+                    message: `${field.getName()} must be have a value in ${values}`,
+                };
+            }
+        }
+        return result;
+    }
+    doesSourceFieldHaveValue(field, values) {
+        return this.doesFieldHaveValue(field, values);
+    }
+    isTargetGreaterThanEqualSource(targetField, sourceField) {
+        let result = { ruleFailed: false };
+        let check = this.areTwoFieldsEqual(targetField, sourceField);
+        if (check.ruleFailed) {
+            check = this.isTargetGreaterThan(targetField, sourceField);
+            if (check.ruleFailed) {
+                result = {
+                    ruleFailed: true,
+                    message: `${targetField.getName()} must be greater than or equal to ${sourceField.getName()}`,
+                };
+            }
+        }
+        return result;
+    }
+    compareFields(targetField, sourceField, comparison, value) {
+        switch (comparison) {
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals: {
+                return this.areTwoFieldsEqual(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan: {
+                return this.isTargetLessThanSource(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThanEqual: {
+                return this.isTargetLessThanEqualSource(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan: {
+                return this.isTargetGreaterThan(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThanEqual: {
+                return this.isTargetGreaterThanEqualSource(targetField, sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNull: {
+                return this.isFieldNull(sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNotNull: {
+                return this.isFieldNotNull(sourceField);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.hasValue: {
+                return this.doesSourceFieldHaveValue(sourceField, value);
+                break;
+            }
+        }
+    }
+    compareFieldWithValue(field, comparison, value) {
+        switch (comparison) {
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.equals: {
+                return this.isFieldAndValueEqual(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThan: {
+                return this.isFieldLessThanValue(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.lessThanEqual: {
+                return this.isFieldLessThanEqualValue(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThan: {
+                return this.isFieldGreaterThanValue(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.greaterThanEqual: {
+                return this.isFieldGreaterThanEqualValue(field, value);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNull: {
+                return this.isFieldNull(field);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.isNotNull: {
+                return this.isFieldNotNull(field);
+                break;
+            }
+            case _CommonTypes__WEBPACK_IMPORTED_MODULE_1__.ComparisonType.hasValue: {
+                return this.doesSourceFieldHaveValue(field, value);
+                break;
+            }
+        }
+    }
+}
+//# sourceMappingURL=ValidationHelperFunctions.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationManager.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationManager.js ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ValidationManager": () => (/* binding */ ValidationManager)
+/* harmony export */ });
+/* harmony import */ var _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationTypeDefs.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../model/DataObjectTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/model/DataObjectTypeDefs.js");
+/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
+/* harmony import */ var _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ValidationHelperFunctions */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationHelperFunctions.js");
+
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager');
+const flogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-rule-failure');
+const erLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-execute-rule');
+const merLogger = debug__WEBPACK_IMPORTED_MODULE_1___default()('validation-manager-multiple-condition-rule-results');
+class ValidationManager {
+    constructor() {
+        this.viewRules = [];
+        this.viewValidators = [];
+    }
+    static getInstance() {
+        if (!(ValidationManager._instance)) {
+            ValidationManager._instance = new ValidationManager();
+        }
+        return ValidationManager._instance;
+    }
+    addViewValidator(validator) {
+        this.viewValidators.push(validator);
+    }
+    getName() {
+        return "Validation Manager";
+    }
+    addRuleToView(validatableView, rule) {
+        logger(`Adding rule on form ${validatableView.getId()} for target field ${rule.targetDataFieldId}`);
+        /*
+         validate the rule
+         1. does the rule have a comparison field or static for each condition?
+         2. do the fields exist?
+         3. are the comparisons valid types to compare?
+        */
+        let targetField = validatableView.getFieldFromDataFieldId(rule.targetDataFieldId);
+        if (!targetField) {
+            flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - NOT FOUND in form`);
+            return false;
+        }
+        let convertedRule = {
+            viewMode: rule.viewMode,
+            targetField: targetField,
+            response: rule.response,
+            conditions: [],
+            multipleConditionLogic: _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails
+        };
+        if (rule.multipleConditionLogic) {
+            convertedRule.multipleConditionLogic = rule.multipleConditionLogic;
+        }
+        if (rule.conditions)
+            rule.conditions.forEach((condition) => {
+                // do we have one of values or source field?
+                if (!(condition.values) && !(condition.sourceDataFieldId)) {
+                    flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - a condition is missing both values and source field`);
+                    return false;
+                }
+                // is this a target field value comparison?
+                if ((condition.values) && (condition.sourceDataFieldId)) {
+                    logger(`Rule adding for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} with values ${condition.values}`);
+                    let sourceField = validatableView.getFieldFromDataFieldId(condition.sourceDataFieldId);
+                    if (!sourceField) {
+                        flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
+                        return false;
+                    }
+                    convertedRule.conditions.push({
+                        sourceField: sourceField,
+                        comparison: condition.comparison,
+                        values: condition.values
+                    });
+                    sourceField.addFieldListener(this);
+                }
+                else if ((condition.values) && !(condition.sourceDataFieldId)) { // is this a value comparison?
+                    logger(`Rule adding for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - values ${condition.values}`);
+                    // add a new value rule to the internal structure
+                    convertedRule.conditions.push({ values: condition.values, comparison: condition.comparison });
+                    if (targetField)
+                        targetField.addFieldListener(this);
+                }
+                else if ((condition.sourceDataFieldId) && (!condition.values)) { // is this a field vs field comparison
+                    logger(`Rule adding for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId}`);
+                    let sourceField = validatableView.getFieldFromDataFieldId(condition.sourceDataFieldId);
+                    if (!sourceField) {
+                        flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
+                        return false;
+                    }
+                    /*
+                       are we comparing two fields that can be compared?
+                       allowed combinations are:
+                       date|datetime vs date|datetime
+                       time|short time vs time|short time
+                       boolean vs boolean
+                       integer|float vs number|float
+                       any other vs any other
+                     */
+                    let sourceType = sourceField.getFieldDefinition().type;
+                    let targetType = targetField === null || targetField === void 0 ? void 0 : targetField.getFieldDefinition().type;
+                    switch (targetType) {
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date):
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime): {
+                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime) &&
+                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date)) {
+                                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is date(time), source is NOT`);
+                                return false;
+                            }
+                            break;
+                        }
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time):
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime): {
+                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time) &&
+                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime)) {
+                                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is time, source is NOT`);
+                                return false;
+                            }
+                            break;
+                        }
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean): {
+                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean)) {
+                                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is boolean, source is NOT`);
+                                return false;
+                            }
+                            break;
+                        }
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer):
+                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float): {
+                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer) &&
+                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float)) {
+                                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is number, source is NOT`);
+                                return false;
+                            }
+                            break;
+                        }
+                    }
+                    convertedRule.conditions.push({ sourceField: sourceField, comparison: condition.comparison });
+                    sourceField.addFieldListener(this);
+                }
+            });
+        logger(`Converted rule to `);
+        logger(convertedRule);
+        let index = this.viewRules.findIndex((viewRule) => viewRule.validatableView.getId() === validatableView.getId());
+        let formRuleSet;
+        // store the rules for later execution
+        if (index < 0) {
+            formRuleSet = {
+                validatableView: validatableView,
+                rules: []
+            };
+            formRuleSet.rules.push(convertedRule);
+            this.viewRules.push(formRuleSet);
+        }
+        else {
+            formRuleSet = this.viewRules[index];
+            formRuleSet.rules.push(convertedRule);
+        }
+        logger(`Current set of rules for form ${validatableView.getId()}`);
+        logger(formRuleSet);
+        return true;
+    }
+    failedValidation(view, field, currentValue, message) {
+    } // ignored, we might be causing
+    applyRulesToTargetField(validatableView, viewMode, field, onlyRulesOfType) {
+        logger(`Checking rules for form ${validatableView.getId()}, data field ${field.id} of type ${onlyRulesOfType}`);
+        // which rules apply?
+        let rules = this.getRulesForFieldChange(validatableView, field.id, false);
+        let result = {
+            ruleFailed: false
+        };
+        // get the rules for the field, filtered by the condition response type
+        if (onlyRulesOfType) {
+            logger(`Only validating rules of type ${onlyRulesOfType}`);
+            let ruleSubset = [];
+            rules.forEach((rule) => {
+                if (rule.response === onlyRulesOfType) {
+                    ruleSubset.push(rule);
+                }
+            });
+            rules = ruleSubset;
+        }
+        rules.forEach((rule) => {
+            let response = this.executeRule(viewMode, rule);
+            if (response.ruleFailed) {
+                flogger(`Rule failed for form ${validatableView.getId()} with field ${field.displayName} with message ${response.message}`);
+                result.ruleFailed = true;
+                result.message = response.message;
+            }
+        });
+        // if we haven't failed yet and we have validators
+        this.viewValidators.forEach((validator) => {
+            let ruleCheck = validator.applyRulesToTargetField(validatableView, viewMode, field, onlyRulesOfType);
+            if (ruleCheck.ruleFailed) {
+                flogger(`FormFieldValidator - Rule failed for form ${validatableView.getId()} with field ${field.displayName} with message ${ruleCheck.message}`);
+                result.ruleFailed = true;
+                result.message = ruleCheck.message;
+            }
+        });
+        return result;
+    }
+    valueChanged(view, field, fieldDef, newValue) {
+        logger(`Handling field change - form ${view}, data field ${fieldDef.id}, value ${newValue}`);
+        // a field we are listening to has changed
+        // which rules apply?
+        const rules = this.getRulesForFieldChange(view, fieldDef.id, true);
+        // execute each rule and collect the responses
+        let failedResponses = [];
+        rules.forEach((rule) => {
+            let response = this.executeRule(view.getViewMode(), rule);
+            if (response.ruleFailed) {
+                failedResponses.push(response);
+            }
+        });
+        logger(`Have ${failedResponses.length} failed rules - applying each`);
+        // for each failed response let the target field know based on the response type
+        failedResponses.forEach((response) => {
+            switch (response.response) {
+                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide: {
+                    logger(`Apply hide ${response.field.getId()}`);
+                    response.field.hide();
+                    break;
+                }
+                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show: {
+                    logger(`Apply show ${response.field.getId()}`);
+                    response.field.show();
+                    break;
+                }
+                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid: {
+                    logger(`Apply invalid ${response.field.getId()}`);
+                    if (response.message)
+                        response.field.setInvalid(response.message);
+                    break;
+                }
+                case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.valid: {
+                    logger(`Apply valid ${response.field.getId()}`);
+                    response.field.setValid();
+                    break;
+                }
+            }
+        });
+    }
+    executeRule(formMode, rule) {
+        let response = {
+            field: rule.targetField,
+            ruleFailed: false,
+            response: rule.response,
+        };
+        // run each field comparison
+        erLogger(`Executing rule with response ${rule.response} for target ${rule.targetField.getId()}`);
+        erLogger(rule);
+        let ruleChecks = [];
+        if (rule.conditions.length > 0) {
+            rule.conditions.forEach((condition) => {
+                erLogger('condition rule');
+                erLogger(condition);
+                let values = (condition.values) ? condition.values : '';
+                let ruleCheck;
+                if (condition.sourceField) {
+                    erLogger('condition rule - source field present');
+                    ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFields(rule.targetField, condition.sourceField, condition.comparison, values);
+                }
+                else {
+                    erLogger(`condition rule - target field value check - ${values}`);
+                    ruleCheck = _ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_4__.ValidationHelperFunctions.getInstance().compareFieldWithValue(rule.targetField, condition.comparison, values);
+                }
+                ruleChecks.push(ruleCheck);
+                if (ruleCheck.ruleFailed) {
+                    flogger('condition rule FAILED');
+                }
+                else {
+                    flogger('condition rule PASSED');
+                }
+            });
+            // are we dealing with one rule check or multiple?
+            if (ruleChecks.length === 1) {
+                flogger(`Single rule check - rule failed? ${ruleChecks[0].ruleFailed}`);
+                response.message = ruleChecks[0].message;
+                response.ruleFailed = ruleChecks[0].ruleFailed;
+            }
+            else {
+                let errorMessageBuffer = '';
+                let failedRuleChecks = [];
+                ruleChecks.forEach((ruleCheck, index) => {
+                    if (ruleCheck.ruleFailed) {
+                        ruleCheck.index = index;
+                        failedRuleChecks.push(ruleCheck);
+                        errorMessageBuffer += ruleCheck.message + ', ';
+                    }
+                });
+                if (errorMessageBuffer.length > 0) {
+                    errorMessageBuffer = errorMessageBuffer.substr(0, errorMessageBuffer.length - 2);
+                }
+                merLogger(`Multiple rule check - number of failures ${failedRuleChecks.length} with message ${errorMessageBuffer}`);
+                switch (rule.multipleConditionLogic) {
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails: {
+                        if (failedRuleChecks.length > 0) {
+                            flogger(`Multiple rule check - when any conditions fail - rule FAILED`);
+                            merLogger(`Multiple rule check - when any conditions fail - rule FAILED`);
+                            response.message = errorMessageBuffer;
+                            response.ruleFailed = true;
+                        }
+                        break;
+                    }
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.onlyFailIfAllConditionsFail: {
+                        if (failedRuleChecks.length === ruleChecks.length) {
+                            flogger(`Multiple rule check - when all conditions fail - rule FAILED`);
+                            merLogger(`Multiple rule check - when all conditions fail - rule FAILED`);
+                            response.ruleFailed = true;
+                            response.message = errorMessageBuffer;
+                        }
+                        break;
+                    }
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failWhenTheNextInSequenceFails: {
+                        if (failedRuleChecks.length > 0) {
+                            flogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
+                            merLogger(`Multiple rule check - when next in sequence fails - rule FAILED`);
+                            response.message = errorMessageBuffer;
+                            response.ruleFailed = true;
+                        }
+                        break;
+                    }
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.whenAllConditionsFailRuleShouldNotBeApplied: {
+                        if ((failedRuleChecks.length === ruleChecks.length) || (failedRuleChecks.length === 0)) {
+                            merLogger(`Multiple rule check - when all fail rule does not apply - rule PASSED`);
+                            response.ruleFailed = false;
+                            response.message = errorMessageBuffer;
+                        }
+                        else {
+                            flogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
+                            merLogger(`Multiple rule check - when all fail rule does not apply - rule FAILED`);
+                            response.ruleFailed = true;
+                            response.message = errorMessageBuffer;
+                        }
+                        break;
+                    }
+                    case _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails: {
+                        if (failedRuleChecks.length === 1) {
+                            const failedRuleIndex = failedRuleChecks[0].index;
+                            // is this the last rule in the chain of conditions?
+                            if (failedRuleIndex === (ruleChecks.length - 1)) {
+                                flogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
+                                merLogger(`Multiple rule check - only if final is a fail, others are not fails - rule FAILED`);
+                                response.message = errorMessageBuffer;
+                                response.ruleFailed = true;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            // no conditions, should be based on the form mode only
+            if ((rule.viewMode === formMode) || (rule.viewMode === _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ViewMode.any)) {
+                response.ruleFailed = true;
+                response.message = '';
+                erLogger(`Zero condition rule applied with matching form mode`);
+            }
+        }
+        // for show and hide rules, we want the opposite effect (i.e. a success on conditions show cause the action)
+        if ((response.response === _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide) || (response.response === _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show)) {
+            response.ruleFailed = !response.ruleFailed;
+            erLogger(`Changing show/hide rule result to opposite boolean value to cause activation if the conditions were PASSED`);
+        }
+        return response;
+    }
+    getRulesForFieldChange(validatableView, dataFieldId, includeSourceFields) {
+        let rules = [];
+        const viewMode = validatableView.getViewMode();
+        // lets go through the rules for the form
+        logger(`Finding rules for form ${validatableView} and data field ${dataFieldId}`);
+        let index = this.viewRules.findIndex((formRule) => formRule.validatableView.getId() === validatableView.getId());
+        if (index >= 0) {
+            const ruleSet = this.viewRules[index];
+            // the dataFieldId could be the target or one of the sources
+            ruleSet.rules.forEach((rule) => {
+                // check the rule applies to the current form mode
+                const ruleViewMode = rule.viewMode;
+                logger(`Rule applies to mode ${ruleViewMode} (any? ${(ruleViewMode === _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ViewMode.any)}) and current form mode is ${viewMode}`);
+                if ((ruleViewMode === _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ViewMode.any) ||
+                    (ruleViewMode === viewMode)) {
+                    if (rule.targetField.getId() === dataFieldId) {
+                        logger(`Found rule where data field ${dataFieldId} is target`);
+                        if (rule.targetField.isValid()) {
+                            rules.push(rule);
+                        }
+                        else {
+                            flogger(`Found rule where data field ${dataFieldId} is target but value is not currently valid`);
+                        }
+                    }
+                    else {
+                        if (includeSourceFields) {
+                            // rule.fieldConditions.every((value: { sourceField: Field, comparison: ComparisonType }) => {
+                            rule.conditions.forEach((condition) => {
+                                if (condition.sourceField) {
+                                    if (condition.sourceField.getId() === dataFieldId) {
+                                        logger(`Found rule where data field ${dataFieldId} is source`);
+                                        if (condition.sourceField.isValid()) {
+                                            rules.push(rule);
+                                        }
+                                        else {
+                                            flogger(`Found rule where data field ${dataFieldId} is source but value is not currently valid`);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+        return rules;
+    }
+}
+//# sourceMappingURL=ValidationManager.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationTypeDefs.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationTypeDefs.js ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ConditionResponse": () => (/* binding */ ConditionResponse),
+/* harmony export */   "MultipleConditionLogic": () => (/* binding */ MultipleConditionLogic)
+/* harmony export */ });
+var ConditionResponse;
+(function (ConditionResponse) {
+    ConditionResponse[ConditionResponse["show"] = 0] = "show";
+    ConditionResponse[ConditionResponse["hide"] = 1] = "hide";
+    ConditionResponse[ConditionResponse["invalid"] = 2] = "invalid";
+    ConditionResponse[ConditionResponse["valid"] = 3] = "valid";
+})(ConditionResponse || (ConditionResponse = {}));
+var MultipleConditionLogic;
+(function (MultipleConditionLogic) {
+    MultipleConditionLogic[MultipleConditionLogic["onlyFailIfAllConditionsFail"] = 0] = "onlyFailIfAllConditionsFail";
+    MultipleConditionLogic[MultipleConditionLogic["failIfAnyConditionFails"] = 1] = "failIfAnyConditionFails";
+    MultipleConditionLogic[MultipleConditionLogic["failWhenTheNextInSequenceFails"] = 2] = "failWhenTheNextInSequenceFails";
+    MultipleConditionLogic[MultipleConditionLogic["whenAllConditionsFailRuleShouldNotBeApplied"] = 3] = "whenAllConditionsFailRuleShouldNotBeApplied";
+    MultipleConditionLogic[MultipleConditionLogic["failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails"] = 4] = "failOnlyIfFinalConditionIsAFailAndPreviousConditionsAreNotFails";
+})(MultipleConditionLogic || (MultipleConditionLogic = {}));
+//# sourceMappingURL=ValidationTypeDefs.js.map
 
 /***/ }),
 
@@ -65334,6 +65518,12 @@ class BrowserUtil {
             });
         }
     }
+    removeClasses(element, classesText = undefined) {
+        this.addRemoveClasses(element, classesText, false);
+    }
+    addClasses(element, classesText = undefined) {
+        this.addRemoveClasses(element, classesText, true);
+    }
     addAttributes(element, attributes) {
         if (attributes) {
             attributes.forEach((attribute) => {
@@ -65553,6 +65743,7 @@ function isHexValueDark(hexValue) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ComparisonType": () => (/* reexport safe */ _framework_CommonTypes__WEBPACK_IMPORTED_MODULE_0__.ComparisonType),
+/* harmony export */   "ViewMode": () => (/* reexport safe */ _framework_CommonTypes__WEBPACK_IMPORTED_MODULE_0__.ViewMode),
 /* harmony export */   "BasicFieldOperations": () => (/* reexport safe */ _framework_model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__.BasicFieldOperations),
 /* harmony export */   "BasicObjectDefinitionFactory": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.BasicObjectDefinitionFactory),
 /* harmony export */   "FIELD_ModifiedOn": () => (/* reexport safe */ _framework_model_BasicObjectDefinitionFactory__WEBPACK_IMPORTED_MODULE_2__.FIELD_ModifiedOn),
@@ -65610,59 +65801,59 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "UserSearchSidebar": () => (/* reexport safe */ _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_37__.UserSearchSidebar),
 /* harmony export */   "UserSearchView": () => (/* reexport safe */ _framework_ui_chat_UserSearchView__WEBPACK_IMPORTED_MODULE_38__.UserSearchView),
 /* harmony export */   "SidebarViewContainer": () => (/* reexport safe */ _framework_ui_container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_39__.SidebarViewContainer),
-/* harmony export */   "ContextualInformationHelper": () => (/* reexport safe */ _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_40__.ContextualInformationHelper),
-/* harmony export */   "UIFieldType": () => (/* reexport safe */ _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_41__.UIFieldType),
-/* harmony export */   "defaultGetValue": () => (/* reexport safe */ _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_41__.defaultGetValue),
-/* harmony export */   "FormMode": () => (/* reexport safe */ _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_41__.FormMode),
-/* harmony export */   "FormEventType": () => (/* reexport safe */ _framework_ui_form_FormListener__WEBPACK_IMPORTED_MODULE_42__.FormEventType),
-/* harmony export */   "AbstractForm": () => (/* reexport safe */ _framework_ui_form_AbstractForm__WEBPACK_IMPORTED_MODULE_43__.AbstractForm),
-/* harmony export */   "FormElementFactory": () => (/* reexport safe */ _framework_ui_form_factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_44__.FormElementFactory),
-/* harmony export */   "BasicFormImplementation": () => (/* reexport safe */ _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_45__.BasicFormImplementation),
-/* harmony export */   "AbstractField": () => (/* reexport safe */ _framework_ui_form_field_AbstractField__WEBPACK_IMPORTED_MODULE_46__.AbstractField),
-/* harmony export */   "InputField": () => (/* reexport safe */ _framework_ui_form_field_InputField__WEBPACK_IMPORTED_MODULE_47__.InputField),
-/* harmony export */   "TextAreaField": () => (/* reexport safe */ _framework_ui_form_field_TextAreaField__WEBPACK_IMPORTED_MODULE_48__.TextAreaField),
-/* harmony export */   "SelectField": () => (/* reexport safe */ _framework_ui_form_field_SelectField__WEBPACK_IMPORTED_MODULE_49__.SelectField),
-/* harmony export */   "RadioButtonGroupField": () => (/* reexport safe */ _framework_ui_form_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_50__.RadioButtonGroupField),
-/* harmony export */   "ColourInputField": () => (/* reexport safe */ _framework_ui_form_field_ColourInputField__WEBPACK_IMPORTED_MODULE_51__.ColourInputField),
-/* harmony export */   "ConditionResponse": () => (/* reexport safe */ _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_52__.ConditionResponse),
-/* harmony export */   "MultipleConditionLogic": () => (/* reexport safe */ _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_52__.MultipleConditionLogic),
-/* harmony export */   "ValidationManager": () => (/* reexport safe */ _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_53__.ValidationManager),
-/* harmony export */   "ValidationHelperFunctions": () => (/* reexport safe */ _framework_ui_form_validation_ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_54__.ValidationHelperFunctions),
-/* harmony export */   "DefaultFormFieldPermissionChecker": () => (/* reexport safe */ _framework_ui_form_DefaultFormFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_55__.DefaultFormFieldPermissionChecker),
-/* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_56__.BootstrapFormConfigHelper),
-/* harmony export */   "BootstrapTableConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_57__.BootstrapTableConfigHelper),
-/* harmony export */   "LimitedChoiceTextRenderer": () => (/* reexport safe */ _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_58__.LimitedChoiceTextRenderer),
-/* harmony export */   "LinkedCollectionDetailController": () => (/* reexport safe */ _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_59__.LinkedCollectionDetailController),
-/* harmony export */   "RBGFieldOperations": () => (/* reexport safe */ _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_60__.RBGFieldOperations),
-/* harmony export */   "SimpleValueDataSource": () => (/* reexport safe */ _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_61__.SimpleValueDataSource),
-/* harmony export */   "ColourEditor": () => (/* reexport safe */ _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_62__.ColourEditor),
-/* harmony export */   "AbstractView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_63__.AbstractView),
-/* harmony export */   "AbstractCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_64__.AbstractCollectionView),
-/* harmony export */   "AbstractStatefulCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_65__.AbstractStatefulCollectionView),
-/* harmony export */   "DefaultPermissionChecker": () => (/* reexport safe */ _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_66__.DefaultPermissionChecker),
-/* harmony export */   "DetailViewImplementation": () => (/* reexport safe */ _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_67__.DetailViewImplementation),
-/* harmony export */   "CarouselViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_68__.CarouselViewRenderer),
-/* harmony export */   "CarouselViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_69__.CarouselViewRendererUsingContext),
-/* harmony export */   "FormDetailViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_70__.FormDetailViewRenderer),
-/* harmony export */   "ListViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_71__.ListViewRenderer),
-/* harmony export */   "ListViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_72__.ListViewRendererUsingContext),
-/* harmony export */   "TabularViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_73__.TabularViewRendererUsingContext),
-/* harmony export */   "ViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_74__.ViewListenerForwarder),
-/* harmony export */   "DetailViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__.DetailViewListenerForwarder),
-/* harmony export */   "CollectionViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_76__.CollectionViewListenerForwarder),
-/* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_77__.CollectionViewEventHandlerDelegate),
-/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_78__.CollectionViewEventHandlerDelegateUsingContext),
-/* harmony export */   "truncateString": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.truncateString),
-/* harmony export */   "convertHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.convertHexToNumber),
-/* harmony export */   "convertSingleHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.convertSingleHexToNumber),
-/* harmony export */   "isHexValueDark": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.isHexValueDark),
-/* harmony export */   "isSameMongo": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSameMongo),
-/* harmony export */   "isSame": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSame),
-/* harmony export */   "isSameUsername": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSameUsername),
-/* harmony export */   "isSameRoom": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSameRoom),
-/* harmony export */   "addDurations": () => (/* reexport safe */ _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_81__.addDurations),
-/* harmony export */   "BrowserUtil": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__.BrowserUtil),
-/* harmony export */   "getElementOffset": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__.getElementOffset)
+/* harmony export */   "TabularViewContainer": () => (/* reexport safe */ _framework_ui_container_TabularViewContainer__WEBPACK_IMPORTED_MODULE_40__.TabularViewContainer),
+/* harmony export */   "ContextualInformationHelper": () => (/* reexport safe */ _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_41__.ContextualInformationHelper),
+/* harmony export */   "UIFieldType": () => (/* reexport safe */ _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_42__.UIFieldType),
+/* harmony export */   "defaultGetValue": () => (/* reexport safe */ _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_42__.defaultGetValue),
+/* harmony export */   "FormEventType": () => (/* reexport safe */ _framework_ui_form_FormListener__WEBPACK_IMPORTED_MODULE_43__.FormEventType),
+/* harmony export */   "AbstractForm": () => (/* reexport safe */ _framework_ui_form_AbstractForm__WEBPACK_IMPORTED_MODULE_44__.AbstractForm),
+/* harmony export */   "FormElementFactory": () => (/* reexport safe */ _framework_ui_form_factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_45__.FormElementFactory),
+/* harmony export */   "BasicFormImplementation": () => (/* reexport safe */ _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_46__.BasicFormImplementation),
+/* harmony export */   "AbstractField": () => (/* reexport safe */ _framework_ui_field_AbstractField__WEBPACK_IMPORTED_MODULE_47__.AbstractField),
+/* harmony export */   "InputField": () => (/* reexport safe */ _framework_ui_field_InputField__WEBPACK_IMPORTED_MODULE_48__.InputField),
+/* harmony export */   "TextAreaField": () => (/* reexport safe */ _framework_ui_field_TextAreaField__WEBPACK_IMPORTED_MODULE_49__.TextAreaField),
+/* harmony export */   "SelectField": () => (/* reexport safe */ _framework_ui_field_SelectField__WEBPACK_IMPORTED_MODULE_50__.SelectField),
+/* harmony export */   "RadioButtonGroupField": () => (/* reexport safe */ _framework_ui_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_51__.RadioButtonGroupField),
+/* harmony export */   "ColourInputField": () => (/* reexport safe */ _framework_ui_field_ColourInputField__WEBPACK_IMPORTED_MODULE_52__.ColourInputField),
+/* harmony export */   "ConditionResponse": () => (/* reexport safe */ _framework_ui_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_53__.ConditionResponse),
+/* harmony export */   "MultipleConditionLogic": () => (/* reexport safe */ _framework_ui_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_53__.MultipleConditionLogic),
+/* harmony export */   "ValidationManager": () => (/* reexport safe */ _framework_ui_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_54__.ValidationManager),
+/* harmony export */   "ValidationHelperFunctions": () => (/* reexport safe */ _framework_ui_validation_ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_55__.ValidationHelperFunctions),
+/* harmony export */   "DefaultFormFieldPermissionChecker": () => (/* reexport safe */ _framework_ui_form_DefaultFormFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_56__.DefaultFormFieldPermissionChecker),
+/* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_57__.BootstrapFormConfigHelper),
+/* harmony export */   "BootstrapTableConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_58__.BootstrapTableConfigHelper),
+/* harmony export */   "LimitedChoiceTextRenderer": () => (/* reexport safe */ _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_59__.LimitedChoiceTextRenderer),
+/* harmony export */   "LinkedCollectionDetailController": () => (/* reexport safe */ _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_60__.LinkedCollectionDetailController),
+/* harmony export */   "RBGFieldOperations": () => (/* reexport safe */ _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_61__.RBGFieldOperations),
+/* harmony export */   "SimpleValueDataSource": () => (/* reexport safe */ _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_62__.SimpleValueDataSource),
+/* harmony export */   "ColourEditor": () => (/* reexport safe */ _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_63__.ColourEditor),
+/* harmony export */   "AbstractView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_64__.AbstractView),
+/* harmony export */   "AbstractCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_65__.AbstractCollectionView),
+/* harmony export */   "AbstractStatefulCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_66__.AbstractStatefulCollectionView),
+/* harmony export */   "DefaultPermissionChecker": () => (/* reexport safe */ _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_67__.DefaultPermissionChecker),
+/* harmony export */   "DetailViewImplementation": () => (/* reexport safe */ _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_68__.DetailViewImplementation),
+/* harmony export */   "CarouselViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_69__.CarouselViewRenderer),
+/* harmony export */   "CarouselViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_70__.CarouselViewRendererUsingContext),
+/* harmony export */   "FormDetailViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_71__.FormDetailViewRenderer),
+/* harmony export */   "ListViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_72__.ListViewRenderer),
+/* harmony export */   "ListViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_73__.ListViewRendererUsingContext),
+/* harmony export */   "TabularViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_74__.TabularViewRendererUsingContext),
+/* harmony export */   "ViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__.ViewListenerForwarder),
+/* harmony export */   "DetailViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_76__.DetailViewListenerForwarder),
+/* harmony export */   "CollectionViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_77__.CollectionViewListenerForwarder),
+/* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_78__.CollectionViewEventHandlerDelegate),
+/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_79__.CollectionViewEventHandlerDelegateUsingContext),
+/* harmony export */   "truncateString": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__.truncateString),
+/* harmony export */   "convertHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__.convertHexToNumber),
+/* harmony export */   "convertSingleHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__.convertSingleHexToNumber),
+/* harmony export */   "isHexValueDark": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__.isHexValueDark),
+/* harmony export */   "isSameMongo": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__.isSameMongo),
+/* harmony export */   "isSame": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__.isSame),
+/* harmony export */   "isSameUsername": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__.isSameUsername),
+/* harmony export */   "isSameRoom": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__.isSameRoom),
+/* harmony export */   "addDurations": () => (/* reexport safe */ _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_82__.addDurations),
+/* harmony export */   "BrowserUtil": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_83__.BrowserUtil),
+/* harmony export */   "getElementOffset": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_83__.getElementOffset)
 /* harmony export */ });
 /* harmony import */ var _framework_CommonTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
 /* harmony import */ var _framework_model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./framework/model/BasicFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/model/BasicFieldOperations.js");
@@ -65704,49 +65895,50 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchSidebar */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/UserSearchSidebar.js");
 /* harmony import */ var _framework_ui_chat_UserSearchView__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/UserSearchView.js");
 /* harmony import */ var _framework_ui_container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./framework/ui/container/SidebarViewContainer */ "./node_modules/ui-framework-jps/dist/framework/ui/container/SidebarViewContainer.js");
-/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/context/ContextualInformationHelper.js");
-/* harmony import */ var _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./framework/ui/form/FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
-/* harmony import */ var _framework_ui_form_FormListener__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./framework/ui/form/FormListener */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormListener.js");
-/* harmony import */ var _framework_ui_form_AbstractForm__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./framework/ui/form/AbstractForm */ "./node_modules/ui-framework-jps/dist/framework/ui/form/AbstractForm.js");
-/* harmony import */ var _framework_ui_form_factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./framework/ui/form/factory/FormElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/form/factory/FormElementFactory.js");
-/* harmony import */ var _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./framework/ui/form/BasicFormImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/form/BasicFormImplementation.js");
-/* harmony import */ var _framework_ui_form_field_AbstractField__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./framework/ui/form/field/AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/AbstractField.js");
-/* harmony import */ var _framework_ui_form_field_InputField__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./framework/ui/form/field/InputField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/InputField.js");
-/* harmony import */ var _framework_ui_form_field_TextAreaField__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./framework/ui/form/field/TextAreaField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/TextAreaField.js");
-/* harmony import */ var _framework_ui_form_field_SelectField__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./framework/ui/form/field/SelectField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/SelectField.js");
-/* harmony import */ var _framework_ui_form_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./framework/ui/form/field/RadioButtonGroupField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/RadioButtonGroupField.js");
-/* harmony import */ var _framework_ui_form_field_ColourInputField__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./framework/ui/form/field/ColourInputField */ "./node_modules/ui-framework-jps/dist/framework/ui/form/field/ColourInputField.js");
-/* harmony import */ var _framework_ui_form_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationTypeDefs.js");
-/* harmony import */ var _framework_ui_form_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationManager.js");
-/* harmony import */ var _framework_ui_form_validation_ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./framework/ui/form/validation/ValidationHelperFunctions */ "./node_modules/ui-framework-jps/dist/framework/ui/form/validation/ValidationHelperFunctions.js");
-/* harmony import */ var _framework_ui_form_DefaultFormFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./framework/ui/form/DefaultFormFieldPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/form/DefaultFormFieldPermissionChecker.js");
-/* harmony import */ var _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./framework/ui/helper/LimitedChoiceTextRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
-/* harmony import */ var _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./framework/ui/helper/LinkedCollectionDetailController */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LinkedCollectionDetailController.js");
-/* harmony import */ var _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./framework/ui/helper/RBGFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/RBGFieldOperations.js");
-/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./framework/ui/helper/SimpleValueDataSource */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/SimpleValueDataSource.js");
-/* harmony import */ var _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./framework/ui/helper/ColourEditor */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/ColourEditor.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractStatefulCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./framework/ui/view/implementation/DefaultPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DefaultPermissionChecker.js");
-/* harmony import */ var _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./framework/ui/view/implementation/DetailViewImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DetailViewImplementation.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./framework/ui/view/renderer/FormDetailViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/FormDetailViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./framework/ui/view/renderer/TabularViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./framework/ui/view/delegate/ViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./framework/ui/view/delegate/DetailViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegate */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js");
-/* harmony import */ var _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./framework/util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
-/* harmony import */ var _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./framework/util/EqualityFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js");
-/* harmony import */ var _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./framework/util/DurationFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js");
-/* harmony import */ var _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var _framework_ui_container_TabularViewContainer__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./framework/ui/container/TabularViewContainer */ "./node_modules/ui-framework-jps/dist/framework/ui/container/TabularViewContainer.js");
+/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/context/ContextualInformationHelper.js");
+/* harmony import */ var _framework_ui_form_FormUITypeDefs__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./framework/ui/form/FormUITypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormUITypeDefs.js");
+/* harmony import */ var _framework_ui_form_FormListener__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./framework/ui/form/FormListener */ "./node_modules/ui-framework-jps/dist/framework/ui/form/FormListener.js");
+/* harmony import */ var _framework_ui_form_AbstractForm__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./framework/ui/form/AbstractForm */ "./node_modules/ui-framework-jps/dist/framework/ui/form/AbstractForm.js");
+/* harmony import */ var _framework_ui_form_factory_FormElementFactory__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./framework/ui/form/factory/FormElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/form/factory/FormElementFactory.js");
+/* harmony import */ var _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./framework/ui/form/BasicFormImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/form/BasicFormImplementation.js");
+/* harmony import */ var _framework_ui_field_AbstractField__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./framework/ui/field/AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js");
+/* harmony import */ var _framework_ui_field_InputField__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./framework/ui/field/InputField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/InputField.js");
+/* harmony import */ var _framework_ui_field_TextAreaField__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./framework/ui/field/TextAreaField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/TextAreaField.js");
+/* harmony import */ var _framework_ui_field_SelectField__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./framework/ui/field/SelectField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/SelectField.js");
+/* harmony import */ var _framework_ui_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./framework/ui/field/RadioButtonGroupField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/RadioButtonGroupField.js");
+/* harmony import */ var _framework_ui_field_ColourInputField__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./framework/ui/field/ColourInputField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/ColourInputField.js");
+/* harmony import */ var _framework_ui_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./framework/ui/validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationTypeDefs.js");
+/* harmony import */ var _framework_ui_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./framework/ui/validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationManager.js");
+/* harmony import */ var _framework_ui_validation_ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./framework/ui/validation/ValidationHelperFunctions */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationHelperFunctions.js");
+/* harmony import */ var _framework_ui_form_DefaultFormFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./framework/ui/form/DefaultFormFieldPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/form/DefaultFormFieldPermissionChecker.js");
+/* harmony import */ var _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
+/* harmony import */ var _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableConfigHelper.js");
+/* harmony import */ var _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./framework/ui/helper/LimitedChoiceTextRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
+/* harmony import */ var _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./framework/ui/helper/LinkedCollectionDetailController */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LinkedCollectionDetailController.js");
+/* harmony import */ var _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./framework/ui/helper/RBGFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/RBGFieldOperations.js");
+/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./framework/ui/helper/SimpleValueDataSource */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/SimpleValueDataSource.js");
+/* harmony import */ var _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./framework/ui/helper/ColourEditor */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/ColourEditor.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractView.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractCollectionView.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractStatefulCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
+/* harmony import */ var _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./framework/ui/view/implementation/DefaultPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DefaultPermissionChecker.js");
+/* harmony import */ var _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./framework/ui/view/implementation/DetailViewImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DetailViewImplementation.js");
+/* harmony import */ var _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./framework/ui/view/renderer/FormDetailViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/FormDetailViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./framework/ui/view/renderer/TabularViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./framework/ui/view/delegate/ViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./framework/ui/view/delegate/DetailViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegate */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js");
+/* harmony import */ var _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./framework/util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
+/* harmony import */ var _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./framework/util/EqualityFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js");
+/* harmony import */ var _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./framework/util/DurationFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js");
+/* harmony import */ var _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
 
 
 
@@ -65779,6 +65971,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* ui */
+
 
 
 

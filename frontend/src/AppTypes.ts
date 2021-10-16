@@ -38,7 +38,7 @@ export const NAVIGATION = {
     patientSearch: 'navigationItemPatientSearch',
     appointmentTemplates: 'navigationItemAppointmentTemplating',
     clinicChat: 'navigationItemChat',
-    patientRecords: 'navigationItemPatientRecords',
+    patientRecord: 'navigationItemPatientRecord',
     logout: 'navigationItemLogout',
     appointmentTypes: 'navigationItemAppointmentTypes',
     users: 'navigationItemUsers',

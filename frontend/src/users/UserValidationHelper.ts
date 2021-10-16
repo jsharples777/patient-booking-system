@@ -3,18 +3,17 @@ import {
     ConditionResponse,
     FieldDefinition,
     Form,
-    FormFieldValidator,
-    FormMode,
+    ViewMode,
     ValidationManager,
-    ValidationRule
+    ValidationRule, ViewFieldValidator
 } from "ui-framework-jps";
-import {RuleCheck} from "ui-framework-jps/dist/framework/ui/form/validation/ValidationManager";
 import {STATE_NAMES} from "../AppTypes";
 import debug from 'debug';
+import {RuleCheck} from "ui-framework-jps/dist/framework/ui/validation/ValidationManager";
 
 const logger = debug('user-validation-helper');
 
-export class UserValidationHelper implements FormFieldValidator {
+export class UserValidationHelper implements ViewFieldValidator {
     private static _instance: UserValidationHelper;
 
     public static getInstance(): UserValidationHelper {
@@ -36,24 +35,24 @@ export class UserValidationHelper implements FormFieldValidator {
 
 
         let rule: ValidationRule = {
-            formMode: FormMode.create,
+            viewMode: ViewMode.create,
             targetDataFieldId: 'resetPassword',
             response: ConditionResponse.hide,
             conditions: []
         }
-        ValidationManager.getInstance().addRuleToForm(form, rule);
+        ValidationManager.getInstance().addRuleToView(form, rule);
 
         rule = {
-            formMode: FormMode.create,
+            viewMode: ViewMode.create,
             targetDataFieldId: 'isProvider',
             response: ConditionResponse.hide,
             conditions: []
         }
-        ValidationManager.getInstance().addRuleToForm(form, rule);
+        ValidationManager.getInstance().addRuleToView(form, rule);
 
 
         rule = {
-            formMode: FormMode.create,
+            viewMode: ViewMode.create,
             targetDataFieldId: 'password',
             response: ConditionResponse.invalid,
             conditions: [
@@ -62,10 +61,10 @@ export class UserValidationHelper implements FormFieldValidator {
                 }
             ]
         }
-        ValidationManager.getInstance().addRuleToForm(form, rule);
+        ValidationManager.getInstance().addRuleToView(form, rule);
 
         rule = {
-            formMode: FormMode.update,
+            viewMode: ViewMode.update,
             targetDataFieldId: 'password',
             response: ConditionResponse.show,
             conditions: [
@@ -76,9 +75,9 @@ export class UserValidationHelper implements FormFieldValidator {
                 }
             ]
         }
-        ValidationManager.getInstance().addRuleToForm(form, rule);
+        ValidationManager.getInstance().addRuleToView(form, rule);
         rule = {
-            formMode: FormMode.update,
+            viewMode: ViewMode.update,
             targetDataFieldId: 'password',
             response: ConditionResponse.hide,
             conditions: [
@@ -89,12 +88,12 @@ export class UserValidationHelper implements FormFieldValidator {
                 }
             ]
         }
-        ValidationManager.getInstance().addRuleToForm(form, rule);
+        ValidationManager.getInstance().addRuleToView(form, rule);
 
-        ValidationManager.getInstance().addFormValidator(this);
+        ValidationManager.getInstance().addViewValidator(this);
     }
 
-    applyRulesToTargetField(form: Form, formMode: FormMode, fieldDef: FieldDefinition, onlyRulesOfType: ConditionResponse | null): RuleCheck {
+    applyRulesToTargetField(form: Form, viewMode: ViewMode, fieldDef: FieldDefinition, onlyRulesOfType: ConditionResponse | null): RuleCheck {
         let result: RuleCheck = {
             ruleFailed: false
         }

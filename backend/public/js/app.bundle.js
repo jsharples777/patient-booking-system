@@ -64,7 +64,7 @@ const NAVIGATION = {
   patientSearch: 'navigationItemPatientSearch',
   appointmentTemplates: 'navigationItemAppointmentTemplating',
   clinicChat: 'navigationItemChat',
-  patientRecords: 'navigationItemPatientRecords',
+  patientRecord: 'navigationItemPatientRecord',
   logout: 'navigationItemLogout',
   appointmentTypes: 'navigationItemAppointmentTypes',
   users: 'navigationItemUsers',
@@ -4204,6 +4204,194 @@ class AppointmentControllerHelper {
 
 /***/ }),
 
+/***/ "./src/patients/PatientRecordTabularView.ts":
+/*!**************************************************!*\
+  !*** ./src/patients/PatientRecordTabularView.ts ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PatientRecordTabularView": () => (/* binding */ PatientRecordTabularView)
+/* harmony export */ });
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+
+class PatientRecordTabularView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.TabularViewContainer {
+  static config = {
+    containedById: 'patientRecord',
+    containerId: 'patientRecordTabularView',
+    tabViewContainer: {
+      type: 'div',
+      classes: 'row'
+    },
+    tabBarContainer: {
+      type: 'div',
+      classes: 'col-12'
+    },
+    tabBarElement: {
+      type: 'ul',
+      classes: 'nav nav-pills nav-fill'
+    },
+    tabularViewContainer: {
+      type: 'div',
+      classes: 'col-12'
+    },
+    tabs: [{
+      id: 'demographics',
+      element: {
+        type: 'li',
+        classes: 'nav-item'
+      },
+      subElement: {
+        type: 'a',
+        classes: 'nav-link',
+        attributes: [{
+          name: 'href',
+          value: '#'
+        }],
+        innerHTML: 'Demographics'
+      },
+      isDefaultActive: true
+    }, {
+      id: 'consults',
+      element: {
+        type: 'li',
+        classes: 'nav-item'
+      },
+      subElement: {
+        type: 'a',
+        classes: 'nav-link',
+        attributes: [{
+          name: 'href',
+          value: '#'
+        }],
+        innerHTML: 'History and Consults'
+      },
+      isDefaultActive: false
+    }, {
+      id: 'scripts',
+      element: {
+        type: 'li',
+        classes: 'nav-item'
+      },
+      subElement: {
+        type: 'a',
+        classes: 'nav-link',
+        attributes: [{
+          name: 'href',
+          value: '#'
+        }],
+        innerHTML: 'Allergies and Scripts'
+      },
+      isDefaultActive: false
+    }, {
+      id: 'results',
+      element: {
+        type: 'li',
+        classes: 'nav-item'
+      },
+      subElement: {
+        type: 'a',
+        classes: 'nav-link',
+        attributes: [{
+          name: 'href',
+          value: '#'
+        }],
+        innerHTML: 'Results'
+      },
+      isDefaultActive: false
+    }, {
+      id: 'documents',
+      element: {
+        type: 'li',
+        classes: 'nav-item'
+      },
+      subElement: {
+        type: 'a',
+        classes: 'nav-link',
+        attributes: [{
+          name: 'href',
+          value: '#'
+        }],
+        innerHTML: 'Documents and Letters'
+      },
+      isDefaultActive: false
+    }, {
+      id: 'vaccinations',
+      element: {
+        type: 'li',
+        classes: 'nav-item'
+      },
+      subElement: {
+        type: 'a',
+        classes: 'nav-link',
+        attributes: [{
+          name: 'href',
+          value: '#'
+        }],
+        innerHTML: 'Vaccinations'
+      },
+      isDefaultActive: false
+    }, {
+      id: 'workcover',
+      element: {
+        type: 'li',
+        classes: 'nav-item'
+      },
+      subElement: {
+        type: 'a',
+        classes: 'nav-link',
+        attributes: [{
+          name: 'href',
+          value: '#'
+        }],
+        innerHTML: 'Workcover'
+      },
+      isDefaultActive: false
+    }, {
+      id: 'tasks',
+      element: {
+        type: 'li',
+        classes: 'nav-item'
+      },
+      subElement: {
+        type: 'a',
+        classes: 'nav-link',
+        attributes: [{
+          name: 'href',
+          value: '#'
+        }],
+        innerHTML: 'Tasks'
+      },
+      isDefaultActive: false
+    }, {
+      id: 'archive',
+      element: {
+        type: 'li',
+        classes: 'nav-item'
+      },
+      subElement: {
+        type: 'a',
+        classes: 'nav-link',
+        attributes: [{
+          name: 'href',
+          value: '#'
+        }],
+        innerHTML: 'Script Archive'
+      },
+      isDefaultActive: false
+    }]
+  };
+
+  constructor() {
+    super(PatientRecordTabularView.config);
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/patients/PatientSearchSidebar.ts":
 /*!**********************************************!*\
   !*** ./src/patients/PatientSearchSidebar.ts ***!
@@ -4723,30 +4911,30 @@ class UserValidationHelper {
     *
      */
     let rule = {
-      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.create,
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.create,
       targetDataFieldId: 'resetPassword',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
       conditions: []
     };
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
     rule = {
-      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.create,
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.create,
       targetDataFieldId: 'isProvider',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
       conditions: []
     };
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
     rule = {
-      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.create,
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.create,
       targetDataFieldId: 'password',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid,
       conditions: [{
         comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.isNotNull
       }]
     };
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
     rule = {
-      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.update,
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.update,
       targetDataFieldId: 'password',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show,
       conditions: [{
@@ -4755,9 +4943,9 @@ class UserValidationHelper {
         values: 'true'
       }]
     };
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
     rule = {
-      formMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FormMode.update,
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.update,
       targetDataFieldId: 'password',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
       conditions: [{
@@ -4766,11 +4954,11 @@ class UserValidationHelper {
         values: 'false'
       }]
     };
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToForm(form, rule);
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addFormValidator(this);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addViewValidator(this);
   }
 
-  applyRulesToTargetField(form, formMode, fieldDef, onlyRulesOfType) {
+  applyRulesToTargetField(form, viewMode, fieldDef, onlyRulesOfType) {
     let result = {
       ruleFailed: false
     }; // are we dealing with the form for users?
@@ -5114,6 +5302,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./clinic-chat/ClinicChatListView */ "./src/clinic-chat/ClinicChatListView.ts");
 /* harmony import */ var _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./users/UsersCompositeView */ "./src/users/UsersCompositeView.ts");
 /* harmony import */ var _today_TodayController__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./today/TodayController */ "./src/today/TodayController.ts");
+/* harmony import */ var _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./patients/PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
+
 
 
 
@@ -5144,7 +5334,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.handleShowChat = this.handleShowChat.bind(this);
     this.handleShowAppointmentBook = this.handleShowAppointmentBook.bind(this);
     this.handleShowAppointmentTemplates = this.handleShowAppointmentTemplates.bind(this);
-    this.handleShowPatientRecords = this.handleShowPatientRecords.bind(this);
+    this.handleShowPatientRecord = this.handleShowPatientRecord.bind(this);
     this.handleShowPatientSearch = this.handleShowPatientSearch.bind(this);
     this.handleShowAppointmentTypes = this.handleShowAppointmentTypes.bind(this);
     this.handleShowUsers = this.handleShowUsers.bind(this);
@@ -5168,6 +5358,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.usersSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.UsersSidebarPrefs);
     new _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__.UsersCompositeView(this.usersSidebar).onDocumentLoaded();
     _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).onDocumentLoaded();
+    new _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_16__.PatientRecordTabularView().onDocumentLoaded();
     this.setupNavigationItemHandling();
     _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
     _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
@@ -5250,6 +5441,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
   }
 
   handleShowAppointmentTemplates(event) {
@@ -5262,6 +5454,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
   }
 
   handleShowToday(event) {
@@ -5274,13 +5467,20 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', false);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
   }
 
-  handleShowPatientRecords(event) {
+  handleShowPatientRecord(event) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
+
+    logger(`Showing patient record`);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', false);
   }
 
   handleShowPatientSearch(event) {
@@ -5312,7 +5512,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
       apptTypesEl.addEventListener('click', this.handleShowAppointmentTypes);
     }
 
-    document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientRecords).addEventListener('click', this.handleShowPatientRecords);
+    document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientRecord).addEventListener('click', this.handleShowPatientRecord);
     document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch);
     let usersEl = document.getElementById(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.users);
 
@@ -5333,7 +5533,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'app api-ts-results tabular-view-container'; //user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+//localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
