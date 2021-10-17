@@ -86,7 +86,7 @@ export class UsersCollectionView extends AbstractStatefulCollectionView implemen
             displayOrders.push({fieldId: 'isProvider', displayOrder: 4});
             displayOrders.push({fieldId: 'providerNo', displayOrder: 5});
 
-            let tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableRowConfig(userDef, displayOrders, 1, false, true);
+            let tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableConfig(userDef, displayOrders, 1, false, true);
 
             tableUIConfig.headerColumns[1].element.classes += ' text-center';
             tableUIConfig.headerColumns[2].element.classes += ' text-center';

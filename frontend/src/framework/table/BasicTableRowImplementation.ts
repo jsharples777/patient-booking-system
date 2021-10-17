@@ -1,27 +1,15 @@
-
 import debug from 'debug';
 import {
-    DefaultItemView,
-    AttributeFieldMapItem,
-    ColourInputField,
-    DATA_ID_ATTRIBUTE,
     DataObjectDefinition,
-    DisplayOrder,
+    DefaultItemView,
     Field,
     FieldDefinition,
-    FieldType,
-    FieldUIConfig,
-    InputField,
+    ItemFactoryResponse,
     ItemViewConfigHelper,
     ItemViewElementFactory,
-    RadioButtonGroupField,
-    SelectField,
-    TextAreaField,
-    UIFieldType,
-    ViewFieldPermissionChecker, ItemFactoryResponse, ValidatableView
+    ValidatableView,
+    ViewFieldPermissionChecker
 } from "ui-framework-jps";
-import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
-import {FormUIDefinition} from "ui-framework-jps/dist/framework/ui/form/FormUITypeDefs";
 
 
 const logger = debug('basic-table-row');
@@ -34,10 +22,15 @@ export class BasicTableRowImplementation extends DefaultItemView {
     public constructor(idField:string, containerId: string, dataObjDef: DataObjectDefinition, configHelper: ItemViewConfigHelper, permissionChecker: ViewFieldPermissionChecker, hasExternalControl: boolean = false) {
         super(containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl);
         this.idField = idField;
+
+        this.__buildUIElements = this.__buildUIElements.bind(this);
+        this.__getFactoryElements = this.__getFactoryElements.bind(this);
+        this.__preDisplayCurrentDataObject = this.__preDisplayCurrentDataObject.bind(this);
     }
 
     protected __buildUIElements() {
         // do nothing here, we build our ui element just before display
+        console.log('not building');
         logger(`not loading ui elements yet, awaiting object`);
     }
 
@@ -55,6 +48,7 @@ export class BasicTableRowImplementation extends DefaultItemView {
 
 
     protected __preDisplayCurrentDataObject(dataObj: any) {
+        console.log(dataObj);
         this.id = dataObj[this.idField];
         logger(`pre-display data object id is ${this.id}`);
         this.buildTableRowElements();

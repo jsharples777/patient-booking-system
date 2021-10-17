@@ -60548,7 +60548,7 @@ class BootstrapTableConfigHelper {
         }
         return BootstrapTableConfigHelper._instance;
     }
-    generateTableRowConfig(dataObjDef, displayOrders, itemDetailColumn, hasActions, hideModifierFields = false) {
+    generateTableConfig(dataObjDef, displayOrders, itemDetailColumn, hasActions, hideModifierFields = false) {
         let fieldOperations = new _model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_0__.BasicFieldOperations();
         let choiceRenderer = new _LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_4__.LimitedChoiceTextRenderer();
         // create the Field UI config for each field
@@ -60781,6 +60781,10 @@ class BootstrapTableRowConfigHelper {
             // construct the field ui config
             let fieldUIConfig = {
                 field: fieldDef,
+                containedBy: {
+                    type: 'td',
+                    classes: ''
+                },
                 displayOrder: displayOrderValue,
                 elementType: fieldType,
                 elementClasses: '',

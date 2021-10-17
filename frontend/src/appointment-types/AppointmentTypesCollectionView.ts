@@ -3,13 +3,13 @@ import {AppointmentTypesSidebarContainers, STATE_NAMES, VIEW_NAME} from "../AppT
 import debug from 'debug';
 import {
     AbstractStatefulCollectionView,
-    BootstrapTableConfigHelper,
+    BootstrapTableConfigHelper, BootstrapTableRowConfigHelper,
     CollectionViewDOMConfig,
     CollectionViewEventHandlerDelegateUsingContext,
     CollectionViewListener,
     CollectionViewListenerForwarder,
     ContextualInformationHelper,
-    DataObjectDefinition,
+    DataObjectDefinition, DefaultFieldPermissionChecker,
     DisplayOrder,
     isSameMongo,
     KeyType,
@@ -20,6 +20,7 @@ import {
     TabularViewRendererUsingContext,
     View
 } from "ui-framework-jps";
+import {TabularItemViewRenderer} from "../renderer/TabularItemViewRenderer";
 
 
 const logger = debug('appointment-types-view');
@@ -76,13 +77,15 @@ export class AppointmentTypesCollectionView extends AbstractStatefulCollectionVi
             displayOrders.push({fieldId: 'name', displayOrder: 1});
             displayOrders.push({fieldId: 'colour', displayOrder: 2});
             displayOrders.push({fieldId: 'icon', displayOrder: 3});
-            //displayOrders.push({ fieldId:'isStatus',displayOrder:4});
-            let tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableRowConfig(apptTypeDef, displayOrders, 1, false, true);
+            displayOrders.push({ fieldId:'isStatus',displayOrder:4});
+            let tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableConfig(apptTypeDef, displayOrders, 1, false, true);
             // tableUIConfig.headerColumns[0].element.classes += ' text-center';
             tableUIConfig.headerColumns[1].element.classes += ' text-center';
             tableUIConfig.headerColumns[2].element.classes += ' text-center';
+            tableUIConfig.headerColumns[3].element.classes += ' text-center';
 
-            this.renderer = new TabularViewRendererUsingContext(this, this, tableUIConfig);
+            this.renderer = new TabularItemViewRenderer(this, this, tableUIConfig,displayOrders,BootstrapTableRowConfigHelper.getInstance(),new DefaultFieldPermissionChecker() );
+            // this.renderer = new TabularViewRendererUsingContext(this, this, tableUIConfig);
             //this.renderer = new ListViewRendererUsingContext(this,this);
             this.eventHandlerDelegate = new CollectionViewEventHandlerDelegateUsingContext(this, <CollectionViewListenerForwarder>this.eventForwarder);
             this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);

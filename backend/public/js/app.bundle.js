@@ -1547,6 +1547,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _renderer_TabularItemViewRenderer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../renderer/TabularItemViewRenderer */ "./src/renderer/TabularItemViewRenderer.ts");
+
 
 
 
@@ -1614,13 +1616,18 @@ class AppointmentTypesCollectionView extends ui_framework_jps__WEBPACK_IMPORTED_
       displayOrders.push({
         fieldId: 'icon',
         displayOrder: 3
-      }); //displayOrders.push({ fieldId:'isStatus',displayOrder:4});
-
-      let tableUIConfig = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableConfigHelper.getInstance().generateTableRowConfig(apptTypeDef, displayOrders, 1, false, true); // tableUIConfig.headerColumns[0].element.classes += ' text-center';
+      });
+      displayOrders.push({
+        fieldId: 'isStatus',
+        displayOrder: 4
+      });
+      let tableUIConfig = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableConfigHelper.getInstance().generateTableConfig(apptTypeDef, displayOrders, 1, false, true); // tableUIConfig.headerColumns[0].element.classes += ' text-center';
 
       tableUIConfig.headerColumns[1].element.classes += ' text-center';
       tableUIConfig.headerColumns[2].element.classes += ' text-center';
-      this.renderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.TabularViewRendererUsingContext(this, this, tableUIConfig); //this.renderer = new ListViewRendererUsingContext(this,this);
+      tableUIConfig.headerColumns[3].element.classes += ' text-center';
+      this.renderer = new _renderer_TabularItemViewRenderer__WEBPACK_IMPORTED_MODULE_3__.TabularItemViewRenderer(this, this, tableUIConfig, displayOrders, ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableRowConfigHelper.getInstance(), new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DefaultFieldPermissionChecker()); // this.renderer = new TabularViewRendererUsingContext(this, this, tableUIConfig);
+      //this.renderer = new ListViewRendererUsingContext(this,this);
 
       this.eventHandlerDelegate = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.CollectionViewEventHandlerDelegateUsingContext(this, this.eventForwarder);
       this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);
@@ -3792,6 +3799,73 @@ class ClinicChatSidebar extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.Si
 
 /***/ }),
 
+/***/ "./src/framework/table/BasicTableRowImplementation.ts":
+/*!************************************************************!*\
+  !*** ./src/framework/table/BasicTableRowImplementation.ts ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "BasicTableRowImplementation": () => (/* binding */ BasicTableRowImplementation)
+/* harmony export */ });
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('basic-table-row');
+const dlogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('basic-table-row-detail');
+class BasicTableRowImplementation extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.DefaultItemView {
+  constructor(idField, containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl = false) {
+    super(containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl);
+    this.idField = idField;
+    this.__buildUIElements = this.__buildUIElements.bind(this);
+    this.__getFactoryElements = this.__getFactoryElements.bind(this);
+    this.__preDisplayCurrentDataObject = this.__preDisplayCurrentDataObject.bind(this);
+  }
+
+  __buildUIElements() {
+    // do nothing here, we build our ui element just before display
+    console.log('not building');
+    logger(`not loading ui elements yet, awaiting object`);
+  }
+
+  __getFactoryElements() {
+    return ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ItemViewElementFactory.getInstance().createTableRowElements(this.id, this, this.listeners, this.uiDef, this.fieldListeners);
+  }
+
+  buildTableRowElements() {
+    logger(`loading ui elements now using the super class`);
+
+    super.__buildUIElements();
+
+    logger(`Add ourselves to the container`);
+
+    super._visible();
+  }
+
+  __preDisplayCurrentDataObject(dataObj) {
+    console.log(dataObj);
+    this.id = dataObj[this.idField];
+    logger(`pre-display data object id is ${this.id}`);
+    this.buildTableRowElements();
+  }
+
+  valueChanged(view, field, fieldDef, newValue) {
+    super.valueChanged(view, field, fieldDef, newValue);
+    logger(`values has changed - attempting save`);
+  }
+
+  getRowElement() {
+    return this.factoryElements.top;
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/helper/AppointmentControllerHelper.ts":
 /*!***************************************************!*\
   !*** ./src/helper/AppointmentControllerHelper.ts ***!
@@ -4617,6 +4691,132 @@ class PatientSearchView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Ab
 
 /***/ }),
 
+/***/ "./src/renderer/TabularItemViewRenderer.ts":
+/*!*************************************************!*\
+  !*** ./src/renderer/TabularItemViewRenderer.ts ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TabularItemViewRenderer": () => (/* binding */ TabularItemViewRenderer)
+/* harmony export */ });
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var _framework_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../framework/table/BasicTableRowImplementation */ "./src/framework/table/BasicTableRowImplementation.ts");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('tabular-item-view-renderer');
+class TabularItemViewRenderer {
+  tableRowViews = [];
+  dataObjDef = null;
+
+  constructor(view, eventHandler, tableConfig, displayOrders, configHelper, permissionCheck = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.DefaultFieldPermissionChecker()) {
+    this.view = view;
+    this.eventHandler = eventHandler;
+    this.tableConfig = tableConfig;
+    this.configHelper = configHelper;
+    this.permissionCheck = permissionCheck;
+    this.displayOrders = displayOrders;
+  }
+
+  createDisplayElementForCollectionItem(collectionName, item) {
+    let result = document.createElement('tr');
+
+    if (this.dataObjDef && this.idField) {
+      let rowView = new _framework_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_3__.BasicTableRowImplementation(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
+      rowView.initialise(this.displayOrders, false, true);
+      rowView.startUpdate(item);
+      this.tableRowViews.push(rowView);
+      result = rowView.getRowElement();
+    }
+
+    return result;
+  }
+
+  onDocumentLoaded() {}
+
+  setDisplayElementsForCollectionInContainer(containerEl, collectionName, newState) {
+    if (!this.dataObjDef) {
+      this.dataObjDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ObjectDefinitionRegistry.getInstance().findDefinition(collectionName);
+
+      if (this.dataObjDef) {
+        // find the key field
+        this.dataObjDef.fields.forEach(field => {
+          if (field.isKey) {
+            this.idField = field.id;
+          }
+        });
+      }
+    }
+
+    logger(`view ${this.view.getName()}: creating Results`);
+    logger(newState); // remove the previous items from list
+
+    this.tableRowViews.forEach(view => {
+      view.setIsVisible(false);
+    });
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeAllChildren(containerEl); // create the table
+
+    let tableEl = document.createElement(this.tableConfig.table.type);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(tableEl, this.tableConfig.table.classes);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableEl, this.tableConfig.table.attributes); // create the headers
+
+    let tableHeaderEl = document.createElement(this.tableConfig.header.type);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(tableHeaderEl, this.tableConfig.header.classes);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableHeaderEl, this.tableConfig.header.attributes); // create the column headers
+
+    this.tableConfig.headerColumns.forEach(header => {
+      let thEl = document.createElement(header.element.type);
+      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(thEl, header.element.classes);
+      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(thEl, header.element.attributes);
+      if (header.element.innerHTML) thEl.innerHTML = header.element.innerHTML;
+      tableHeaderEl.appendChild(thEl);
+    }); // create the action column header (if one)
+
+    if (this.tableConfig.actionColumn) {
+      let thEl = document.createElement(this.tableConfig.actionColumn.element.type);
+      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(thEl, this.tableConfig.actionColumn.element.classes);
+      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(thEl, this.tableConfig.actionColumn.element.attributes);
+      if (this.tableConfig.actionColumn.element.innerHTML) thEl.innerHTML = this.tableConfig.actionColumn.element.innerHTML;
+      tableHeaderEl.appendChild(thEl);
+    }
+
+    tableEl.appendChild(tableHeaderEl); // create the table body
+
+    let tableBodyEl = document.createElement(this.tableConfig.body.type);
+    this.tableBodyId = (0,uuid__WEBPACK_IMPORTED_MODULE_4__["default"])();
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(tableBodyEl, this.tableConfig.body.classes);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableBodyEl, this.tableConfig.body.attributes);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableBodyEl, [{
+      name: 'id',
+      value: this.tableBodyId
+    }]);
+    tableEl.appendChild(tableBodyEl);
+    containerEl.appendChild(tableEl); // add the new children
+
+    newState.map((item, index) => {
+      const childEl = this.createDisplayElementForCollectionItem(collectionName, item); // add draggable actions
+
+      logger(`view ${this.view.getName()}:  Adding child ${this.view.getIdForItemInNamedCollection(collectionName, item)}`); //tableBodyEl.appendChild(childEl);
+
+      ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ContextualInformationHelper.getInstance().addContextToElement(this.view.getName(), collectionName, item, childEl, true);
+      childEl.addEventListener('contextmenu', ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ContextualInformationHelper.getInstance().handleContextMenu);
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/today/TodayController.ts":
 /*!**************************************!*\
   !*** ./src/today/TodayController.ts ***!
@@ -5104,7 +5304,7 @@ class UsersCollectionView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.
         fieldId: 'providerNo',
         displayOrder: 5
       });
-      let tableUIConfig = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableConfigHelper.getInstance().generateTableRowConfig(userDef, displayOrders, 1, false, true);
+      let tableUIConfig = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableConfigHelper.getInstance().generateTableConfig(userDef, displayOrders, 1, false, true);
       tableUIConfig.headerColumns[1].element.classes += ' text-center';
       tableUIConfig.headerColumns[2].element.classes += ' text-center';
       tableUIConfig.headerColumns[3].element.classes += ' text-center';
@@ -5531,7 +5731,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results tabular-view-container'; //user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results basic-table-row basic-table-row-detail abstract-field'; // tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';

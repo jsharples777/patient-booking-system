@@ -246,7 +246,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results basic-table-row basic-table-row-detail abstract-field';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 

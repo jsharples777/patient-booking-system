@@ -6,7 +6,7 @@ import {
     CollectionViewEventHandler,
     CollectionViewRenderer,
     ContextualInformationHelper,
-    DataObjectDefinition, DefaultFieldPermissionChecker,
+    DataObjectDefinition, DefaultFieldPermissionChecker, DisplayOrder,
     FieldType,
     ItemViewConfigHelper,
     Modifier,
@@ -16,9 +16,10 @@ import {
 import {EXTRA_ACTION_ATTRIBUTE_NAME} from "ui-framework-jps/dist/framework/ui/ConfigurationTypes";
 import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 import {BasicTableRowImplementation} from "../framework/table/BasicTableRowImplementation";
+import {v4} from "uuid";
 
 
-const logger = debug('tabular-view-renderer-with-context');
+const logger = debug('tabular-item-view-renderer');
 
 export class TabularItemViewRenderer implements CollectionViewRenderer {
     protected view: CollectionView;
@@ -29,20 +30,24 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
     protected idField:string|null;
     protected configHelper:ItemViewConfigHelper;
     protected permissionCheck:ViewFieldPermissionChecker;
+    private displayOrders: DisplayOrder[];
+    private tableBodyId: string;
 
-    constructor(view: CollectionView, eventHandler: CollectionViewEventHandler, tableConfig: TableUIConfig,configHelper:ItemViewConfigHelper,permissionCheck:ViewFieldPermissionChecker|null = new DefaultFieldPermissionChecker()) {
+    constructor(view: CollectionView, eventHandler: CollectionViewEventHandler, tableConfig: TableUIConfig,displayOrders:DisplayOrder[],configHelper:ItemViewConfigHelper,permissionCheck:ViewFieldPermissionChecker|null = new DefaultFieldPermissionChecker()) {
         this.view = view;
         this.eventHandler = eventHandler;
         this.tableConfig = tableConfig;
         this.configHelper = configHelper;
         this.permissionCheck = permissionCheck;
+        this.displayOrders = displayOrders;
     }
 
 
     public createDisplayElementForCollectionItem(collectionName: string, item: any): HTMLElement {
         let result = document.createElement('tr');
         if (this.dataObjDef && this.idField) {
-            let rowView = new BasicTableRowImplementation(this.idField, this.view.getCollectionUIConfig().viewConfig.resultsContainerId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
+            let rowView = new BasicTableRowImplementation(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
+            rowView.initialise(this.displayOrders,false,true);
             rowView.startUpdate(item);
             this.tableRowViews.push(rowView);
             result = rowView.getRowElement();
@@ -54,7 +59,7 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
     }
 
     public setDisplayElementsForCollectionInContainer(containerEl: HTMLElement, collectionName: string, newState: any): void {
-        if (this.dataObjDef) {
+        if (!(this.dataObjDef)) {
             this.dataObjDef = ObjectDefinitionRegistry.getInstance().findDefinition(collectionName);
             if (this.dataObjDef) {
                 // find the key field
@@ -111,8 +116,12 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
 
         // create the table body
         let tableBodyEl = document.createElement(this.tableConfig.body.type);
+        this.tableBodyId = v4();
         browserUtil.addRemoveClasses(tableBodyEl, this.tableConfig.body.classes);
         browserUtil.addAttributes(tableBodyEl, this.tableConfig.body.attributes);
+        browserUtil.addAttributes(tableBodyEl,[{name:'id',value:this.tableBodyId}]);
+        tableEl.appendChild(tableBodyEl);
+        containerEl.appendChild(tableEl);
 
         // add the new children
         newState.map((item: any, index: number) => {
@@ -126,7 +135,5 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
         });
         $('[data-toggle="tooltip"]').tooltip();
 
-        tableEl.appendChild(tableBodyEl);
-        containerEl.appendChild(tableEl);
     }
 }
