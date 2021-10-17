@@ -4,7 +4,7 @@ import {
     BasicObjectDefinitionFactory,
     DataObjectController,
     DataObjectDefinition,
-    DataObjectListener, DefaultFormFieldPermissionChecker,
+    DataObjectListener, DefaultFieldPermissionChecker,
     DetailView,
     DetailViewImplementation, Form,
     FormDetailViewRenderer,
@@ -36,7 +36,7 @@ export class UsersCompositeView implements DataObjectListener {
         const userDef: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.users);
 
         if (userDef) {
-            let detailRenderer: FormDetailViewRenderer = new FormDetailViewRenderer(UsersSidebarContainers.detail, userDef, new DefaultFormFieldPermissionChecker(), BootstrapFormConfigHelper.getInstance(), false);
+            let detailRenderer: FormDetailViewRenderer = new FormDetailViewRenderer(UsersSidebarContainers.detail, userDef, new DefaultFieldPermissionChecker(), BootstrapFormConfigHelper.getInstance(), false);
 
             let usersDetailView: DetailView = new DetailViewImplementation(
                 {

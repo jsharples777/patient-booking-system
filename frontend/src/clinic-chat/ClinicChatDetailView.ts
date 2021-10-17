@@ -4,7 +4,7 @@ import {
     ChatLog,
     ChatManager,
     CollectionView,
-    CollectionViewListener,
+    CollectionViewListener, DRAGGABLE_KEY_ID, DRAGGABLE_TYPE,
     Invitation,
     Message,
     Modifier,
@@ -19,7 +19,6 @@ import {
 } from "ui-framework-jps";
 import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 import {SimpleAttachment} from "ui-framework-jps/dist/framework/socket/Types";
-import {DRAGGABLE_KEY_ID, DRAGGABLE_TYPE} from "ui-framework-jps/dist/framework/ui/ConfigurationTypes";
 import moment from "moment";
 
 import {DRAGGABLE as APP_DRAGGABLE, STATE_NAMES as APP_STATE_NAMES} from '../AppTypes'

@@ -2883,12 +2883,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
 /* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var ui_framework_jps_dist_framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ui-framework-jps/dist/framework/ui/ConfigurationTypes */ "./node_modules/ui-framework-jps/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
-/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
-
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
 
 
 
@@ -2928,7 +2926,7 @@ class ClinicChatDetailView {
     this.handleAttachmentClicked = this.handleAttachmentClicked.bind(this);
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this);
     this.stateManager.addChangeListenerForName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users, this);
-    this.stateManager.addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_5__.STATE_NAMES.patientSearch, this);
+    this.stateManager.addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_4__.STATE_NAMES.patientSearch, this);
   }
 
   onDocumentLoaded() {
@@ -3062,16 +3060,16 @@ class ClinicChatDetailView {
 
     if (this.selectedChatLog) {
       // @ts-ignore
-      const draggedObjectJSON = event.dataTransfer.getData(ui_framework_jps_dist_framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_3__.DRAGGABLE_KEY_ID);
+      const draggedObjectJSON = event.dataTransfer.getData(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.DRAGGABLE_KEY_ID);
       const draggedObject = JSON.parse(draggedObjectJSON);
       logger(draggedObject);
 
-      if (draggedObject[ui_framework_jps_dist_framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_3__.DRAGGABLE_TYPE] === _AppTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE.typePatientSummary) {
+      if (draggedObject[ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.DRAGGABLE_TYPE] === _AppTypes__WEBPACK_IMPORTED_MODULE_4__.DRAGGABLE.typePatientSummary) {
         // send the patient as an attachment
         const roomName = this.selectedChatLog.roomName;
         const simpleAttachment = {
           identifier: draggedObject._id,
-          type: _AppTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE.typePatientSummary,
+          type: _AppTypes__WEBPACK_IMPORTED_MODULE_4__.DRAGGABLE.typePatientSummary,
           displayText: `${draggedObject.name.firstname} ${draggedObject.name.surname}`,
           iconClasses: 'fas fa-male'
         };
@@ -3112,7 +3110,7 @@ class ClinicChatDetailView {
 
       if (this.currentlySelectedPatient) {
         simpleAttachment.identifier = this.currentlySelectedPatient._id;
-        simpleAttachment.type = _AppTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE.typePatientSummary;
+        simpleAttachment.type = _AppTypes__WEBPACK_IMPORTED_MODULE_4__.DRAGGABLE.typePatientSummary;
         simpleAttachment.displayText = `${this.currentlySelectedPatient.name.firstname} ${this.currentlySelectedPatient.name.surname}`;
         simpleAttachment.iconClasses = 'fas fa-male';
       }
@@ -3146,7 +3144,7 @@ class ClinicChatDetailView {
 
       let messageSenderEl = document.createElement('div');
       ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(messageSenderEl, 'message-sender');
-      messageSenderEl.innerText = message.from + '   ' + moment__WEBPACK_IMPORTED_MODULE_4___default()(message.created, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm');
+      messageSenderEl.innerText = message.from + '   ' + moment__WEBPACK_IMPORTED_MODULE_3___default()(message.created, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm');
       chatMessageEl.appendChild(messageSenderEl); // message content
 
       let contentEl = document.createElement('div'); // just a text message
@@ -3261,7 +3259,7 @@ class ClinicChatDetailView {
   }
 
   stateChanged(managerName, name, newState) {
-    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_5__.STATE_NAMES.patientSearch) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_4__.STATE_NAMES.patientSearch) {
       logger(`Handling patient search results`);
       logger(newState); // load the search names into the search field
 
@@ -3368,7 +3366,7 @@ class ClinicChatDetailView {
     logger(`Patient ${ui.item.label} with id ${ui.item.value} selected`); // @ts-ignore
 
     event.target.value = ui.item.label;
-    this.currentlySelectedPatient = _Controller__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_5__.STATE_NAMES.patientSearch, {
+    this.currentlySelectedPatient = _Controller__WEBPACK_IMPORTED_MODULE_5__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_4__.STATE_NAMES.patientSearch, {
       _id: ui.item.value
     });
     logger(this.currentlySelectedPatient);
@@ -5206,7 +5204,7 @@ class UsersCompositeView {
     const userDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.ObjectDefinitionRegistry.getInstance().findDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users);
 
     if (userDef) {
-      let detailRenderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.FormDetailViewRenderer(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.UsersSidebarContainers.detail, userDef, new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DefaultFormFieldPermissionChecker(), ui_framework_jps_dist_framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_4__.BootstrapFormConfigHelper.getInstance(), false);
+      let detailRenderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.FormDetailViewRenderer(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.UsersSidebarContainers.detail, userDef, new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DefaultFieldPermissionChecker(), ui_framework_jps_dist_framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_4__.BootstrapFormConfigHelper.getInstance(), false);
       let usersDetailView = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DetailViewImplementation({
         resultsContainerId: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.UsersSidebarContainers.detail,
         dataSourceId: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.VIEW_NAME.userDetail
