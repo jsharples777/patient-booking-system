@@ -21,7 +21,27 @@ export const STATE_NAMES = {
     clinicConfig: 'clinicConfig',
     providers: 'provider',
     appointmentTemplates: 'appointmentTemplate',
-    patients: 'patient'
+    patients: 'patient',
+    name: 'name',
+    contact: 'contact',
+    identifiers:'identifiers',
+    flags:'flags',
+    warnings:'warnings',
+    allergies:'allergy',
+    consults:'consult',
+    history:'history',
+    results:'result',
+    scripts:'script',
+    scriptHistory:'scriptHistory',
+    scriptArchive:'scriptArchive',
+    recalls:'recall',
+    tasks:'task',
+    documents:'documents',
+    letters:'letter',
+    vaccinations:'vaccination',
+    wcc:'wcc',
+    modifiedDates:'modifiedDate'
+
 }
 
 export const API_Config = {

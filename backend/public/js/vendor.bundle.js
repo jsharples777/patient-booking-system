@@ -57440,30 +57440,30 @@ class ChatLogDetailView {
     }
     addChatMessage(message) {
         let chatMessageEl = document.createElement('div');
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addRemoveClasses(chatMessageEl, "message");
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addClasses(chatMessageEl, "message");
         // are we dealing with an "join"/"exit" message?
         if (message.from.trim().length === 0) {
             let messageSenderEl = document.createElement('div');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addRemoveClasses(messageSenderEl, 'message-sender');
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addClasses(messageSenderEl, 'message-sender');
             messageSenderEl.innerText = message.message;
             chatMessageEl.appendChild(messageSenderEl);
         }
         else {
             if (message.from === _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__.ChatManager.getInstance().getCurrentUser()) {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addRemoveClasses(chatMessageEl, "my-message");
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addClasses(chatMessageEl, "my-message");
             }
             else {
                 let messageSenderEl = document.createElement('div');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addRemoveClasses(messageSenderEl, 'message-sender');
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addClasses(messageSenderEl, 'message-sender');
                 messageSenderEl.innerText = message.from + '   ' + moment__WEBPACK_IMPORTED_MODULE_4___default()(message.created, 'YYYYMMDDHHmmss').format('DD/MM/YYYY ');
                 chatMessageEl.appendChild(messageSenderEl);
             }
             let contentEl = document.createElement('div');
             if (message.from === _socket_ChatManager__WEBPACK_IMPORTED_MODULE_2__.ChatManager.getInstance().getCurrentUser()) {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addRemoveClasses(contentEl, "my-message-content");
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addClasses(contentEl, "my-message-content");
             }
             else {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addRemoveClasses(contentEl, 'message-content');
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].addClasses(contentEl, 'message-content');
             }
             contentEl.innerText = message.message;
             chatMessageEl.appendChild(contentEl);
@@ -58979,7 +58979,7 @@ class ContextualInformationHelper {
                         let itemEl = document.createElement(action.elementDefinition.type);
                         if (itemEl && this.menuContentEl) {
                             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(itemEl, action.elementDefinition.attributes);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(itemEl, action.elementDefinition.classes);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(itemEl, action.elementDefinition.classes);
                             itemEl.setAttribute(ContextualInformationHelper.SOURCE, context.source);
                             itemEl.setAttribute(ContextualInformationHelper.TYPE, context.internalType);
                             itemEl.setAttribute(ContextualInformationHelper.DISPLAYNAME, context.displayName);
@@ -59010,13 +59010,13 @@ class ContextualInformationHelper {
     }
     hideContextMenu(event) {
         if (this.menuDivEl) {
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(this.menuDivEl, 'd-none');
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(this.menuDivEl, 'd-none');
         }
     }
     showContextMenu(event) {
         if (this.menuDivEl) {
             logger(`Showing context menu at ${event.pageX},${event.pageY}`);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(this.menuDivEl, 'd-none', false);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(this.menuDivEl, 'd-none');
             this.menuDivEl.style.left = event.pageX + 'px';
             this.menuDivEl.style.top = event.pageY + 'px';
         }
@@ -59089,7 +59089,7 @@ class FieldInputElementFactory {
         if (fieldConfig.elementAttributes)
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(fieldElement, fieldConfig.elementAttributes);
         if (fieldConfig.elementClasses)
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(fieldElement, fieldConfig.elementClasses);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(fieldElement, fieldConfig.elementClasses);
         // readonly field?
         if (fieldConfig.field.displayOnly) {
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(fieldElement, [{ name: 'disabled', value: 'true' }, {
@@ -59128,7 +59128,7 @@ class FieldInputElementFactory {
             errorMessageDivEl = document.createElement('div');
             errorMessageDivEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.error`);
             errorMessageDivEl.setAttribute('style', 'display: none'); // default to not visible
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(errorMessageDivEl, fieldConfig.validator.messageDisplay.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(errorMessageDivEl, fieldConfig.validator.messageDisplay.classes);
             let messageEl = document.createElement(fieldConfig.validator.messageDisplay.type);
             if (messageEl) {
                 messageEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.error.message`);
@@ -59142,7 +59142,7 @@ class FieldInputElementFactory {
             // we need to create a container for the field and option label and description text
             let containedByEl = document.createElement(fieldConfig.containedBy.type);
             if (containedByEl) {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containedByEl, fieldConfig.containedBy.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(containedByEl, fieldConfig.containedBy.classes);
                 containedByEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.container`);
                 if (fieldConfig.containedBy.attributes)
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, fieldConfig.containedBy.attributes);
@@ -59154,7 +59154,7 @@ class FieldInputElementFactory {
                     if (fieldConfig.label.attributes)
                         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(labelEl, fieldConfig.label.attributes);
                     if (fieldConfig.label.classes)
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(labelEl, fieldConfig.label.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(labelEl, fieldConfig.label.classes);
                     containedByEl.appendChild(labelEl);
                 }
                 if (fieldConfig.describedBy) {
@@ -59166,7 +59166,7 @@ class FieldInputElementFactory {
                             descEl.innerHTML = fieldConfig.field.description;
                         fieldElement.setAttribute('aria-describedby', `${formId}.field.${fieldConfig.field.id}.desc`);
                         if (fieldConfig.describedBy.elementClasses)
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(descEl, fieldConfig.describedBy.elementClasses);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(descEl, fieldConfig.describedBy.elementClasses);
                         containedByEl.appendChild(fieldElement);
                         containedByEl.appendChild(descEl);
                         if (errorMessageDivEl)
@@ -59205,7 +59205,7 @@ class FieldInputElementFactory {
                 // is there a container?
                 if (fieldConfig.subElement.container) {
                     containerEl = document.createElement(fieldConfig.subElement.container.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containerEl, fieldConfig.subElement.container.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(containerEl, fieldConfig.subElement.container.classes);
                     if (fieldConfig.subElement.container.attributes)
                         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, fieldConfig.subElement.container.attributes);
                     parentEl.appendChild(containerEl);
@@ -59214,14 +59214,14 @@ class FieldInputElementFactory {
                 valueEl.setAttribute('value', valueOption.value);
                 valueEl.setAttribute('id', `${formId}.field.${fieldConfig.field.id}.${index}`);
                 valueEl.setAttribute('name', `${formId}.field.${fieldConfig.field.id}`);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(valueEl, fieldConfig.subElement.element.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(valueEl, fieldConfig.subElement.element.classes);
                 if (fieldConfig.subElement.element.attributes)
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(valueEl, fieldConfig.subElement.element.attributes);
                 containerEl.appendChild(valueEl);
                 if (fieldConfig.subElement.label) {
                     let labelEl = document.createElement('label');
                     if (fieldConfig.subElement.label.classes)
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(labelEl, fieldConfig.subElement.label.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(labelEl, fieldConfig.subElement.label.classes);
                     if (fieldConfig.subElement.label.attributes)
                         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(labelEl, fieldConfig.subElement.label.attributes);
                     labelEl.innerHTML = valueOption.name;
@@ -59302,7 +59302,7 @@ class FieldInputElementFactory {
         if (fieldConfig.elementAttributes)
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(radioGroupElement, fieldConfig.elementAttributes);
         if (fieldConfig.elementClasses)
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(radioGroupElement, fieldConfig.elementClasses);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(radioGroupElement, fieldConfig.elementClasses);
         let subElements = [];
         // create the options from the data source
         if (fieldConfig.datasource) {
@@ -59361,14 +59361,14 @@ class ItemViewElementFactory {
         formEl.setAttribute('id', formConfig.id);
         formEl.setAttribute('name', formConfig.displayName);
         if (formConfig.classes)
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(formEl, formConfig.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(formEl, formConfig.classes);
         // create each of the fields and collect them
         let formInputElements = [];
         let formTAElements = [];
         let formRBGElements = [];
         let formSelectElements = [];
         let unsavedMessage = document.createElement(formConfig.unsavedChanges.type);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(unsavedMessage, formConfig.unsavedChanges.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(unsavedMessage, formConfig.unsavedChanges.classes);
         if (formConfig.unsavedChanges.attributes)
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(unsavedMessage, formConfig.unsavedChanges.attributes);
         formEl.appendChild(unsavedMessage);
@@ -59382,7 +59382,7 @@ class ItemViewElementFactory {
                     if (group.containedBy.attributes)
                         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(containerEl, group.containedBy.attributes);
                     if (group.containedBy.classes)
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(containerEl, group.containedBy.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(containerEl, group.containedBy.classes);
                     formEl.appendChild(containerEl);
                 }
             }
@@ -59417,7 +59417,7 @@ class ItemViewElementFactory {
             if (buttonContainer) {
                 if (formConfig.buttonsContainedBy.attributes)
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(buttonContainer, formConfig.buttonsContainedBy.attributes);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(buttonContainer, formConfig.buttonsContainedBy.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(buttonContainer, formConfig.buttonsContainedBy.classes);
                 formEl.appendChild(buttonContainer);
             }
             else {
@@ -59452,33 +59452,6 @@ class ItemViewElementFactory {
         };
         return result;
     }
-    createButton(form, formConfig, listeners, buttonDef, eventType) {
-        let buttonEl = document.createElement('button');
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(buttonEl, buttonDef.classes);
-        buttonEl.setAttribute('id', `${formConfig.id}.${eventType}`);
-        if (buttonDef.text) {
-            buttonEl.innerText = buttonDef.text;
-        }
-        if (buttonDef.iconClasses) {
-            let iconEl = document.createElement('i');
-            if (iconEl) {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, buttonDef.iconClasses);
-                buttonEl.appendChild(iconEl);
-            }
-        }
-        /* setup the event handler for the button */
-        buttonEl.addEventListener('click', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            let itemEvent = {
-                target: form,
-                identifier: formConfig.id,
-                eventType: eventType
-            };
-            listeners.forEach((listener) => listener.valuesChanged(itemEvent));
-        });
-        return buttonEl;
-    }
     createTableRowElements(itemId, view, listeners, config, fieldListeners) {
         let rowEl = document.createElement('tr');
         // create each of the fields and collect them
@@ -59511,6 +59484,33 @@ class ItemViewElementFactory {
             radioButtonGroups: rowRBGElements
         };
         return result;
+    }
+    createButton(form, formConfig, listeners, buttonDef, eventType) {
+        let buttonEl = document.createElement('button');
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(buttonEl, buttonDef.classes);
+        buttonEl.setAttribute('id', `${formConfig.id}.${eventType}`);
+        if (buttonDef.text) {
+            buttonEl.innerText = buttonDef.text;
+        }
+        if (buttonDef.iconClasses) {
+            let iconEl = document.createElement('i');
+            if (iconEl) {
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, buttonDef.iconClasses);
+                buttonEl.appendChild(iconEl);
+            }
+        }
+        /* setup the event handler for the button */
+        buttonEl.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            let itemEvent = {
+                target: form,
+                identifier: formConfig.id,
+                eventType: eventType
+            };
+            listeners.forEach((listener) => listener.valuesChanged(itemEvent));
+        });
+        return buttonEl;
     }
 }
 //# sourceMappingURL=ItemViewElementFactory.js.map
@@ -60166,14 +60166,14 @@ class ValidationEventHandler {
             if (errorMessageEl)
                 errorMessageEl.innerHTML = '';
             if (this.fieldConfig.validator.invalidClasses)
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses, false);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses);
             if (this.fieldConfig.validator.validClasses)
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.validClasses);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(validationElementTarget, this.fieldConfig.validator.validClasses);
             if (!isValid) {
                 if (this.fieldConfig.validator.invalidClasses)
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(validationElementTarget, this.fieldConfig.validator.invalidClasses);
                 if (this.fieldConfig.validator.validClasses)
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(validationElementTarget, this.fieldConfig.validator.validClasses, false);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(validationElementTarget, this.fieldConfig.validator.validClasses);
                 if (!message) {
                     message = `${field.displayName} does not have a valid value.`;
                 }
@@ -60869,23 +60869,22 @@ class ColourEditor {
         this.container = null;
         this.colourPickerContainerId = colourPickerContainerId;
         this.editValue = this.editValue.bind(this);
+        this.editCompleted = this.editCompleted.bind(this);
         this.cbColourChange = this.cbColourChange.bind(this);
         this.container = document.getElementById(this.colourPickerContainerId);
         if (this.container) {
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none');
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(this.container, 'd-none');
             $(this.container).farbtastic(this.cbColourChange);
         }
     }
     editCompleted(field, fieldDef) {
         logger(`Field at edit completed`);
-        logger(this.field);
+        this.field = field;
         if (this.container)
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none');
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(this.container, 'd-none');
     }
     editValue(field, fieldDef, currentValue) {
         this.field = field;
-        // @ts-ignore
-        this.field = this.field.bind(this);
         logger(`Field at edit value`);
         logger(this.field);
         // do we have a valid value?
@@ -60903,7 +60902,7 @@ class ColourEditor {
                     name: 'style',
                     value: `top:${offset.top}px; left: ${offset.left}px;`
                 }]);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none', false);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].removeClasses(this.container, 'd-none');
         }
         return currentValue;
     }
@@ -60920,7 +60919,7 @@ class ColourEditor {
             if (field)
                 field.setValue(colour);
             if (this.container)
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none', true);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(this.container, 'd-none');
         }
     }
 }
@@ -61331,26 +61330,6 @@ class BasicTableRowImplementation extends _view_item_DefaultItemView__WEBPACK_IM
         this.__preDisplayCurrentDataObject = this.__preDisplayCurrentDataObject.bind(this);
         this._hidden = this._hidden.bind(this);
     }
-    __buildUIElements() {
-        // do nothing here, we build our ui element just before display
-        console.log('not building');
-        logger(`not loading ui elements yet, awaiting object`);
-    }
-    __getFactoryElements() {
-        return _factory_ItemViewElementFactory__WEBPACK_IMPORTED_MODULE_2__.ItemViewElementFactory.getInstance().createTableRowElements(this.id, this, this.listeners, this.uiDef, this.fieldListeners);
-    }
-    buildTableRowElements() {
-        logger(`loading ui elements now using the super class`);
-        super.__buildUIElements();
-        logger(`Add ourselves to the container`);
-        super._visible();
-    }
-    __preDisplayCurrentDataObject(dataObj) {
-        console.log(dataObj);
-        this.id = dataObj[this.idField];
-        logger(`pre-display data object id is ${this.id}`);
-        this.buildTableRowElements();
-    }
     valueChanged(view, field, fieldDef, newValue) {
         super.valueChanged(view, field, fieldDef, newValue);
         logger(`values has changed - attempting save`);
@@ -61368,7 +61347,26 @@ class BasicTableRowImplementation extends _view_item_DefaultItemView__WEBPACK_IM
         }
         return result;
     }
-    _hidden() { }
+    __buildUIElements() {
+        // do nothing here, we build our ui element just before display
+        logger(`not loading ui elements yet, awaiting object`);
+    }
+    __getFactoryElements() {
+        return _factory_ItemViewElementFactory__WEBPACK_IMPORTED_MODULE_2__.ItemViewElementFactory.getInstance().createTableRowElements(this.id, this, this.listeners, this.uiDef, this.fieldListeners);
+    }
+    buildTableRowElements() {
+        logger(`loading ui elements now using the super class`);
+        super.__buildUIElements();
+        logger(`Add ourselves to the container`);
+        super._visible();
+    }
+    __preDisplayCurrentDataObject(dataObj) {
+        this.id = dataObj[this.idField];
+        logger(`pre-display data object id is ${this.id}`);
+        this.buildTableRowElements();
+    }
+    _hidden() {
+    }
 }
 //# sourceMappingURL=BasicTableRowImplementation.js.map
 
@@ -63490,6 +63488,16 @@ class DefaultItemView {
     getElementIdForField(fieldId) {
         return _factory_FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_7__.FieldInputElementFactory.getElementIdForFieldId(this, fieldId);
     }
+    getFormattedDataObject() {
+        logger(`Getting current formatted data`);
+        let formattedResult = {};
+        this.dataObjDef.fields.forEach((fieldDef) => {
+            let fieldValue = this.currentDataObj[fieldDef.id];
+            formattedResult[fieldDef.id] = this.getFormattedFieldValue(fieldDef);
+        });
+        logger(formattedResult);
+        return formattedResult;
+    }
     informListeners(event, dataObj) {
         this.listeners.forEach((listener) => listener.valuesChanged(event, dataObj));
     }
@@ -63631,6 +63639,7 @@ class DefaultItemView {
     }
     __preDisplayCurrentDataObject(dataObj) {
     }
+    /* methods to be implemented in the subclass */
     _startCreate() {
         this.clearUnsavedMessage();
         // we have a new object, there might be some values to generate
@@ -63658,7 +63667,6 @@ class DefaultItemView {
                     value: 'display:none'
                 }]);
     }
-    /* methods to be implemented in the subclass */
     _startUpdate() {
         this.clearUnsavedMessage();
         // we have an existing object, there might be some values to generate
@@ -63804,16 +63812,6 @@ class DefaultItemView {
                 // this.factoryElements.submitButton.innerHTML = this.uiDef.activeSave + this.uiDef.submitButton.text;
             }
         }
-    }
-    getFormattedDataObject() {
-        logger(`Getting current formatted data`);
-        let formattedResult = {};
-        this.dataObjDef.fields.forEach((fieldDef) => {
-            let fieldValue = this.currentDataObj[fieldDef.id];
-            formattedResult[fieldDef.id] = this.getFormattedFieldValue(fieldDef);
-        });
-        logger(formattedResult);
-        return formattedResult;
     }
     _hidden() {
         var _a;
@@ -63987,13 +63985,13 @@ class CarouselViewRenderer {
         avLogger(item);
         const collectionConfig = this.view.getCollectionUIConfig();
         let childEl = document.createElement(collectionConfig.resultsElement.type);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(childEl, collectionConfig.resultsElement.classes);
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(childEl, collectionConfig.resultsElement.attributes);
         childEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
         childEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
         if (collectionConfig.detail.background) {
             let backgroundEl = document.createElement(collectionConfig.detail.background.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(backgroundEl, collectionConfig.detail.background.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(backgroundEl, collectionConfig.detail.background.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(backgroundEl, collectionConfig.detail.background.attributes);
             backgroundEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
             backgroundEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
@@ -64004,18 +64002,18 @@ class CarouselViewRenderer {
         let textEl = childEl;
         if (collectionConfig.detail.containerClasses) {
             let contentEl = document.createElement('div');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(contentEl, collectionConfig.detail.containerClasses);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(contentEl, collectionConfig.detail.containerClasses);
             contentEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
             contentEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
             textEl = document.createElement(collectionConfig.detail.textElement.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(textEl, collectionConfig.detail.textElement.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(textEl, collectionConfig.detail.textElement.type);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(textEl, collectionConfig.detail.textElement.attributes);
             textEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
             textEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
             contentEl.appendChild(textEl);
             if (collectionConfig.extraActions || collectionConfig.detail.delete) {
                 let buttonsEl = document.createElement(this.config.actionContainer.type);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(buttonsEl, this.config.actionContainer.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(buttonsEl, this.config.actionContainer.classes);
                 contentEl.appendChild(buttonsEl);
                 if (collectionConfig.extraActions) {
                     collectionConfig.extraActions.forEach((extraAction) => {
@@ -64023,14 +64021,14 @@ class CarouselViewRenderer {
                         if (hasPermissionForAction) {
                             let action = document.createElement('button');
                             action.setAttribute('type', 'button');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(action, extraAction.button.classes);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(action, extraAction.button.classes);
                             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(action, extraAction.button.attributes);
                             if (extraAction.button.text) {
                                 action.innerHTML = extraAction.button.text;
                             }
                             if (extraAction.button.iconClasses) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, extraAction.button.iconClasses);
                                 iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                                 iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
@@ -64051,14 +64049,14 @@ class CarouselViewRenderer {
                 if (collectionConfig.detail.delete && collectionConfig && canDeleteItem) {
                     let deleteButtonEl = document.createElement('button');
                     deleteButtonEl.setAttribute('type', 'button');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(deleteButtonEl, collectionConfig.detail.delete.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(deleteButtonEl, collectionConfig.detail.delete.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(deleteButtonEl, collectionConfig.detail.delete.attributes);
                     if (collectionConfig.detail.delete.text) {
                         deleteButtonEl.innerHTML = collectionConfig.detail.delete.text;
                     }
                     if (collectionConfig.detail.delete.iconClasses) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.detail.delete.iconClasses);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, collectionConfig.detail.delete.iconClasses);
                         iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                         iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                         deleteButtonEl.appendChild(iconEl);
@@ -64095,21 +64093,21 @@ class CarouselViewRenderer {
             switch (modifier) {
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.normal: {
                     avLogger(`view ${this.view.getName()}: normal item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.normal);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(childEl, collectionConfig.modifiers.normal);
                     if (collectionConfig.icons && collectionConfig.icons.normal) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.normal);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, collectionConfig.icons.normal);
                         iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                         iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.normal, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(childEl, collectionConfig.modifiers.normal);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(childEl, collectionConfig.modifiers.warning);
                             if (collectionConfig.icons && collectionConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, collectionConfig.icons.warning);
                                 iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -64119,7 +64117,7 @@ class CarouselViewRenderer {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.active: {
                             if (collectionConfig.icons && collectionConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, collectionConfig.icons.active);
                                 iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -64130,21 +64128,21 @@ class CarouselViewRenderer {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.active: {
                     avLogger(`view ${this.view.getName()}: active item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.active);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(childEl, collectionConfig.modifiers.active);
                     if (collectionConfig.icons && collectionConfig.icons.active) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, collectionConfig.icons.active);
                         iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                         iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.active, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(childEl, collectionConfig.modifiers.active);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(childEl, collectionConfig.modifiers.warning);
                             if (collectionConfig.icons && collectionConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, collectionConfig.icons.warning);
                                 iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -64156,10 +64154,10 @@ class CarouselViewRenderer {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.inactive: {
                     avLogger(`view ${this.view.getName()}: inactive item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.inactive);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(childEl, collectionConfig.modifiers.inactive);
                     if (collectionConfig.icons && collectionConfig.icons.inactive) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.inactive);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, collectionConfig.icons.inactive);
                         iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                         iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                         textEl.appendChild(iconEl);
@@ -64167,10 +64165,10 @@ class CarouselViewRenderer {
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.warning: {
                             if (collectionConfig.icons && collectionConfig.icons.warning) {
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.inactive, false);
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(childEl, collectionConfig.modifiers.inactive);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(childEl, collectionConfig.modifiers.warning);
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, collectionConfig.icons.warning);
                                 iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -64180,7 +64178,7 @@ class CarouselViewRenderer {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.Modifier.active: {
                             if (collectionConfig.icons && collectionConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, collectionConfig.icons.active);
                                 iconEl.setAttribute(collectionConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, collectionConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -64217,17 +64215,17 @@ class CarouselViewRenderer {
         for (let rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
             // create the row
             let rowContainerEl = document.createElement(this.config.rowContainer.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowContainerEl, this.config.rowContainer.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(rowContainerEl, this.config.rowContainer.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowContainerEl, this.config.rowContainer.attributes);
             //browserUtil.addAttributes(rowContainerEl,[{name:'style',value:'display:block'}]);
             let rowEl = document.createElement(this.config.row.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowEl, this.config.row.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(rowEl, this.config.row.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowEl, this.config.row.attributes);
             rowContainerEl.appendChild(rowEl);
             // if this the active row?
             if (((rowIndex === 0) && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.RowPosition.first) ||
                 ((rowIndex === (numberOfRows - 1)) && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_2__.RowPosition.last)) {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(rowContainerEl, this.config.activeRow.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(rowContainerEl, this.config.activeRow.classes);
                 _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(rowContainerEl, this.config.activeRow.attributes);
             }
             let itemIndex = rowIndex * itemsPerRow;
@@ -64237,7 +64235,7 @@ class CarouselViewRenderer {
                 let itemContainerEl = rowEl;
                 if (this.config.multipleItemsPerRowContainer) {
                     itemContainerEl = document.createElement(this.config.multipleItemsPerRowContainer.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(itemContainerEl, this.config.multipleItemsPerRowContainer.attributes);
                     rowEl.appendChild(itemContainerEl);
                 }
@@ -64352,11 +64350,11 @@ class CarouselViewRendererUsingContext {
         logger(item);
         const collectionConfig = this.view.getCollectionUIConfig();
         let childEl = document.createElement(collectionConfig.resultsElement.type);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, collectionConfig.resultsElement.classes);
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(childEl, collectionConfig.resultsElement.attributes);
         if (collectionConfig.detail.background) {
             let backgroundEl = document.createElement(collectionConfig.detail.background.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(backgroundEl, collectionConfig.detail.background.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(backgroundEl, collectionConfig.detail.background.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(backgroundEl, collectionConfig.detail.background.attributes);
             childEl.appendChild(backgroundEl);
             this.view.renderBackgroundForItemInNamedCollection(backgroundEl, collectionName, item);
@@ -64365,14 +64363,14 @@ class CarouselViewRendererUsingContext {
         let textEl = childEl;
         if (collectionConfig.detail.containerClasses) {
             let contentEl = document.createElement('div');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, collectionConfig.detail.containerClasses);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(contentEl, collectionConfig.detail.containerClasses);
             textEl = document.createElement(collectionConfig.detail.textElement.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(textEl, collectionConfig.detail.textElement.type);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(textEl, collectionConfig.detail.textElement.type);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(textEl, collectionConfig.detail.textElement.attributes);
             contentEl.appendChild(textEl);
             if (collectionConfig.extraActions || collectionConfig.detail.delete) {
                 let buttonsEl = document.createElement(this.config.actionContainer.type);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(buttonsEl, this.config.actionContainer.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(buttonsEl, this.config.actionContainer.classes);
                 contentEl.appendChild(buttonsEl);
                 if (collectionConfig.extraActions) {
                     collectionConfig.extraActions.forEach((extraAction) => {
@@ -64380,14 +64378,14 @@ class CarouselViewRendererUsingContext {
                         if (hasPermissionForAction) {
                             let action = document.createElement('button');
                             action.setAttribute('type', 'button');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(action, extraAction.button.classes);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(action, extraAction.button.classes);
                             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(action, extraAction.button.attributes);
                             if (extraAction.button.text) {
                                 action.innerHTML = extraAction.button.text;
                             }
                             if (extraAction.button.iconClasses) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, extraAction.button.iconClasses);
                                 iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
                                 action.appendChild(iconEl);
                             }
@@ -64404,14 +64402,14 @@ class CarouselViewRendererUsingContext {
                 if (collectionConfig.detail.delete && collectionConfig && canDeleteItem) {
                     let deleteButtonEl = document.createElement('button');
                     deleteButtonEl.setAttribute('type', 'button');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(deleteButtonEl, collectionConfig.detail.delete.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(deleteButtonEl, collectionConfig.detail.delete.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(deleteButtonEl, collectionConfig.detail.delete.attributes);
                     if (collectionConfig.detail.delete.text) {
                         deleteButtonEl.innerHTML = collectionConfig.detail.delete.text;
                     }
                     if (collectionConfig.detail.delete.iconClasses) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.detail.delete.iconClasses);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, collectionConfig.detail.delete.iconClasses);
                         deleteButtonEl.appendChild(iconEl);
                     }
                     deleteButtonEl.addEventListener('click', (event) => {
@@ -64441,19 +64439,19 @@ class CarouselViewRendererUsingContext {
             switch (modifier) {
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal: {
                     logger(`view ${this.view.getName()}: normal item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.normal);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, collectionConfig.modifiers.normal);
                     if (collectionConfig.icons && collectionConfig.icons.normal) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.normal);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, collectionConfig.icons.normal);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.normal, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeClasses(childEl, collectionConfig.modifiers.normal);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, collectionConfig.modifiers.warning);
                             if (collectionConfig.icons && collectionConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, collectionConfig.icons.warning);
                                 textEl.appendChild(iconEl);
                             }
                             break;
@@ -64461,7 +64459,7 @@ class CarouselViewRendererUsingContext {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active: {
                             if (collectionConfig.icons && collectionConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, collectionConfig.icons.active);
                                 textEl.appendChild(iconEl);
                             }
                         }
@@ -64470,19 +64468,19 @@ class CarouselViewRendererUsingContext {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active: {
                     logger(`view ${this.view.getName()}: active item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.active);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, collectionConfig.modifiers.active);
                     if (collectionConfig.icons && collectionConfig.icons.active) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, collectionConfig.icons.active);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.active, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeClasses(childEl, collectionConfig.modifiers.active);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, collectionConfig.modifiers.warning);
                             if (collectionConfig.icons && collectionConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, collectionConfig.icons.warning);
                                 textEl.appendChild(iconEl);
                             }
                             break;
@@ -64492,19 +64490,19 @@ class CarouselViewRendererUsingContext {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.inactive: {
                     logger(`view ${this.view.getName()}: inactive item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.inactive);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, collectionConfig.modifiers.inactive);
                     if (collectionConfig.icons && collectionConfig.icons.inactive) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.inactive);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, collectionConfig.icons.inactive);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
                             if (collectionConfig.icons && collectionConfig.icons.warning) {
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.inactive, false);
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, collectionConfig.modifiers.warning, true);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeClasses(childEl, collectionConfig.modifiers.inactive);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, collectionConfig.modifiers.warning);
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, collectionConfig.icons.warning);
                                 textEl.appendChild(iconEl);
                             }
                             break;
@@ -64512,7 +64510,7 @@ class CarouselViewRendererUsingContext {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active: {
                             if (collectionConfig.icons && collectionConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, collectionConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, collectionConfig.icons.active);
                                 textEl.appendChild(iconEl);
                             }
                             break;
@@ -64547,17 +64545,17 @@ class CarouselViewRendererUsingContext {
         for (let rowIndex = 0; rowIndex < numberOfRows; rowIndex++) {
             // create the row
             let rowContainerEl = document.createElement(this.config.rowContainer.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowContainerEl, this.config.rowContainer.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(rowContainerEl, this.config.rowContainer.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowContainerEl, this.config.rowContainer.attributes);
             //browserUtil.addAttributes(rowContainerEl,[{name:'style',value:'display:block'}]);
             let rowEl = document.createElement(this.config.row.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowEl, this.config.row.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(rowEl, this.config.row.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowEl, this.config.row.attributes);
             rowContainerEl.appendChild(rowEl);
             // if this the active row?
             if (((rowIndex === 0) && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.RowPosition.first) ||
                 ((rowIndex === (numberOfRows - 1)) && this.config.activeRowPosition === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.RowPosition.last)) {
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(rowContainerEl, this.config.activeRow.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(rowContainerEl, this.config.activeRow.classes);
                 _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(rowContainerEl, this.config.activeRow.attributes);
             }
             let itemIndex = rowIndex * itemsPerRow;
@@ -64567,7 +64565,7 @@ class CarouselViewRendererUsingContext {
                 let itemContainerEl = rowEl;
                 if (this.config.multipleItemsPerRowContainer) {
                     itemContainerEl = document.createElement(this.config.multipleItemsPerRowContainer.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(itemContainerEl, this.config.multipleItemsPerRowContainer.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(itemContainerEl, this.config.multipleItemsPerRowContainer.attributes);
                     rowEl.appendChild(itemContainerEl);
                 }
@@ -64857,7 +64855,7 @@ class ListViewRenderer {
         avLogger(item);
         const resultDataKeyId = this.view.getIdForItemInNamedCollection(collectionName, item);
         let childEl = document.createElement(uiConfig.resultsElement.type);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(childEl, uiConfig.resultsElement.classes);
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(childEl, uiConfig.resultsElement.attributes);
         childEl.setAttribute(uiConfig.keyId, resultDataKeyId);
         childEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
@@ -64865,18 +64863,18 @@ class ListViewRenderer {
         let textEl = childEl;
         if (uiConfig.detail.containerClasses) {
             let contentEl = document.createElement('div');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(contentEl, uiConfig.detail.containerClasses);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(contentEl, uiConfig.detail.containerClasses);
             contentEl.setAttribute(uiConfig.keyId, resultDataKeyId);
             contentEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
             textEl = document.createElement(uiConfig.detail.textElement.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(textEl, uiConfig.detail.textElement.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(textEl, uiConfig.detail.textElement.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(textEl, uiConfig.detail.textElement.attributes);
             textEl.setAttribute(uiConfig.keyId, resultDataKeyId);
             textEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
             contentEl.appendChild(textEl);
             if (uiConfig.detail.background) {
                 let imgEl = document.createElement(uiConfig.detail.background.type);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(imgEl, uiConfig.detail.background.classes);
                 imgEl.setAttribute('src', this.view.getBackgroundImageForItemInNamedCollection(collectionName, item));
                 childEl.appendChild(imgEl);
             }
@@ -64886,7 +64884,7 @@ class ListViewRenderer {
                 const badgeValue = this.view.getBadgeValueForItemInNamedCollection(collectionName, item);
                 if (badgeValue > 0) {
                     let badgeEl = document.createElement(uiConfig.detail.badge.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(badgeEl, uiConfig.detail.badge.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(badgeEl, uiConfig.detail.badge.attributes);
                     badgeEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                     badgeEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
@@ -64898,7 +64896,7 @@ class ListViewRenderer {
                 const badgeValue = this.view.getSecondaryBadgeValueForItemInNamedCollection(collectionName, item);
                 if (badgeValue > 0) {
                     let badgeEl = document.createElement(uiConfig.detail.secondBadge.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(badgeEl, uiConfig.detail.secondBadge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(badgeEl, uiConfig.detail.secondBadge.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(badgeEl, uiConfig.detail.secondBadge.attributes);
                     badgeEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                     badgeEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
@@ -64910,7 +64908,7 @@ class ListViewRenderer {
                 const badgeValue = this.view.getTertiaryBadgeValueForItemInNamedCollection(collectionName, item);
                 if (badgeValue > 0) {
                     let badgeEl = document.createElement(uiConfig.detail.thirdBadge.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(badgeEl, uiConfig.detail.thirdBadge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(badgeEl, uiConfig.detail.thirdBadge.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(badgeEl, uiConfig.detail.thirdBadge.attributes);
                     badgeEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                     badgeEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
@@ -64924,14 +64922,14 @@ class ListViewRenderer {
                     if (hasPermissionForAction) {
                         let action = document.createElement('button');
                         action.setAttribute('type', 'button');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(action, extraAction.button.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(action, extraAction.button.classes);
                         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(action, extraAction.button.attributes);
                         if (extraAction.button.text) {
                             action.innerHTML = extraAction.button.text;
                         }
                         if (extraAction.button.iconClasses) {
                             let iconEl = document.createElement('i');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, extraAction.button.iconClasses);
                             iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                             iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                             iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
@@ -64952,14 +64950,14 @@ class ListViewRenderer {
             if (uiConfig.detail.delete && canDeleteItem) {
                 let deleteButtonEl = document.createElement('button');
                 deleteButtonEl.setAttribute('type', 'button');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(deleteButtonEl, uiConfig.detail.delete.classes);
                 _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addAttributes(deleteButtonEl, uiConfig.detail.delete.attributes);
                 if (uiConfig.detail.delete.text) {
                     deleteButtonEl.innerHTML = uiConfig.detail.delete.text;
                 }
                 if (uiConfig.detail.delete.iconClasses) {
                     let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, uiConfig.detail.delete.iconClasses);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.detail.delete.iconClasses);
                     iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                     iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                     deleteButtonEl.appendChild(iconEl);
@@ -64992,7 +64990,7 @@ class ListViewRenderer {
             const icons = uiConfig.detail.icons(collectionName, item);
             icons.forEach((icon) => {
                 let iconEl = document.createElement('i');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, icon);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, icon);
                 iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                 iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                 textEl.appendChild(iconEl);
@@ -65005,21 +65003,21 @@ class ListViewRenderer {
             switch (modifier) {
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal: {
                     avLogger(`view ${this.view.getName()}: normal item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.modifiers.normal);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(childEl, uiConfig.modifiers.normal);
                     if (uiConfig.icons && uiConfig.icons.normal) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, uiConfig.icons.normal);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.icons.normal);
                         iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                         iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.modifiers.normal, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].removeClasses(childEl, uiConfig.modifiers.normal);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(childEl, uiConfig.modifiers.warning);
                             if (uiConfig.icons && uiConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.icons.warning);
                                 iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -65029,7 +65027,7 @@ class ListViewRenderer {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active: {
                             if (uiConfig.icons && uiConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.icons.active);
                                 iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -65040,21 +65038,21 @@ class ListViewRenderer {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active: {
                     avLogger(`view ${this.view.getName()}: active item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.modifiers.active);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(childEl, uiConfig.modifiers.active);
                     if (uiConfig.icons && uiConfig.icons.active) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.icons.active);
                         iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                         iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.modifiers.active, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].removeClasses(childEl, uiConfig.modifiers.active);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(childEl, uiConfig.modifiers.warning);
                             if (uiConfig.icons && uiConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.icons.warning);
                                 iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -65066,10 +65064,10 @@ class ListViewRenderer {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.inactive: {
                     avLogger(`view ${this.view.getName()}: inactive item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.modifiers.inactive);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(childEl, uiConfig.modifiers.inactive);
                     if (uiConfig.icons && uiConfig.icons.inactive) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, uiConfig.icons.inactive);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.icons.inactive);
                         iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                         iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                         textEl.appendChild(iconEl);
@@ -65077,10 +65075,10 @@ class ListViewRenderer {
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
                             if (uiConfig.icons && uiConfig.icons.warning) {
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.modifiers.inactive, false);
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(childEl, uiConfig.modifiers.warning, true);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].removeClasses(childEl, uiConfig.modifiers.inactive);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(childEl, uiConfig.modifiers.warning);
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.icons.warning);
                                 iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -65090,7 +65088,7 @@ class ListViewRenderer {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active: {
                             if (uiConfig.icons && uiConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.icons.active);
                                 iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
                                 iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
                                 textEl.appendChild(iconEl);
@@ -65158,20 +65156,20 @@ class ListViewRendererUsingContext {
         avLogger(item);
         const resultDataKeyId = this.view.getIdForItemInNamedCollection(collectionName, item);
         let childEl = document.createElement(uiConfig.resultsElement.type);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, uiConfig.resultsElement.classes);
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(childEl, uiConfig.resultsElement.attributes);
         // the content may be structured
         let textEl = childEl;
         if (uiConfig.detail.containerClasses) {
             let contentEl = document.createElement('div');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(contentEl, uiConfig.detail.containerClasses);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(contentEl, uiConfig.detail.containerClasses);
             textEl = document.createElement(uiConfig.detail.textElement.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(textEl, uiConfig.detail.textElement.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(textEl, uiConfig.detail.textElement.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(textEl, uiConfig.detail.textElement.attributes);
             contentEl.appendChild(textEl);
             if (uiConfig.detail.background) {
                 let imgEl = document.createElement(uiConfig.detail.background.type);
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(imgEl, uiConfig.detail.background.classes);
                 imgEl.setAttribute('src', this.view.getBackgroundImageForItemInNamedCollection(collectionName, item));
                 childEl.appendChild(imgEl);
             }
@@ -65181,7 +65179,7 @@ class ListViewRendererUsingContext {
                 const badgeValue = this.view.getBadgeValueForItemInNamedCollection(collectionName, item);
                 if (badgeValue > 0) {
                     let badgeEl = document.createElement(uiConfig.detail.badge.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(badgeEl, uiConfig.detail.badge.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(badgeEl, uiConfig.detail.badge.attributes);
                     buttonsEl.appendChild(badgeEl);
                     badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
@@ -65191,7 +65189,7 @@ class ListViewRendererUsingContext {
                 const badgeValue = this.view.getSecondaryBadgeValueForItemInNamedCollection(collectionName, item);
                 if (badgeValue > 0) {
                     let badgeEl = document.createElement(uiConfig.detail.secondBadge.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(badgeEl, uiConfig.detail.secondBadge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(badgeEl, uiConfig.detail.secondBadge.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(badgeEl, uiConfig.detail.secondBadge.attributes);
                     buttonsEl.appendChild(badgeEl);
                     badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
@@ -65201,7 +65199,7 @@ class ListViewRendererUsingContext {
                 const badgeValue = this.view.getTertiaryBadgeValueForItemInNamedCollection(collectionName, item);
                 if (badgeValue > 0) {
                     let badgeEl = document.createElement(uiConfig.detail.thirdBadge.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(badgeEl, uiConfig.detail.thirdBadge.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(badgeEl, uiConfig.detail.thirdBadge.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(badgeEl, uiConfig.detail.thirdBadge.attributes);
                     buttonsEl.appendChild(badgeEl);
                     badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
@@ -65213,14 +65211,14 @@ class ListViewRendererUsingContext {
                     if (hasPermissionForAction) {
                         let action = document.createElement('button');
                         action.setAttribute('type', 'button');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(action, extraAction.button.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(action, extraAction.button.classes);
                         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(action, extraAction.button.attributes);
                         if (extraAction.button.text) {
                             action.innerHTML = extraAction.button.text;
                         }
                         if (extraAction.button.iconClasses) {
                             let iconEl = document.createElement('i');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, extraAction.button.iconClasses);
                             iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
                             action.appendChild(iconEl);
                         }
@@ -65237,14 +65235,14 @@ class ListViewRendererUsingContext {
             if (uiConfig.detail.delete && canDeleteItem) {
                 let deleteButtonEl = document.createElement('button');
                 deleteButtonEl.setAttribute('type', 'button');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(deleteButtonEl, uiConfig.detail.delete.classes);
                 _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(deleteButtonEl, uiConfig.detail.delete.attributes);
                 if (uiConfig.detail.delete.text) {
                     deleteButtonEl.innerHTML = uiConfig.detail.delete.text;
                 }
                 if (uiConfig.detail.delete.iconClasses) {
                     let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.detail.delete.iconClasses);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.detail.delete.iconClasses);
                     deleteButtonEl.appendChild(iconEl);
                 }
                 deleteButtonEl.addEventListener('click', (event) => {
@@ -65271,7 +65269,7 @@ class ListViewRendererUsingContext {
             const icons = uiConfig.detail.icons(collectionName, item);
             icons.forEach((icon) => {
                 let iconEl = document.createElement('i');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, icon);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, icon);
                 textEl.appendChild(iconEl);
             });
         }
@@ -65282,19 +65280,19 @@ class ListViewRendererUsingContext {
             switch (modifier) {
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal: {
                     avLogger(`view ${this.view.getName()}: normal item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.normal);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, uiConfig.modifiers.normal);
                     if (uiConfig.icons && uiConfig.icons.normal) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.normal);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.icons.normal);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.normal, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeClasses(childEl, uiConfig.modifiers.normal);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, uiConfig.modifiers.warning);
                             if (uiConfig.icons && uiConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.icons.warning);
                                 textEl.appendChild(iconEl);
                             }
                             break;
@@ -65302,7 +65300,7 @@ class ListViewRendererUsingContext {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active: {
                             if (uiConfig.icons && uiConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.icons.active);
                                 textEl.appendChild(iconEl);
                             }
                         }
@@ -65311,19 +65309,19 @@ class ListViewRendererUsingContext {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active: {
                     avLogger(`view ${this.view.getName()}: active item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.active);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, uiConfig.modifiers.active);
                     if (uiConfig.icons && uiConfig.icons.active) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.icons.active);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.active, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeClasses(childEl, uiConfig.modifiers.active);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, uiConfig.modifiers.warning);
                             if (uiConfig.icons && uiConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.icons.warning);
                                 textEl.appendChild(iconEl);
                             }
                             break;
@@ -65333,19 +65331,19 @@ class ListViewRendererUsingContext {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.inactive: {
                     avLogger(`view ${this.view.getName()}: inactive item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.inactive);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, uiConfig.modifiers.inactive);
                     if (uiConfig.icons && uiConfig.icons.inactive) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.inactive);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.icons.inactive);
                         textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
                             if (uiConfig.icons && uiConfig.icons.warning) {
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.inactive, false);
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(childEl, uiConfig.modifiers.warning, true);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeClasses(childEl, uiConfig.modifiers.inactive);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, uiConfig.modifiers.warning);
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.icons.warning);
                                 textEl.appendChild(iconEl);
                             }
                             break;
@@ -65353,7 +65351,7 @@ class ListViewRendererUsingContext {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.active: {
                             if (uiConfig.icons && uiConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.icons.active);
                                 textEl.appendChild(iconEl);
                             }
                             break;
@@ -65424,30 +65422,30 @@ class TabularViewRendererUsingContext {
         logger(item);
         const resultDataKeyId = this.view.getIdForItemInNamedCollection(collectionName, item);
         let tableRowEl = document.createElement(uiConfig.resultsElement.type);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.resultsElement.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableRowEl, uiConfig.resultsElement.classes);
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableRowEl, uiConfig.resultsElement.attributes);
         // we need to build the row from the displayed item values using the renderer if present
         this.tableConfig.columns.forEach((column, index) => {
             const fieldValue = column.getValue(column, item[column.field.id]);
             const fieldDataType = column.field.type;
             let tdEl = document.createElement('td');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tdEl, column.elementClasses);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tdEl, column.elementClasses);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, column.elementAttributes);
             if ((index + 1) === this.tableConfig.itemDetailColumn) {
                 // this column is different and can have many components
                 // the content may be structured
                 if (uiConfig.detail.containerClasses) {
                     let contentEl = document.createElement('div');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(contentEl, uiConfig.detail.containerClasses);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(contentEl, uiConfig.detail.containerClasses);
                     let textEl = document.createElement(uiConfig.detail.textElement.type);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(textEl, uiConfig.detail.textElement.classes);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(textEl, uiConfig.detail.textElement.classes);
                     _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(textEl, uiConfig.detail.textElement.attributes);
                     // add the key ids for selection
                     this.view.renderDisplayForItemInNamedCollection(textEl, collectionName, item);
                     contentEl.appendChild(textEl);
                     if (uiConfig.detail.background) {
                         let imgEl = document.createElement(uiConfig.detail.background.type);
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(imgEl, uiConfig.detail.background.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(imgEl, uiConfig.detail.background.classes);
                         imgEl.setAttribute('src', this.view.getBackgroundImageForItemInNamedCollection(collectionName, item));
                         contentEl.appendChild(imgEl);
                     }
@@ -65455,7 +65453,7 @@ class TabularViewRendererUsingContext {
                         const badgeValue = this.view.getBadgeValueForItemInNamedCollection(collectionName, item);
                         if (badgeValue > 0) {
                             let badgeEl = document.createElement(uiConfig.detail.badge.type);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(badgeEl, uiConfig.detail.badge.classes);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(badgeEl, uiConfig.detail.badge.classes);
                             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(badgeEl, uiConfig.detail.badge.attributes);
                             contentEl.appendChild(badgeEl);
                             badgeEl.innerHTML = `&nbsp;&nbsp;&nbsp;${badgeValue}&nbsp;&nbsp;&nbsp;`;
@@ -65466,7 +65464,7 @@ class TabularViewRendererUsingContext {
                         const icons = uiConfig.detail.icons(collectionName, item);
                         icons.forEach((icon) => {
                             let iconEl = document.createElement('i');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, icon);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, icon);
                             contentEl.appendChild(iconEl);
                         });
                     }
@@ -65501,7 +65499,7 @@ class TabularViewRendererUsingContext {
         if (this.tableConfig.actionColumn) {
             // create the extra table column
             let tdEl = document.createElement('td');
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tdEl, this.tableConfig.actionColumn.element.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tdEl, this.tableConfig.actionColumn.element.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tdEl, this.tableConfig.actionColumn.element.attributes);
             if (uiConfig.extraActions) {
                 uiConfig.extraActions.forEach((extraAction) => {
@@ -65509,14 +65507,14 @@ class TabularViewRendererUsingContext {
                     if (hasPermissionForAction) {
                         let action = document.createElement('button');
                         action.setAttribute('type', 'button');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(action, extraAction.button.classes);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(action, extraAction.button.classes);
                         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(action, extraAction.button.attributes);
                         if (extraAction.button.text) {
                             action.innerHTML = extraAction.button.text;
                         }
                         if (extraAction.button.iconClasses) {
                             let iconEl = document.createElement('i');
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, extraAction.button.iconClasses);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, extraAction.button.iconClasses);
                             iconEl.setAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.EXTRA_ACTION_ATTRIBUTE_NAME, extraAction.name);
                             action.appendChild(iconEl);
                         }
@@ -65533,14 +65531,14 @@ class TabularViewRendererUsingContext {
             if (uiConfig.detail.delete && canDeleteItem) {
                 let deleteButtonEl = document.createElement('button');
                 deleteButtonEl.setAttribute('type', 'button');
-                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(deleteButtonEl, uiConfig.detail.delete.classes);
+                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(deleteButtonEl, uiConfig.detail.delete.classes);
                 _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(deleteButtonEl, uiConfig.detail.delete.attributes);
                 if (uiConfig.detail.delete.text) {
                     deleteButtonEl.innerHTML = uiConfig.detail.delete.text;
                 }
                 if (uiConfig.detail.delete.iconClasses) {
                     let iconEl = document.createElement('i');
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.detail.delete.iconClasses);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, uiConfig.detail.delete.iconClasses);
                     deleteButtonEl.appendChild(iconEl);
                 }
                 deleteButtonEl.addEventListener('click', (event) => {
@@ -65567,19 +65565,19 @@ class TabularViewRendererUsingContext {
             switch (modifier) {
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.normal: {
                     logger(`view ${this.view.getName()}: normal item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.normal);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableRowEl, uiConfig.modifiers.normal);
                     if (uiConfig.icons && uiConfig.icons.normal) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.normal);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, uiConfig.icons.normal);
                         //textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.normal, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tableRowEl, uiConfig.modifiers.normal);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableRowEl, uiConfig.modifiers.warning);
                             if (uiConfig.icons && uiConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, uiConfig.icons.warning);
                                 //textEl.appendChild(iconEl);
                             }
                             break;
@@ -65587,7 +65585,7 @@ class TabularViewRendererUsingContext {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.active: {
                             if (uiConfig.icons && uiConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, uiConfig.icons.active);
                                 //textEl.appendChild(iconEl);
                             }
                         }
@@ -65596,19 +65594,19 @@ class TabularViewRendererUsingContext {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.active: {
                     logger(`view ${this.view.getName()}: active item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.active);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableRowEl, uiConfig.modifiers.active);
                     if (uiConfig.icons && uiConfig.icons.active) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, uiConfig.icons.active);
                         //textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.warning: {
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.active, false);
-                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.warning, true);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tableRowEl, uiConfig.modifiers.active);
+                            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableRowEl, uiConfig.modifiers.warning);
                             if (uiConfig.icons && uiConfig.icons.warning) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, uiConfig.icons.warning);
                                 //textEl.appendChild(iconEl);
                             }
                             break;
@@ -65618,19 +65616,19 @@ class TabularViewRendererUsingContext {
                 }
                 case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.inactive: {
                     logger(`view ${this.view.getName()}: inactive item`);
-                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.inactive);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableRowEl, uiConfig.modifiers.inactive);
                     if (uiConfig.icons && uiConfig.icons.inactive) {
                         let iconEl = document.createElement('i');
-                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.inactive);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, uiConfig.icons.inactive);
                         //textEl.appendChild(iconEl);
                     }
                     switch (secondModifier) {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.warning: {
                             if (uiConfig.icons && uiConfig.icons.warning) {
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.inactive, false);
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableRowEl, uiConfig.modifiers.warning, true);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tableRowEl, uiConfig.modifiers.inactive);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableRowEl, uiConfig.modifiers.warning);
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.warning);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, uiConfig.icons.warning);
                                 //textEl.appendChild(iconEl);
                             }
                             break;
@@ -65638,7 +65636,7 @@ class TabularViewRendererUsingContext {
                         case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_0__.Modifier.active: {
                             if (uiConfig.icons && uiConfig.icons.active) {
                                 let iconEl = document.createElement('i');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(iconEl, uiConfig.icons.active);
+                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(iconEl, uiConfig.icons.active);
                                 //textEl.appendChild(iconEl);
                             }
                             break;
@@ -65659,16 +65657,16 @@ class TabularViewRendererUsingContext {
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAllChildren(containerEl);
         // create the table
         let tableEl = document.createElement(this.tableConfig.table.type);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableEl, this.tableConfig.table.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableEl, this.tableConfig.table.classes);
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableEl, this.tableConfig.table.attributes);
         // create the headers
         let tableHeaderEl = document.createElement(this.tableConfig.header.type);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableHeaderEl, this.tableConfig.header.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableHeaderEl, this.tableConfig.header.classes);
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableHeaderEl, this.tableConfig.header.attributes);
         // create the column headers
         this.tableConfig.headerColumns.forEach((header) => {
             let thEl = document.createElement(header.element.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(thEl, header.element.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(thEl, header.element.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(thEl, header.element.attributes);
             if (header.element.innerHTML)
                 thEl.innerHTML = header.element.innerHTML;
@@ -65677,7 +65675,7 @@ class TabularViewRendererUsingContext {
         // create the action column header (if one)
         if (this.tableConfig.actionColumn) {
             let thEl = document.createElement(this.tableConfig.actionColumn.element.type);
-            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(thEl, this.tableConfig.actionColumn.element.classes);
+            _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(thEl, this.tableConfig.actionColumn.element.classes);
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(thEl, this.tableConfig.actionColumn.element.attributes);
             if (this.tableConfig.actionColumn.element.innerHTML)
                 thEl.innerHTML = this.tableConfig.actionColumn.element.innerHTML;
@@ -65686,7 +65684,7 @@ class TabularViewRendererUsingContext {
         tableEl.appendChild(tableHeaderEl);
         // create the table body
         let tableBodyEl = document.createElement(this.tableConfig.body.type);
-        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addRemoveClasses(tableBodyEl, this.tableConfig.body.classes);
+        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tableBodyEl, this.tableConfig.body.classes);
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tableBodyEl, this.tableConfig.body.attributes);
         // add the new children
         newState.map((item, index) => {

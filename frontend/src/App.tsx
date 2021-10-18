@@ -22,6 +22,7 @@ import {ClinicChatListView} from "./clinic-chat/ClinicChatListView";
 import {UsersCompositeView} from "./users/UsersCompositeView";
 import {TodayController} from "./today/TodayController";
 import {PatientRecordTabularView} from "./patients/PatientRecordTabularView";
+import {PatientDemographicsCompositeView} from "./patients/PatientDemographicsCompositeView";
 
 
 const logger = debug('app');
@@ -74,7 +75,9 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
         ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).onDocumentLoaded();
 
-        new PatientRecordTabularView().onDocumentLoaded();
+        const patientView = new PatientRecordTabularView();
+        patientView.addViewToTab('demographics',new PatientDemographicsCompositeView());
+        patientView.onDocumentLoaded();
 
 
         this.setupNavigationItemHandling();
@@ -247,7 +250,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results tabular-view-container';//default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 

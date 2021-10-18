@@ -49,7 +49,26 @@ const STATE_NAMES = {
   clinicConfig: 'clinicConfig',
   providers: 'provider',
   appointmentTemplates: 'appointmentTemplate',
-  patients: 'patient'
+  patients: 'patient',
+  name: 'name',
+  contact: 'contact',
+  identifiers: 'identifiers',
+  flags: 'flags',
+  warnings: 'warnings',
+  allergies: 'allergy',
+  consults: 'consult',
+  history: 'history',
+  results: 'result',
+  scripts: 'script',
+  scriptHistory: 'scriptHistory',
+  scriptArchive: 'scriptArchive',
+  recalls: 'recall',
+  tasks: 'task',
+  documents: 'documents',
+  letters: 'letter',
+  vaccinations: 'vaccination',
+  wcc: 'wcc',
+  modifiedDates: 'modifiedDate'
 };
 const API_Config = {
   login: '/login',
@@ -5432,6 +5451,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./users/UsersCompositeView */ "./src/users/UsersCompositeView.ts");
 /* harmony import */ var _today_TodayController__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./today/TodayController */ "./src/today/TodayController.ts");
 /* harmony import */ var _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./patients/PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
+/* harmony import */ var _patients_PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./patients/PatientDemographicsCompositeView */ "./src/patients/PatientDemographicsCompositeView.tsx");
+
 
 
 
@@ -5487,7 +5508,9 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.usersSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.UsersSidebarPrefs);
     new _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__.UsersCompositeView(this.usersSidebar).onDocumentLoaded();
     _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).onDocumentLoaded();
-    new _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_16__.PatientRecordTabularView().onDocumentLoaded();
+    const patientView = new _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_16__.PatientRecordTabularView();
+    patientView.addViewToTab('demographics', new _patients_PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_17__.PatientDemographicsCompositeView());
+    patientView.onDocumentLoaded();
     this.setupNavigationItemHandling();
     _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
     _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
@@ -5662,7 +5685,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results default-item-view default-item-view-detail default-item-view-detail-validation'; // basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results tabular-view-container'; //default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
@@ -5683,6 +5706,70 @@ $(function () {
   });
   react_dom__WEBPACK_IMPORTED_MODULE_4__.render(element, document.getElementById('root'));
 });
+
+/***/ }),
+
+/***/ "./src/patients/PatientDemographicsCompositeView.tsx":
+/*!***********************************************************!*\
+  !*** ./src/patients/PatientDemographicsCompositeView.tsx ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PatientDemographicsCompositeView": () => (/* binding */ PatientDemographicsCompositeView)
+/* harmony export */ });
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/** @jsx jsxCreateElement */
+
+/*** @jsxFrag jsxCreateFragment */
+
+class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AbstractView {
+  constructor() {
+    super({
+      resultsContainerId: '',
+      dataSourceId: 'patientDemographics'
+    });
+  }
+
+  onDocumentLoaded() {
+    super.onDocumentLoaded();
+    console.log('blah');
+    const demographicsView = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      id: "demographics-view",
+      className: "container-fluid"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "row"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      id: "patient-name",
+      className: "col-12-sm col-md-6"
+    }), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      id: "patient-contact",
+      className: "col-12-sm col-md-6"
+    })), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "row"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      id: "patient-identifiers",
+      className: "col-12-sm col-md-6"
+    }))); // @ts-ignore
+
+    this.containerEl.append(demographicsView);
+  }
+
+  hidden() {}
+
+  render() {}
+
+  show() {}
+
+  update(controller, typeName, dataObj) {}
+
+  create(controller, typeName, dataObj) {}
+
+  delete(controller, typeName, dataObj) {}
+
+}
 
 /***/ }),
 
