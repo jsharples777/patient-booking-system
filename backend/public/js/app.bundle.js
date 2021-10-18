@@ -1626,7 +1626,7 @@ class AppointmentTypesCollectionView extends ui_framework_jps__WEBPACK_IMPORTED_
       tableUIConfig.headerColumns[1].element.classes += ' text-center';
       tableUIConfig.headerColumns[2].element.classes += ' text-center';
       tableUIConfig.headerColumns[3].element.classes += ' text-center';
-      this.renderer = new _renderer_TabularItemViewRenderer__WEBPACK_IMPORTED_MODULE_3__.TabularItemViewRenderer(this, this, tableUIConfig, displayOrders, ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableRowConfigHelper.getInstance(), new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DefaultFieldPermissionChecker()); // this.renderer = new TabularViewRendererUsingContext(this, this, tableUIConfig);
+      this.renderer = new _renderer_TabularItemViewRenderer__WEBPACK_IMPORTED_MODULE_3__.TabularItemViewRenderer(this, this, tableUIConfig, displayOrders, ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableRowConfigHelper.getInstance(), new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DefaultFieldPermissionChecker()); //this.renderer = new TabularViewRendererUsingContext(this, this, tableUIConfig);
       //this.renderer = new ListViewRendererUsingContext(this,this);
 
       this.eventHandlerDelegate = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.CollectionViewEventHandlerDelegateUsingContext(this, this.eventForwarder);
@@ -3799,73 +3799,6 @@ class ClinicChatSidebar extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.Si
 
 /***/ }),
 
-/***/ "./src/framework/table/BasicTableRowImplementation.ts":
-/*!************************************************************!*\
-  !*** ./src/framework/table/BasicTableRowImplementation.ts ***!
-  \************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "BasicTableRowImplementation": () => (/* binding */ BasicTableRowImplementation)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('basic-table-row');
-const dlogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('basic-table-row-detail');
-class BasicTableRowImplementation extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.DefaultItemView {
-  constructor(idField, containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl = false) {
-    super(containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl);
-    this.idField = idField;
-    this.__buildUIElements = this.__buildUIElements.bind(this);
-    this.__getFactoryElements = this.__getFactoryElements.bind(this);
-    this.__preDisplayCurrentDataObject = this.__preDisplayCurrentDataObject.bind(this);
-  }
-
-  __buildUIElements() {
-    // do nothing here, we build our ui element just before display
-    console.log('not building');
-    logger(`not loading ui elements yet, awaiting object`);
-  }
-
-  __getFactoryElements() {
-    return ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ItemViewElementFactory.getInstance().createTableRowElements(this.id, this, this.listeners, this.uiDef, this.fieldListeners);
-  }
-
-  buildTableRowElements() {
-    logger(`loading ui elements now using the super class`);
-
-    super.__buildUIElements();
-
-    logger(`Add ourselves to the container`);
-
-    super._visible();
-  }
-
-  __preDisplayCurrentDataObject(dataObj) {
-    console.log(dataObj);
-    this.id = dataObj[this.idField];
-    logger(`pre-display data object id is ${this.id}`);
-    this.buildTableRowElements();
-  }
-
-  valueChanged(view, field, fieldDef, newValue) {
-    super.valueChanged(view, field, fieldDef, newValue);
-    logger(`values has changed - attempting save`);
-  }
-
-  getRowElement() {
-    return this.factoryElements.top;
-  }
-
-}
-
-/***/ }),
-
 /***/ "./src/helper/AppointmentControllerHelper.ts":
 /*!***************************************************!*\
   !*** ./src/helper/AppointmentControllerHelper.ts ***!
@@ -4706,7 +4639,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
 /* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _framework_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../framework/table/BasicTableRowImplementation */ "./src/framework/table/BasicTableRowImplementation.ts");
+Object(function webpackMissingModule() { var e = new Error("Cannot find module '../framework/table/BasicTableRowImplementation'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 /* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
 
 
@@ -4731,7 +4664,7 @@ class TabularItemViewRenderer {
     let result = document.createElement('tr');
 
     if (this.dataObjDef && this.idField) {
-      let rowView = new _framework_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_3__.BasicTableRowImplementation(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
+      let rowView = new Object(function webpackMissingModule() { var e = new Error("Cannot find module '../framework/table/BasicTableRowImplementation'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
       rowView.initialise(this.displayOrders, false, true);
       rowView.startUpdate(item);
       this.tableRowViews.push(rowView);
@@ -5731,7 +5664,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results basic-table-row basic-table-row-detail abstract-field'; // tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results default-item-view default-item-view-detail default-item-view-detail-validation'; // basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';

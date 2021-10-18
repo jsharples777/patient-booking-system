@@ -62,7 +62,7 @@ export const VIEW_NAME = {
     appointmentTypes: 'appointmentTypes',
     appointmentTypeDetail: 'appointmentTypeDetail',
     users: 'usersList',
-    userDetail:'userDetail'
+    userDetail: 'userDetail'
 }
 
 export const VIEW_CONTAINER = {

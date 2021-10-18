@@ -4,36 +4,24 @@ import {StateChangeListener} from "ui-framework-jps";
 import debug from 'debug';
 import moment from "moment";
 import {computeTimeStringFromStartTimeAndDurationInSeconds} from "../DurationFunctions";
-import {v4} from "uuid";
 import {ScheduleLoadedListener} from "./ScheduleLoadedListener";
-import {AppointmentController} from "../appointments/AppointmentController";
 
 
 const logger = debug('appointment-controller-helper');
 
-export class AppointmentControllerHelper implements StateChangeListener{
-    private static _instance: AppointmentControllerHelper;
-    
-    public static getInstance(): AppointmentControllerHelper {
-        if (!(AppointmentControllerHelper._instance)) {
-            AppointmentControllerHelper._instance = new AppointmentControllerHelper();
-        }
-        return AppointmentControllerHelper._instance;
-    }
-
+export class AppointmentControllerHelper implements StateChangeListener {
     public static APPOINTMENT_STATUS_ARRIVED = 'Patient Arrived';
     public static APPOINTMENT_STATUS_READY_FOR_BILLING = 'Ready For Billing';
     public static APPOINTMENT_STATUS_BILLING_COMPLETE = 'Billing Complete';
     public static APPOINTMENT_TYPE_PATIENT_CANCELLED = 'Patient Cancelled';
     public static APPOINTMENT_TYPE_PATIENT_DNA = 'Did Not Arrive';
-    
-    private appointmentTypes:any[] = [];
-    private clinicConfig:any|null = null;
-    private patientSearch:any[] = [];
-    private providers:any[] = [];
+    private static _instance: AppointmentControllerHelper;
+    private appointmentTypes: any[] = [];
+    private clinicConfig: any | null = null;
+    private patientSearch: any[] = [];
+    private providers: any[] = [];
+    private listeners: ScheduleLoadedListener[] = [];
 
-    private listeners:ScheduleLoadedListener[] = [];
-    
     private constructor() {
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.clinicConfig, this);
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.appointmentTypes, this);
@@ -44,7 +32,14 @@ export class AppointmentControllerHelper implements StateChangeListener{
         this.handleAppointmentRendering = this.handleAppointmentRendering.bind(this);
     }
 
-    public addListener(listener:ScheduleLoadedListener) {
+    public static getInstance(): AppointmentControllerHelper {
+        if (!(AppointmentControllerHelper._instance)) {
+            AppointmentControllerHelper._instance = new AppointmentControllerHelper();
+        }
+        return AppointmentControllerHelper._instance;
+    }
+
+    public addListener(listener: ScheduleLoadedListener) {
         this.listeners.push(listener);
     }
 
@@ -65,24 +60,23 @@ export class AppointmentControllerHelper implements StateChangeListener{
 
     }
 
-    public getAppointmentTypes():any[] {
+    public getAppointmentTypes(): any[] {
         return this.appointmentTypes;
     }
 
-    public getPatientSearch():any[] {
+    public getPatientSearch(): any[] {
         return this.patientSearch;
     }
 
-    public getProviders():any[] {
+    public getProviders(): any[] {
         return this.providers;
     }
 
-    public getClinicConfig():any {
+    public getClinicConfig(): any {
         if (this.clinicConfig) {
             const config = JSON.parse(JSON.stringify(this.clinicConfig));
             return config;
-        }
-        else {
+        } else {
             let options = {
                 clickToCreate: 'double',
                 dragTimeStep: 5,
@@ -141,7 +135,6 @@ export class AppointmentControllerHelper implements StateChangeListener{
         }
         return result;
     }
-
 
 
     public getIconsForEvent(event: any): string {
@@ -266,8 +259,8 @@ export class AppointmentControllerHelper implements StateChangeListener{
     }
 
 
-
-    filterResults(managerName: string, name: string, filterResults: any): void {}
+    filterResults(managerName: string, name: string, filterResults: any): void {
+    }
 
     getListenerName(): string {
         return "Appointment Controller Helper";
@@ -313,7 +306,7 @@ export class AppointmentControllerHelper implements StateChangeListener{
     }
 
     stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, itemNewValue: any): void {
-        switch(name) {
+        switch (name) {
             case (STATE_NAMES.appointmentTypes): {
                 this.appointmentTypes = Controller.getInstance().getStateManager().getStateByName(name);
                 this.listeners.forEach((listener) => listener.loadedAppointmentTypes(this.appointmentTypes));
@@ -354,8 +347,6 @@ export class AppointmentControllerHelper implements StateChangeListener{
     }
 
 
-
-    
     public getAppointmentTemplateFromEvent(event: any): any {
         let day = parseInt(moment(event.start).format('d'));
         let time = moment(event.start).format('HHmmss');
@@ -434,8 +425,6 @@ export class AppointmentControllerHelper implements StateChangeListener{
         }
         return buffer;
     }
-
-
 
 
 }

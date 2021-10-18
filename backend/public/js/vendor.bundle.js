@@ -60008,6 +60008,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "EditingEventListener": () => (/* binding */ EditingEventListener)
 /* harmony export */ });
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('editing-event-listener');
 class EditingEventListener {
     constructor(view, field, fieldConfig, listeners) {
         this.view = view;
@@ -60025,7 +60029,9 @@ class EditingEventListener {
         const fieldElement = event.target;
         if (this.fieldConfig.editor) {
             const fieldDef = this.fieldConfig.field;
+            logger(fieldDef);
             const value = fieldElement.value;
+            logger(value);
             const newValue = this.fieldConfig.editor.editValue(this.field, fieldDef, value);
             if (newValue && (newValue !== value)) {
                 fieldElement.value = newValue;
@@ -60852,7 +60858,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "ColourEditor": () => (/* binding */ ColourEditor)
 /* harmony export */ });
 /* harmony import */ var _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('colour-editor');
 class ColourEditor {
     constructor(colourPickerContainerId) {
         this.field = null;
@@ -60867,13 +60877,21 @@ class ColourEditor {
         }
     }
     editCompleted(field, fieldDef) {
+        logger(`Field at edit completed`);
+        logger(this.field);
         if (this.container)
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none');
     }
     editValue(field, fieldDef, currentValue) {
         this.field = field;
+        // @ts-ignore
+        this.field = this.field.bind(this);
+        logger(`Field at edit value`);
+        logger(this.field);
         // do we have a valid value?
         if (/^#[0-9a-f]{6}$/.test(currentValue) && this.container) {
+            // @ts-ignore
+            this.container['data-field'] = field;
             $.farbtastic(this.container).setColor(currentValue);
         }
         if (field && this.container) {
@@ -60890,9 +60908,17 @@ class ColourEditor {
         return currentValue;
     }
     cbColourChange(colour) {
+        logger(`Colour changed to ${colour}`);
         if (/^#[0-9a-f]{6}$/.test(colour)) {
+            logger(`Field at CB Colour Change`);
+            logger(this.field);
+            // @ts-ignore
+            let field = this.container['data-field'];
+            logger(field);
             if (this.field)
                 this.field.setValue(colour);
+            if (field)
+                field.setValue(colour);
             if (this.container)
                 _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addRemoveClasses(this.container, 'd-none', true);
         }
@@ -61272,6 +61298,79 @@ class SimpleValueDataSource {
     }
 }
 //# sourceMappingURL=SimpleValueDataSource.js.map
+
+/***/ }),
+
+/***/ "./node_modules/ui-framework-jps/dist/framework/ui/table/BasicTableRowImplementation.js":
+/*!**********************************************************************************************!*\
+  !*** ./node_modules/ui-framework-jps/dist/framework/ui/table/BasicTableRowImplementation.js ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "BasicTableRowImplementation": () => (/* binding */ BasicTableRowImplementation)
+/* harmony export */ });
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _view_item_DefaultItemView__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../view/item/DefaultItemView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/item/DefaultItemView.js");
+/* harmony import */ var _factory_ItemViewElementFactory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../factory/ItemViewElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/factory/ItemViewElementFactory.js");
+/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('basic-table-row');
+class BasicTableRowImplementation extends _view_item_DefaultItemView__WEBPACK_IMPORTED_MODULE_1__.DefaultItemView {
+    constructor(idField, containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl = false) {
+        super(containerId, dataObjDef, configHelper, permissionChecker, hasExternalControl);
+        this.idField = idField;
+        this.__buildUIElements = this.__buildUIElements.bind(this);
+        this.__getFactoryElements = this.__getFactoryElements.bind(this);
+        this.__preDisplayCurrentDataObject = this.__preDisplayCurrentDataObject.bind(this);
+        this._hidden = this._hidden.bind(this);
+    }
+    __buildUIElements() {
+        // do nothing here, we build our ui element just before display
+        console.log('not building');
+        logger(`not loading ui elements yet, awaiting object`);
+    }
+    __getFactoryElements() {
+        return _factory_ItemViewElementFactory__WEBPACK_IMPORTED_MODULE_2__.ItemViewElementFactory.getInstance().createTableRowElements(this.id, this, this.listeners, this.uiDef, this.fieldListeners);
+    }
+    buildTableRowElements() {
+        logger(`loading ui elements now using the super class`);
+        super.__buildUIElements();
+        logger(`Add ourselves to the container`);
+        super._visible();
+    }
+    __preDisplayCurrentDataObject(dataObj) {
+        console.log(dataObj);
+        this.id = dataObj[this.idField];
+        logger(`pre-display data object id is ${this.id}`);
+        this.buildTableRowElements();
+    }
+    valueChanged(view, field, fieldDef, newValue) {
+        super.valueChanged(view, field, fieldDef, newValue);
+        logger(`values has changed - attempting save`);
+        let event = {
+            target: this,
+            identifier: this.getId(),
+            eventType: _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.SAVING
+        };
+        this.valuesChanged(event, this.currentDataObj);
+    }
+    getRowElement() {
+        let result = null;
+        if (this.factoryElements) {
+            result = this.factoryElements.top;
+        }
+        return result;
+    }
+    _hidden() { }
+}
+//# sourceMappingURL=BasicTableRowImplementation.js.map
 
 /***/ }),
 
@@ -62999,7 +63098,7 @@ class DefaultItemView {
         this.factoryElements = null;
         this.containerEl = document.getElementById(containerId);
         if (!(this.containerEl))
-            throw new Error(`container ${containerId} for form ${dataObjDef.id} does not exist`);
+            throw new Error(`container ${containerId} for Item View ${dataObjDef.id} does not exist`);
         this.map = [];
         this.dataObjDef = dataObjDef;
         this.configHelper = configHelper;
@@ -63008,7 +63107,7 @@ class DefaultItemView {
         this.currentDataObj = {};
         this.id = (0,uuid__WEBPACK_IMPORTED_MODULE_15__["default"])();
         this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ViewMode.unset;
-        // sub-classes need to create the form and it's fields
+        // sub-classes need to create the Item View and it's fields
         // listen to ourselves
         this.addListener(this);
     }
@@ -63063,11 +63162,11 @@ class DefaultItemView {
     valueChanged(view, field, fieldDef, newValue) {
         this.hasChangedBoolean = true;
         this.setUnsavedMessage();
-        logger(`Form has changed`);
+        logger(`Item View has changed`);
     }
     failedValidation(view, field, currentValue, message) {
         this.hasChangedBoolean = true;
-        logger(`Form has changed`);
+        logger(`Item View has changed`);
     }
     initialise(displayOrder, hasDeleteButton, hideModifierFields = false) {
         if (this.isInitialised)
@@ -63082,7 +63181,7 @@ class DefaultItemView {
         this.listeners.push(listener);
     }
     reset() {
-        logger(`Resetting form`);
+        logger(`Resetting Item View`);
         this.clearUnsavedMessage();
         this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ViewMode.unset;
         this.hasChangedBoolean = false;
@@ -63182,11 +63281,11 @@ class DefaultItemView {
         this.setReadOnly();
     }
     valuesChanged(event, values) {
-        // catch form events for user leaving the form
+        // catch form events for user leaving the Item View
         let shouldCancelChange = false;
         switch (event.eventType) {
             case (_CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.CANCELLING): {
-                logger(`Form is cancelling`);
+                logger(`Item View is cancelling`);
                 if (this.hasChangedBoolean && !(this.viewMode === _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ViewMode.displayOnly)) {
                     if (this.uiDef) {
                         _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Lose any unsaved changes?`, _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.CANCELLING);
@@ -63205,53 +63304,53 @@ class DefaultItemView {
                 break;
             }
             case (_CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.CANCELLING_ABORTED): {
-                logger(`Form is cancelling - aborted`);
+                logger(`Item View is cancelling - aborted`);
                 break;
             }
             case (_CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.CANCELLED): {
-                logger(`Form is cancelled - resetting`);
-                // user cancelled the form, will become invisible
+                logger(`Item View is cancelled - resetting`);
+                // user cancelled the Item View, will become invisible
                 this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ViewMode.displayOnly;
-                this.reset(); // reset the form state
+                this.reset(); // reset the Item View state
                 this.setReadOnly();
                 break;
             }
             case (_CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.DELETING): {
-                logger(`Form is deleting`);
+                logger(`Item View is deleting`);
                 if (this.uiDef) {
                     _alert_AlertManager__WEBPACK_IMPORTED_MODULE_4__.AlertManager.getInstance().startAlert(this, this.uiDef.displayName, `Are you sure you want to delete this information?`, _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.DELETING);
                 }
                 break;
             }
             case (_CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.DELETE_ABORTED): {
-                logger(`Form is deleting - aborted`);
+                logger(`Item View is deleting - aborted`);
                 break;
             }
             case (_CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.DELETED): {
-                logger(`Form is deleted - resetting`);
+                logger(`Item View is deleted - resetting`);
                 // user is deleting the object, will become invisible
                 this.reset();
                 break;
             }
             case (_CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.SAVE_ABORTED): {
                 this._saveFinishedOrAborted();
-                logger(`Form save cancelled`);
+                logger(`Item View save cancelled`);
                 break;
             }
             case (_CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.SAVED): {
                 this._saveFinishedOrAborted();
-                logger(`Form is saved with data`);
+                logger(`Item View is saved with data`);
                 logger(values);
                 this.viewMode = _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ViewMode.update;
                 this.hasChangedBoolean = false;
                 break;
             }
             case (_CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.SAVING): {
-                logger(`Form is saving, checking validation and storing values`);
+                logger(`Item View is saving, checking validation and storing values`);
                 this._saveIsActive();
                 if (this.uiDef) {
                     let allFieldsValid = true;
-                    // user attempting to save the form, lets check the field validation
+                    // user attempting to save the Item View, lets check the field validation
                     this.fields.forEach((field) => {
                         const currentValue = field.getValue();
                         if (!field.isValid()) {
@@ -63275,7 +63374,7 @@ class DefaultItemView {
                     });
                     // is every field valid?
                     if (!allFieldsValid) {
-                        logger(`Form is saving, checking validation - FAILED`);
+                        logger(`Item View is saving, checking validation - FAILED`);
                         let itemEvent = {
                             identifier: this.getId(),
                             target: this,
@@ -63451,14 +63550,14 @@ class DefaultItemView {
         return _factory_ItemViewElementFactory__WEBPACK_IMPORTED_MODULE_8__.ItemViewElementFactory.getInstance().createFormElements(this, this.listeners, this.uiDef, this.fieldListeners);
     }
     __buildUIElements() {
-        // now we need to create all the form elements from the ui definition
+        // now we need to create all the Item View elements from the ui definition
         this.factoryElements = this.__getFactoryElements();
         logger(this.factoryElements);
         // create field elements for each field element, and the basic map
         logger(`Converting field input elements to Field objects`);
         this.factoryElements.fields.forEach((fieldEl) => {
             fieldEl.addEventListener('keyup', (event) => {
-                dlogger(`key up in form ${this.getName()}`);
+                dlogger(`key up in Item View ${this.getName()}`);
                 this.hasChangedBoolean = true;
                 this.setUnsavedMessage();
             });
@@ -63467,7 +63566,7 @@ class DefaultItemView {
         logger(`Converting field text area elements to Field objects`);
         this.factoryElements.textFields.forEach((fieldEl) => {
             fieldEl.addEventListener('keyup', (event) => {
-                dlogger(`key up in form ${this.getName()}`);
+                dlogger(`key up in Item View ${this.getName()}`);
                 this.hasChangedBoolean = true;
                 this.setUnsavedMessage();
             });
@@ -63476,7 +63575,7 @@ class DefaultItemView {
         logger(`Converting field select elements to Field objects`);
         this.factoryElements.selectFields.forEach((fieldEl) => {
             fieldEl.addEventListener('change', (event) => {
-                dlogger(`change in form ${this.getName()}`);
+                dlogger(`change in Item View ${this.getName()}`);
                 this.hasChangedBoolean = true;
                 this.setUnsavedMessage();
             });
@@ -63487,7 +63586,7 @@ class DefaultItemView {
             this.setupFieldObject(rbg.container, rbg.radioButtons);
             rbg.radioButtons.forEach((radioButton) => {
                 radioButton.addEventListener('change', (event) => {
-                    dlogger(`radio button change in form ${this.getName()}`);
+                    dlogger(`radio button change in Item View ${this.getName()}`);
                     this.hasChangedBoolean = true;
                     this.setUnsavedMessage();
                 });
@@ -63500,7 +63599,7 @@ class DefaultItemView {
     }
     _initialise(displayOrder, hasDeleteButton, hideModifierFields = false) {
         logger(`Initialising`);
-        // ok, so given a Data Object definition we are going to create the form ui config
+        // ok, so given a Data Object definition we are going to create the Item View ui config
         this.uiDef = this.configHelper.generateConfig(this.dataObjDef, displayOrder, hasDeleteButton, hideModifierFields, this.hasExternalControl);
         logger(this.uiDef);
         this.__buildUIElements();
@@ -63779,7 +63878,7 @@ class DefaultItemView {
             this.factoryElements.unsavedMessage.innerHTML = '';
     }
     setUnsavedMessage() {
-        if (this.factoryElements && this.uiDef && this.uiDef.unsavedChanges.innerHTML) {
+        if (this.factoryElements && this.uiDef && this.uiDef.unsavedChanges && this.uiDef.unsavedChanges.innerHTML) {
             if (this.factoryElements.unsavedMessage)
                 this.factoryElements.unsavedMessage.innerHTML = this.uiDef.unsavedChanges.innerHTML;
         }
@@ -66037,7 +66136,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "isSameRoom": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSameRoom),
 /* harmony export */   "addDurations": () => (/* reexport safe */ _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_81__.addDurations),
 /* harmony export */   "BrowserUtil": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__.BrowserUtil),
-/* harmony export */   "getElementOffset": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__.getElementOffset)
+/* harmony export */   "getElementOffset": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__.getElementOffset),
+/* harmony export */   "BasicTableRowImplementation": () => (/* reexport safe */ _framework_ui_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_83__.BasicTableRowImplementation)
 /* harmony export */ });
 /* harmony import */ var _framework_CommonTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
 /* harmony import */ var _framework_model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./framework/model/BasicFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/model/BasicFieldOperations.js");
@@ -66122,6 +66222,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./framework/util/EqualityFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js");
 /* harmony import */ var _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./framework/util/DurationFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js");
 /* harmony import */ var _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var _framework_ui_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./framework/ui/table/BasicTableRowImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/table/BasicTableRowImplementation.js");
 
 
 
@@ -66154,6 +66255,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* ui */
+
 
 
 

@@ -21,7 +21,8 @@ export class AppointmentBookView {
         calendar: null,
     }
 
-    private constructor() {}
+    private constructor() {
+    }
 
     public static getInstance(): AppointmentBookView {
         if (!(AppointmentBookView._instance)) {
@@ -43,7 +44,6 @@ export class AppointmentBookView {
 
         let options = AppointmentControllerHelper.getInstance().getClinicConfig();
         logger('Using clinic config options');
-
 
 
         options.onSelectedDateChange = (event: any, inst: any) => {

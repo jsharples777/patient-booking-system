@@ -32,27 +32,16 @@ const dLogger = debug('clinic-chat-list-view:detail');
 
 export class ClinicChatListView extends AbstractStatefulCollectionView implements ChatEventListener, CollectionViewListener, ChatUserEventListener {
     private static _instance: ClinicChatListView;
-
-    public static getInstance(): ClinicChatListView {
-        if (!(ClinicChatListView._instance)) {
-            ClinicChatListView._instance = new ClinicChatListView();
-        }
-        return ClinicChatListView._instance;
-    }
-
-
-
-
     private static DOMConfig: CollectionViewDOMConfig = {
         viewConfig: {
             resultsContainerId: 'chatLogs',
             dataSourceId: VIEW_NAME.chatLogs,
         },
-        resultsElement:{
-            type:'a',
-            attributes:[{name: 'href', value: '#'}],
-            classes:'list-group-item my-list-item truncate-notification list-group-item-action'
-        } ,
+        resultsElement: {
+            type: 'a',
+            attributes: [{name: 'href', value: '#'}],
+            classes: 'list-group-item my-list-item truncate-notification list-group-item-action'
+        },
         keyId: 'roomName',
         keyType: KeyType.string,
         modifiers: {
@@ -84,8 +73,8 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
                 type: 'span',
                 classes: 'badge badge-pill badge-danger mr-1',
             },
-            icons: (name:string,item:any) => {
-                let results:string[] = [];
+            icons: (name: string, item: any) => {
+                let results: string[] = [];
                 if (item.users.length == 2) {
                     let filter: FilterItem = {
                         attributeName: 'username',
@@ -113,9 +102,9 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         },
     };
     protected selectedChatLog: ChatLog | null = null;
-    private doNotDisturbEl: HTMLInputElement|null = null;
+    private doNotDisturbEl: HTMLInputElement | null = null;
 
-   private constructor() {
+    private constructor() {
         super(ClinicChatListView.DOMConfig, new MemoryBufferStateManager(isSameRoom), STATE_NAMES.chatLogs);
 
         this.renderer = new ListViewRenderer(this, this);
@@ -132,45 +121,58 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         NotificationController.getInstance().addUserListener(this);
 
         // load all users into the list view
-        Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.users,this);
+        Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.users, this);
     }
 
-    toggleDoNotDisturb(event:Event) {
-       event.preventDefault();
-       event.stopPropagation();
-       if (this.doNotDisturbEl) {
-           logger(`Toggling Do Not Disturb ${this.doNotDisturbEl.checked}`)
-           const doNotDisturb = !this.doNotDisturbEl.checked;
+    public static getInstance(): ClinicChatListView {
+        if (!(ClinicChatListView._instance)) {
+            ClinicChatListView._instance = new ClinicChatListView();
+        }
+        return ClinicChatListView._instance;
+    }
 
-           NotificationController.getInstance().setOptions({
-               showNormalPriorityMessageNotifications: doNotDisturb,
-               showHighPriorityMessageNotifications: doNotDisturb,
-               showUrgentPriorityMessageNotifications: true,
-               showInvitationDeclinedNotifications: false,
-               showInvitedNotifications: false,
-               showOfflineMessageNotification: true,
-               showFavouriteUserLoggedInNotification: false,
-               showFavouriteUserLoggedOutNotification: false,
-               showUserJoinLeaveChatNotification: false
+    toggleDoNotDisturb(event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (this.doNotDisturbEl) {
+            logger(`Toggling Do Not Disturb ${this.doNotDisturbEl.checked}`)
+            const doNotDisturb = !this.doNotDisturbEl.checked;
 
-           });
-       }
+            NotificationController.getInstance().setOptions({
+                showNormalPriorityMessageNotifications: doNotDisturb,
+                showHighPriorityMessageNotifications: doNotDisturb,
+                showUrgentPriorityMessageNotifications: true,
+                showInvitationDeclinedNotifications: false,
+                showInvitedNotifications: false,
+                showOfflineMessageNotification: true,
+                showFavouriteUserLoggedInNotification: false,
+                showFavouriteUserLoggedOutNotification: false,
+                showUserJoinLeaveChatNotification: false
+
+            });
+        }
     }
 
     handleLoggedInUsersUpdated(usernames: string[]): void {
         logger(`Handling logged in users changed`);
         this.updateStateManager();
     }
+
     handleFavouriteUserLoggedIn(username: string): void {
         logger(`Handling logged in users changed`);
         this.updateStateManager();
     }
+
     handleFavouriteUserLoggedOut(username: string): void {
         logger(`Handling logged in users changed`);
         this.updateStateManager();
     }
-    handleFavouriteUsersChanged(usernames: string[]): void {}
-    handleBlockedUsersChanged(usernames: string[]): void {}
+
+    handleFavouriteUsersChanged(usernames: string[]): void {
+    }
+
+    handleBlockedUsersChanged(usernames: string[]): void {
+    }
 
     compareItemsForEquality(item1: any, item2: any): boolean {
         return isSameRoom(item1, item2);
@@ -206,8 +208,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         let chatLog = <ChatLog>item;
         if (chatLog.users.length > 1) {
             containerEl.innerHTML = chatLog.users[1] + "&nbsp;&nbsp;&nbsp;";
-        }
-        else {
+        } else {
             containerEl.innerHTML = 'Chat closed by other user';
         }
     }
@@ -259,9 +260,11 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
     getBadgeValueForItemInNamedCollection(name: string, item: any): number {
         return item.unreadMessages;
     }
+
     getSecondaryBadgeValueForItemInNamedCollection(name: string, item: any): number {
         return item.unreadHighMessages;
     }
+
     getTertiaryBadgeValueForItemInNamedCollection(name: string, item: any): number {
         return item.unreadUrgentMessages;
     }
@@ -326,19 +329,12 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
         return true;
     }
 
-    private updateStateManager() {
-        logger(`Updating state with chat manager`);
-        let newState = ChatManager.getInstance().getChatLogs();
-        logger(newState);
-        this.stateManager.setStateByName(STATE_NAMES.chatLogs, newState, true);
-    }
-
     public stateChanged(managerName: string, name: string, newValue: any) {
         logger(`Updating state for ${name}`);
         logger(newValue);
         if (name === STATE_NAMES.users) {
             // load a chat room for each other user
-            newValue.forEach((user:any) => {
+            newValue.forEach((user: any) => {
                 if (user.username !== SecurityManager.getInstance().getLoggedInUsername()) {
                     ChatManager.getInstance().addUserToFavouriteList(user.username);
                     ChatManager.getInstance().startChatWithUser(user.username);
@@ -346,9 +342,16 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
             })
         }
         if (name === STATE_NAMES.chatLogs) {
-            super.stateChanged(managerName,name,newValue);
+            super.stateChanged(managerName, name, newValue);
         }
 
+    }
+
+    private updateStateManager() {
+        logger(`Updating state with chat manager`);
+        let newState = ChatManager.getInstance().getChatLogs();
+        logger(newState);
+        this.stateManager.setStateByName(STATE_NAMES.chatLogs, newState, true);
     }
 }
 

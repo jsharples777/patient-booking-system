@@ -4,9 +4,11 @@ import {
     BasicObjectDefinitionFactory,
     DataObjectController,
     DataObjectDefinition,
-    DataObjectListener, DefaultFieldPermissionChecker,
+    DataObjectListener,
+    DefaultFieldPermissionChecker,
     DetailView,
-    DetailViewImplementation, Form,
+    DetailViewImplementation,
+    Form,
     FormDetailViewRenderer,
     LinkedCollectionDetailController,
     ObjectDefinitionRegistry,
@@ -50,7 +52,7 @@ export class UsersCompositeView implements DataObjectListener {
             let startingDisplayOrder = BasicObjectDefinitionFactory.getInstance().generateStartingDisplayOrder(userDef);
             usersDetailView.initialise(startingDisplayOrder, false, true);
 
-            const detailForm:Form|null = detailRenderer.getForm();
+            const detailForm: Form | null = detailRenderer.getForm();
             if (detailForm) {
                 logger(`Setting up validation rules for ${detailForm.getId()}`);
                 logger(detailForm);
@@ -85,7 +87,8 @@ export class UsersCompositeView implements DataObjectListener {
         }
     }
 
-    delete(controller: DataObjectController, typeName: string, dataObj: any): void {}
+    delete(controller: DataObjectController, typeName: string, dataObj: any): void {
+    }
 
     update(controller: DataObjectController, typeName: string, dataObj: any): void {
         logger(`Handling update`);

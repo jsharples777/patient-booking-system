@@ -9,10 +9,10 @@ import {TodayView} from "./TodayView";
 
 const logger = debug('today-controller');
 
-export class TodayController implements StateChangeListener,ScheduleLoadedListener {
+export class TodayController implements StateChangeListener, ScheduleLoadedListener {
     private static _instance: TodayController;
 
-     private constructor() {
+    private constructor() {
         this.onPageLoading = this.onPageLoading.bind(this);
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.appointments, this);
         AppointmentControllerHelper.getInstance().addListener(this);
@@ -74,7 +74,6 @@ export class TodayController implements StateChangeListener,ScheduleLoadedListen
                 let results: any[] = [];
                 appointments.forEach((appointment: any) => {
                     if (appointment.start === today) {
-
 
 
                         if (appointment.provider === currentProvider) {
@@ -142,14 +141,17 @@ export class TodayController implements StateChangeListener,ScheduleLoadedListen
         }
     }
 
-    loadedAppointmentTypes(appointmentTypes: any[]): void {}
+    loadedAppointmentTypes(appointmentTypes: any[]): void {
+    }
 
     loadedClinicAppointmentBookConfig(clinicConfig: any): void {
         TodayView.getInstance().applyClinicConfig(clinicConfig);
     }
 
-    loadedPatientSearch(patientSearch: any[]): void {}
+    loadedPatientSearch(patientSearch: any[]): void {
+    }
 
-    loadedProviders(providers: any[]): void {}
+    loadedProviders(providers: any[]): void {
+    }
 
 }

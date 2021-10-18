@@ -1,11 +1,11 @@
-import {TabularViewContainer, TabularViewDOMConfig, TabularViewListener} from "ui-framework-jps";
+import {TabularViewContainer, TabularViewDOMConfig} from "ui-framework-jps";
 
 export class PatientRecordTabularView extends TabularViewContainer {
-    protected static config:TabularViewDOMConfig = {
+    protected static config: TabularViewDOMConfig = {
         containedById: 'patientRecord',
         containerId: 'patientRecordTabularView',
         tabViewContainer: {
-            type:'div',
+            type: 'div',
             classes: 'row'
         },
         tabBarContainer: {
@@ -14,7 +14,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
         },
         tabBarElement: {
             type: 'ul',
-            classes:'nav nav-pills nav-fill'
+            classes: 'nav nav-pills nav-fill'
         },
         tabularViewContainer: {
             type: 'div',
@@ -23,129 +23,129 @@ export class PatientRecordTabularView extends TabularViewContainer {
         tabs: [
             {
                 id: 'demographics',
-                element:{
-                    type:'li',
-                    classes:'nav-item'
+                element: {
+                    type: 'li',
+                    classes: 'nav-item'
                 },
                 subElement: {
-                    type:'a',
-                    classes:'nav-link',
-                    attributes:[{name:'href',value:'#'}],
-                    innerHTML:'Demographics'
+                    type: 'a',
+                    classes: 'nav-link',
+                    attributes: [{name: 'href', value: '#'}],
+                    innerHTML: 'Demographics'
                 },
-                isDefaultActive:true
+                isDefaultActive: true
             },
             {
                 id: 'consults',
-                element:{
-                    type:'li',
-                    classes:'nav-item'
+                element: {
+                    type: 'li',
+                    classes: 'nav-item'
                 },
                 subElement: {
-                    type:'a',
-                    classes:'nav-link',
-                    attributes:[{name:'href',value:'#'}],
-                    innerHTML:'History and Consults'
+                    type: 'a',
+                    classes: 'nav-link',
+                    attributes: [{name: 'href', value: '#'}],
+                    innerHTML: 'History and Consults'
                 },
-                isDefaultActive:false
+                isDefaultActive: false
             },
             {
                 id: 'scripts',
-                element:{
-                    type:'li',
-                    classes:'nav-item'
+                element: {
+                    type: 'li',
+                    classes: 'nav-item'
                 },
                 subElement: {
-                    type:'a',
-                    classes:'nav-link',
-                    attributes:[{name:'href',value:'#'}],
-                    innerHTML:'Allergies and Scripts'
+                    type: 'a',
+                    classes: 'nav-link',
+                    attributes: [{name: 'href', value: '#'}],
+                    innerHTML: 'Allergies and Scripts'
                 },
-                isDefaultActive:false
+                isDefaultActive: false
             },
             {
                 id: 'results',
-                element:{
-                    type:'li',
-                    classes:'nav-item'
+                element: {
+                    type: 'li',
+                    classes: 'nav-item'
                 },
                 subElement: {
-                    type:'a',
-                    classes:'nav-link',
-                    attributes:[{name:'href',value:'#'}],
-                    innerHTML:'Results'
+                    type: 'a',
+                    classes: 'nav-link',
+                    attributes: [{name: 'href', value: '#'}],
+                    innerHTML: 'Results'
                 },
-                isDefaultActive:false
+                isDefaultActive: false
             },
             {
                 id: 'documents',
-                element:{
-                    type:'li',
-                    classes:'nav-item'
+                element: {
+                    type: 'li',
+                    classes: 'nav-item'
                 },
                 subElement: {
-                    type:'a',
-                    classes:'nav-link',
-                    attributes:[{name:'href',value:'#'}],
-                    innerHTML:'Documents and Letters'
+                    type: 'a',
+                    classes: 'nav-link',
+                    attributes: [{name: 'href', value: '#'}],
+                    innerHTML: 'Documents and Letters'
                 },
-                isDefaultActive:false
+                isDefaultActive: false
             },
             {
                 id: 'vaccinations',
-                element:{
-                    type:'li',
-                    classes:'nav-item'
+                element: {
+                    type: 'li',
+                    classes: 'nav-item'
                 },
                 subElement: {
-                    type:'a',
-                    classes:'nav-link',
-                    attributes:[{name:'href',value:'#'}],
-                    innerHTML:'Vaccinations'
+                    type: 'a',
+                    classes: 'nav-link',
+                    attributes: [{name: 'href', value: '#'}],
+                    innerHTML: 'Vaccinations'
                 },
-                isDefaultActive:false
+                isDefaultActive: false
             },
             {
                 id: 'workcover',
-                element:{
-                    type:'li',
-                    classes:'nav-item'
+                element: {
+                    type: 'li',
+                    classes: 'nav-item'
                 },
                 subElement: {
-                    type:'a',
-                    classes:'nav-link',
-                    attributes:[{name:'href',value:'#'}],
-                    innerHTML:'Workcover'
+                    type: 'a',
+                    classes: 'nav-link',
+                    attributes: [{name: 'href', value: '#'}],
+                    innerHTML: 'Workcover'
                 },
-                isDefaultActive:false
+                isDefaultActive: false
             },
             {
                 id: 'tasks',
-                element:{
-                    type:'li',
-                    classes:'nav-item'
+                element: {
+                    type: 'li',
+                    classes: 'nav-item'
                 },
                 subElement: {
-                    type:'a',
-                    classes:'nav-link',
-                    attributes:[{name:'href',value:'#'}],
-                    innerHTML:'Tasks'
+                    type: 'a',
+                    classes: 'nav-link',
+                    attributes: [{name: 'href', value: '#'}],
+                    innerHTML: 'Tasks'
                 },
-                isDefaultActive:false
+                isDefaultActive: false
             },
             {
                 id: 'archive',
-                element:{
-                    type:'li',
-                    classes:'nav-item'
+                element: {
+                    type: 'li',
+                    classes: 'nav-item'
                 },
                 subElement: {
-                    type:'a',
-                    classes:'nav-link',
-                    attributes:[{name:'href',value:'#'}],
-                    innerHTML:'Script Archive'
+                    type: 'a',
+                    classes: 'nav-link',
+                    attributes: [{name: 'href', value: '#'}],
+                    innerHTML: 'Script Archive'
                 },
-                isDefaultActive:false
+                isDefaultActive: false
             },
         ],
     }

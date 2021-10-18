@@ -9,12 +9,14 @@ import {
     ChatManager,
     DataObjectController,
     DataObjectDefinition,
-    DataObjectListener, DerivedField,
-    DownloadManager, FieldDefinition,
-    FieldType, FieldValueGenerator,
+    DataObjectListener,
+    DerivedField,
+    DownloadManager,
+    FieldDefinition,
+    FieldType,
+    FieldValueGenerator,
     GraphQLApiStateManager,
     isSameMongo,
-    KeyType,
     MemoryBufferStateManager,
     NotificationController,
     ObjectDefinitionRegistry,
@@ -207,7 +209,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 serverURL: '',
                 api: API_Config.clinicConfig,
                 isActive: true,
-                find:false,
+                find: false,
                 findAll: true,
                 create: true,
                 update: true,
@@ -219,7 +221,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 api: API_Config.patients,
                 isActive: true,
                 idField: '_id',
-                find:true,
+                find: true,
                 findAll: true,
                 create: true,
                 update: true,
@@ -604,18 +606,18 @@ export default class Controller implements StateChangeListener, DataObjectListen
         const generator = new DefaultUserValueGenerator();
         // setup default values for new user
         isCurrentFieldDef.generator = {
-            onCreation:true,
-            onModify:false,
+            onCreation: true,
+            onModify: false,
             generator: generator
         };
         resetPasswordFieldDef.generator = {
-            onCreation:true,
-            onModify:false,
+            onCreation: true,
+            onModify: false,
             generator: generator
         };
         passwordFieldDef.generator = {
-            onCreation:true,
-            onModify:false,
+            onCreation: true,
+            onModify: false,
             generator: generator
         };
 

@@ -7,7 +7,6 @@ import {SecurityManager, StateChangeListener} from "ui-framework-jps";
 import {AppointmentTemplateView} from "./AppointmentTemplateView";
 import {AppointmentTemplateFilterView} from "./AppointmentTemplateFilterView";
 import {AppointmentTemplateDetailModal} from "./AppointmentTemplateDetailModal";
-import {computeTimeStringFromStartTimeAndDurationInSeconds} from "../DurationFunctions";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 import {ScheduleLoadedListener} from "../helper/ScheduleLoadedListener";
 
@@ -23,7 +22,7 @@ type AppointmentTemplateDataElements = {
     currentLastDate: number
 }
 
-export class AppointmentTemplateController implements StateChangeListener,ScheduleLoadedListener {
+export class AppointmentTemplateController implements StateChangeListener, ScheduleLoadedListener {
     private static _instance: AppointmentTemplateController;
     private dataElements: AppointmentTemplateDataElements = {
         oldEvent: null,
@@ -41,7 +40,15 @@ export class AppointmentTemplateController implements StateChangeListener,Schedu
 
     }
 
-    loadedPatientSearch(patientSearch: any[]): void {}
+    public static getInstance(): AppointmentTemplateController {
+        if (!(AppointmentTemplateController._instance)) {
+            AppointmentTemplateController._instance = new AppointmentTemplateController();
+        }
+        return AppointmentTemplateController._instance;
+    }
+
+    loadedPatientSearch(patientSearch: any[]): void {
+    }
 
     loadedProviders(providers: any[]): void {
         AppointmentTemplateFilterView.getInstance().populateProviders(providers);
@@ -54,13 +61,6 @@ export class AppointmentTemplateController implements StateChangeListener,Schedu
 
     loadedAppointmentTypes(appointmentTypes: any[]): void {
         AppointmentTemplateDetailModal.getInstance().setupAppointmentTypeDropDown(appointmentTypes);
-    }
-
-    public static getInstance(): AppointmentTemplateController {
-        if (!(AppointmentTemplateController._instance)) {
-            AppointmentTemplateController._instance = new AppointmentTemplateController();
-        }
-        return AppointmentTemplateController._instance;
     }
 
     public getModel(): AppointmentTemplateDataElements {
@@ -163,7 +163,6 @@ export class AppointmentTemplateController implements StateChangeListener,Schedu
             if (result) AppointmentTemplateView.getInstance().getCalender().updateEvent(result);
         }
     }
-
 
 
 }

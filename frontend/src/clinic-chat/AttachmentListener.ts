@@ -1,3 +1,3 @@
 export interface AttachmentListener {
-    attachmentClicked(dataType:String, dataIdentifier:String):void;
+    attachmentClicked(dataType: String, dataIdentifier: String): void;
 }

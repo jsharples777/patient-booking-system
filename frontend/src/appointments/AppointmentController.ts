@@ -171,6 +171,23 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
         }
     }
 
+    loadedAppointmentTypes(appointmentTypes: any[]): void {
+        AppointmentDetailModal.getInstance().setupAppointmentTypeDropDown(appointmentTypes);
+    }
+
+    loadedClinicAppointmentBookConfig(clinicConfig: any): void {
+        AppointmentBookView.getInstance().applyClinicConfig(clinicConfig);
+    }
+
+    loadedPatientSearch(patientSearch: any[]): void {
+        AppointmentDetailModal.getInstance().setupPatientSearchDropDown(patientSearch);
+    }
+
+    loadedProviders(providers: any[]): void {
+        AppointmentFilterView.getInstance().populateProviders(providers);
+        AppointmentBookView.getInstance().setupProviders(providers);
+    }
+
     private addTemplateEvents(loadDate: number, day: number, currentAppointments: any[]) {
         logger('Loading templated events for day ' + day);
         const appointmentTemplates = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
@@ -207,23 +224,6 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
                 }
             }
         });
-    }
-
-    loadedAppointmentTypes(appointmentTypes: any[]): void {
-        AppointmentDetailModal.getInstance().setupAppointmentTypeDropDown(appointmentTypes);
-    }
-
-    loadedClinicAppointmentBookConfig(clinicConfig: any): void {
-        AppointmentBookView.getInstance().applyClinicConfig(clinicConfig);
-    }
-
-    loadedPatientSearch(patientSearch: any[]): void {
-        AppointmentDetailModal.getInstance().setupPatientSearchDropDown(patientSearch);
-    }
-
-    loadedProviders(providers: any[]): void {
-        AppointmentFilterView.getInstance().populateProviders(providers);
-        AppointmentBookView.getInstance().setupProviders(providers);
     }
 
 

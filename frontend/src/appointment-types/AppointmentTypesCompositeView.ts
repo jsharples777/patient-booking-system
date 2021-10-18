@@ -11,7 +11,8 @@ import {
     FormDetailViewRenderer,
     LinkedCollectionDetailController,
     ObjectDefinitionRegistry,
-    SidebarViewContainer, ViewFieldPermissionChecker
+    SidebarViewContainer,
+    ViewFieldPermissionChecker
 } from "ui-framework-jps";
 import {AppointmentTypesSidebarContainers, STATE_NAMES, VIEW_NAME} from "../AppTypes";
 import {AppointmentTypesCollectionView} from "./AppointmentTypesCollectionView";

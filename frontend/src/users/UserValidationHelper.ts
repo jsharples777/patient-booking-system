@@ -3,9 +3,10 @@ import {
     ConditionResponse,
     FieldDefinition,
     Form,
-    ViewMode,
     ValidationManager,
-    ValidationRule, ViewFieldValidator
+    ValidationRule,
+    ViewFieldValidator,
+    ViewMode
 } from "ui-framework-jps";
 import {STATE_NAMES} from "../AppTypes";
 import debug from 'debug';
@@ -16,14 +17,14 @@ const logger = debug('user-validation-helper');
 export class UserValidationHelper implements ViewFieldValidator {
     private static _instance: UserValidationHelper;
 
+    private constructor() {
+    }
+
     public static getInstance(): UserValidationHelper {
         if (!(UserValidationHelper._instance)) {
             UserValidationHelper._instance = new UserValidationHelper();
         }
         return UserValidationHelper._instance;
-    }
-
-    private constructor() {
     }
 
     public setupValidationForDetailsForm(form: Form) {

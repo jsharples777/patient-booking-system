@@ -11,7 +11,7 @@ const logger = debug('today-view');
 export class TodayView {
     private static _instance: TodayView;
     private calendar: Eventcalendar | null = null;
-    private currentProviderNo:string = '';
+    private currentProviderNo: string = '';
 
     private constructor() {
     }
@@ -43,7 +43,7 @@ export class TodayView {
         options.min = new Date();
         options.showControls = false;
         options.resources = [this.currentProviderNo];
-        options.groupBy =  'date';
+        options.groupBy = 'date';
 
         options.onPageLoading = (event: any, inst: any) => {
             TodayController.getInstance().onPageLoading(event, inst);
@@ -77,7 +77,7 @@ export class TodayView {
             clinicConfig.min = new Date();
             clinicConfig.showControls = false;
             clinicConfig.resources = [this.currentProviderNo];
-            clinicConfig.groupBy =  'date';
+            clinicConfig.groupBy = 'date';
 
             this.calendar.setOptions(clinicConfig);
         }

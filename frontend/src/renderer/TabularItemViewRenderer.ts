@@ -1,21 +1,19 @@
-
 import debug from "debug";
 import {
+    BasicTableRowImplementation,
     CollectionView,
-    CollectionViewDOMConfig,
     CollectionViewEventHandler,
     CollectionViewRenderer,
     ContextualInformationHelper,
-    DataObjectDefinition, DefaultFieldPermissionChecker, DisplayOrder,
-    FieldType,
+    DataObjectDefinition,
+    DefaultFieldPermissionChecker,
+    DisplayOrder,
     ItemViewConfigHelper,
-    Modifier,
     ObjectDefinitionRegistry,
-    TableUIConfig, ViewFieldPermissionChecker
+    TableUIConfig,
+    ViewFieldPermissionChecker
 } from "ui-framework-jps";
-import {EXTRA_ACTION_ATTRIBUTE_NAME} from "ui-framework-jps/dist/framework/ui/ConfigurationTypes";
 import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
-import {BasicTableRowImplementation} from "../framework/table/BasicTableRowImplementation";
 import {v4} from "uuid";
 
 
@@ -26,14 +24,14 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
     protected eventHandler: CollectionViewEventHandler;
     protected tableConfig: TableUIConfig;
     protected tableRowViews: BasicTableRowImplementation[] = [];
-    protected dataObjDef:DataObjectDefinition|null = null;
-    protected idField:string|null;
-    protected configHelper:ItemViewConfigHelper;
-    protected permissionCheck:ViewFieldPermissionChecker;
+    protected dataObjDef: DataObjectDefinition | null = null;
+    protected idField: string | null;
+    protected configHelper: ItemViewConfigHelper;
+    protected permissionCheck: ViewFieldPermissionChecker;
     private displayOrders: DisplayOrder[];
     private tableBodyId: string;
 
-    constructor(view: CollectionView, eventHandler: CollectionViewEventHandler, tableConfig: TableUIConfig,displayOrders:DisplayOrder[],configHelper:ItemViewConfigHelper,permissionCheck:ViewFieldPermissionChecker|null = new DefaultFieldPermissionChecker()) {
+    constructor(view: CollectionView, eventHandler: CollectionViewEventHandler, tableConfig: TableUIConfig, displayOrders: DisplayOrder[], configHelper: ItemViewConfigHelper, permissionCheck: ViewFieldPermissionChecker | null = new DefaultFieldPermissionChecker()) {
         this.view = view;
         this.eventHandler = eventHandler;
         this.tableConfig = tableConfig;
@@ -47,7 +45,7 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
         let result = document.createElement('tr');
         if (this.dataObjDef && this.idField) {
             let rowView = new BasicTableRowImplementation(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
-            rowView.initialise(this.displayOrders,false,true);
+            rowView.initialise(this.displayOrders, false, true);
             rowView.startUpdate(item);
             this.tableRowViews.push(rowView);
             result = rowView.getRowElement();
@@ -64,9 +62,9 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
             if (this.dataObjDef) {
                 // find the key field
                 this.dataObjDef.fields.forEach((field) => {
-                   if (field.isKey) {
-                       this.idField = field.id;
-                   }
+                    if (field.isKey) {
+                        this.idField = field.id;
+                    }
                 });
             }
 
@@ -79,8 +77,6 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
         });
 
         browserUtil.removeAllChildren(containerEl);
-
-
 
 
         // create the table
@@ -119,7 +115,7 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
         this.tableBodyId = v4();
         browserUtil.addRemoveClasses(tableBodyEl, this.tableConfig.body.classes);
         browserUtil.addAttributes(tableBodyEl, this.tableConfig.body.attributes);
-        browserUtil.addAttributes(tableBodyEl,[{name:'id',value:this.tableBodyId}]);
+        browserUtil.addAttributes(tableBodyEl, [{name: 'id', value: this.tableBodyId}]);
         tableEl.appendChild(tableBodyEl);
         containerEl.appendChild(tableEl);
 

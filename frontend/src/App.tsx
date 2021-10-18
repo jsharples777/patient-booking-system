@@ -1,13 +1,15 @@
 import debug from 'debug';
 import Controller from './Controller';
 
-import {API_Config, AppointmentTypesSidebarPrefs, NAVIGATION, STATE_NAMES, UsersSidebarPrefs,} from "./AppTypes";
+import {API_Config, AppointmentTypesSidebarPrefs, NAVIGATION, UsersSidebarPrefs,} from "./AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
 import {AppointmentController} from "./appointments/AppointmentController";
 import {
-    ContextualInformationHelper, NotificationController,
-    SecurityManager, SidebarViewContainer,
+    ContextualInformationHelper,
+    NotificationController,
+    SecurityManager,
+    SidebarViewContainer,
     UnreadMessageCountListener
 } from "ui-framework-jps";
 import {setOptions} from "@mobiscroll/javascript";
@@ -83,25 +85,23 @@ export default class App extends React.Component implements UnreadMessageCountLi
         ContextualInformationHelper.getInstance().onDocumentLoaded();
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
         NotificationController.getInstance().setOptions({
-            showNormalPriorityMessageNotifications:true,
-            showHighPriorityMessageNotifications:true,
-            showUrgentPriorityMessageNotifications:true,
-            showInvitationDeclinedNotifications:false,
-            showInvitedNotifications:false,
-            showOfflineMessageNotification:true,
-            showFavouriteUserLoggedInNotification:false,
-            showFavouriteUserLoggedOutNotification:false,
-            showUserJoinLeaveChatNotification:false
+            showNormalPriorityMessageNotifications: true,
+            showHighPriorityMessageNotifications: true,
+            showUrgentPriorityMessageNotifications: true,
+            showInvitationDeclinedNotifications: false,
+            showInvitedNotifications: false,
+            showOfflineMessageNotification: true,
+            showFavouriteUserLoggedInNotification: false,
+            showFavouriteUserLoggedOutNotification: false,
+            showUserJoinLeaveChatNotification: false
         })
         Controller.getInstance().onDocumentLoaded();
 
         if (Controller.getInstance().isProvider()) {
             this.handleShowToday(null);
-        }
-        else {
+        } else {
             this.handleShowAppointmentBook(null);
         }
-
 
 
     }
@@ -184,6 +184,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         browserUtil.addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
 
     }
+
     protected handleShowPatientRecord(event: Event): void {
         if (event) {
             event.preventDefault();
@@ -233,7 +234,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         }
         let todayEl = document.getElementById(NAVIGATION.today);
         if (todayEl) {
-            todayEl.addEventListener('click',this.handleShowToday);
+            todayEl.addEventListener('click', this.handleShowToday);
         }
 
         // @ts-ignore
@@ -246,7 +247,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results basic-table-row basic-table-row-detail abstract-field';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 

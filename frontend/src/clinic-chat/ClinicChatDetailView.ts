@@ -4,7 +4,9 @@ import {
     ChatLog,
     ChatManager,
     CollectionView,
-    CollectionViewListener, DRAGGABLE_KEY_ID, DRAGGABLE_TYPE,
+    CollectionViewListener,
+    DRAGGABLE_KEY_ID,
+    DRAGGABLE_TYPE,
     Invitation,
     Message,
     Modifier,
@@ -30,15 +32,6 @@ const logger = debug('clinic-chat-detail-view');
 
 export class ClinicChatDetailView implements View, ChatEventListener, CollectionViewListener, StateChangeListener {
     private static _instance: ClinicChatDetailView;
-
-    public static getInstance(stateManager: StateManager): ClinicChatDetailView {
-        if (!(ClinicChatDetailView._instance)) {
-            ClinicChatDetailView._instance = new ClinicChatDetailView(stateManager);
-        }
-        return ClinicChatDetailView._instance;
-    }
-
-
     private static newFormId: string = "newMessage";
     private static commentId: string = "message";
     private static submitCommentId: string = "submitMessage";
@@ -46,8 +39,6 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     private static chatLogRoomId: string = 'chatLogRoom';
     private static priorityId: string = 'priority';
     private static clinicChatFastPatientSearch: string = 'clinicChatFastPatientSearch';
-
-
     // @ts-ignore
     protected chatRoomDiv: HTMLDivElement;
     // @ts-ignore
@@ -62,16 +53,10 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     protected sendMessageButton: HTMLButtonElement;
     // @ts-ignore
     protected fastPatientSearch: HTMLInputElement;
-
     protected stateManager: StateManager;
-
     protected selectedChatLog: ChatLog | null;
     protected currentlySelectedPatient: any | null;
-
-    private listeners:AttachmentListener[] = [];
-
-
-
+    private listeners: AttachmentListener[] = [];
 
     private constructor(stateManager: StateManager) {
         this.stateManager = stateManager;
@@ -89,6 +74,13 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         NotificationController.getInstance().addListener(this);
         this.stateManager.addChangeListenerForName(STATE_NAMES.users, this);
         this.stateManager.addChangeListenerForName(APP_STATE_NAMES.patientSearch, this);
+    }
+
+    public static getInstance(stateManager: StateManager): ClinicChatDetailView {
+        if (!(ClinicChatDetailView._instance)) {
+            ClinicChatDetailView._instance = new ClinicChatDetailView(stateManager);
+        }
+        return ClinicChatDetailView._instance;
     }
 
     onDocumentLoaded() {
@@ -336,8 +328,6 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
             this.chatLogDiv.appendChild(chatMessageEl);
 
 
-
-
             // do we have a simple attachement?
             if (message.simpleAttachment.identifier.trim().length > 0) {
                 chatMessageEl = document.createElement('div');
@@ -368,7 +358,7 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
                     browserUtil.addRemoveClasses(contentEl, `message-content-${attachment.type}`);
                 }
                 contentEl.appendChild(attachmentLinkEl);
-                attachmentLinkEl.addEventListener('click',this.handleAttachmentClicked);
+                attachmentLinkEl.addEventListener('click', this.handleAttachmentClicked);
                 chatMessageEl.appendChild(contentEl);
                 this.chatLogDiv.appendChild(chatMessageEl);
             }
@@ -505,6 +495,32 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     filterResults(managerName: string, name: string, filterResults: any): void {
     }
 
+    handlePatientSelected(event: Event, ui: any) {
+        event.preventDefault();
+        event.stopPropagation();
+        logger(`Patient ${ui.item.label} with id ${ui.item.value} selected`);
+        // @ts-ignore
+        event.target.value = ui.item.label;
+        this.currentlySelectedPatient = Controller.getInstance().getStateManager().findItemInState(APP_STATE_NAMES.patientSearch, {_id: ui.item.value});
+        logger(this.currentlySelectedPatient);
+    }
+
+    handleAttachmentClicked(event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const dataType = (<HTMLElement>event.target).getAttribute("data-type");
+        const dataId = (<HTMLElement>event.target).getAttribute("data-id");
+        logger(`Handling attachment clicked of type ${dataType} with identifier ${dataId}`);
+        this.listeners.forEach((listener) => {
+            listener.attachmentClicked(dataType, dataId);
+        });
+
+    }
+
+    public addAttachmentListener(listener: AttachmentListener) {
+        this.listeners.push(listener);
+    }
+
     private checkCanComment() {
         if (this.selectedChatLog) {
             if (this.commentEl) this.commentEl.removeAttribute("readonly");
@@ -524,32 +540,6 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
 
     private clearChatLog() {
         browserUtil.removeAllChildren(this.chatLogDiv);
-    }
-
-    handlePatientSelected(event: Event, ui: any) {
-        event.preventDefault();
-        event.stopPropagation();
-        logger(`Patient ${ui.item.label} with id ${ui.item.value} selected`);
-        // @ts-ignore
-        event.target.value = ui.item.label;
-        this.currentlySelectedPatient = Controller.getInstance().getStateManager().findItemInState(APP_STATE_NAMES.patientSearch, {_id: ui.item.value});
-        logger(this.currentlySelectedPatient);
-    }
-
-    handleAttachmentClicked(event:Event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const dataType = (<HTMLElement>event.target).getAttribute("data-type");
-        const dataId = (<HTMLElement>event.target).getAttribute("data-id");
-        logger(`Handling attachment clicked of type ${dataType} with identifier ${dataId}`);
-        this.listeners.forEach((listener) => {
-            listener.attachmentClicked(dataType,dataId);
-        });
-
-    }
-
-    public addAttachmentListener(listener:AttachmentListener) {
-        this.listeners.push(listener);
     }
 
 }
