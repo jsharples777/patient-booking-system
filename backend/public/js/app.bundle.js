@@ -880,6 +880,14 @@ class AppointmentTemplateController {
     _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().addListener(this);
   }
 
+  static getInstance() {
+    if (!AppointmentTemplateController._instance) {
+      AppointmentTemplateController._instance = new AppointmentTemplateController();
+    }
+
+    return AppointmentTemplateController._instance;
+  }
+
   loadedPatientSearch(patientSearch) {}
 
   loadedProviders(providers) {
@@ -893,14 +901,6 @@ class AppointmentTemplateController {
 
   loadedAppointmentTypes(appointmentTypes) {
     _AppointmentTemplateDetailModal__WEBPACK_IMPORTED_MODULE_7__.AppointmentTemplateDetailModal.getInstance().setupAppointmentTypeDropDown(appointmentTypes);
-  }
-
-  static getInstance() {
-    if (!AppointmentTemplateController._instance) {
-      AppointmentTemplateController._instance = new AppointmentTemplateController();
-    }
-
-    return AppointmentTemplateController._instance;
   }
 
   getModel() {
@@ -2153,6 +2153,23 @@ class AppointmentController {
     }
   }
 
+  loadedAppointmentTypes(appointmentTypes) {
+    _AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_7__.AppointmentDetailModal.getInstance().setupAppointmentTypeDropDown(appointmentTypes);
+  }
+
+  loadedClinicAppointmentBookConfig(clinicConfig) {
+    _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().applyClinicConfig(clinicConfig);
+  }
+
+  loadedPatientSearch(patientSearch) {
+    _AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_7__.AppointmentDetailModal.getInstance().setupPatientSearchDropDown(patientSearch);
+  }
+
+  loadedProviders(providers) {
+    _AppointmentFilterView__WEBPACK_IMPORTED_MODULE_6__.AppointmentFilterView.getInstance().populateProviders(providers);
+    _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().setupProviders(providers);
+  }
+
   addTemplateEvents(loadDate, day, currentAppointments) {
     logger('Loading templated events for day ' + day);
     const appointmentTemplates = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointmentTemplates);
@@ -2187,23 +2204,6 @@ class AppointmentController {
         }
       }
     });
-  }
-
-  loadedAppointmentTypes(appointmentTypes) {
-    _AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_7__.AppointmentDetailModal.getInstance().setupAppointmentTypeDropDown(appointmentTypes);
-  }
-
-  loadedClinicAppointmentBookConfig(clinicConfig) {
-    _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().applyClinicConfig(clinicConfig);
-  }
-
-  loadedPatientSearch(patientSearch) {
-    _AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_7__.AppointmentDetailModal.getInstance().setupPatientSearchDropDown(patientSearch);
-  }
-
-  loadedProviders(providers) {
-    _AppointmentFilterView__WEBPACK_IMPORTED_MODULE_6__.AppointmentFilterView.getInstance().populateProviders(providers);
-    _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().setupProviders(providers);
   }
 
 }
@@ -2902,14 +2902,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('clinic-chat-detail-view');
 class ClinicChatDetailView {
-  static getInstance(stateManager) {
-    if (!ClinicChatDetailView._instance) {
-      ClinicChatDetailView._instance = new ClinicChatDetailView(stateManager);
-    }
-
-    return ClinicChatDetailView._instance;
-  }
-
   static newFormId = "newMessage";
   static commentId = "message";
   static submitCommentId = "submitMessage";
@@ -2934,6 +2926,14 @@ class ClinicChatDetailView {
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addListener(this);
     this.stateManager.addChangeListenerForName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users, this);
     this.stateManager.addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_4__.STATE_NAMES.patientSearch, this);
+  }
+
+  static getInstance(stateManager) {
+    if (!ClinicChatDetailView._instance) {
+      ClinicChatDetailView._instance = new ClinicChatDetailView(stateManager);
+    }
+
+    return ClinicChatDetailView._instance;
   }
 
   onDocumentLoaded() {
@@ -3347,26 +3347,6 @@ class ClinicChatDetailView {
 
   filterResults(managerName, name, filterResults) {}
 
-  checkCanComment() {
-    if (this.selectedChatLog) {
-      if (this.commentEl) this.commentEl.removeAttribute("readonly");
-      if (this.commentEl) this.commentEl.removeAttribute("disabled");
-      if (this.sendMessageButton) this.sendMessageButton.removeAttribute("disabled");
-      if (this.fastPatientSearch) this.fastPatientSearch.removeAttribute("disabled");
-      if (this.priorityEl) this.priorityEl.removeAttribute("disabled");
-    } else {
-      if (this.commentEl) this.commentEl.setAttribute("readonly", "true");
-      if (this.commentEl) this.commentEl.setAttribute("disabled", "true");
-      if (this.sendMessageButton) this.sendMessageButton.setAttribute("disabled", "true");
-      if (this.fastPatientSearch) this.fastPatientSearch.setAttribute("disabled", "true");
-      if (this.priorityEl) this.priorityEl.setAttribute("disabled", "true");
-    }
-  }
-
-  clearChatLog() {
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeAllChildren(this.chatLogDiv);
-  }
-
   handlePatientSelected(event, ui) {
     event.preventDefault();
     event.stopPropagation();
@@ -3394,6 +3374,26 @@ class ClinicChatDetailView {
     this.listeners.push(listener);
   }
 
+  checkCanComment() {
+    if (this.selectedChatLog) {
+      if (this.commentEl) this.commentEl.removeAttribute("readonly");
+      if (this.commentEl) this.commentEl.removeAttribute("disabled");
+      if (this.sendMessageButton) this.sendMessageButton.removeAttribute("disabled");
+      if (this.fastPatientSearch) this.fastPatientSearch.removeAttribute("disabled");
+      if (this.priorityEl) this.priorityEl.removeAttribute("disabled");
+    } else {
+      if (this.commentEl) this.commentEl.setAttribute("readonly", "true");
+      if (this.commentEl) this.commentEl.setAttribute("disabled", "true");
+      if (this.sendMessageButton) this.sendMessageButton.setAttribute("disabled", "true");
+      if (this.fastPatientSearch) this.fastPatientSearch.setAttribute("disabled", "true");
+      if (this.priorityEl) this.priorityEl.setAttribute("disabled", "true");
+    }
+  }
+
+  clearChatLog() {
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeAllChildren(this.chatLogDiv);
+  }
+
 }
 
 /***/ }),
@@ -3419,14 +3419,6 @@ __webpack_require__.r(__webpack_exports__);
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('clinic-chat-list-view');
 const dLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('clinic-chat-list-view:detail');
 class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.AbstractStatefulCollectionView {
-  static getInstance() {
-    if (!ClinicChatListView._instance) {
-      ClinicChatListView._instance = new ClinicChatListView();
-    }
-
-    return ClinicChatListView._instance;
-  }
-
   static DOMConfig = {
     viewConfig: {
       resultsContainerId: 'chatLogs',
@@ -3520,6 +3512,14 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.NotificationController.getInstance().addUserListener(this); // load all users into the list view
 
     _Controller__WEBPACK_IMPORTED_MODULE_2__["default"].getInstance().getStateManager().addChangeListenerForName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users, this);
+  }
+
+  static getInstance() {
+    if (!ClinicChatListView._instance) {
+      ClinicChatListView._instance = new ClinicChatListView();
+    }
+
+    return ClinicChatListView._instance;
   }
 
   toggleDoNotDisturb(event) {
@@ -3716,13 +3716,6 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
     return true;
   }
 
-  updateStateManager() {
-    logger(`Updating state with chat manager`);
-    let newState = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getChatLogs();
-    logger(newState);
-    this.stateManager.setStateByName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.chatLogs, newState, true);
-  }
-
   stateChanged(managerName, name, newValue) {
     logger(`Updating state for ${name}`);
     logger(newValue);
@@ -3740,6 +3733,13 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
     if (name === ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.chatLogs) {
       super.stateChanged(managerName, name, newValue);
     }
+  }
+
+  updateStateManager() {
+    logger(`Updating state with chat manager`);
+    let newState = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ChatManager.getInstance().getChatLogs();
+    logger(newState);
+    this.stateManager.setStateByName(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.chatLogs, newState, true);
   }
 
 }
@@ -3764,14 +3764,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class ClinicChatSidebar extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.SidebarViewContainer {
-  static getInstance(stateManager) {
-    if (!ClinicChatSidebar._instance) {
-      ClinicChatSidebar._instance = new ClinicChatSidebar(stateManager);
-    }
-
-    return ClinicChatSidebar._instance;
-  }
-
   static SidebarPrefs = {
     id: 'chatSideBar',
     expandedSize: '35%',
@@ -3793,6 +3785,14 @@ class ClinicChatSidebar extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.Si
       containerId: ClinicChatSidebar.SidebarContainers.chatLog
     });
     chatView.addEventListener(chatLogView);
+  }
+
+  static getInstance(stateManager) {
+    if (!ClinicChatSidebar._instance) {
+      ClinicChatSidebar._instance = new ClinicChatSidebar(stateManager);
+    }
+
+    return ClinicChatSidebar._instance;
   }
 
 }
@@ -3824,14 +3824,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('appointment-controller-helper');
 class AppointmentControllerHelper {
-  static getInstance() {
-    if (!AppointmentControllerHelper._instance) {
-      AppointmentControllerHelper._instance = new AppointmentControllerHelper();
-    }
-
-    return AppointmentControllerHelper._instance;
-  }
-
   static APPOINTMENT_STATUS_ARRIVED = 'Patient Arrived';
   static APPOINTMENT_STATUS_READY_FOR_BILLING = 'Ready For Billing';
   static APPOINTMENT_STATUS_BILLING_COMPLETE = 'Billing Complete';
@@ -3850,6 +3842,14 @@ class AppointmentControllerHelper {
     _Controller__WEBPACK_IMPORTED_MODULE_0__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.providers, this);
     this.handleAppointmentTemplateRendering = this.handleAppointmentTemplateRendering.bind(this);
     this.handleAppointmentRendering = this.handleAppointmentRendering.bind(this);
+  }
+
+  static getInstance() {
+    if (!AppointmentControllerHelper._instance) {
+      AppointmentControllerHelper._instance = new AppointmentControllerHelper();
+    }
+
+    return AppointmentControllerHelper._instance;
   }
 
   addListener(listener) {
@@ -4639,9 +4639,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
 /* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
-Object(function webpackMissingModule() { var e = new Error("Cannot find module '../framework/table/BasicTableRowImplementation'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
-
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
 
 
 
@@ -4664,7 +4662,7 @@ class TabularItemViewRenderer {
     let result = document.createElement('tr');
 
     if (this.dataObjDef && this.idField) {
-      let rowView = new Object(function webpackMissingModule() { var e = new Error("Cannot find module '../framework/table/BasicTableRowImplementation'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
+      let rowView = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.BasicTableRowImplementation(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
       rowView.initialise(this.displayOrders, false, true);
       rowView.startUpdate(item);
       this.tableRowViews.push(rowView);
@@ -4725,7 +4723,7 @@ class TabularItemViewRenderer {
     tableEl.appendChild(tableHeaderEl); // create the table body
 
     let tableBodyEl = document.createElement(this.tableConfig.body.type);
-    this.tableBodyId = (0,uuid__WEBPACK_IMPORTED_MODULE_4__["default"])();
+    this.tableBodyId = (0,uuid__WEBPACK_IMPORTED_MODULE_3__["default"])();
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(tableBodyEl, this.tableConfig.body.classes);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableBodyEl, this.tableConfig.body.attributes);
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableBodyEl, [{
@@ -5025,6 +5023,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('user-validation-helper');
 class UserValidationHelper {
+  constructor() {}
+
   static getInstance() {
     if (!UserValidationHelper._instance) {
       UserValidationHelper._instance = new UserValidationHelper();
@@ -5032,8 +5032,6 @@ class UserValidationHelper {
 
     return UserValidationHelper._instance;
   }
-
-  constructor() {}
 
   setupValidationForDetailsForm(form) {
     /*
