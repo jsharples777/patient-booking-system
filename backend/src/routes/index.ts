@@ -2,6 +2,8 @@ import express from 'express';
 import passport from 'passport';
 import debug from 'debug';
 import {ensureAuthenticated} from "./auth";
+import {MongoDataSource} from "../db/MongoDataSource";
+import PatientsQLDelegate from "../graphql/PatientsQLDelegate";
 
 const router = express.Router();
 
@@ -58,6 +60,14 @@ router.get('/ping', (req, res) => {
 router.get('/test', (req, res) => {
     console.log(`url: ${req.url}`);
     res.send('Hello World');
+});
+
+router.get('/postprocess', (req, res) => {
+    console.log(`url: ${req.url}`);
+    PatientsQLDelegate.postProcessAll().then(() => {
+        res.send('Completed');
+
+    });
 });
 
 export = router;

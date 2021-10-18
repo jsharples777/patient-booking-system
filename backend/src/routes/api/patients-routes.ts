@@ -2,6 +2,7 @@ import express from 'express';
 import {MongoDataSource} from "../../db/MongoDataSource";
 import {Document} from "mongodb";
 import debug from "debug";
+import PatientsQLDelegate from "../../graphql/PatientsQLDelegate";
 
 const router = express.Router();
 
@@ -29,14 +30,8 @@ router.get("/:id", function (req, res) {
 
     MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id: req.params.id}).then((result: Document | null) => {
         logger(result);
-        if (result) {
-            result.results.forEach((pathology: any) => {
-                if (isNaN(pathology.received)) {
-                    pathology.received = -1;
-                }
+        if (result) PatientsQLDelegate.demoise(result);
 
-            });
-        }
         res.json(result);
         res.end();
     })
