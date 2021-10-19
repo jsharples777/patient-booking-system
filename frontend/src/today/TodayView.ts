@@ -5,6 +5,7 @@ import debug from "debug";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 import moment from "moment";
 import Controller from "../Controller";
+import {PatientController} from "../patients/PatientController";
 
 const logger = debug('today-view');
 
@@ -31,7 +32,7 @@ export class TodayView {
     public onDocumentLoaded() {
         if (!Controller.getInstance().isProvider()) return;
 
-        this.currentProviderNo = Controller.getInstance().getProviderNo();
+        this.currentProviderNo = Controller.getInstance().getLoggedInUsername();
 
         let options = AppointmentControllerHelper.getInstance().getClinicConfig();
         logger('Using clinic config options');
@@ -44,8 +45,8 @@ export class TodayView {
         options.dragToResize = false;
         options.min = new Date();
         options.showControls = false;
-        options.resources = [this.currentProviderNo];
-        options.groupBy = 'date';
+        //options.resources = [this.currentProviderNo];
+        //options.groupBy = 'date';
 
         options.onPageLoading = (event: any, inst: any) => {
             TodayController.getInstance().onPageLoading(event, inst);
@@ -58,6 +59,9 @@ export class TodayView {
 
         options.onEventClick = (args: any) => {
             logger(args.event);
+            if (args.event.patientId) {
+                PatientController.getInstance().openPatientRecord(args.event.patientId);
+            }
         }
         options.renderScheduleEvent = AppointmentControllerHelper.getInstance().handleAppointmentRendering;
 
@@ -78,8 +82,8 @@ export class TodayView {
             clinicConfig.dragToResize = false;
             clinicConfig.min = new Date();
             clinicConfig.showControls = false;
-            clinicConfig.resources = [this.currentProviderNo];
-            clinicConfig.groupBy = 'date';
+            //clinicConfig.resources = [this.currentProviderNo];
+            //clinicConfig.groupBy = 'date';
 
             this.calendar.setOptions(clinicConfig);
         }

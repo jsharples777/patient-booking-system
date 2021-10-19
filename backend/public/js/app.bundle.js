@@ -4210,7 +4210,7 @@ class AppointmentControllerHelper {
     const icons = AppointmentControllerHelper.getInstance().getIconForAppointmentType(data.original.type);
     logger(`Applicable icons`);
     logger(icons);
-    let buffer = '' + '<div class="md-custom-event-cont" style="border-left: 5px solid ' + data.color + ';background:' + data.color + '">' + '  <div class="md-custom-event-wrapper">' + '    <div class="container-fluid">' + '    <div class="row ">' + `      <div style="background:${data.color}" class="col-12 md-custom-event-template-type">${data.original.type}</div>` + '      <div class="col-12 d-flex w-100 justify-content-between md-custom-event-time">' + `        <span>${data.start} - ${data.end}</span>`;
+    let buffer = '' + '<div class="md-custom-event-cont" style="border-left: 5px solid ' + data.color + ';background:' + data.color + '">' + '  <div class="md-custom-event-wrapper">' + '    <div class="container-fluid">' + '    <div class="row">' + `      <div style="background:${data.color}" class="col-12 md-custom-event-template-type">${data.original.type}</div>` + '    </div>' + '    <div class="row">' + '      <div class="col-12 d-flex w-100 justify-content-between md-custom-event-time">' + `        <span>${data.start} - ${data.end}</span>`;
 
     if (icons.trim().length > 0) {
       buffer += '' + `        <span class="md-custom-event-img-cont">${icons}</span>` + '      </div>' + '  </div>' + '</div>';
@@ -4237,6 +4237,159 @@ class AppointmentControllerHelper {
 
     return buffer;
   }
+
+}
+
+/***/ }),
+
+/***/ "./src/patients/PatientController.ts":
+/*!*******************************************!*\
+  !*** ./src/patients/PatientController.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PatientController": () => (/* binding */ PatientController)
+/* harmony export */ });
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('patient-controller');
+class PatientController {
+  constructor() {
+    this.stateManager = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.MemoryBufferStateManager(ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.isSameMongo);
+    _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patients, this);
+  }
+
+  getStateManager() {
+    return this.stateManager;
+  }
+
+  static getInstance() {
+    if (!PatientController._instance) {
+      PatientController._instance = new PatientController();
+    }
+
+    return PatientController._instance;
+  }
+
+  openPatientRecord(patientId) {
+    logger(`Handling opening patient record ${patientId}`);
+  }
+
+  onDocumentLoaded() {
+    // Patient name details
+    let nameDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.name, 'Name', true, true, false, '_id');
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "title", "Title", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.choice, false, "Name", new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SimpleValueDataSource([{
+      name: '',
+      value: ''
+    }, {
+      name: 'Master',
+      value: 'master'
+    }, {
+      name: 'Miss',
+      value: 'miss'
+    }, {
+      name: 'Ms',
+      value: 'ms'
+    }, {
+      name: 'Mr',
+      value: 'mr'
+    }, {
+      name: 'Mrs',
+      value: 'mrs'
+    }]));
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "firstname", "First Name", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, true, "First name");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "middlename", "Middle Name", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Middle name(s)");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "surname", "Surname", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, true, "Surname");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "aka", "AKA", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Also known as");
+    logger(`Name type data object definition`);
+    logger(nameDef); // Patient contact details
+
+    let contactDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.contact, 'Contact', true, true, false, '_id');
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "line1", "Line 1", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, true, "Address line 1");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "line2", "Line 2", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Address line 2");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "suburb", "Suburb", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, true, "Suburb");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "postcode", "Post Code", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.integer, true, "Post code");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "state", "State", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.choice, true, "State", new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SimpleValueDataSource([{
+      name: 'Australia Capital Territory',
+      value: 'ACT'
+    }, {
+      name: 'Queensland',
+      value: 'QLD'
+    }, {
+      name: 'South Australia',
+      value: 'SA'
+    }, {
+      name: 'Tasmania',
+      value: 'TAS'
+    }, {
+      name: 'Victoria',
+      value: 'VIC'
+    }, {
+      name: 'Western Australia',
+      value: 'WA'
+    }]));
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "country", "Country", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, true, "Country");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "home", "Home Phone", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, true, "Home phone");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "work", "Work Phone", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Work phone");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "mobile", "Mobile Phone", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, true, "Mobile phone");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "nokname", "NOK Name", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Next of kin name");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "nokphone", "NOK Phone", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, true, "Next of kin phone");
+    logger(`Contact type data object definition`);
+    logger(nameDef); // Patient identifiers details
+
+    let identifiersDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ObjectDefinitionRegistry.getInstance().addDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.identifiers, 'Contact', true, true, false, '_id');
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "medicare", "Medicare", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Medicare number");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "medicareRef", "Medicare Ref", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Medicare reference number");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "legacyId", "Legacy Id", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Legacy Id");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "dva", "DVA", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "DVA number");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "dvaColour", "DVA Colour", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.choice, true, "DVA colour", new ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SimpleValueDataSource([{
+      name: '',
+      value: ''
+    }, {
+      name: 'White',
+      value: 'white'
+    }, {
+      name: 'Gold',
+      value: 'gold'
+    }]));
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "hcc", "HCC", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.text, false, "Health Care Card");
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "ihi", "IHI", ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.FieldType.integer, false, "Individual health identifier");
+    logger(`Identifiers type data object definition`);
+    logger(nameDef);
+  }
+
+  stateChanged(managerName, name, newValue) {}
+
+  stateChangedItemAdded(managerName, name, itemAdded) {
+    switch (name) {
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patients:
+        {
+          // found new patient to add to buffer
+          this.stateManager.addNewItemToState(name, itemAdded, true);
+          break;
+        }
+    }
+  }
+
+  stateChangedItemRemoved(managerName, name, itemRemoved) {}
+
+  stateChangedItemUpdated(managerName, name, itemUpdated, itemNewValue) {}
+
+  getListenerName() {
+    return 'Patient Controller';
+  }
+
+  filterResults(managerName, name, filterResults) {}
 
 }
 
@@ -4676,6 +4829,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
 /* harmony import */ var _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../helper/AppointmentControllerHelper */ "./src/helper/AppointmentControllerHelper.ts");
 /* harmony import */ var _TodayView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TodayView */ "./src/today/TodayView.ts");
+/* harmony import */ var _TodaysPatientsView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TodaysPatientsView */ "./src/today/TodaysPatientsView.tsx");
+
 
 
 
@@ -4706,9 +4861,8 @@ class TodayController {
   onPageLoading(event, inst) {
     // load the events for the view
     if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
-    logger(event);
     const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
-    logger(`Need to load today ${today})`);
+    logger(`Need to load today (${today})`);
     const appointments = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments);
     let results = [];
     let appointmentsForTheDay = [];
@@ -4719,7 +4873,7 @@ class TodayController {
         results.push(result);
       }
     });
-    inst.setEvents(results);
+    inst.setEvents(appointmentsForTheDay);
   }
 
   filterResults(managerName, name, filterResults) {}
@@ -4736,14 +4890,18 @@ class TodayController {
       case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments:
         {
           const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
-          const currentProvider = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getProviderNo();
+          const currentProvider = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getLoggedInUsername();
+          logger(`Provider no is ${currentProvider}`);
           const appointments = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments);
           let results = [];
           appointments.forEach(appointment => {
             if (appointment.start === today) {
+              logger(appointment);
+
               if (appointment.provider === currentProvider) {
-                logger(`Found appointment for today and provider ${currentProvider}`);
-                logger(appointment);
+                logger(`Found appointment for today and provider ${currentProvider}`); // add the patient in the appointment to the dashboard
+
+                if (appointment._patient) _TodaysPatientsView__WEBPACK_IMPORTED_MODULE_6__.TodaysPatientsView.getInstance().addPatientSummaryById(appointment._patient);
                 let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_4__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
                 logger('Converted to event');
                 logger(result);
@@ -4760,7 +4918,7 @@ class TodayController {
   stateChangedItemAdded(managerName, name, appointment) {
     if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
 
-    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getProviderNo()) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getLoggedInUsername()) {
       logger('New Appointment inserted by another user');
       logger(appointment);
       const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
@@ -4768,7 +4926,9 @@ class TodayController {
       if (appointment.start === today) {
         let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_4__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
         logger('Converted to event');
-        logger(result);
+        logger(result); // add the patient in the appointment to the dashboard
+
+        if (appointment._patient) _TodaysPatientsView__WEBPACK_IMPORTED_MODULE_6__.TodaysPatientsView.getInstance().addPatientSummaryById(appointment._patient);
         _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().getCalender().addEvent(result);
       }
     }
@@ -4777,13 +4937,17 @@ class TodayController {
   stateChangedItemRemoved(managerName, name, appointment) {
     if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
 
-    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getProviderNo()) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getLoggedInUsername()) {
       logger('Appointment deleted by another user');
       logger(appointment);
       const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
 
       if (appointment.start === today) {
-        _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().getCalender().removeEvent([appointment._id]);
+        _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().getCalender().removeEvent([appointment._id]); // remove the patient in the appointment to the dashboard
+
+        if (appointment._patient) _TodaysPatientsView__WEBPACK_IMPORTED_MODULE_6__.TodaysPatientsView.getInstance().removePatient({
+          _id: appointment._patient
+        });
       }
     }
   }
@@ -4791,7 +4955,7 @@ class TodayController {
   stateChangedItemUpdated(managerName, name, itemUpdated, appointment) {
     if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
 
-    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getProviderNo()) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getLoggedInUsername()) {
       logger('Appointment updated by another user');
       logger(appointment);
       const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
@@ -4838,6 +5002,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+/* harmony import */ var _patients_PatientController__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../patients/PatientController */ "./src/patients/PatientController.ts");
+
 
 
 
@@ -4865,7 +5031,7 @@ class TodayView {
 
   onDocumentLoaded() {
     if (!_Controller__WEBPACK_IMPORTED_MODULE_5__["default"].getInstance().isProvider()) return;
-    this.currentProviderNo = _Controller__WEBPACK_IMPORTED_MODULE_5__["default"].getInstance().getProviderNo();
+    this.currentProviderNo = _Controller__WEBPACK_IMPORTED_MODULE_5__["default"].getInstance().getLoggedInUsername();
     let options = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_3__.AppointmentControllerHelper.getInstance().getClinicConfig();
     logger('Using clinic config options');
     const day = parseInt(moment__WEBPACK_IMPORTED_MODULE_4___default()().format('d'));
@@ -4876,9 +5042,8 @@ class TodayView {
     options.dragToMove = false;
     options.dragToResize = false;
     options.min = new Date();
-    options.showControls = false;
-    options.resources = [this.currentProviderNo];
-    options.groupBy = 'date';
+    options.showControls = false; //options.resources = [this.currentProviderNo];
+    //options.groupBy = 'date';
 
     options.onPageLoading = (event, inst) => {
       _TodayController__WEBPACK_IMPORTED_MODULE_0__.TodayController.getInstance().onPageLoading(event, inst);
@@ -4890,6 +5055,10 @@ class TodayView {
 
     options.onEventClick = args => {
       logger(args.event);
+
+      if (args.event.patientId) {
+        _patients_PatientController__WEBPACK_IMPORTED_MODULE_6__.PatientController.getInstance().openPatientRecord(args.event.patientId);
+      }
     };
 
     options.renderScheduleEvent = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_3__.AppointmentControllerHelper.getInstance().handleAppointmentRendering; // @ts-ignore
@@ -4909,9 +5078,9 @@ class TodayView {
       clinicConfig.dragToMove = false;
       clinicConfig.dragToResize = false;
       clinicConfig.min = new Date();
-      clinicConfig.showControls = false;
-      clinicConfig.resources = [this.currentProviderNo];
-      clinicConfig.groupBy = 'date';
+      clinicConfig.showControls = false; //clinicConfig.resources = [this.currentProviderNo];
+      //clinicConfig.groupBy = 'date';
+
       this.calendar.setOptions(clinicConfig);
     }
   }
@@ -5350,6 +5519,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _today_TodayController__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./today/TodayController */ "./src/today/TodayController.ts");
 /* harmony import */ var _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./patients/PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
 /* harmony import */ var _patients_PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./patients/PatientDemographicsCompositeView */ "./src/patients/PatientDemographicsCompositeView.tsx");
+/* harmony import */ var _today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./today/TodaysPatientsView */ "./src/today/TodaysPatientsView.tsx");
+
 
 
 
@@ -5409,6 +5580,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     const patientView = new _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_16__.PatientRecordTabularView();
     patientView.addViewToTab('demographics', new _patients_PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_17__.PatientDemographicsCompositeView());
     patientView.onDocumentLoaded();
+    _today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_18__.TodaysPatientsView.getInstance().onDocumentLoaded();
     this.setupNavigationItemHandling();
     _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
     _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
@@ -5583,7 +5755,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results tabular-view-container'; //default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'app api-ts-results today-controller patient-controller todays-patients-view today-view'; //tabular-view-container';//default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
@@ -5704,6 +5876,246 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
   create(controller, typeName, dataObj) {}
 
   delete(controller, typeName, dataObj) {}
+
+}
+
+/***/ }),
+
+/***/ "./src/today/TodaysPatientsView.tsx":
+/*!******************************************!*\
+  !*** ./src/today/TodaysPatientsView.tsx ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TodaysPatientsView": () => (/* binding */ TodaysPatientsView)
+/* harmony export */ });
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var _patients_PatientController__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../patients/PatientController */ "./src/patients/PatientController.ts");
+/** @jsx jsxCreateElement */
+
+/*** @jsxFrag jsxCreateFragment */
+
+
+
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('todays-patients-view');
+class TodaysPatientsView {
+  currentProviderNo = '';
+  patients = [];
+  patientIdsNotYetLoaded = [];
+  patientsNotYetLoaded = [];
+
+  constructor() {
+    this.handleOpenPatient = this.handleOpenPatient.bind(this);
+    _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, this);
+    _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients, this);
+  }
+
+  static getInstance() {
+    if (!TodaysPatientsView._instance) {
+      TodaysPatientsView._instance = new TodaysPatientsView();
+    }
+
+    return TodaysPatientsView._instance;
+  }
+
+  addPatientSummary(patientSummary) {
+    logger(`Adding patient summary`);
+    logger(patientSummary); // make sure we don't add duplicates
+
+    const foundIndex = this.patients.findIndex(patient => patient._id === patientSummary._id);
+    logger(`Adding patient summary ${foundIndex}`);
+
+    if (foundIndex < 0) {
+      logger(`Adding NON-DUPLICATE patient summary`);
+      patientSummary.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_2__.Decorator.Incomplete;
+      this.patients.push(patientSummary);
+      this.render(); // ask the controller to find the full patient record
+
+      this.patientsNotYetLoaded.push(patientSummary._id);
+      _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients, patientSummary);
+    }
+  }
+
+  addPatientSummaryById(patientId) {
+    logger(`Adding patient summary by Id ${patientId}`);
+    const patientSummary = _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch, {
+      _id: patientId
+    });
+    logger(patientSummary);
+
+    if (patientSummary && patientSummary._id) {
+      this.addPatientSummary(patientSummary);
+    } else {
+      this.patientIdsNotYetLoaded.push(patientId);
+    }
+  }
+
+  replacePatientSummaryWithPatient(patient) {
+    logger(`Replacing patient summary with patient ${patient._id}`); // replace the current patient
+
+    const foundIndex = this.patients.findIndex(patientObj => (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.isSameMongo)(patientObj, patient));
+
+    if (foundIndex >= 0) {
+      patient.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_2__.Decorator.Complete;
+      this.patients.splice(foundIndex, 1, patient);
+    } else {
+      this.patients.push(patient);
+    }
+
+    this.render();
+  }
+
+  removePatient(patient) {
+    logger(`Removing patient with id ${patient._id}`);
+    const foundIndex = this.patients.findIndex(patientObj => (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.isSameMongo)(patientObj, patient));
+
+    if (foundIndex >= 0) {
+      this.patients.splice(foundIndex, 1);
+      this.render();
+    }
+  }
+
+  onDocumentLoaded() {
+    logger(`on document loaded`);
+    this.currentProviderNo = _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getLoggedInUsername();
+    this.containerEl = document.getElementById('todays-patients');
+  }
+
+  handleOpenPatient(event) {
+    event.preventDefault();
+    event.stopPropagation(); // @ts-ignore
+
+    const patientId = event.target.getAttribute('data-id');
+    logger(`Handling open patient with patient id ${patientId}`);
+
+    if (patientId) {
+      _patients_PatientController__WEBPACK_IMPORTED_MODULE_6__.PatientController.getInstance().openPatientRecord(patientId);
+    }
+  }
+
+  render() {
+    logger(`render`);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_5__["default"].removeAllChildren(this.containerEl);
+
+    const address = patient => {
+      let buffer = '';
+
+      if (patient.contact) {
+        buffer = patient.contact.line1;
+
+        if (patient.contact.line2.trim().length > 0) {
+          buffer += ', ' + patient.contact.line2;
+        }
+
+        buffer += ', ' + patient.contact.suburb;
+        buffer += ', ' + patient.contact.state;
+        buffer += ' ' + patient.contact.postcode;
+      }
+
+      return buffer;
+    };
+
+    const incompletePatientCard = patient => {
+      // @ts-ignore
+      return (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("div", {
+        className: "shadow card col-sm-12 col-md-4 mr-2 mt-2"
+      }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("img", {
+        className: "card-img-top",
+        src: "/img/spinner.gif",
+        alt: "Card image cap"
+      }), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("div", {
+        className: "card-body"
+      }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("h5", {
+        className: "card-title"
+      }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("a", {
+        href: "#",
+        "data-id": patient._id,
+        onClick: this.handleOpenPatient
+      }, patient.name.firstname, " ", patient.name.surname)), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("h6", {
+        className: "card-subtitle mb-2 text-muted"
+      }, "DOB: ", moment__WEBPACK_IMPORTED_MODULE_4___default()(patient.dob).format('DD/MM/YYYY')), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("p", {
+        className: "card-text"
+      }, address(patient))));
+    };
+
+    const patientCard = patient => {
+      // @ts-ignore
+      return (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("div", {
+        className: "shadow card col-sm-12 col-md-4 mr-2 mt-2"
+      }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("div", {
+        className: "card-body"
+      }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("h5", {
+        className: "card-title"
+      }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("a", {
+        href: "#",
+        "data-id": patient._id,
+        onClick: this.handleOpenPatient
+      }, patient.name.firstname, " ", patient.name.surname)), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("h6", {
+        className: "card-subtitle mb-2 text-muted"
+      }, "DOB: ", moment__WEBPACK_IMPORTED_MODULE_4___default()(patient.dob).format('DD/MM/YYYY')), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.jsxCreateElement)("p", {
+        className: "card-text"
+      }, address(patient))));
+    };
+
+    this.patients.forEach(patient => {
+      if (patient.decorator === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.Decorator.Incomplete) {
+        // @ts-ignore
+        this.containerEl.appendChild(incompletePatientCard(patient));
+      } else {
+        // @ts-ignore
+        this.containerEl.appendChild(patientCard(patient));
+      }
+    });
+  }
+
+  filterResults(managerName, name, filterResults) {}
+
+  getListenerName() {
+    return "Todays Patients View";
+  }
+
+  stateChanged(managerName, name, newValue) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch) {
+      logger(`loading patient ids from fast patient search that we couldn't find yet`); // load the patients we couldn't find yet
+
+      this.patientIdsNotYetLoaded.forEach(patientId => {
+        this.addPatientSummaryById(patientId);
+      });
+      this.patientIdsNotYetLoaded = [];
+    }
+  }
+
+  stateChangedItemAdded(managerName, name, itemAdded) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients) {
+      logger(`Patient added to state with id ${itemAdded._id}`); // was this a patient we asked for?
+
+      const foundIndex = this.patientsNotYetLoaded.findIndex(patientId => patientId === itemAdded._id);
+
+      if (foundIndex >= 0) {
+        // remove from our internal queue
+        this.patientsNotYetLoaded.splice(foundIndex, 1);
+        this.replacePatientSummaryWithPatient(itemAdded);
+      }
+    }
+  }
+
+  stateChangedItemRemoved(managerName, name, itemRemoved) {}
+
+  stateChangedItemUpdated(managerName, name, itemUpdated, itemNewValue) {}
 
 }
 

@@ -31,7 +31,7 @@ export class PatientController implements StateChangeListener{
     }
 
     public openPatientRecord(patientId:string):void {
-        logger(`Handling opening patient record`);
+        logger(`Handling opening patient record ${patientId}`);
     }
 
 

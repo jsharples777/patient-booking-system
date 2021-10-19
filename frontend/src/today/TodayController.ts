@@ -6,6 +6,7 @@ import {SecurityManager, StateChangeListener} from "ui-framework-jps";
 import {ScheduleLoadedListener} from "../helper/ScheduleLoadedListener";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 import {TodayView} from "./TodayView";
+import {TodaysPatientsView} from "./TodaysPatientsView";
 
 const logger = debug('today-controller');
 
@@ -36,10 +37,8 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
 
     public onPageLoading(event: any, inst: any): void {  // load the events for the view
         if (!Controller.getInstance().isProvider()) return;
-
-        logger(event);
         const today = parseInt(moment().format('YYYYMMDD'));
-        logger(`Need to load today ${today})`);
+        logger(`Need to load today (${today})`);
 
 
         const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
@@ -56,7 +55,7 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
         });
 
 
-        inst.setEvents(results);
+        inst.setEvents(appointmentsForTheDay);
     }
 
     filterResults(managerName: string, name: string, filterResults: any): void {
@@ -74,17 +73,20 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
 
             case (STATE_NAMES.appointments): {
                 const today = parseInt(moment().format('YYYYMMDD'));
-                const currentProvider = Controller.getInstance().getProviderNo();
+                const currentProvider = Controller.getInstance().getLoggedInUsername();
+                logger(`Provider no is ${currentProvider}`);
 
                 const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
                 let results: any[] = [];
                 appointments.forEach((appointment: any) => {
                     if (appointment.start === today) {
-
+                        logger(appointment);
 
                         if (appointment.provider === currentProvider) {
                             logger(`Found appointment for today and provider ${currentProvider}`);
-                            logger(appointment);
+
+                            // add the patient in the appointment to the dashboard
+                            if (appointment._patient) TodaysPatientsView.getInstance().addPatientSummaryById(appointment._patient);
 
                             let result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
                             logger('Converted to event');
@@ -105,7 +107,7 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
 
     stateChangedItemAdded(managerName: string, name: string, appointment: any): void {
         if (!Controller.getInstance().isProvider()) return;
-        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getProviderNo())) {
+        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getLoggedInUsername())) {
             logger('New Appointment inserted by another user');
             logger(appointment);
             const today = parseInt(moment().format('YYYYMMDD'));
@@ -115,6 +117,9 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
                 logger('Converted to event');
                 logger(result);
 
+                // add the patient in the appointment to the dashboard
+                if (appointment._patient) TodaysPatientsView.getInstance().addPatientSummaryById(appointment._patient);
+
                 TodayView.getInstance().getCalender().addEvent(result);
             }
         }
@@ -122,19 +127,21 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
 
     stateChangedItemRemoved(managerName: string, name: string, appointment: any): void {
         if (!Controller.getInstance().isProvider()) return;
-        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getProviderNo())) {
+        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getLoggedInUsername())) {
             logger('Appointment deleted by another user');
             logger(appointment);
             const today = parseInt(moment().format('YYYYMMDD'));
             if (appointment.start === today) {
                 TodayView.getInstance().getCalender().removeEvent([appointment._id]);
+                // remove the patient in the appointment to the dashboard
+                if (appointment._patient) TodaysPatientsView.getInstance().removePatient({_id:appointment._patient});
             }
         }
     }
 
     stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, appointment: any): void {
         if (!Controller.getInstance().isProvider()) return;
-        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getProviderNo())) {
+        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getLoggedInUsername())) {
             logger('Appointment updated by another user');
             logger(appointment);
 
