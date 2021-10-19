@@ -40,7 +40,8 @@ export const STATE_NAMES = {
     letters:'letter',
     vaccinations:'vaccination',
     wcc:'wcc',
-    modifiedDates:'modifiedDate'
+    modifiedDates:'modifiedDate',
+    loadedPatients:'loadedPatients'
 
 }
 

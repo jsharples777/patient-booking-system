@@ -1,18 +1,27 @@
 import {
     BasicObjectDefinitionFactory,
-    DataObjectDefinition, FieldType,
-    ObjectDefinitionRegistry, SimpleValueDataSource,
+    DataObjectDefinition, FieldType, isSameMongo, MemoryBufferStateManager,
+    ObjectDefinitionRegistry, SimpleValueDataSource, StateChangeListener,
     StateManager
 } from "ui-framework-jps";
 import {STATE_NAMES} from "../AppTypes";
 import debug from 'debug';
+import Controller from "../Controller";
 
 const logger = debug('patient-controller');
 
-export class PatientController {
+export class PatientController implements StateChangeListener{
     private static _instance: PatientController;
+    private stateManager: StateManager;
 
-    private constructor() {}
+    private constructor() {
+        this.stateManager = new MemoryBufferStateManager(isSameMongo);
+        Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.patients,this);
+    }
+
+    public getStateManager() {
+        return this.stateManager;
+    }
 
     public static getInstance(): PatientController {
         if (!(PatientController._instance)) {
@@ -20,6 +29,8 @@ export class PatientController {
         }
         return PatientController._instance;
     }
+
+
 
     public onDocumentLoaded():void {
         // Patient name details
@@ -86,4 +97,26 @@ export class PatientController {
         logger(nameDef);
 
     }
+
+
+    stateChanged(managerName: string, name: string, newValue: any) {
+    }
+    stateChangedItemAdded(managerName: string, name: string, itemAdded: any) {
+        switch (name) {
+            case STATE_NAMES.patients: {
+                // found new patient to add to buffer
+                this.stateManager.addNewItemToState(name, itemAdded, true);
+                break;
+            }
+        }
+    }
+
+
+    stateChangedItemRemoved(managerName: string, name: string, itemRemoved: any) {}
+    stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, itemNewValue: any) {
+    }
+    getListenerName(): string {
+        return 'Patient Controller';
+    }
+    filterResults(managerName: string, name: string, filterResults: any) {}
 }
