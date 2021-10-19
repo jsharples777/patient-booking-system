@@ -7,7 +7,7 @@
     "compile": "tsc",
     "watch": "tsc-watch",
     "build": "webpack --mode production",
-    "build.dev": "webpack --mode development --watch",
+    "watch.dev": "webpack --mode development --watch",
     "lint": "eslint --ext js,jsx,tsx,ts --fix ."
   },
   "dependencies": {
@@ -38,9 +38,11 @@
     "@types/react": "^17.0.15",
     "@types/react-dom": "^17.0.9",
     "@types/uuid": "^8.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
     "babel-loader": "^8.2.2",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^17.1.1",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.24.0",

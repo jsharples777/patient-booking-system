@@ -3,7 +3,9 @@
   "env": {
     "browser": "true"
   },
+
   "rules": {
+    "ignorePatterns": ["*.js", "*.d.ts"],
     "no-console": "off",
     "no-restricted-globals": "off",
     "react/prop-types": "off",
