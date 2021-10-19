@@ -19,7 +19,8 @@ import {
     ObjectDefinitionRegistry,
     StateManager,
     TableUIConfig,
-    View
+    View,
+    TabularViewRendererUsingContext
 } from "ui-framework-jps";
 import {TabularItemViewRenderer} from "../renderer/TabularItemViewRenderer";
 
@@ -85,8 +86,8 @@ export class AppointmentTypesCollectionView extends AbstractStatefulCollectionVi
             tableUIConfig.headerColumns[2].element.classes += ' text-center';
             tableUIConfig.headerColumns[3].element.classes += ' text-center';
 
-            this.renderer = new TabularItemViewRenderer(this, this, tableUIConfig, displayOrders, BootstrapTableRowConfigHelper.getInstance(), new DefaultFieldPermissionChecker());
-            //this.renderer = new TabularViewRendererUsingContext(this, this, tableUIConfig);
+            //this.renderer = new TabularItemViewRenderer(this, this, tableUIConfig, displayOrders, BootstrapTableRowConfigHelper.getInstance(), new DefaultFieldPermissionChecker());
+            this.renderer = new TabularViewRendererUsingContext(this, this, tableUIConfig);
             //this.renderer = new ListViewRendererUsingContext(this,this);
             this.eventHandlerDelegate = new CollectionViewEventHandlerDelegateUsingContext(this, <CollectionViewListenerForwarder>this.eventForwarder);
             this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);

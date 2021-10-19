@@ -31,7 +31,15 @@ export default class PatientsQLDelegate {
                         isInactive: 1,
                         hasWarnings: 1,
                     },
-                    warnings: 1
+                    warnings: 1,
+                    contact:1,
+                    lastSeen:1,
+                    lastSeenBy:1,
+                    dob:1,
+                    dod:1,
+                    gender:1,
+                    ethnicity:1,
+                    countryofbirth:1
                 }
             };
             MongoDataSource.getInstance().getDatabase().collection(collection).find({}, projection).sort({
@@ -41,8 +49,7 @@ export default class PatientsQLDelegate {
                 logger(results.length);
                 if (enableDemo) {
                     results.forEach((patientSearch) => {
-                        patientSearch.name.firstname = patientSearch.name.substr(0,2) + 'xxxxxx';
-                        patientSearch.name.surname = patientSearch.name.substr(0,2) + 'xxxxxx';
+                        PatientsQLDelegate.demoise(patientSearch);
                     })
                 }
                 resolve(results);
@@ -160,22 +167,26 @@ export default class PatientsQLDelegate {
     }
 
     public static demoise(patient:Document) {
-        const enableDemo = ((process.env.ENABLE_DEMO === 'Y') || true);
+        const enableDemo = ((process.env.ENABLE_DEMO === 'Y') || false);
         if (enableDemo && patient) {
             logger(`DEMO MODE ACTIVATED`);
             patient.name.firstname = patient.name.firstname.substr(0,2) + 'xxxxxx';
             patient.name.surname = patient.name.surname.substr(0,2) + 'xxxxxx';
-            patient.contact.line1 = '1 Demo Street';
-            patient.contact.line2 = '';
-            patient.contact.home = '00 0000 0000';
-            patient.contact.work = '00 0000 0000';
-            patient.contact.mobile = '0000 0000 0000';
-            patient.contact.nokname = 'NOK';
-            patient.contact.nokphone = '00 0000 0000';
-            patient.identifiers.medicare = 0;
-            patient.identifiers.dva= '';
-            patient.identifiers.hcc= '';
-            patient.identifiers.ihi = 0;
+            if (patient.contact) {
+                patient.contact.line1 = '1 Demo Street';
+                patient.contact.line2 = '';
+                patient.contact.home = '00 0000 0000';
+                patient.contact.work = '00 0000 0000';
+                patient.contact.mobile = '0000 0000 0000';
+                patient.contact.nokname = 'NOK';
+                patient.contact.nokphone = '00 0000 0000';
+            }
+            if (patient.identifiers) {
+                patient.identifiers.medicare = 0;
+                patient.identifiers.dva = '';
+                patient.identifiers.hcc = '';
+                patient.identifiers.ihi = 0;
+            }
             patient.isDemoOnly = true;
         }
 

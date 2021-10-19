@@ -64,13 +64,7 @@ input WarningsInput {
     warnings: [String]
 }
 
-type PatientSearchItem {
-    _id:String,
-    identifiers: IdentifiersPartial,
-    name: NamePartial,
-    flags: FlagsPartial,
-    warnings: Warnings
-}
+
 
 type AppointmentType {
     _id:String,
@@ -157,6 +151,23 @@ type Contact {
     mobile:String,
     nokname:String,
     nokphone:String
+}
+
+type PatientSearchItem {
+    _id:String,
+    identifiers: IdentifiersPartial,
+    name: NamePartial,
+    flags: FlagsPartial,
+    warnings: Warnings,
+    contact: Contact,
+    isDemoOnly:Boolean,
+    lastSeen:Int,
+    lastSeenBy:String,
+    dob:Int,
+    dod:Int,
+    gender:String,
+    ethnicity:String,
+    countryofbirth:String
 }
 
 input ContactInput {

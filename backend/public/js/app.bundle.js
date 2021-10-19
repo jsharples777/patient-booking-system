@@ -248,7 +248,7 @@ class Controller {
       serverURL: '',
       apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
       apis: {
-        findAll: 'query {getPatientSearchDetails {_id,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}}}',
+        findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' + '    line1,\n' + '    line2,\n' + '    suburb\n' + '    postcode,\n' + '    state,\n' + '    country,\n' + '    home,\n' + '    work,\n' + '    mobile,\n' + '    nokname,\n' + '    nokphone},\n' + 'lastSeen,\n' + 'lastSeenBy,\n' + 'dob,\n' + 'dod,\n' + 'gender,\n' + 'ethnicity,\n' + 'countryofbirth}}',
         create: '',
         destroy: '',
         update: '',
@@ -487,6 +487,21 @@ class Controller {
     } catch (error) {}
 
     cLoggerDetail(`Logged in user is ${result}`);
+    return result;
+  }
+
+  getProviderNo() {
+    let result = '';
+
+    try {
+      // @ts-ignore
+      if (loggedInUser) {
+        // @ts-ignore
+        result = loggedInUser.providerNo;
+      }
+    } catch (error) {}
+
+    cLoggerDetail(`Logged in provider is ${result}`);
     return result;
   }
 
@@ -1567,8 +1582,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
-/* harmony import */ var _renderer_TabularItemViewRenderer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../renderer/TabularItemViewRenderer */ "./src/renderer/TabularItemViewRenderer.ts");
-
 
 
 
@@ -1645,9 +1658,9 @@ class AppointmentTypesCollectionView extends ui_framework_jps__WEBPACK_IMPORTED_
 
       tableUIConfig.headerColumns[1].element.classes += ' text-center';
       tableUIConfig.headerColumns[2].element.classes += ' text-center';
-      tableUIConfig.headerColumns[3].element.classes += ' text-center';
-      this.renderer = new _renderer_TabularItemViewRenderer__WEBPACK_IMPORTED_MODULE_3__.TabularItemViewRenderer(this, this, tableUIConfig, displayOrders, ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableRowConfigHelper.getInstance(), new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DefaultFieldPermissionChecker()); //this.renderer = new TabularViewRendererUsingContext(this, this, tableUIConfig);
-      //this.renderer = new ListViewRendererUsingContext(this,this);
+      tableUIConfig.headerColumns[3].element.classes += ' text-center'; //this.renderer = new TabularItemViewRenderer(this, this, tableUIConfig, displayOrders, BootstrapTableRowConfigHelper.getInstance(), new DefaultFieldPermissionChecker());
+
+      this.renderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.TabularViewRendererUsingContext(this, this, tableUIConfig); //this.renderer = new ListViewRendererUsingContext(this,this);
 
       this.eventHandlerDelegate = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.CollectionViewEventHandlerDelegateUsingContext(this, this.eventForwarder);
       this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);
@@ -4644,130 +4657,6 @@ class PatientSearchView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Ab
 
 /***/ }),
 
-/***/ "./src/renderer/TabularItemViewRenderer.ts":
-/*!*************************************************!*\
-  !*** ./src/renderer/TabularItemViewRenderer.ts ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "TabularItemViewRenderer": () => (/* binding */ TabularItemViewRenderer)
-/* harmony export */ });
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
-/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
-/* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
-
-
-
-
-const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('tabular-item-view-renderer');
-class TabularItemViewRenderer {
-  tableRowViews = [];
-  dataObjDef = null;
-
-  constructor(view, eventHandler, tableConfig, displayOrders, configHelper, permissionCheck = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.DefaultFieldPermissionChecker()) {
-    this.view = view;
-    this.eventHandler = eventHandler;
-    this.tableConfig = tableConfig;
-    this.configHelper = configHelper;
-    this.permissionCheck = permissionCheck;
-    this.displayOrders = displayOrders;
-  }
-
-  createDisplayElementForCollectionItem(collectionName, item) {
-    let result = document.createElement('tr');
-
-    if (this.dataObjDef && this.idField) {
-      let rowView = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.BasicTableRowImplementation(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
-      rowView.initialise(this.displayOrders, false, true);
-      rowView.startUpdate(item);
-      this.tableRowViews.push(rowView);
-      result = rowView.getRowElement();
-    }
-
-    return result;
-  }
-
-  onDocumentLoaded() {}
-
-  setDisplayElementsForCollectionInContainer(containerEl, collectionName, newState) {
-    if (!this.dataObjDef) {
-      this.dataObjDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ObjectDefinitionRegistry.getInstance().findDefinition(collectionName);
-
-      if (this.dataObjDef) {
-        // find the key field
-        this.dataObjDef.fields.forEach(field => {
-          if (field.isKey) {
-            this.idField = field.id;
-          }
-        });
-      }
-    }
-
-    logger(`view ${this.view.getName()}: creating Results`);
-    logger(newState); // remove the previous items from list
-
-    this.tableRowViews.forEach(view => {
-      view.setIsVisible(false);
-    });
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeAllChildren(containerEl); // create the table
-
-    let tableEl = document.createElement(this.tableConfig.table.type);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(tableEl, this.tableConfig.table.classes);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableEl, this.tableConfig.table.attributes); // create the headers
-
-    let tableHeaderEl = document.createElement(this.tableConfig.header.type);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(tableHeaderEl, this.tableConfig.header.classes);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableHeaderEl, this.tableConfig.header.attributes); // create the column headers
-
-    this.tableConfig.headerColumns.forEach(header => {
-      let thEl = document.createElement(header.element.type);
-      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(thEl, header.element.classes);
-      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(thEl, header.element.attributes);
-      if (header.element.innerHTML) thEl.innerHTML = header.element.innerHTML;
-      tableHeaderEl.appendChild(thEl);
-    }); // create the action column header (if one)
-
-    if (this.tableConfig.actionColumn) {
-      let thEl = document.createElement(this.tableConfig.actionColumn.element.type);
-      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(thEl, this.tableConfig.actionColumn.element.classes);
-      ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(thEl, this.tableConfig.actionColumn.element.attributes);
-      if (this.tableConfig.actionColumn.element.innerHTML) thEl.innerHTML = this.tableConfig.actionColumn.element.innerHTML;
-      tableHeaderEl.appendChild(thEl);
-    }
-
-    tableEl.appendChild(tableHeaderEl); // create the table body
-
-    let tableBodyEl = document.createElement(this.tableConfig.body.type);
-    this.tableBodyId = (0,uuid__WEBPACK_IMPORTED_MODULE_3__["default"])();
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addRemoveClasses(tableBodyEl, this.tableConfig.body.classes);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableBodyEl, this.tableConfig.body.attributes);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addAttributes(tableBodyEl, [{
-      name: 'id',
-      value: this.tableBodyId
-    }]);
-    tableEl.appendChild(tableBodyEl);
-    containerEl.appendChild(tableEl); // add the new children
-
-    newState.map((item, index) => {
-      const childEl = this.createDisplayElementForCollectionItem(collectionName, item); // add draggable actions
-
-      logger(`view ${this.view.getName()}:  Adding child ${this.view.getIdForItemInNamedCollection(collectionName, item)}`); //tableBodyEl.appendChild(childEl);
-
-      ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ContextualInformationHelper.getInstance().addContextToElement(this.view.getName(), collectionName, item, childEl, true);
-      childEl.addEventListener('contextmenu', ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ContextualInformationHelper.getInstance().handleContextMenu);
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-  }
-
-}
-
-/***/ }),
-
 /***/ "./src/today/TodayController.ts":
 /*!**************************************!*\
   !*** ./src/today/TodayController.ts ***!
@@ -4785,10 +4674,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
 /* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
-/* harmony import */ var _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../helper/AppointmentControllerHelper */ "./src/helper/AppointmentControllerHelper.ts");
-/* harmony import */ var _TodayView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./TodayView */ "./src/today/TodayView.ts");
-
+/* harmony import */ var _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../helper/AppointmentControllerHelper */ "./src/helper/AppointmentControllerHelper.ts");
+/* harmony import */ var _TodayView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TodayView */ "./src/today/TodayView.ts");
 
 
 
@@ -4799,8 +4686,9 @@ const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('today-controller');
 class TodayController {
   constructor() {
     this.onPageLoading = this.onPageLoading.bind(this);
+    if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
     _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments, this);
-    _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_5__.AppointmentControllerHelper.getInstance().addListener(this);
+    _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_4__.AppointmentControllerHelper.getInstance().addListener(this);
   }
 
   static getInstance() {
@@ -4812,11 +4700,12 @@ class TodayController {
   }
 
   onDocumentLoaded() {
-    _TodayView__WEBPACK_IMPORTED_MODULE_6__.TodayView.getInstance().onDocumentLoaded();
+    _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().onDocumentLoaded();
   }
 
   onPageLoading(event, inst) {
     // load the events for the view
+    if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
     logger(event);
     const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
     logger(`Need to load today ${today})`);
@@ -4824,9 +4713,9 @@ class TodayController {
     let results = [];
     let appointmentsForTheDay = [];
     appointments.forEach(appointment => {
-      if (appointment.start === today) {
+      if (appointment.start === today && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getProviderNo()) {
         appointmentsForTheDay.push(appointment);
-        let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_5__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
+        let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_4__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
         results.push(result);
       }
     });
@@ -4840,13 +4729,14 @@ class TodayController {
   }
 
   stateChanged(managerName, name, newValue) {
+    if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
     logger(`Handling state changed ${name}`);
 
     switch (name) {
       case _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments:
         {
           const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
-          const currentProvider = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getLoggedInUsername();
+          const currentProvider = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getProviderNo();
           const appointments = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().getStateByName(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments);
           let results = [];
           appointments.forEach(appointment => {
@@ -4854,57 +4744,63 @@ class TodayController {
               if (appointment.provider === currentProvider) {
                 logger(`Found appointment for today and provider ${currentProvider}`);
                 logger(appointment);
-                let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_5__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
+                let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_4__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
                 logger('Converted to event');
                 logger(result);
                 results.push(result);
               }
             }
           });
-          _TodayView__WEBPACK_IMPORTED_MODULE_6__.TodayView.getInstance().getCalender().setEvents(results);
+          _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().getCalender().setEvents(results);
           break;
         }
     }
   }
 
   stateChangedItemAdded(managerName, name, appointment) {
-    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.createdBy !== ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.SecurityManager.getInstance().getLoggedInUsername()) {
+    if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
+
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getProviderNo()) {
       logger('New Appointment inserted by another user');
       logger(appointment);
       const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
 
       if (appointment.start === today) {
-        let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_5__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
+        let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_4__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
         logger('Converted to event');
         logger(result);
-        _TodayView__WEBPACK_IMPORTED_MODULE_6__.TodayView.getInstance().getCalender().addEvent(result);
+        _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().getCalender().addEvent(result);
       }
     }
   }
 
   stateChangedItemRemoved(managerName, name, appointment) {
-    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments) {
+    if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
+
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getProviderNo()) {
       logger('Appointment deleted by another user');
       logger(appointment);
       const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
 
       if (appointment.start === today) {
-        _TodayView__WEBPACK_IMPORTED_MODULE_6__.TodayView.getInstance().getCalender().removeEvent([appointment._id]);
+        _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().getCalender().removeEvent([appointment._id]);
       }
     }
   }
 
   stateChangedItemUpdated(managerName, name, itemUpdated, appointment) {
-    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.createdBy !== ui_framework_jps__WEBPACK_IMPORTED_MODULE_4__.SecurityManager.getInstance().getLoggedInUsername()) {
+    if (!_Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().isProvider()) return;
+
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments && appointment.provider === _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getProviderNo()) {
       logger('Appointment updated by another user');
       logger(appointment);
       const today = parseInt(moment__WEBPACK_IMPORTED_MODULE_1___default()().format('YYYYMMDD'));
 
       if (appointment.start === today) {
-        let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_5__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
+        let result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_4__.AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
         logger('Converted to event');
         logger(result);
-        _TodayView__WEBPACK_IMPORTED_MODULE_6__.TodayView.getInstance().getCalender().updateEvent(result);
+        _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().getCalender().updateEvent(result);
       }
     }
   }
@@ -4912,7 +4808,7 @@ class TodayController {
   loadedAppointmentTypes(appointmentTypes) {}
 
   loadedClinicAppointmentBookConfig(clinicConfig) {
-    _TodayView__WEBPACK_IMPORTED_MODULE_6__.TodayView.getInstance().applyClinicConfig(clinicConfig);
+    _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().applyClinicConfig(clinicConfig);
   }
 
   loadedPatientSearch(patientSearch) {}
@@ -4968,7 +4864,8 @@ class TodayView {
   }
 
   onDocumentLoaded() {
-    this.currentProviderNo = _Controller__WEBPACK_IMPORTED_MODULE_5__["default"].getInstance().getLoggedInUsername();
+    if (!_Controller__WEBPACK_IMPORTED_MODULE_5__["default"].getInstance().isProvider()) return;
+    this.currentProviderNo = _Controller__WEBPACK_IMPORTED_MODULE_5__["default"].getInstance().getProviderNo();
     let options = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_3__.AppointmentControllerHelper.getInstance().getClinicConfig();
     logger('Using clinic config options');
     const day = parseInt(moment__WEBPACK_IMPORTED_MODULE_4___default()().format('d'));
@@ -5736,7 +5633,6 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
 
   onDocumentLoaded() {
     super.onDocumentLoaded();
-    console.log('blah');
     const demographicsView = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "demographics-view",
       className: "container-fluid"
@@ -5745,15 +5641,54 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "patient-name",
       className: "col-12-sm col-md-6"
-    }), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
-      id: "patient-contact",
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-body"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h5", {
+      className: "card-title"
+    }, "Name Details"), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-text",
+      id: "patient-name-details"
+    })))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      id: "patient-basics",
       className: "col-12-sm col-md-6"
-    })), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-body"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h5", {
+      className: "card-title"
+    }, "Contact Details"), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-text",
+      id: "patient-basics-details"
+    }))))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       className: "row"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      id: "patient-contact",
+      className: "col-12-sm col-md-6"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-body"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h5", {
+      className: "card-title"
+    }, "Contact Details"), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-text",
+      id: "patient-contact-details"
+    })))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "patient-identifiers",
       className: "col-12-sm col-md-6"
-    }))); // @ts-ignore
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-body"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h5", {
+      className: "card-title"
+    }, "Identifiers"), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-text",
+      id: "patient-contact-details"
+    })))))); // @ts-ignore
 
     this.containerEl.append(demographicsView);
   }

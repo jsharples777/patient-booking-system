@@ -29,7 +29,9 @@ export class TodayView {
 
 
     public onDocumentLoaded() {
-        this.currentProviderNo = Controller.getInstance().getLoggedInUsername();
+        if (!Controller.getInstance().isProvider()) return;
+
+        this.currentProviderNo = Controller.getInstance().getProviderNo();
 
         let options = AppointmentControllerHelper.getInstance().getClinicConfig();
         logger('Using clinic config options');

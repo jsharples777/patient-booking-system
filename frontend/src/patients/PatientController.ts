@@ -30,6 +30,10 @@ export class PatientController implements StateChangeListener{
         return PatientController._instance;
     }
 
+    public openPatientRecord(patientId:string):void {
+        logger(`Handling opening patient record`);
+    }
+
 
 
     public onDocumentLoaded():void {

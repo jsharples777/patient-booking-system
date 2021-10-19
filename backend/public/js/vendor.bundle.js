@@ -62196,6 +62196,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../alert/AlertListener */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertListener.js");
+/* harmony import */ var _CommonTypes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
+
 
 
 
@@ -62229,9 +62231,9 @@ class CollectionViewEventHandlerDelegate {
         selectedItem = this.view.getItemInNamedCollection(this.view.getCollectionName(), compareWith);
         if (selectedItem) {
             // @ts-ignore
-            selectedItem[DRAGGABLE_TYPE] = (_a = this.view.getCollectionUIConfig().detail.drag) === null || _a === void 0 ? void 0 : _a.type;
+            selectedItem[_CommonTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE_TYPE] = (_a = this.view.getCollectionUIConfig().detail.drag) === null || _a === void 0 ? void 0 : _a.type;
             // @ts-ignore
-            selectedItem[DRAGGABLE_FROM] = (_b = this.view.getCollectionUIConfig().detail.drag) === null || _b === void 0 ? void 0 : _b.from;
+            selectedItem[_CommonTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE_FROM] = (_b = this.view.getCollectionUIConfig().detail.drag) === null || _b === void 0 ? void 0 : _b.from;
         }
         return selectedItem;
     }
@@ -62241,7 +62243,7 @@ class CollectionViewEventHandlerDelegate {
         const data = JSON.stringify(this.getDragData(event));
         logger(data);
         // @ts-ignore
-        event.dataTransfer.setData(DRAGGABLE_KEY_ID, data);
+        event.dataTransfer.setData(_CommonTypes__WEBPACK_IMPORTED_MODULE_5__.DRAGGABLE_KEY_ID, data);
         (this.eventForwarder).itemDragStarted(this.view, data);
     }
     eventClickItem(event) {

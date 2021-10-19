@@ -14,6 +14,9 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
 
     private constructor() {
         this.onPageLoading = this.onPageLoading.bind(this);
+
+        if (!Controller.getInstance().isProvider()) return;
+
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.appointments, this);
         AppointmentControllerHelper.getInstance().addListener(this);
     }
@@ -32,6 +35,8 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
 
 
     public onPageLoading(event: any, inst: any): void {  // load the events for the view
+        if (!Controller.getInstance().isProvider()) return;
+
         logger(event);
         const today = parseInt(moment().format('YYYYMMDD'));
         logger(`Need to load today ${today})`);
@@ -41,7 +46,7 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
         let results: any[] = [];
         let appointmentsForTheDay: any[] = [];
         appointments.forEach((appointment: any) => {
-            if (appointment.start === today) {
+            if ((appointment.start === today) && (appointment.provider === Controller.getInstance().getProviderNo())) {
                 appointmentsForTheDay.push(appointment);
 
                 let result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
@@ -62,13 +67,14 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
     }
 
     stateChanged(managerName: string, name: string, newValue: any): void {
+        if (!Controller.getInstance().isProvider()) return;
         logger(`Handling state changed ${name}`);
 
         switch (name) {
 
             case (STATE_NAMES.appointments): {
                 const today = parseInt(moment().format('YYYYMMDD'));
-                const currentProvider = Controller.getInstance().getLoggedInUsername();
+                const currentProvider = Controller.getInstance().getProviderNo();
 
                 const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
                 let results: any[] = [];
@@ -98,7 +104,8 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
     }
 
     stateChangedItemAdded(managerName: string, name: string, appointment: any): void {
-        if ((name === STATE_NAMES.appointments) && (appointment.createdBy !== SecurityManager.getInstance().getLoggedInUsername())) {
+        if (!Controller.getInstance().isProvider()) return;
+        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getProviderNo())) {
             logger('New Appointment inserted by another user');
             logger(appointment);
             const today = parseInt(moment().format('YYYYMMDD'));
@@ -114,7 +121,8 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
     }
 
     stateChangedItemRemoved(managerName: string, name: string, appointment: any): void {
-        if (name === STATE_NAMES.appointments) {
+        if (!Controller.getInstance().isProvider()) return;
+        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getProviderNo())) {
             logger('Appointment deleted by another user');
             logger(appointment);
             const today = parseInt(moment().format('YYYYMMDD'));
@@ -125,7 +133,8 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
     }
 
     stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, appointment: any): void {
-        if ((name === STATE_NAMES.appointments) && (appointment.createdBy !== SecurityManager.getInstance().getLoggedInUsername())) {
+        if (!Controller.getInstance().isProvider()) return;
+        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getProviderNo())) {
             logger('Appointment updated by another user');
             logger(appointment);
 

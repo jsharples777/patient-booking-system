@@ -235,7 +235,25 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 serverURL: '',
                 apiURL: API_Config.graphQL,
                 apis: {
-                    findAll: 'query {getPatientSearchDetails {_id,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}}}',
+                    findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' +
+                        '    line1,\n' +
+                        '    line2,\n' +
+                        '    suburb\n' +
+                        '    postcode,\n' +
+                        '    state,\n' +
+                        '    country,\n' +
+                        '    home,\n' +
+                        '    work,\n' +
+                        '    mobile,\n' +
+                        '    nokname,\n' +
+                        '    nokphone},\n' +
+                        'lastSeen,\n' +
+                        'lastSeenBy,\n' +
+                        'dob,\n' +
+                        'dod,\n' +
+                        'gender,\n' +
+                        'ethnicity,\n' +
+                        'countryofbirth}}',
                     create: '',
                     destroy: '',
                     update: '',
@@ -489,6 +507,20 @@ export default class Controller implements StateChangeListener, DataObjectListen
         } catch (error) {
         }
         cLoggerDetail(`Logged in user is ${result}`);
+        return result;
+    }
+
+    public getProviderNo(): string {
+        let result = '';
+        try {
+            // @ts-ignore
+            if (loggedInUser) {
+                // @ts-ignore
+                result = loggedInUser.providerNo;
+            }
+        } catch (error) {
+        }
+        cLoggerDetail(`Logged in provider is ${result}`);
         return result;
     }
 
