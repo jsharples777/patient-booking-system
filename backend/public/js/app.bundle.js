@@ -34,6 +34,7 @@ let Decorator;
   Decorator[Decorator["Complete"] = 1] = "Complete";
   Decorator[Decorator["Persisted"] = 2] = "Persisted";
   Decorator[Decorator["PersistedLocally"] = 3] = "PersistedLocally";
+  Decorator[Decorator["Modified"] = 4] = "Modified";
 })(Decorator || (Decorator = {}));
 
 const STATE_NAMES = {
@@ -44,6 +45,7 @@ const STATE_NAMES = {
   recentUserSearches: 'recentUserSearch',
   patientSearch: 'fastSearchNames',
   recentPatientSearches: 'recentPatientSearches',
+  openPatients: 'openPatients',
   appointments: 'appointment',
   appointmentTypes: 'appointmentType',
   clinicConfig: 'clinicConfig',
@@ -106,7 +108,8 @@ const VIEW_NAME = {
   appointmentTypes: 'appointmentTypes',
   appointmentTypeDetail: 'appointmentTypeDetail',
   users: 'usersList',
-  userDetail: 'userDetail'
+  userDetail: 'userDetail',
+  openPatients: 'openPatients'
 };
 const VIEW_CONTAINER = {
   calendarControl: 'calendarControl',
@@ -118,7 +121,8 @@ const PatientSearchSidebarPrefs = {
   location: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.SidebarLocation.left
 };
 const PatientSearchSidebarContainers = {
-  container: 'recentPatientSearches'
+  container: 'recentPatientSearches',
+  openRecords: 'openPatientRecords'
 };
 const AppointmentTypesSidebarPrefs = {
   id: 'appointmentTypesSideBar',
@@ -4696,7 +4700,6 @@ class PatientSearchView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Ab
 
   constructor(stateManager) {
     super(PatientSearchView.DOMConfig, stateManager, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch);
-    this.loggedInUsers = [];
     this.renderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ListViewRenderer(this, this); // handler binding
 
     this.updateViewForNamedCollection = this.updateViewForNamedCollection.bind(this);

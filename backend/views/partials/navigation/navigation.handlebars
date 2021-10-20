@@ -13,42 +13,35 @@
                 {{#if user.isProvider}}
                     <li class="nav-item pr-2"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="bottom"
                                                  title="Show todays details"
-                                                 id="navigationItemToday">Today <i class="fas fa-calendar-day"></i></a></li>{{/if}}
+                                                 id="navigationItemToday">Today <i class="fas fa-calendar-day"></i></a></li>
+                {{/if}}
                 {{#if user.isAdmin}}
                     <li class="nav-item pr-2"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="bottom"
                                                  title="Show the appointment templating"
-                                                 id="navigationItemAppointmentTemplating">Appointment Templates <i
-                            class="fas fa-th-list"></i></a></li>{{/if}}
+                                                 id="navigationItemAppointmentTemplating">Appointment Templates <i class="fas fa-th-list"></i></a></li>
+                {{/if}}
                 <li class="nav-item pr-2"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="bottom"
                                              title="Show the currently open patient records"
-                                             id="navigationItemPatientRecord">Patient Record <i
-                        class="fas fa-clipboard-list"></i></a></li>
+                                             id="navigationItemPatientRecord">Patient Record <i class="fas fa-clipboard-list"></i></a></li>
                 <li class="nav-item pr-2"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="bottom"
-                                             title="Show the patient search" id="navigationItemPatientSearch">Patient
-                    Search <i class="fas fa-search"></i></a></li>
+                                             title="Show the patient search" id="navigationItemPatientSearch">Patient Search <i class="fas fa-search"></i></a></li>
                 <li class="nav-item pr-2"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="bottom"
-                                             title="Show the chat" id="navigationItemChat">Clinic Chat <i
-                        class="fas fa-inbox"></i></a></li>
+                                             title="Show the chat" id="navigationItemChat">Clinic Chat <i class="fas fa-inbox"></i></a></li>
             {{else}}
                 <li class="nav-item pr-2"><a class="nav-link" href="/login" data-toggle="tooltip"
                                              data-placement="bottom" title="Show the appointment book"
-                                             id="navigationItemAppointmentBook">Appointment Book <i
-                        class="fas fa-calendar-check"></i></a></li>
+                                             id="navigationItemAppointmentBook">Appointment Book <i class="fas fa-calendar-check"></i></a></li>
                 <li class="nav-item pr-2"><a class="nav-link" href="/login" data-toggle="tooltip"
                                              data-placement="bottom" title="Show the appointment templating"
-                                             id="navigationItemAppointmentTemplating">Appointment Templates <i
-                        class="fas fa-th-list"></i></a></li>
+                                             id="navigationItemAppointmentTemplating">Appointment Templates <i class="fas fa-th-list"></i></a></li>
                 <li class="nav-item pr-2"><a class="nav-link" href="/login" data-toggle="tooltip"
                                              data-placement="bottom" title="Show the currently open patient records"
-                                             id="navigationItemPatientRecords">Patient Records <i
-                        class="fas fa-clipboard-list"></i></a></li>
+                                             id="navigationItemPatientRecords">Patient Records <i class="fas fa-clipboard-list"></i></a></li>
                 <li class="nav-item pr-2"><a class="nav-link" href="/login" data-toggle="tooltip"
                                              data-placement="bottom" title="Show the patient search"
-                                             id="navigationItemPatientSearch">Patient Search <i
-                        class="fas fa-search"></i></a></li>
+                                             id="navigationItemPatientSearch">Patient Search <i class="fas fa-search"></i></a></li>
                 <li class="nav-item pr-2"><a class="nav-link" href="/login" data-toggle="tooltip"
-                                             data-placement="bottom" title="Show the chat" id="navigationItemChat">Clinic
-                    Chat <i class="fas fa-inbox"></i></a></li>
+                                             data-placement="bottom" title="Show the chat" id="navigationItemChat">Clinic Chat <i class="fas fa-inbox"></i></a></li>
             {{/if}}
         </ul>
         <ul class="navbar-nav is-pulled-right">

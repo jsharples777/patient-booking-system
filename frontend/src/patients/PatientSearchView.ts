@@ -62,13 +62,10 @@ export class PatientSearchView extends AbstractStatefulCollectionView {
             },
         },
     };
-    protected loggedInUsers: string[];
     protected localisedSM: StateManager;
 
     constructor(stateManager: StateManager) {
         super(PatientSearchView.DOMConfig, stateManager, STATE_NAMES.patientSearch);
-
-        this.loggedInUsers = [];
 
         this.renderer = new ListViewRenderer(this, this);
 

@@ -60,8 +60,13 @@
 }
 
 .scroll-patient-search {
-    height: 90vh;
-    max-height: 100vh;
+    height: 40vh;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+.scroll-open-patients {
+    height: 40vh;
+    max-height: 40vh;
     overflow-y: auto;
 }
 

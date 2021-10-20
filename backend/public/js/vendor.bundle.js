@@ -56918,6 +56918,7 @@ var StateManagerType;
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "EXTRA_ACTION_ATTRIBUTE_NAME": () => (/* binding */ EXTRA_ACTION_ATTRIBUTE_NAME),
+/* harmony export */   "ActionType": () => (/* binding */ ActionType),
 /* harmony export */   "Modifier": () => (/* binding */ Modifier),
 /* harmony export */   "KeyType": () => (/* binding */ KeyType),
 /* harmony export */   "SidebarLocation": () => (/* binding */ SidebarLocation),
@@ -56927,6 +56928,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "SCREEN_WIDTH_SMALL": () => (/* binding */ SCREEN_WIDTH_SMALL)
 /* harmony export */ });
 const EXTRA_ACTION_ATTRIBUTE_NAME = 'view-extra-action';
+var ActionType;
+(function (ActionType) {
+    ActionType["DELETE"] = "delete";
+    ActionType["EXTRA_ACTION"] = "extraAction";
+    ActionType["CUSTOM_TYPE1"] = "custom Type 1";
+    ActionType["CUSTOM_TYPE2"] = "custom Type 2";
+    ActionType["CUSTOM_TYPE3"] = "custom Type 3";
+    ActionType["CUSTOM_TYPE4"] = "custom Type 4";
+    ActionType["CUSTOM_TYPE5"] = "custom Type 5";
+    ActionType["CUSTOM_TYPE6"] = "custom Type 6";
+    ActionType["CUSTOM_TYPE7"] = "custom Type 7";
+})(ActionType || (ActionType = {}));
 var Modifier;
 (function (Modifier) {
     Modifier[Modifier["normal"] = 0] = "normal";
@@ -58107,6 +58120,7 @@ FavouriteUserView.DOMConfig = {
                 classes: 'btn bg-warning text-white btn-circle btn-sm mr-1',
                 iconClasses: 'fas fa-user-slash'
             },
+            confirm: false
         }
     ]
 };
@@ -58426,6 +58440,7 @@ UserSearchView.DOMConfig = {
                 classes: 'btn bg-info text-white btn-circle btn-sm mr-1',
                 iconClasses: 'fas fa-user-plus'
             },
+            confirm: false
         },
         {
             name: 'block',
@@ -58433,6 +58448,7 @@ UserSearchView.DOMConfig = {
                 classes: 'btn bg-warning text-white btn-circle btn-sm mr-1',
                 iconClasses: 'fas fa-user-slash'
             },
+            confirm: false
         }
     ]
 };
@@ -62297,7 +62313,7 @@ class CollectionViewEventHandlerDelegate {
                     this.eventForwarder.itemDeleted(this.view, selectedItem);
                 }
                 else {
-                    _alert_AlertManager__WEBPACK_IMPORTED_MODULE_2__.AlertManager.getInstance().startAlert(this, this.view.getName(), `Are you sure you want to delete this information?`, selectedItem);
+                    _alert_AlertManager__WEBPACK_IMPORTED_MODULE_2__.AlertManager.getInstance().startAlert(this, this.view.getName(), `Are you sure you want to delete this information?`, { actionType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.ActionType.DELETE, item: selectedItem });
                 }
             }
         }
@@ -62310,6 +62326,15 @@ class CollectionViewEventHandlerDelegate {
         const dataSource = context.dataSource;
         // @ts-ignore
         const actionName = event.target.getAttribute(_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.EXTRA_ACTION_ATTRIBUTE_NAME);
+        // get the action def
+        const uiConfig = this.view.getCollectionUIConfig();
+        let actionConfig = null;
+        if (uiConfig.extraActions) {
+            const foundIndex = uiConfig.extraActions.findIndex((extraAction) => extraAction.name === actionName);
+            if (foundIndex >= 0)
+                actionConfig = uiConfig.extraActions[foundIndex];
+        }
+        const shouldConfirm = ((actionConfig) && (actionConfig.confirm));
         if (this.view.getCollectionUIConfig().keyType === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.KeyType.number) { // @ts-ignore
             itemId = parseInt(itemId);
         }
@@ -62323,17 +62348,29 @@ class CollectionViewEventHandlerDelegate {
             const shouldSelect = (this.eventForwarder).canSelectItem(this.view, selectedItem);
             logger(`view ${this.view.getName()}: Item with id ${itemId} attempting action ${actionName} from ${dataSource} - ${shouldSelect}`);
             if (shouldSelect) {
-                this.selectedItem = selectedItem;
-                logger(selectedItem);
-                this.eventForwarder.itemAction(this.view, actionName, selectedItem);
+                // do we need to confirm action?
+                if (shouldConfirm) {
+                    _alert_AlertManager__WEBPACK_IMPORTED_MODULE_2__.AlertManager.getInstance().startAlert(this, this.view.getName(), `${actionName}: please confirm this action`, { actionType: _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.ActionType.EXTRA_ACTION, actionName: actionName, item: selectedItem });
+                }
+                else {
+                    this.selectedItem = selectedItem;
+                    logger(selectedItem);
+                    this.eventForwarder.itemAction(this.view, actionName, selectedItem);
+                }
             }
         }
     }
     completed(event) {
         logger(event.context);
         if (event.outcome === _alert_AlertListener__WEBPACK_IMPORTED_MODULE_4__.AlertType.confirmed) {
-            this.selectedItem = null;
-            this.eventForwarder.itemDeleted(this.view, event.context);
+            if (event.context.actionType === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.ActionType.DELETE) {
+                this.selectedItem = null;
+                this.eventForwarder.itemDeleted(this.view, event.context.item);
+            }
+            if (event.context.actionType === _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.ActionType.EXTRA_ACTION) {
+                this.selectedItem = event.context.item;
+                this.eventForwarder.itemAction(this.view, event.context.actionName, event.context.item);
+            }
         }
     }
     getItemContext(event) {
@@ -66073,6 +66110,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "KeyType": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.KeyType),
 /* harmony export */   "SidebarLocation": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.SidebarLocation),
 /* harmony export */   "RowPosition": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.RowPosition),
+/* harmony export */   "ActionType": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.ActionType),
+/* harmony export */   "SCREEN_WIDTH_LARGE": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.SCREEN_WIDTH_LARGE),
+/* harmony export */   "SCREEN_WIDTH_SMALL": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.SCREEN_WIDTH_SMALL),
+/* harmony export */   "SCREEN_WIDTH_MEDIUM": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.SCREEN_WIDTH_MEDIUM),
 /* harmony export */   "AlertType": () => (/* reexport safe */ _framework_ui_alert_AlertListener__WEBPACK_IMPORTED_MODULE_29__.AlertType),
 /* harmony export */   "AlertManager": () => (/* reexport safe */ _framework_ui_alert_AlertManager__WEBPACK_IMPORTED_MODULE_30__.AlertManager),
 /* harmony export */   "BlockedUserView": () => (/* reexport safe */ _framework_ui_chat_BlockedUserView__WEBPACK_IMPORTED_MODULE_31__.BlockedUserView),

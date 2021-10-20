@@ -5,7 +5,8 @@ export enum Decorator {
     Incomplete,
     Complete,
     Persisted,
-    PersistedLocally = 3
+    PersistedLocally = 3,
+    Modified
 }
 
 export const STATE_NAMES = {
@@ -16,6 +17,7 @@ export const STATE_NAMES = {
     recentUserSearches: 'recentUserSearch',
     patientSearch: 'fastSearchNames',
     recentPatientSearches: 'recentPatientSearches',
+    openPatients:'openPatients',
     appointments: 'appointment',
     appointmentTypes: 'appointmentType',
     clinicConfig: 'clinicConfig',
@@ -83,7 +85,8 @@ export const VIEW_NAME = {
     appointmentTypes: 'appointmentTypes',
     appointmentTypeDetail: 'appointmentTypeDetail',
     users: 'usersList',
-    userDetail: 'userDetail'
+    userDetail: 'userDetail',
+    openPatients: 'openPatients'
 }
 
 export const VIEW_CONTAINER = {
@@ -100,6 +103,7 @@ export const PatientSearchSidebarPrefs: SidebarPrefs = {
 
 export const PatientSearchSidebarContainers = {
     container: 'recentPatientSearches',
+    openRecords: 'openPatientRecords'
 }
 
 export const AppointmentTypesSidebarPrefs: SidebarPrefs = {
