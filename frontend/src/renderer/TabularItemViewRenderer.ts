@@ -44,7 +44,7 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
     public createDisplayElementForCollectionItem(collectionName: string, item: any): HTMLElement {
         let result = document.createElement('tr');
         if (this.dataObjDef && this.idField) {
-            let rowView = new BasicTableRowImplementation(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
+            const rowView = new BasicTableRowImplementation(this.idField, this.tableBodyId, this.dataObjDef, this.configHelper, this.permissionCheck, false);
             rowView.initialise(this.displayOrders, false, true);
             rowView.startUpdate(item);
             this.tableRowViews.push(rowView);
@@ -80,19 +80,19 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
 
 
         // create the table
-        let tableEl = document.createElement(this.tableConfig.table.type);
+        const tableEl = document.createElement(this.tableConfig.table.type);
         browserUtil.addRemoveClasses(tableEl, this.tableConfig.table.classes);
         browserUtil.addAttributes(tableEl, this.tableConfig.table.attributes);
 
         // create the headers
-        let tableHeaderEl = document.createElement(this.tableConfig.header.type);
+        const tableHeaderEl = document.createElement(this.tableConfig.header.type);
         browserUtil.addRemoveClasses(tableHeaderEl, this.tableConfig.header.classes);
         browserUtil.addAttributes(tableHeaderEl, this.tableConfig.header.attributes);
 
 
         // create the column headers
         this.tableConfig.headerColumns.forEach((header) => {
-            let thEl = document.createElement(header.element.type);
+            const thEl = document.createElement(header.element.type);
             browserUtil.addRemoveClasses(thEl, header.element.classes);
             browserUtil.addAttributes(thEl, header.element.attributes);
             if (header.element.innerHTML) thEl.innerHTML = header.element.innerHTML;
@@ -101,7 +101,7 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
 
         // create the action column header (if one)
         if (this.tableConfig.actionColumn) {
-            let thEl = document.createElement(this.tableConfig.actionColumn.element.type);
+            const thEl = document.createElement(this.tableConfig.actionColumn.element.type);
             browserUtil.addRemoveClasses(thEl, this.tableConfig.actionColumn.element.classes);
             browserUtil.addAttributes(thEl, this.tableConfig.actionColumn.element.attributes);
             if (this.tableConfig.actionColumn.element.innerHTML) thEl.innerHTML = this.tableConfig.actionColumn.element.innerHTML;
@@ -111,7 +111,7 @@ export class TabularItemViewRenderer implements CollectionViewRenderer {
 
 
         // create the table body
-        let tableBodyEl = document.createElement(this.tableConfig.body.type);
+        const tableBodyEl = document.createElement(this.tableConfig.body.type);
         this.tableBodyId = v4();
         browserUtil.addRemoveClasses(tableBodyEl, this.tableConfig.body.classes);
         browserUtil.addAttributes(tableBodyEl, this.tableConfig.body.attributes);

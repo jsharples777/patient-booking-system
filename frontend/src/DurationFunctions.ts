@@ -1,5 +1,5 @@
 export function addDurations(duration1: string, duration2: string): string {
-    const durationRegexp: RegExp = /^(\d+:)?[0-5]?\d:[0-5]\d$/;
+    const durationRegexp = /^(\d+:)?[0-5]?\d:[0-5]\d$/;
 
     // check both are valid durations
     const duration1Valid: boolean = durationRegexp.test(duration1);
@@ -44,7 +44,7 @@ export function addDurations(duration1: string, duration2: string): string {
         }
 
 
-        let sumHours = duration1Hours + duration2Hours + carry;
+        const sumHours = duration1Hours + duration2Hours + carry;
 
         return `${(sumHours > 0) ? sumHours + ':' : ''}${(sumMinutes < 10) ? '0' + sumMinutes : sumMinutes}:${(sumSeconds < 10) ? '0' + sumSeconds : sumSeconds}`
     } else {

@@ -74,9 +74,9 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
                 classes: 'badge badge-pill badge-danger mr-1',
             },
             icons: (name: string, item: any) => {
-                let results: string[] = [];
+                const results: string[] = [];
                 if (item.users.length == 2) {
-                    let filter: FilterItem = {
+                    const filter: FilterItem = {
                         attributeName: 'username',
                         value: item.users[1],
                         comparison: ComparisonType.equals,
@@ -205,7 +205,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
     }
 
     renderDisplayForItemInNamedCollection(containerEl: HTMLElement, name: string, item: any): void {
-        let chatLog = <ChatLog>item;
+        const chatLog = <ChatLog>item;
         if (chatLog.users.length > 1) {
             containerEl.innerHTML = chatLog.users[1] + "&nbsp;&nbsp;&nbsp;";
         } else {
@@ -238,7 +238,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
     }
 
     selectChatRoom(roomName: string) {
-        let room = ChatManager.getInstance().getChatLog(roomName);
+        const room = ChatManager.getInstance().getChatLog(roomName);
         this.selectedChatLog = room;
         (<CollectionViewListenerForwarder>this.eventForwarder).itemSelected(this, this.selectedChatLog);
         this.updateStateManager();
@@ -349,7 +349,7 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
 
     private updateStateManager() {
         logger(`Updating state with chat manager`);
-        let newState = ChatManager.getInstance().getChatLogs();
+        const newState = ChatManager.getInstance().getChatLogs();
         logger(newState);
         this.stateManager.setStateByName(STATE_NAMES.chatLogs, newState, true);
     }

@@ -58,7 +58,7 @@ export class UsersCollectionView extends AbstractStatefulCollectionView implemen
             },
             select: true,
             icons: (name: string, item: any) => {
-                let results: string[] = [];
+                const results: string[] = [];
 
                 if (item.isAdmin) {
                     results.push("fas fa-user-cog");
@@ -77,16 +77,16 @@ export class UsersCollectionView extends AbstractStatefulCollectionView implemen
     constructor(stateManager: StateManager) {
         super(UsersCollectionView.DOMConfig, stateManager, STATE_NAMES.users);
 
-        let userDef: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.users);
+        const userDef: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.users);
         if (userDef) {
-            let displayOrders: DisplayOrder[] = [];
+            const displayOrders: DisplayOrder[] = [];
             displayOrders.push({fieldId: 'username', displayOrder: 1});
             displayOrders.push({fieldId: 'isCurrent', displayOrder: 2});
             displayOrders.push({fieldId: 'isAdmin', displayOrder: 3});
             displayOrders.push({fieldId: 'isProvider', displayOrder: 4});
             displayOrders.push({fieldId: 'providerNo', displayOrder: 5});
 
-            let tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableConfig(userDef, displayOrders, 1, false, true);
+            const tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableConfig(userDef, displayOrders, 1, false, true);
 
             tableUIConfig.headerColumns[1].element.classes += ' text-center';
             tableUIConfig.headerColumns[2].element.classes += ' text-center';

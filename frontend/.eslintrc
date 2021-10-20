@@ -1,20 +1,41 @@
 {
-  "extends": "airbnb",
-  "env": {
-    "browser": "true"
-  },
-
-  "rules": {
-    "ignorePatterns": ["*.js", "*.d.ts"],
-    "no-console": "off",
-    "no-restricted-globals": "off",
-    "react/prop-types": "off",
-    "import/extensions": [
-      "error",
-      "always",
-      {
-        "ignorePackages": true
-      }
-    ]
-  }
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "ignorePatterns": ["*.js", "*.d.ts"],
+    "rules": {
+      "ignorePatterns": 0,
+      "no-console": 2,
+      "no-restricted-globals": 0,
+      "react/prop-types": 0,
+      "": 0
+    }
 }
+//{
+//  "extends": "airbnb",
+//  "env": {
+//    "browser": "true"
+//  },
+//
+//
+//  "rules": {
+//    "ignorePatterns": ["*.js", "*.d.ts"],
+//    "no-console": "off",
+//    "no-restricted-globals": "off",
+//    "react/prop-types": "off",
+//    "import/extensions": [
+//      "error",
+//      "always",
+//      {
+//        "ignorePackages": true
+//      }
+//    ]
+//  }
+//}

@@ -39,6 +39,16 @@ export default class App extends React.Component implements UnreadMessageCountLi
     public constructor() {
         // @ts-ignore
         super();
+
+        let todaysPatients:any[] = [];
+
+        this.state = {
+            todaysPatients:todaysPatients
+        };
+
+
+
+
         // event handlers
         this.handleShowChat = this.handleShowChat.bind(this);
         this.handleShowAppointmentBook = this.handleShowAppointmentBook.bind(this);
@@ -55,7 +65,22 @@ export default class App extends React.Component implements UnreadMessageCountLi
     render(): ReactNode {
         logger("Rendering App");
         return (
-            <div></div>
+            <div id="today" className="container-fluid d-none">
+                <div className="row">
+                    <div className="col-sm-12 col-md-3">
+                        <div id="todayDetail">
+
+                        </div>
+                    </div>
+                    <div className="col-sm-12 col-md-9">
+                        <div className="container-fluid">
+                            <div className="row" id="todays-patients">
+                                <TodaysPatientsView/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         )
     }
 
@@ -80,7 +105,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         patientView.addViewToTab('demographics',new PatientDemographicsCompositeView());
         patientView.onDocumentLoaded();
 
-        TodaysPatientsView.getInstance().onDocumentLoaded();
+        TodaysPatientsView.getInstance().onDocumentLoaded(this);
 
 
         this.setupNavigationItemHandling();
@@ -224,21 +249,21 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     private setupNavigationItemHandling() {
         document.getElementById(NAVIGATION.appointmentBook).addEventListener('click', this.handleShowAppointmentBook);
-        let templateEl = document.getElementById(NAVIGATION.appointmentTemplates);
+        const templateEl = document.getElementById(NAVIGATION.appointmentTemplates);
         if (templateEl) {
             templateEl.addEventListener('click', this.handleShowAppointmentTemplates);
         }
-        let apptTypesEl = document.getElementById(NAVIGATION.appointmentTypes);
+        const apptTypesEl = document.getElementById(NAVIGATION.appointmentTypes);
         if (apptTypesEl) {
             apptTypesEl.addEventListener('click', this.handleShowAppointmentTypes);
         }
         document.getElementById(NAVIGATION.patientRecord).addEventListener('click', this.handleShowPatientRecord);
         document.getElementById(NAVIGATION.patientSearch).addEventListener('click', this.handleShowPatientSearch);
-        let usersEl = document.getElementById(NAVIGATION.users);
+        const usersEl = document.getElementById(NAVIGATION.users);
         if (usersEl) {
             usersEl.addEventListener('click', this.handleShowUsers);
         }
-        let todayEl = document.getElementById(NAVIGATION.today);
+        const todayEl = document.getElementById(NAVIGATION.today);
         if (todayEl) {
             todayEl.addEventListener('click', this.handleShowToday);
         }

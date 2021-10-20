@@ -77,7 +77,7 @@ export class AppointmentControllerHelper implements StateChangeListener {
             const config = JSON.parse(JSON.stringify(this.clinicConfig));
             return config;
         } else {
-            let options = {
+            const options = {
                 clickToCreate: 'double',
                 dragTimeStep: 5,
                 dragToCreate: true,
@@ -125,7 +125,7 @@ export class AppointmentControllerHelper implements StateChangeListener {
         logger(`Getting icon for appoint type ${appointmentType}`);
         let result = ``;
         if (this.appointmentTypes) {
-            let foundIndex = this.appointmentTypes.findIndex((type) => type.name === appointmentType);
+            const foundIndex = this.appointmentTypes.findIndex((type) => type.name === appointmentType);
             if (foundIndex >= 0) {
                 if (this.appointmentTypes[foundIndex].icon) {
                     result = `<i class="md-custom-event-icon ${this.appointmentTypes[foundIndex].icon}"></i>`;
@@ -158,7 +158,7 @@ export class AppointmentControllerHelper implements StateChangeListener {
     public getColourForAppointmentType(appointmentType: string) {
         let result = `rgba(10, 100, 100, 50)`;
         if (this.appointmentTypes) {
-            let foundIndex = this.appointmentTypes.findIndex((type) => type.name === appointmentType);
+            const foundIndex = this.appointmentTypes.findIndex((type) => type.name === appointmentType);
             if (foundIndex >= 0) result = this.appointmentTypes[foundIndex].colour;
         }
         return result;
@@ -197,10 +197,10 @@ export class AppointmentControllerHelper implements StateChangeListener {
     public getEventForAppointment(loadDate: number, appointment: any): any {
         const today = parseInt(moment().format('YYYYMMDD'));
 
-        let canEdit = ((loadDate >= today) && (!appointment.isDNA && !appointment.isCancelled) && (!appointment.isBilled));
+        const canEdit = ((loadDate >= today) && (!appointment.isDNA && !appointment.isCancelled) && (!appointment.isBilled));
         const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(appointment.time, appointment.duration);
 
-        let result = {
+        const result = {
             id: appointment._id,
             start: moment(`${loadDate}${appointment.time}`, 'YYYYMMDDHHmmss'),
             end: moment(`${loadDate}${timeString}`, 'YYYYMMDDHHmm'),
@@ -230,12 +230,12 @@ export class AppointmentControllerHelper implements StateChangeListener {
     }
 
     public getAppointmentFromEvent(event: any): any {
-        let start = parseInt(moment(event.start).format('YYYYMMDD'));
-        let time = moment(event.start).format('HHmmss');
-        let duration = moment(event.end).diff(moment(event.start), 'seconds');
+        const start = parseInt(moment(event.start).format('YYYYMMDD'));
+        const time = moment(event.start).format('HHmmss');
+        const duration = moment(event.end).diff(moment(event.start), 'seconds');
 
 
-        let appointment = {
+        const appointment = {
             _id: event.id,
             name: event.title,
             note: event.description,
@@ -325,7 +325,7 @@ export class AppointmentControllerHelper implements StateChangeListener {
         const timeString = computeTimeStringFromStartTimeAndDurationInSeconds(template.time, template.duration);
 
 
-        let result = {
+        const result = {
             id: template._id,
             start: moment(`${startDate}${template.time}`, 'YYYYMMDDHHmmss'),
             end: moment(`${startDate}${timeString}`, 'YYYYMMDDHHmm'),
@@ -348,12 +348,12 @@ export class AppointmentControllerHelper implements StateChangeListener {
 
 
     public getAppointmentTemplateFromEvent(event: any): any {
-        let day = parseInt(moment(event.start).format('d'));
-        let time = moment(event.start).format('HHmmss');
-        let duration = moment(event.end).diff(moment(event.start), 'seconds');
+        const day = parseInt(moment(event.start).format('d'));
+        const time = moment(event.start).format('HHmmss');
+        const duration = moment(event.end).diff(moment(event.start), 'seconds');
 
 
-        let appointment = {
+        const appointment = {
             _id: event.id,
             day: day,
             time: time,

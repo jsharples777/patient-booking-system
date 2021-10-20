@@ -32,13 +32,13 @@ const logger = debug('clinic-chat-detail-view');
 
 export class ClinicChatDetailView implements View, ChatEventListener, CollectionViewListener, StateChangeListener {
     private static _instance: ClinicChatDetailView;
-    private static newFormId: string = "newMessage";
-    private static commentId: string = "message";
-    private static submitCommentId: string = "submitMessage";
-    private static chatLogId: string = 'chatLog';
-    private static chatLogRoomId: string = 'chatLogRoom';
-    private static priorityId: string = 'priority';
-    private static clinicChatFastPatientSearch: string = 'clinicChatFastPatientSearch';
+    private static newFormId = "newMessage";
+    private static commentId = "message";
+    private static submitCommentId = "submitMessage";
+    private static chatLogId = 'chatLog';
+    private static chatLogRoomId = 'chatLogRoom';
+    private static priorityId = 'priority';
+    private static clinicChatFastPatientSearch = 'clinicChatFastPatientSearch';
     // @ts-ignore
     protected chatRoomDiv: HTMLDivElement;
     // @ts-ignore
@@ -232,10 +232,10 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
                     displayText: `${draggedObject.name.firstname} ${draggedObject.name.surname}`,
                     iconClasses: 'fas fa-male'
                 }
-                let sentMessage: Message | null = ChatManager.getInstance().sendMessage(roomName, simpleAttachment.displayText, Priority.Normal, simpleAttachment, {});
+                const sentMessage: Message | null = ChatManager.getInstance().sendMessage(roomName, simpleAttachment.displayText, Priority.Normal, simpleAttachment, {});
                 if (sentMessage) {
                     // add the message to our display
-                    let messageEl = this.addChatMessage(sentMessage);
+                    const messageEl = this.addChatMessage(sentMessage);
                     // scroll to bottom
                     if (messageEl) browserUtil.scrollSmoothTo(messageEl);
                 }
@@ -263,7 +263,7 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
             let priority = parseInt(this.priorityEl.value);
             if (isNaN(priority)) priority = Priority.Normal;
 
-            let simpleAttachment: SimpleAttachment = {identifier: '', type: '', displayText: ''};
+            const simpleAttachment: SimpleAttachment = {identifier: '', type: '', displayText: ''};
             if (this.currentlySelectedPatient) {
                 simpleAttachment.identifier = this.currentlySelectedPatient._id;
                 simpleAttachment.type = APP_DRAGGABLE.typePatientSummary;
@@ -271,11 +271,11 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
                 simpleAttachment.iconClasses = 'fas fa-male';
             }
 
-            let sentMessage: Message | null = ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, priority, simpleAttachment, {});
+            const sentMessage: Message | null = ChatManager.getInstance().sendMessage(this.selectedChatLog.roomName, messageContent, priority, simpleAttachment, {});
             logger(sentMessage);
             if (sentMessage) {
                 // add the message to our display
-                let messageEl = this.addChatMessage(sentMessage);
+                const messageEl = this.addChatMessage(sentMessage);
                 // scroll to bottom
                 if (messageEl) browserUtil.scrollSmoothTo(messageEl);
             }
@@ -298,12 +298,12 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
             }
 
             // create and display a time stamp
-            let messageSenderEl = document.createElement('div');
+            const messageSenderEl = document.createElement('div');
             browserUtil.addRemoveClasses(messageSenderEl, 'message-sender');
             messageSenderEl.innerText = message.from + '   ' + moment(message.created, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm');
             chatMessageEl.appendChild(messageSenderEl);
             // message content
-            let contentEl = document.createElement('div');
+            const contentEl = document.createElement('div');
 
 
             // just a text message
@@ -337,11 +337,11 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
                 }
 
                 // message content
-                let contentEl = document.createElement('div');
+                const contentEl = document.createElement('div');
 
                 const attachment = message.simpleAttachment;
                 // simple attachment - should be a patient summary
-                let attachmentLinkEl = document.createElement('a');
+                const attachmentLinkEl = document.createElement('a');
                 browserUtil.addAttributes(attachmentLinkEl, [{
                     name: 'data-type',
                     value: `${attachment.type}`

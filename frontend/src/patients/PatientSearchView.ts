@@ -18,8 +18,8 @@ const vLogger = debug('patient-search');
 const vLoggerDetail = debug('patient-search-detail');
 
 export class PatientSearchView extends AbstractStatefulCollectionView {
-    static fastSearchInputId: string = 'fastPatientSearch';
-    static dataLimit: number = 20;
+    static fastSearchInputId = 'fastPatientSearch';
+    static dataLimit = 20;
     static DOMConfig: CollectionViewDOMConfig = {
         viewConfig: {
             resultsContainerId: 'recentPatientSearches',

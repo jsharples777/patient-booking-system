@@ -80,7 +80,7 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
         const loadDate = this.dataElements.currentFirstDate + (template.day - this.dataElements.currentFirstDateDayNumber);
 
 
-        let result = AppointmentControllerHelper.getInstance().getEventForAppointmentTemplateForDate(loadDate, template.day, template);
+        const result = AppointmentControllerHelper.getInstance().getEventForAppointmentTemplateForDate(loadDate, template.day, template);
         logger('Converted to template event');
         logger(result);
 
@@ -98,9 +98,9 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
 
 
         const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
-        let results: any[] = [];
+        const results: any[] = [];
         appointments.forEach((appointment: any) => {
-            let result = this.getEventForAppointmentTemplate(appointment);
+            const result = this.getEventForAppointmentTemplate(appointment);
             if (result) results.push(result);
         });
 
@@ -120,9 +120,9 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
         switch (name) {
             case (STATE_NAMES.appointmentTemplates): {
                 const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);
-                let results: any[] = [];
+                const results: any[] = [];
                 appointments.forEach((appointment: any) => {
-                    let result = this.getEventForAppointmentTemplate(appointment);
+                    const result = this.getEventForAppointmentTemplate(appointment);
                     if (result) results.push(result);
                 });
 
@@ -140,7 +140,7 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
             logger('New Appointment Template inserted by another user');
             logger(appointment);
 
-            let result = this.getEventForAppointmentTemplate(appointment);
+            const result = this.getEventForAppointmentTemplate(appointment);
             if (result) AppointmentTemplateView.getInstance().getCalender().addEvent(result);
         }
     }
@@ -159,7 +159,7 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
             logger('Appointment updated by another user');
             logger(appointment);
 
-            let result = this.getEventForAppointmentTemplate(appointment);
+            const result = this.getEventForAppointmentTemplate(appointment);
             if (result) AppointmentTemplateView.getInstance().getCalender().updateEvent(result);
         }
     }

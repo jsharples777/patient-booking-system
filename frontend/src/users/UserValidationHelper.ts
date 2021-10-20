@@ -95,7 +95,7 @@ export class UserValidationHelper implements ViewFieldValidator {
     }
 
     applyRulesToTargetField(form: Form, viewMode: ViewMode, fieldDef: FieldDefinition, onlyRulesOfType: ConditionResponse | null): RuleCheck {
-        let result: RuleCheck = {
+        const result: RuleCheck = {
             ruleFailed: false
         }
 
@@ -107,15 +107,15 @@ export class UserValidationHelper implements ViewFieldValidator {
                 if (fieldDef.id === 'password') {
                     logger('User form, password field, invalid check');
                     // what is the value of the field reset password
-                    let resetField = form.getFieldFromDataFieldId('resetPassword');
+                    const resetField = form.getFieldFromDataFieldId('resetPassword');
                     if (resetField) {
-                        let resetValue = resetField.getValue();
+                        const resetValue = resetField.getValue();
                         logger(`User form, password field, invalid check - reset is ${resetValue}`);
                         if (resetValue && (resetValue === 'true')) {
                             // check the password value
-                            let passwordField = form.getFieldFromDataFieldId(fieldDef.id);
+                            const passwordField = form.getFieldFromDataFieldId(fieldDef.id);
                             if (passwordField) {
-                                let passwordValue = passwordField.getValue();
+                                const passwordValue = passwordField.getValue();
                                 logger(`User form, password field, invalid check - reset is ${resetValue}, password is "${passwordValue}"`);
                                 if (passwordValue) {
                                     if (passwordValue.trim().length === 0) {

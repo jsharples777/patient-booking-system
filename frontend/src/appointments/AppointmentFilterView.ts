@@ -20,8 +20,8 @@ export class AppointmentFilterView {
     public populateProviders(providers: any[]): void {
         if (providers && this.providersEl) {
             providers.forEach((provider: any) => {
-                let labelEl = document.createElement('label');
-                let inputEl = document.createElement('input');
+                const labelEl = document.createElement('label');
+                const inputEl = document.createElement('input');
                 inputEl.setAttribute('type', 'checkbox');
                 inputEl.setAttribute('value', provider.name);
                 inputEl.setAttribute("checked", '');
@@ -42,11 +42,11 @@ export class AppointmentFilterView {
 
             document.querySelectorAll('.provider-checkbox').forEach(function (elm) {
                 elm.addEventListener('change', function () {
-                    let checkboxList = document.querySelectorAll('.provider-checkbox');
-                    let selected: any[] = [];
+                    const checkboxList = document.querySelectorAll('.provider-checkbox');
+                    const selected: any[] = [];
 
                     for (let i = 0; i < checkboxList.length; i++) {
-                        let checkbox = checkboxList[i];
+                        const checkbox = checkboxList[i];
                         // @ts-ignore
                         if (checkbox.checked) {
                             // @ts-ignore
