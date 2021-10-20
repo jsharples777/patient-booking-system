@@ -12,7 +12,7 @@ const logger = debug('today-view');
 export class TodayView {
     private static _instance: TodayView;
     private calendar: Eventcalendar | null = null;
-    private currentProviderNo: string = '';
+    private currentProviderNo = '';
 
     private constructor() {
     }
@@ -34,7 +34,7 @@ export class TodayView {
 
         this.currentProviderNo = Controller.getInstance().getLoggedInUsername();
 
-        let options = AppointmentControllerHelper.getInstance().getClinicConfig();
+        const options = AppointmentControllerHelper.getInstance().getClinicConfig();
         logger('Using clinic config options');
         const day = parseInt(moment().format('d'));
         options.view.startDay = day;

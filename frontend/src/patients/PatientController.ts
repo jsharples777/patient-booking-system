@@ -38,7 +38,7 @@ export class PatientController implements StateChangeListener{
 
     public onDocumentLoaded():void {
         // Patient name details
-        let nameDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.name, 'Name', true, true, false, '_id');
+        const nameDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.name, 'Name', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "title", "Title", FieldType.choice, false, "Name",new SimpleValueDataSource([
             {name:'',value:''},
             {name:'Master',value:'master'},
@@ -56,7 +56,7 @@ export class PatientController implements StateChangeListener{
         logger(nameDef);
 
         // Patient contact details
-        let contactDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.contact, 'Contact', true, true, false, '_id');
+        const contactDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.contact, 'Contact', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "line1", "Line 1", FieldType.text, true, "Address line 1");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "line2", "Line 2", FieldType.text, false, "Address line 2");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "suburb", "Suburb", FieldType.text, true, "Suburb");
@@ -82,7 +82,7 @@ export class PatientController implements StateChangeListener{
         logger(nameDef);
 
         // Patient identifiers details
-        let identifiersDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.identifiers, 'Contact', true, true, false, '_id');
+        const identifiersDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.identifiers, 'Contact', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "medicare", "Medicare", FieldType.text, false, "Medicare number");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "medicareRef", "Medicare Ref", FieldType.text, false, "Medicare reference number");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "legacyId", "Legacy Id", FieldType.text, false, "Legacy Id");

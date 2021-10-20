@@ -42,7 +42,7 @@ export class AppointmentBookView {
         AppointmentDetailModal.getInstance().onDocumentLoaded();
 
 
-        let options = AppointmentControllerHelper.getInstance().getClinicConfig();
+        const options = AppointmentControllerHelper.getInstance().getClinicConfig();
         logger('Using clinic config options');
 
 
@@ -101,7 +101,7 @@ export class AppointmentBookView {
         }
 
         if (AppointmentControllerHelper.getInstance().haveProvidersLoaded()) {
-            let providers: any[] = [];
+            const providers: any[] = [];
 
             AppointmentControllerHelper.getInstance().getProviders().forEach((provider: any) => {
                 if (provider.isCurrent) providers.push({
@@ -149,7 +149,7 @@ export class AppointmentBookView {
     }
 
     public setupProviders(providersCollection: any[]) {
-        let providers: any[] = [];
+        const providers: any[] = [];
 
         providersCollection.forEach((provider: any) => {
             if (provider.isCurrent) providers.push({

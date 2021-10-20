@@ -38,18 +38,18 @@ export class UsersCompositeView implements DataObjectListener {
         const userDef: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.users);
 
         if (userDef) {
-            let detailRenderer: FormDetailViewRenderer = new FormDetailViewRenderer(UsersSidebarContainers.detail, userDef, new DefaultFieldPermissionChecker(), BootstrapFormConfigHelper.getInstance(), false);
+            const detailRenderer: FormDetailViewRenderer = new FormDetailViewRenderer(UsersSidebarContainers.detail, userDef, new DefaultFieldPermissionChecker(), BootstrapFormConfigHelper.getInstance(), false);
 
-            let usersDetailView: DetailView = new DetailViewImplementation(
+            const usersDetailView: DetailView = new DetailViewImplementation(
                 {
                     resultsContainerId: UsersSidebarContainers.detail,
                     dataSourceId: VIEW_NAME.userDetail
                 }, detailRenderer);
-            let viewLinker: LinkedCollectionDetailController = new LinkedCollectionDetailController(STATE_NAMES.users, apptTypes);
+            const viewLinker: LinkedCollectionDetailController = new LinkedCollectionDetailController(STATE_NAMES.users, apptTypes);
             viewLinker.addLinkedDetailView(usersDetailView);
             this.sideBar.onDocumentLoaded();
 
-            let startingDisplayOrder = BasicObjectDefinitionFactory.getInstance().generateStartingDisplayOrder(userDef);
+            const startingDisplayOrder = BasicObjectDefinitionFactory.getInstance().generateStartingDisplayOrder(userDef);
             usersDetailView.initialise(startingDisplayOrder, false, true);
 
             const detailForm: Form | null = detailRenderer.getForm();
@@ -60,7 +60,7 @@ export class UsersCompositeView implements DataObjectListener {
             }
 
             // setup the event handling for the create new exercise type button
-            let createUser = <HTMLButtonElement>document.getElementById('addNewUser');
+            const createUser = <HTMLButtonElement>document.getElementById('addNewUser');
             logger(`Setting up button for creating users`);
             logger(createUser);
             if (createUser) {
@@ -88,6 +88,7 @@ export class UsersCompositeView implements DataObjectListener {
     }
 
     delete(controller: DataObjectController, typeName: string, dataObj: any): void {
+        return;
     }
 
     update(controller: DataObjectController, typeName: string, dataObj: any): void {

@@ -55,22 +55,22 @@ export class AppointmentTypesCompositeView implements DataObjectListener {
         const apptTypeDefinition: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.appointmentTypes);
 
         if (apptTypeDefinition) {
-            let apptTypeDetailRenderer: FormDetailViewRenderer = new FormDetailViewRenderer(AppointmentTypesSidebarContainers.detail, apptTypeDefinition, new ApptTypePermissionChecker(), BootstrapFormConfigHelper.getInstance(), false);
+            const apptTypeDetailRenderer: FormDetailViewRenderer = new FormDetailViewRenderer(AppointmentTypesSidebarContainers.detail, apptTypeDefinition, new ApptTypePermissionChecker(), BootstrapFormConfigHelper.getInstance(), false);
 
-            let apptTypeDetailView: DetailView = new DetailViewImplementation(
+            const apptTypeDetailView: DetailView = new DetailViewImplementation(
                 {
                     resultsContainerId: AppointmentTypesSidebarContainers.detail,
                     dataSourceId: VIEW_NAME.appointmentTypeDetail
                 }, apptTypeDetailRenderer);
-            let viewLinker: LinkedCollectionDetailController = new LinkedCollectionDetailController(STATE_NAMES.appointmentTypes, apptTypes);
+            const viewLinker: LinkedCollectionDetailController = new LinkedCollectionDetailController(STATE_NAMES.appointmentTypes, apptTypes);
             viewLinker.addLinkedDetailView(apptTypeDetailView);
             this.sideBar.onDocumentLoaded();
 
-            let startingDisplayOrder = BasicObjectDefinitionFactory.getInstance().generateStartingDisplayOrder(apptTypeDefinition);
+            const startingDisplayOrder = BasicObjectDefinitionFactory.getInstance().generateStartingDisplayOrder(apptTypeDefinition);
             apptTypeDetailView.initialise(startingDisplayOrder, false, true);
 
             // setup the event handling for the create new exercise type button
-            let createApptType = <HTMLButtonElement>document.getElementById('addNewAppointmentType');
+            const createApptType = <HTMLButtonElement>document.getElementById('addNewAppointmentType');
             logger(`Setting up button for creating appointment types`);
             logger(createApptType);
             if (createApptType) {

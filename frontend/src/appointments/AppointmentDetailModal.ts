@@ -148,7 +148,7 @@ export class AppointmentDetailModal {
             maxTime: '17:00',
             responsive: AppointmentDetailModal.datePickerResponsive,
             onChange: function (args: any) {
-                let date = args.value;
+                const date = args.value;
                 // update event's start date
                 AppointmentController.getInstance().getModel().tempEvent.start = date[0];
                 AppointmentController.getInstance().getModel().tempEvent.end = date[1];
@@ -162,7 +162,7 @@ export class AppointmentDetailModal {
 
     public setupAppointmentTypeDropDown(appointmentTypes: any[]) {
 
-        let types: any[] = [];
+        const types: any[] = [];
 
         appointmentTypes.forEach((type: any) => {
             if (!(type.isStatus)) types.push(type.name);
@@ -220,17 +220,17 @@ export class AppointmentDetailModal {
                     text: 'Add',
                     keyCode: 'enter',
                     handler: function () {
-                        let date = AppointmentDetailModal.getInstance().viewElements.range.getVal();
+                        const date = AppointmentDetailModal.getInstance().viewElements.range.getVal();
                         // store the event created by the UI
-                        let mobiId = AppointmentController.getInstance().getModel().tempEvent.id;
+                        const mobiId = AppointmentController.getInstance().getModel().tempEvent.id;
                         // generate a new UUID
-                        let appointmentId = v4();
+                        const appointmentId = v4();
                         // get the colour for the event type
-                        let colour = AppointmentControllerHelper.getInstance().getColourForAppointmentType('Consulting');
+                        const colour = AppointmentControllerHelper.getInstance().getColourForAppointmentType('Consulting');
 
-                        let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
+                        const createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
 
-                        let updatedEvent = {
+                        const updatedEvent = {
                             id: appointmentId,
                             title: getInst<any>(AppointmentDetailModal.getInstance().viewElements.titleInput).value,
                             description: getInst<any>(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value,
@@ -295,7 +295,7 @@ export class AppointmentDetailModal {
     }
 
     public updateAppointment(args: any) {
-        let ev = args.event;
+        const ev = args.event;
 
         // show delete button inside edit popup
         this.viewElements.patientArrivedButton.style.display = 'block';
@@ -324,11 +324,11 @@ export class AppointmentDetailModal {
                     text: 'Save',
                     keyCode: 'enter',
                     handler: function () {
-                        let date = AppointmentDetailModal.getInstance().viewElements.range.getVal();
+                        const date = AppointmentDetailModal.getInstance().viewElements.range.getVal();
                         // update event with the new properties on save button click
-                        let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
+                        const createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
                         //
-                        let updatedEvent = {
+                        const updatedEvent = {
                             id: ev.id,
                             title: getInst<any>(AppointmentDetailModal.getInstance().viewElements.titleInput).value,
                             description: getInst<any>(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value,
@@ -385,7 +385,7 @@ export class AppointmentDetailModal {
         this.viewElements.patientSearchDropdown.setVal(ev.patientId);
         this.viewElements.providersDropdown.setVal(ev.resource);
 
-        let warningsText = this.getPatientWarnings(ev.patientId);
+        const warningsText = this.getPatientWarnings(ev.patientId);
         // @ts-ignore
         mobiscroll5.getInst(AppointmentDetailModal.getInstance().viewElements.warningsEl).value = warningsText;
 
@@ -410,7 +410,7 @@ export class AppointmentDetailModal {
                 // @ts-ignore
                 getInst(AppointmentDetailModal.getInstance().viewElements.titleInput).value = event.valueText;
 
-                let warningsText = this.getPatientWarnings(event.value);
+                const warningsText = this.getPatientWarnings(event.value);
                 // @ts-ignore
                 getInst(AppointmentDetailModal.getInstance().viewElements.warningsEl).value = warningsText;
 
@@ -434,7 +434,7 @@ export class AppointmentDetailModal {
             AppointmentDetailModal.getInstance().close();
 
             // save a local reference to the deleted event
-            let deletedEvent = AppointmentController.getInstance().getModel().tempEvent;
+            const deletedEvent = AppointmentController.getInstance().getModel().tempEvent;
 
             //
             snackbar({
@@ -456,10 +456,10 @@ export class AppointmentDetailModal {
         this.viewElements.patientCancelledButton.addEventListener('click', function () {
             // update the event to cancelled and set to non-editable
             // save a local reference to the deleted event
-            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+            const originalEvent = AppointmentController.getInstance().getModel().tempEvent;
 
-            let originalType = originalEvent.type;
-            let originalNote = originalEvent.note;
+            const originalType = originalEvent.type;
+            const originalNote = originalEvent.note;
 
             originalEvent.isCancelled = true;
             originalEvent.type = AppointmentControllerHelper.APPOINTMENT_TYPE_PATIENT_CANCELLED;
@@ -501,7 +501,7 @@ export class AppointmentDetailModal {
         this.viewElements.patientArrivedButton.addEventListener('click', function () {
             // update the event to arrived
             // save a local reference to the deleted event
-            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+            const originalEvent = AppointmentController.getInstance().getModel().tempEvent;
 
             originalEvent.arrivalTime = moment().format('HHmmss');
             originalEvent.color = AppointmentControllerHelper.getInstance().getColourForAppointment(originalEvent);
@@ -536,9 +536,9 @@ export class AppointmentDetailModal {
         this.viewElements.patientDNAButton.addEventListener('click', function () {
             // update the event to cancelled and set to non-editable
             // save a local reference to the deleted event
-            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
-            let originalNote = originalEvent.note;
-            let originalType = originalEvent.type;
+            const originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+            const originalNote = originalEvent.note;
+            const originalType = originalEvent.type;
 
             originalEvent.isDNA = true;
             originalEvent.type = AppointmentControllerHelper.APPOINTMENT_TYPE_PATIENT_DNA;
@@ -577,7 +577,7 @@ export class AppointmentDetailModal {
         this.viewElements.readyForBillingButton.addEventListener('click', function () {
             // update the event to cancelled and set to non-editable
             // save a local reference to the deleted event
-            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+            const originalEvent = AppointmentController.getInstance().getModel().tempEvent;
 
 
             originalEvent.readyForBilling = true;
@@ -611,7 +611,7 @@ export class AppointmentDetailModal {
         this.viewElements.billingCompleteButton.addEventListener('click', function () {
             // update the event to cancelled and set to non-editable
             // save a local reference to the deleted event
-            let originalEvent = AppointmentController.getInstance().getModel().tempEvent;
+            const originalEvent = AppointmentController.getInstance().getModel().tempEvent;
 
 
             originalEvent.isBilled = true;
@@ -647,7 +647,7 @@ export class AppointmentDetailModal {
     }
 
     private getPatientWarnings(patientId: string) {
-        let patientBasicDetails: any = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch, {_id: patientId});
+        const patientBasicDetails: any = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch, {_id: patientId});
         let warningsText = '';
         if (patientBasicDetails && patientBasicDetails.flags) {
             if (patientBasicDetails.flags.hasWarnings) {

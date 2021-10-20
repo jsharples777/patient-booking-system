@@ -73,14 +73,14 @@ export class AppointmentTypesCollectionView extends AbstractStatefulCollectionVi
     constructor(stateManager: StateManager) {
         super(AppointmentTypesCollectionView.DOMConfig, stateManager, STATE_NAMES.appointmentTypes);
 
-        let apptTypeDef: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.appointmentTypes);
+        const apptTypeDef: DataObjectDefinition | null = ObjectDefinitionRegistry.getInstance().findDefinition(STATE_NAMES.appointmentTypes);
         if (apptTypeDef) {
-            let displayOrders: DisplayOrder[] = [];
+            const displayOrders: DisplayOrder[] = [];
             displayOrders.push({fieldId: 'name', displayOrder: 1});
             displayOrders.push({fieldId: 'colour', displayOrder: 2});
             displayOrders.push({fieldId: 'icon', displayOrder: 3});
             displayOrders.push({fieldId: 'isStatus', displayOrder: 4});
-            let tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableConfig(apptTypeDef, displayOrders, 1, false, true);
+            const tableUIConfig: TableUIConfig = BootstrapTableConfigHelper.getInstance().generateTableConfig(apptTypeDef, displayOrders, 1, false, true);
             // tableUIConfig.headerColumns[0].element.classes += ' text-center';
             tableUIConfig.headerColumns[1].element.classes += ' text-center';
             tableUIConfig.headerColumns[2].element.classes += ' text-center';

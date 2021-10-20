@@ -106,7 +106,7 @@ export class AppointmentTemplateDetailModal {
             maxTime: '17:00',
             responsive: AppointmentTemplateDetailModal.datePickerResponsive,
             onChange: function (args: any) {
-                let date = args.value;
+                const date = args.value;
                 // update event's start date
                 AppointmentTemplateController.getInstance().getModel().tempEvent.start = date[0];
                 AppointmentTemplateController.getInstance().getModel().tempEvent.end = date[1];
@@ -119,7 +119,7 @@ export class AppointmentTemplateDetailModal {
 
     public setupAppointmentTypeDropDown(appointmentTypes: any[]) {
 
-        let types: any[] = [];
+        const types: any[] = [];
 
         appointmentTypes.forEach((type: any) => {
             if (!(type.isStatus)) types.push(type.name);
@@ -168,17 +168,17 @@ export class AppointmentTemplateDetailModal {
                     text: 'Add',
                     keyCode: 'enter',
                     handler: function () {
-                        let date = AppointmentTemplateDetailModal.getInstance().viewElements.range.getVal();
+                        const date = AppointmentTemplateDetailModal.getInstance().viewElements.range.getVal();
                         // store the event created by the UI
-                        let mobiId = AppointmentTemplateController.getInstance().getModel().tempEvent.id;
+                        const mobiId = AppointmentTemplateController.getInstance().getModel().tempEvent.id;
                         // generate a new UUID
-                        let appointmentId = v4();
+                        const appointmentId = v4();
                         // get the colour for the event type
-                        let colour = AppointmentControllerHelper.getInstance().getColourForAppointmentType('Consulting');
+                        const colour = AppointmentControllerHelper.getInstance().getColourForAppointmentType('Consulting');
 
-                        let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
+                        const createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
 
-                        let updatedEvent = {
+                        const updatedEvent = {
                             id: appointmentId,
                             allDay: false,
                             start: date[0],
@@ -230,7 +230,7 @@ export class AppointmentTemplateDetailModal {
     }
 
     public updateAppointmentTemplate(args: any) {
-        let ev = args.event;
+        const ev = args.event;
 
         // show delete button inside edit popup
         this.viewElements.deleteButton.style.display = 'block';
@@ -252,11 +252,11 @@ export class AppointmentTemplateDetailModal {
                     text: 'Save',
                     keyCode: 'enter',
                     handler: function () {
-                        let date = AppointmentTemplateDetailModal.getInstance().viewElements.range.getVal();
+                        const date = AppointmentTemplateDetailModal.getInstance().viewElements.range.getVal();
                         // update event with the new properties on save button click
-                        let createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
+                        const createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
                         //
-                        let updatedEvent = {
+                        const updatedEvent = {
                             id: ev.id,
                             allDay: false,
                             start: date[0],
@@ -322,7 +322,7 @@ export class AppointmentTemplateDetailModal {
             AppointmentTemplateDetailModal.getInstance().close();
 
             // save a local reference to the deleted event
-            let deletedEvent = AppointmentTemplateController.getInstance().getModel().tempEvent;
+            const deletedEvent = AppointmentTemplateController.getInstance().getModel().tempEvent;
 
             //
             snackbar({

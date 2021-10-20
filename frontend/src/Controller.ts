@@ -202,7 +202,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
         this.applicationView = applicationView;
         this.clientSideStorage = clientSideStorage;
         // setup the API calls
-        let restSM = RESTApiStateManager.getInstance();
+        const restSM = RESTApiStateManager.getInstance();
         restSM.initialise([
             {
                 stateName: STATE_NAMES.clinicConfig,
@@ -228,7 +228,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 destroy: true
             },
         ]);
-        let qlSM = GraphQLApiStateManager.getInstance();
+        const qlSM = GraphQLApiStateManager.getInstance();
         qlSM.initialise([
             {
                 stateName: STATE_NAMES.patientSearch,
@@ -398,11 +398,11 @@ export default class Controller implements StateChangeListener, DataObjectListen
         ])
 
 
-        let aggregateSM = new AggregateStateManager(isSameMongo);
-        let memorySM = new MemoryBufferStateManager(isSameMongo);
+        const aggregateSM = new AggregateStateManager(isSameMongo);
+        const memorySM = new MemoryBufferStateManager(isSameMongo);
 
-        let asyncREST = new AsyncStateManagerWrapper(aggregateSM, restSM, isSameMongo);
-        let asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
+        const asyncREST = new AsyncStateManagerWrapper(aggregateSM, restSM, isSameMongo);
+        const asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
 
         aggregateSM.addStateManager(memorySM, [], false);
         //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patients], false);
@@ -429,14 +429,14 @@ export default class Controller implements StateChangeListener, DataObjectListen
     public onDocumentLoaded(): void {
         cLogger('Initialising data state');
         // listen for socket events
-        let socketListerDelegate = new SocketListenerDelegate();
+        const socketListerDelegate = new SocketListenerDelegate();
         SocketManager.getInstance().setListener(socketListerDelegate);
 
         // now that we have all the user we can setup the chat system but only if we are logged in
         cLogger(`Setting up chat system for user ${this.getLoggedInUserId()}: ${this.getLoggedInUsername()}`);
         if (this.getLoggedInUserId().trim().length > 0) {
             // setup the chat system
-            let chatManager = ChatManager.getInstance(); // this connects the manager to the socket system
+            const chatManager = ChatManager.getInstance(); // this connects the manager to the socket system
 
             // setup the chat notification system
             NotificationController.getInstance();
@@ -595,7 +595,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
     }
 
     addExerciseToCurrentWorkout(exerciseType: any): void {
-        let copyOfExercise = {...exerciseType};
+        const copyOfExercise = {...exerciseType};
         copyOfExercise._id = v4(); // update the id to be unique for the workout
         this.applicationView.addingExerciseToCurrentWorkout(copyOfExercise);
     }
@@ -612,26 +612,26 @@ export default class Controller implements StateChangeListener, DataObjectListen
     }
 
     private setupDataObjectDefinitions() {
-        let apptTypeDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.appointmentTypes, 'Appointment Type', true, true, false, '_id');
+        const apptTypeDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.appointmentTypes, 'Appointment Type', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "name", "Name", FieldType.text, true, "Name");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "colour", "Colour", FieldType.colour, true, "Choose color from below");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "icon", "Icon", FieldType.text, false, "Font Awesome icon classes");
-        let statusFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "isStatus", "Patient flow status", FieldType.boolean, false, "Used by the application to track patient state");
+        const statusFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(apptTypeDef, "isStatus", "Patient flow status", FieldType.boolean, false, "Used by the application to track patient state");
         statusFieldDef.displayOnly = true;
 
         cLogger(`Appointment type data object definition`);
         cLogger(apptTypeDef);
 
 
-        let userDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.users, 'Users', true, true, false, '_id');
+        const userDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.users, 'Users', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "username", "Username", FieldType.text, true, "Username");
-        let isCurrentFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isCurrent", "Active?", FieldType.boolean, false, "Is this a current user?");
+        const isCurrentFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isCurrent", "Active?", FieldType.boolean, false, "Is this a current user?");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isAdmin", "Admin?", FieldType.boolean, false, "Does the user have admin privilege?");
-        let isProviderFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isProvider", "Is Provider", FieldType.boolean, false, "Is the user a provider");
+        const isProviderFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "isProvider", "Is Provider", FieldType.boolean, false, "Is the user a provider");
         isProviderFieldDef.displayOnly = true;
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "providerNo", "Provider Number", FieldType.text, false, "Provider Number");
-        let resetPasswordFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "resetPassword", "Reset Password?", FieldType.boolean, false, "Reset the users password ");
-        let passwordFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "password", "New Password", FieldType.text, false, "New password");
+        const resetPasswordFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "resetPassword", "Reset Password?", FieldType.boolean, false, "Reset the users password ");
+        const passwordFieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(userDef, "password", "New Password", FieldType.text, false, "New password");
         cLogger(`Users type data object definition`);
         cLogger(userDef);
 

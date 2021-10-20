@@ -15,7 +15,7 @@ export default class SocketListenerDelegate implements SocketListener {
 
     public handleDataChangedByAnotherUser(message: any) {
         slLogger(`Handling data change ${message.type} on object type ${message.stateName} made by user ${message.user}`);
-        let stateObj = message.data;
+        const stateObj = message.data;
         slLogger(stateObj);
 
         // are we the same user that made the changes?

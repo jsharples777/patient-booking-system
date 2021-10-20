@@ -1,5 +1,3 @@
-/** @jsx jsxCreateElement */
-/*** @jsxFrag jsxCreateFragment */
 import debug from "debug";
 import Controller from "../Controller";
 import {Decorator, STATE_NAMES} from "../AppTypes";
@@ -7,19 +5,22 @@ import {isSameMongo, jsxCreateFragment, jsxCreateElement, StateChangeListener} f
 import moment from "moment";
 import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 import {PatientController} from "../patients/PatientController";
-import React from "react";
+import React, {ReactNode} from "react";
 
 const logger = debug('todays-patients-view');
 
-export class TodaysPatientsView implements StateChangeListener{
+export class TodaysPatientsView extends React.Component implements StateChangeListener{
     private static _instance: TodaysPatientsView;
-    private currentProviderNo: string = '';
+    private currentProviderNo = '';
     private containerEl: HTMLElement;
     private patients:any[] = [];
     private patientIdsNotYetLoaded:string[] = [];
     private patientsNotYetLoaded:string[] = [];
+    private applicationView:any|null = null;
 
-    private constructor() {
+    constructor(props:any) {
+        super(props);
+        TodaysPatientsView._instance = this;
         this.handleOpenPatient = this.handleOpenPatient.bind(this);
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.patientSearch,this);
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.patients,this);
@@ -27,9 +28,13 @@ export class TodaysPatientsView implements StateChangeListener{
 
     public static getInstance(): TodaysPatientsView {
         if (!(TodaysPatientsView._instance)) {
-            TodaysPatientsView._instance = new TodaysPatientsView();
+            TodaysPatientsView._instance = new TodaysPatientsView({});
         }
         return TodaysPatientsView._instance;
+    }
+
+    private _render() {
+        if (this.applicationView) this.applicationView.setState({todaysPatients:this.patients});
     }
 
     public addPatientSummary(patientSummary:any):void {
@@ -42,7 +47,8 @@ export class TodaysPatientsView implements StateChangeListener{
             logger(`Adding NON-DUPLICATE patient summary`);
             patientSummary.decorator = Decorator.Incomplete;
             this.patients.push(patientSummary);
-            this.render();
+            // this.render();
+            this._render();
 
             // ask the controller to find the full patient record
             this.patientsNotYetLoaded.push(patientSummary._id);
@@ -75,7 +81,8 @@ export class TodaysPatientsView implements StateChangeListener{
         else {
             this.patients.push(patient);
         }
-        this.render();
+        // this.render();
+        this._render();
     }
 
     public removePatient(patient:any):void {
@@ -83,12 +90,14 @@ export class TodaysPatientsView implements StateChangeListener{
         const foundIndex = this.patients.findIndex((patientObj) => isSameMongo(patientObj,patient));
         if (foundIndex >= 0) {
             this.patients.splice(foundIndex,1);
-            this.render();
+            // this.render();
+            this._render();
         }
     }
 
-    public onDocumentLoaded():void {
+    public onDocumentLoaded(applicationView:any):void {
         logger(`on document loaded`);
+        this.applicationView = applicationView;
         this.currentProviderNo = Controller.getInstance().getLoggedInUsername();
         this.containerEl = document.getElementById('todays-patients');
     }
@@ -104,9 +113,10 @@ export class TodaysPatientsView implements StateChangeListener{
         }
     }
 
-    protected render():void {
+    public render():ReactNode {
         logger(`render`);
-        browserUtil.removeAllChildren(this.containerEl);
+
+        //browserUtil.removeAllChildren(this.containerEl);
 
         const address = (patient:any) => {
             let buffer = '';
@@ -124,27 +134,54 @@ export class TodaysPatientsView implements StateChangeListener{
         }
 
         const incompletePatientCard = (patient:any) => {
-           // @ts-ignore
-            return (<div className="shadow card col-sm-12 col-md-4 mr-2 mt-2" ><img className="card-img-top" src="/img/spinner.gif" alt="Card image cap"></img><div className="card-body"><h5 className="card-title"><a href={"#"} data-id={patient._id} onClick={this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a></h5><h6 className="card-subtitle mb-2 text-muted">DOB: {moment(patient.dob).format('DD/MM/YYYY')}</h6><p className="card-text">{address(patient)}</p></div></div>);
+            return (
+                <div className="shadow card col-sm-12 col-md-4 mr-1 mt-2" >
+                    <img className="card-img-top" src="/img/spinner.gif" alt="Card image cap"></img>
+                    <div className="card-body">
+                        <h5 className="card-title"><a href={"#"} data-id={patient._id} onClick={(event) => this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a></h5>
+                        <h6 className="card-subtitle mb-2 text-muted">DOB: {moment(patient.dob).format('DD/MM/YYYY')}</h6>
+                        <p className="card-text">{address(patient)}</p>
+                    </div>
+                </div>
+            );
         };
 
 
         const patientCard = (patient:any) => {
-            // @ts-ignore
-            return (<div className="shadow card col-sm-12 col-md-4 mr-2 mt-2" ><div className="card-body"><h5 className="card-title"><a href={"#"} data-id={patient._id} onClick={this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a></h5><h6 className="card-subtitle mb-2 text-muted">DOB: {moment(patient.dob).format('DD/MM/YYYY')}</h6><p className="card-text">{address(patient)}</p></div></div>);
+            return (
+                <div className="shadow card col-sm-12 col-md-4 mr-1 mt-2 w-100" >
+                    <div className="card-body">
+                        <h5 className="card-title"><a href={"#"} data-id={patient._id} onClick={(event) => this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a></h5>
+                        <h6 className="card-subtitle mb-2 text-muted">DOB: {moment(patient.dob).format('DD/MM/YYYY')}</h6>
+                        <p className="card-text">{address(patient)}</p>
+                    </div>
+                </div>);
         };
 
-        this.patients.forEach((patient) => {
-            if (patient.decorator === Decorator.Incomplete) {
-                // @ts-ignore
-                this.containerEl.appendChild(incompletePatientCard(patient));
-            }
-            else {
-                // @ts-ignore
-                this.containerEl.appendChild(patientCard(patient));
-            }
-
+        // this.patients.forEach((patient) => {
+        //     if (patient.decorator === Decorator.Incomplete) {
+        //         // @ts-ignore
+        //         this.containerEl.appendChild(incompletePatientCard(patient));
+        //     }
+        //     else {
+        //         // @ts-ignore
+        //         this.containerEl.appendChild(patientCard(patient));
+        //     }
+        //
+        // });
+        const patientMap = this.patients.map((patient) => {
+            return (
+                <React.Fragment>
+                  {(patient.decorator === Decorator.Incomplete)?incompletePatientCard(patient):patientCard(patient)}
+                </React.Fragment>
+            );
         });
+
+        return (
+            <React.Fragment>
+              {patientMap}
+            </React.Fragment>
+        );
 
     }
 

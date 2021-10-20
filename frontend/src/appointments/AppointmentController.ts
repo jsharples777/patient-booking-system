@@ -65,13 +65,13 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
 
 
         const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
-        let results: any[] = [];
-        let appointmentsForTheDay: any[] = [];
+        const results: any[] = [];
+        const appointmentsForTheDay: any[] = [];
         appointments.forEach((appointment: any) => {
             if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
                 appointmentsForTheDay.push(appointment);
 
-                let result = AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
+                const result = AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
                 results.push(result);
             }
 
@@ -105,13 +105,13 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
 
 
                 const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
-                let results: any[] = [];
+                const results: any[] = [];
                 appointments.forEach((appointment: any) => {
                     if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
                         logger('Found appointment');
                         logger(appointment);
 
-                        let result = AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
+                        const result = AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
 
 
                         logger('Converted to event');
@@ -137,7 +137,7 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
 
             if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
 
-                let result = AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
+                const result = AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
                 logger('Converted to event');
                 logger(result);
 
@@ -162,7 +162,7 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
 
             if ((appointment.start >= this.dataElements.loadDate) && (appointment.start < this.dataElements.loadDateFinish)) {
 
-                let result = AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
+                const result = AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
                 logger('Converted to event');
                 logger(result);
 
@@ -199,7 +199,7 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
                 if (foundIndex < 0) {
                     logger(`appointment for time ${template.time} not found, creating new appointment`)
                     // don't already have an appointment for that time
-                    let templatedAppt = AppointmentControllerHelper.getInstance().getEventForAppointmentTemplateForDate(loadDate, day, template);
+                    const templatedAppt = AppointmentControllerHelper.getInstance().getEventForAppointmentTemplateForDate(loadDate, day, template);
                     templatedAppt.id = v4();
                     templatedAppt.title = '';
                     templatedAppt.description = '';

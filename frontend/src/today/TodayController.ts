@@ -42,13 +42,13 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
 
 
         const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
-        let results: any[] = [];
-        let appointmentsForTheDay: any[] = [];
+        const results: any[] = [];
+        const appointmentsForTheDay: any[] = [];
         appointments.forEach((appointment: any) => {
             if ((appointment.start === today) && (appointment.provider === Controller.getInstance().getProviderNo())) {
                 appointmentsForTheDay.push(appointment);
 
-                let result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
+                const result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
                 results.push(result);
             }
 
@@ -77,7 +77,7 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
                 logger(`Provider no is ${currentProvider}`);
 
                 const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
-                let results: any[] = [];
+                const results: any[] = [];
                 appointments.forEach((appointment: any) => {
                     if (appointment.start === today) {
                         logger(appointment);
@@ -88,7 +88,7 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
                             // add the patient in the appointment to the dashboard
                             if (appointment._patient) TodaysPatientsView.getInstance().addPatientSummaryById(appointment._patient);
 
-                            let result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
+                            const result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
                             logger('Converted to event');
                             logger(result);
                             results.push(result);
@@ -113,7 +113,7 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
             const today = parseInt(moment().format('YYYYMMDD'));
             if (appointment.start === today) {
 
-                let result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
+                const result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
                 logger('Converted to event');
                 logger(result);
 
@@ -148,7 +148,7 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
             const today = parseInt(moment().format('YYYYMMDD'));
             if (appointment.start === today) {
 
-                let result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
+                const result = AppointmentControllerHelper.getInstance().getEventForAppointment(today, appointment);
                 logger('Converted to event');
                 logger(result);
 
