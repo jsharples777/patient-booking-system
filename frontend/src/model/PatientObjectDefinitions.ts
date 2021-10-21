@@ -2,7 +2,8 @@ import {
     BasicObjectDefinitionFactory,
     DataObjectDefinition,
     FieldType,
-    ObjectDefinitionRegistry, SimpleValueDataSource
+    ObjectDefinitionRegistry,
+    SimpleValueDataSource
 } from "ui-framework-jps";
 import {STATE_NAMES} from "../AppTypes";
 import debug from 'debug';
@@ -15,13 +16,13 @@ export class PatientObjectDefinitions {
     public static loadPatientDefinitions() {
         // Patient name details
         const nameDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.name, 'Name', true, true, false, '_id');
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "title", "Title", FieldType.choice, false, "Name",new SimpleValueDataSource([
-            {name:'',value:''},
-            {name:'Master',value:'master'},
-            {name:'Miss',value:'miss'},
-            {name:'Ms',value:'ms'},
-            {name:'Mr',value:'mr'},
-            {name:'Mrs',value:'mrs'}
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "title", "Title", FieldType.choice, false, "Name", new SimpleValueDataSource([
+            {name: '', value: ''},
+            {name: 'Master', value: 'master'},
+            {name: 'Miss', value: 'miss'},
+            {name: 'Ms', value: 'ms'},
+            {name: 'Mr', value: 'mr'},
+            {name: 'Mrs', value: 'mrs'}
         ]));
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "firstname", "First Name", FieldType.text, true, "First name");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "middlename", "Middle Name", FieldType.text, false, "Middle name(s)");
@@ -37,14 +38,14 @@ export class PatientObjectDefinitions {
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "line2", "Line 2", FieldType.text, false, "Address line 2");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "suburb", "Suburb", FieldType.text, true, "Suburb");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "postcode", "Post Code", FieldType.integer, true, "Post code");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "state", "State", FieldType.choice, true, "State",new SimpleValueDataSource(
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "state", "State", FieldType.choice, true, "State", new SimpleValueDataSource(
             [
-                { name: 'Australia Capital Territory',value:'ACT'},
-                { name: 'Queensland',value:'QLD'},
-                { name: 'South Australia',value:'SA'},
-                { name: 'Tasmania',value:'TAS'},
-                { name: 'Victoria',value:'VIC'},
-                { name: 'Western Australia',value:'WA'},
+                {name: 'Australia Capital Territory', value: 'ACT'},
+                {name: 'Queensland', value: 'QLD'},
+                {name: 'South Australia', value: 'SA'},
+                {name: 'Tasmania', value: 'TAS'},
+                {name: 'Victoria', value: 'VIC'},
+                {name: 'Western Australia', value: 'WA'},
             ]
         ));
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "country", "Country", FieldType.text, true, "Country");
@@ -63,11 +64,11 @@ export class PatientObjectDefinitions {
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "medicareRef", "Medicare Ref", FieldType.text, false, "Medicare reference number");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "legacyId", "Legacy Id", FieldType.text, false, "Legacy Id");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "dva", "DVA", FieldType.text, false, "DVA number");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "dvaColour", "DVA Colour", FieldType.choice, true, "DVA colour",new SimpleValueDataSource(
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "dvaColour", "DVA Colour", FieldType.choice, true, "DVA colour", new SimpleValueDataSource(
             [
-                { name: '',value:''},
-                { name: 'White',value:'white'},
-                { name: 'Gold',value:'gold'},
+                {name: '', value: ''},
+                {name: 'White', value: 'white'},
+                {name: 'Gold', value: 'gold'},
             ]
         ));
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "hcc", "HCC", FieldType.text, false, "Health Care Card");

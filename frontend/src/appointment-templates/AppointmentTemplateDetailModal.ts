@@ -162,6 +162,7 @@ export class AppointmentTemplateDetailModal {
                     keyCode: 'esc',
                     handler: function () {
                         AppointmentTemplateView.getInstance().getCalender().removeEvent(AppointmentTemplateController.getInstance().getModel().tempEvent);
+                        AppointmentTemplateDetailModal.getInstance().close();
                     }
                 },
                 {
@@ -246,6 +247,7 @@ export class AppointmentTemplateDetailModal {
                     keyCode: 'esc',
                     handler: function () {
                         AppointmentTemplateView.getInstance().getCalender().updateEvent(AppointmentTemplateController.getInstance().getModel().oldEvent);
+                        AppointmentTemplateDetailModal.getInstance().close();
                     }
                 },
                 {

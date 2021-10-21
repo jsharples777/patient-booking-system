@@ -1,15 +1,6 @@
 import {TabularViewContainer, TabularViewDOMConfig} from "ui-framework-jps";
 
 export class PatientRecordTabularView extends TabularViewContainer {
-    private static _instance: PatientRecordTabularView;
-
-    public static getInstance(): PatientRecordTabularView {
-        if (!(PatientRecordTabularView._instance)) {
-            PatientRecordTabularView._instance = new PatientRecordTabularView();
-        }
-        return PatientRecordTabularView._instance;
-    }
-
     public static TAB_DEMOGRAPHICS = 'demographics';
     public static TAB_CONSULTS = 'consults';
     public static TAB_SCRIPTS = 'scripts';
@@ -19,7 +10,6 @@ export class PatientRecordTabularView extends TabularViewContainer {
     public static TAB_WORKCOVER = 'workcover';
     public static TAB_TASKS = 'tasks';
     public static TAB_ARCHIVE = 'archive';
-
     protected static config: TabularViewDOMConfig = {
         containedById: 'patientRecord',
         containerId: 'patientRecordTabularView',
@@ -168,9 +158,17 @@ export class PatientRecordTabularView extends TabularViewContainer {
             },
         ],
     }
+    private static _instance: PatientRecordTabularView;
 
     private constructor() {
         super(PatientRecordTabularView.config);
+    }
+
+    public static getInstance(): PatientRecordTabularView {
+        if (!(PatientRecordTabularView._instance)) {
+            PatientRecordTabularView._instance = new PatientRecordTabularView();
+        }
+        return PatientRecordTabularView._instance;
     }
 
 

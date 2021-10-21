@@ -4,14 +4,12 @@ import debug from 'debug';
 import {
     AbstractStatefulCollectionView,
     BootstrapTableConfigHelper,
-    BootstrapTableRowConfigHelper,
     CollectionViewDOMConfig,
     CollectionViewEventHandlerDelegateUsingContext,
     CollectionViewListener,
     CollectionViewListenerForwarder,
     ContextualInformationHelper,
     DataObjectDefinition,
-    DefaultFieldPermissionChecker,
     DisplayOrder,
     isSameMongo,
     KeyType,
@@ -19,10 +17,9 @@ import {
     ObjectDefinitionRegistry,
     StateManager,
     TableUIConfig,
-    View,
-    TabularViewRendererUsingContext
+    TabularViewRendererUsingContext,
+    View
 } from "ui-framework-jps";
-import {TabularItemViewRenderer} from "../renderer/TabularItemViewRenderer";
 
 
 const logger = debug('appointment-types-view');

@@ -1,11 +1,6 @@
 /** @jsx jsxCreateElement */
 /*** @jsxFrag jsxCreateFragment */
-import {
-    AbstractView,
-    DataObjectController,
-    DataObjectListener,
-    jsxCreateFragment, jsxCreateElement, isSameMongo
-} from "ui-framework-jps";
+import {AbstractView, DataObjectController, DataObjectListener, isSameMongo,jsxCreateElement,jsxCreateFragment} from "ui-framework-jps";
 import {PatientListener} from "./PatientListener";
 import {Decorator} from "../AppTypes";
 
@@ -15,10 +10,12 @@ import {PatientController} from "./PatientController";
 
 const logger = debug('patient-demographic-view');
 
-export class PatientDemographicsCompositeView extends AbstractView implements DataObjectListener,PatientListener {
+export class PatientDemographicsCompositeView extends AbstractView implements DataObjectListener, PatientListener {
+
+    private currentPatient: any | null = null;
 
     constructor() {
-        super({resultsContainerId:'',dataSourceId:'patientDemographics'});
+        super({resultsContainerId: '', dataSourceId: 'patientDemographics'});
     }
 
     hidden(): void {
@@ -79,7 +76,8 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         this.containerEl.append(demographicsView)
     }
 
-    show(): void {}
+    show(): void {
+    }
 
     update(controller: DataObjectController, typeName: string, dataObj: any): void {
     }
@@ -90,12 +88,10 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     delete(controller: DataObjectController, typeName: string, dataObj: any): void {
     }
 
-    private currentPatient:any|null = null;
-
     patientClosed(patient: any): void {
         logger(`handling patient closed`);
         if (this.currentPatient && patient) {
-            if (isSameMongo(this.currentPatient,patient)) {
+            if (isSameMongo(this.currentPatient, patient)) {
                 logger(`handling patient closed - is the current patient`);
                 this.currentPatient = null;
                 //this.render();
@@ -106,7 +102,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     patientLoaded(patient: any): void {
         logger(`handling patient loaded`);
         if (this.currentPatient && patient) {
-            if (isSameMongo(this.currentPatient,patient)) {
+            if (isSameMongo(this.currentPatient, patient)) {
                 logger(`handling patient loaded - is the current patient`);
                 if ((this.currentPatient.decorator) && (this.currentPatient.decorator === Decorator.Incomplete)) {
                     this.currentPatient = patient;
@@ -119,7 +115,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     patientSaved(patient: any): void {
         logger(`handling patient saved`);
         if (this.currentPatient && patient) {
-            if (isSameMongo(this.currentPatient,patient)) {
+            if (isSameMongo(this.currentPatient, patient)) {
                 logger(`handling patient saved - is the current patient`);
                 this.currentPatient = patient;
                 //this.render();

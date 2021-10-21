@@ -6,6 +6,7 @@ import moment from "moment";
 import Controller from "../Controller";
 import {AppointmentDetailModal} from "./AppointmentDetailModal";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
+import {PatientController} from "../patients/PatientController";
 
 const logger = debug('appointment-view');
 
@@ -90,6 +91,15 @@ export class AppointmentBookView {
                 }
             }
         }
+        options.onEventDoubleClick = (args: any) => {
+            logger(args.event);
+            if (args.event.patientId) {
+                PatientController.getInstance().openPatientRecordWithPatientId(args.event.patientId);
+            }
+
+        }
+
+
         options.renderScheduleEvent = AppointmentControllerHelper.getInstance().handleAppointmentRendering;
         options.onEventUpdated = (args: any) => {
             // user has dragged event - update the appointment

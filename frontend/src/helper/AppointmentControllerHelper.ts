@@ -380,8 +380,8 @@ export class AppointmentControllerHelper implements StateChangeListener {
             '    <div class="container-fluid">' +
             '    <div class="row">' +
             `      <div style="background:${data.color}" class="col-12 md-custom-event-template-type">${data.original.type}</div>` +
-            '    </div>'+
-            '    <div class="row">'+
+            '    </div>' +
+            '    <div class="row">' +
             '      <div class="col-12 d-flex w-100 justify-content-between md-custom-event-time">' +
             `        <span>${data.start} - ${data.end}</span>`;
         if (icons.trim().length > 0) {

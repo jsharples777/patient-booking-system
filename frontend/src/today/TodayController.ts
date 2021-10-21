@@ -2,7 +2,7 @@ import debug from "debug";
 import moment from "moment";
 import {STATE_NAMES} from "../AppTypes";
 import Controller from "../Controller";
-import {SecurityManager, StateChangeListener} from "ui-framework-jps";
+import {StateChangeListener} from "ui-framework-jps";
 import {ScheduleLoadedListener} from "../helper/ScheduleLoadedListener";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 import {TodayView} from "./TodayView";
@@ -134,7 +134,7 @@ export class TodayController implements StateChangeListener, ScheduleLoadedListe
             if (appointment.start === today) {
                 TodayView.getInstance().getCalender().removeEvent([appointment._id]);
                 // remove the patient in the appointment to the dashboard
-                if (appointment._patient) TodaysPatientsView.getInstance().removePatient({_id:appointment._patient});
+                if (appointment._patient) TodaysPatientsView.getInstance().removePatient({_id: appointment._patient});
             }
         }
     }

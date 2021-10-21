@@ -65984,7 +65984,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "truncateString": () => (/* binding */ truncateString),
 /* harmony export */   "convertSingleHexToNumber": () => (/* binding */ convertSingleHexToNumber),
 /* harmony export */   "convertHexToNumber": () => (/* binding */ convertHexToNumber),
-/* harmony export */   "isHexValueDark": () => (/* binding */ isHexValueDark)
+/* harmony export */   "isHexValueDark": () => (/* binding */ isHexValueDark),
+/* harmony export */   "copyObject": () => (/* binding */ copyObject)
 /* harmony export */ });
 function truncateString(str, num) {
     // If the length of str is less than or equal to num
@@ -66050,6 +66051,9 @@ function isHexValueDark(hexValue) {
         result = true;
     }
     return result;
+}
+function copyObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
 //# sourceMappingURL=MiscFunctions.js.map
 
@@ -66178,6 +66182,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "convertHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.convertHexToNumber),
 /* harmony export */   "convertSingleHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.convertSingleHexToNumber),
 /* harmony export */   "isHexValueDark": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.isHexValueDark),
+/* harmony export */   "copyObject": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.copyObject),
 /* harmony export */   "isSameMongo": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSameMongo),
 /* harmony export */   "isSame": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSame),
 /* harmony export */   "isSameUsername": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSameUsername),

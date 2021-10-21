@@ -7,8 +7,6 @@ import {AppointmentBookView} from "./AppointmentBookView";
 import {v4} from "uuid";
 import {SecurityManager} from "ui-framework-jps";
 import debug from "debug";
-import {AppointmentTemplateView} from "../appointment-templates/AppointmentTemplateView";
-import {AppointmentTemplateController} from "../appointment-templates/AppointmentTemplateController";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 
 const logger = debug('appointment-detail-view');
@@ -213,7 +211,8 @@ export class AppointmentDetailModal {
                     text: 'Cancel',
                     keyCode: 'esc',
                     handler: function () {
-                        AppointmentTemplateView.getInstance().getCalender().removeEvent(AppointmentTemplateController.getInstance().getModel().tempEvent);
+                        AppointmentBookView.getInstance().getCalender().removeEvent(AppointmentController.getInstance().getModel().tempEvent);
+                        AppointmentDetailModal.getInstance().close();
                     }
                 },
                 {
@@ -317,7 +316,8 @@ export class AppointmentDetailModal {
                     text: 'Cancel',
                     keyCode: 'esc',
                     handler: function () {
-                        AppointmentTemplateView.getInstance().getCalender().updateEvent(AppointmentTemplateController.getInstance().getModel().oldEvent);
+                        AppointmentBookView.getInstance().getCalender().updateEvent(AppointmentController.getInstance().getModel().oldEvent);
+                        AppointmentDetailModal.getInstance().close();
                     }
                 },
                 {

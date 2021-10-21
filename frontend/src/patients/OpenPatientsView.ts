@@ -7,35 +7,19 @@ import {
     ContextualInformationHelper,
     isSameMongo,
     KeyType,
-    ListViewRenderer,
     ListViewRendererUsingContext,
-    MemoryBufferStateManager,
-    Modifier,
-    StateManager,
-    View
+    Modifier
 } from "ui-framework-jps";
 import {Decorator, DRAGGABLE, STATE_NAMES, VIEW_NAME} from "../AppTypes";
-import Controller from "../Controller";
 import {PatientController} from "./PatientController";
-
 
 
 const vLogger = debug('open-patients');
 const vLoggerDetail = debug('open-patients-details');
 
 export class OpenPatientsView extends AbstractStatefulCollectionView {
-    private static _instance: OpenPatientsView;
-
-    public static getInstance(): OpenPatientsView {
-        if (!(OpenPatientsView._instance)) {
-            OpenPatientsView._instance = new OpenPatientsView();
-        }
-        return OpenPatientsView._instance;
-    }
-
     static ACTION_CLOSE = 'Close Record';
     static ACTION_SAVE = 'Save';
-
     static DOMConfig: CollectionViewDOMConfig = {
         viewConfig: {
             resultsContainerId: 'openPatientRecords',
@@ -79,7 +63,7 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
                     classes: 'btn bg-primary text-white btn-circle btn-sm mr-1',
                     iconClasses: 'fas fa-save'
                 },
-                confirm:false
+                confirm: false
             },
             {
                 name: OpenPatientsView.ACTION_CLOSE,
@@ -87,19 +71,14 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
                     classes: 'btn bg-warning text-white btn-circle btn-sm mr-1',
                     iconClasses: 'fas fa-door-closed'
                 },
-                confirm:true
+                confirm: true
             },
 
         ],
         sorter: OpenPatientsView.sortPatients
-        
-    };
 
-    private static sortPatients(item1: any, item2: any) {
-        let result = -1;
-        if (item1.name > item2.name) result = 1;
-        return result;
-    }
+    };
+    private static _instance: OpenPatientsView;
 
     constructor() {
         super(OpenPatientsView.DOMConfig, PatientController.getInstance().getStateManager(), STATE_NAMES.openPatients);
@@ -116,6 +95,19 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
 
         ContextualInformationHelper.getInstance().addContextFromView(this, STATE_NAMES.openPatients, 'Open Patient Records');
 
+    }
+
+    public static getInstance(): OpenPatientsView {
+        if (!(OpenPatientsView._instance)) {
+            OpenPatientsView._instance = new OpenPatientsView();
+        }
+        return OpenPatientsView._instance;
+    }
+
+    private static sortPatients(item1: any, item2: any) {
+        let result = -1;
+        if (item1.name > item2.name) result = 1;
+        return result;
     }
 
     onDocumentLoaded() {
@@ -154,9 +146,6 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
     compareItemsForEquality(item1: any, item2: any): boolean {
         return isSameMongo(item1, item2);
     }
-
-
-
 
 
 }

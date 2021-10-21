@@ -1,7 +1,7 @@
 import debug from 'debug';
 import Controller from './Controller';
 
-import {API_Config, AppointmentTypesSidebarPrefs, NAVIGATION, UsersSidebarPrefs,} from "./AppTypes";
+import {API_Config, AppointmentTypesSidebarPrefs, NAVIGATION,} from "./AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
 import {AppointmentController} from "./appointments/AppointmentController";
@@ -19,7 +19,6 @@ import {PatientSearchSidebar} from "./patients/PatientSearchSidebar";
 import {AppointmentTypesCompositeView} from "./appointment-types/AppointmentTypesCompositeView";
 import {ClinicChatSidebar} from "./clinic-chat/ClinicChatSidebar";
 import {ClinicChatListView} from "./clinic-chat/ClinicChatListView";
-import {UsersCompositeView} from "./users/UsersCompositeView";
 import {TodayController} from "./today/TodayController";
 import {PatientRecordTabularView} from "./patients/PatientRecordTabularView";
 import {PatientDemographicsCompositeView} from "./patients/PatientDemographicsCompositeView";
@@ -41,13 +40,11 @@ export default class App extends React.Component implements UnreadMessageCountLi
         // @ts-ignore
         super();
 
-        let todaysPatients:any[] = [];
+        let todaysPatients: any[] = [];
 
         this.state = {
-            todaysPatients:todaysPatients
+            todaysPatients: todaysPatients
         };
-
-
 
 
         // event handlers
@@ -100,7 +97,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).onDocumentLoaded();
 
         const patientView = PatientRecordTabularView.getInstance();
-        patientView.addViewToTab('demographics',new PatientDemographicsCompositeView());
+        patientView.addViewToTab('demographics', new PatientDemographicsCompositeView());
         patientView.onDocumentLoaded();
 
         TodaysPatientsView.getInstance().onDocumentLoaded(this);
