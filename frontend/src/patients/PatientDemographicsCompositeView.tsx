@@ -4,17 +4,36 @@ import {
     AbstractView,
     DataObjectController,
     DataObjectListener,
-    jsxCreateFragment,jsxCreateElement
+    jsxCreateFragment, jsxCreateElement, isSameMongo
 } from "ui-framework-jps";
+import {PatientListener} from "./PatientListener";
+import {Decorator} from "../AppTypes";
 
-export class PatientDemographicsCompositeView extends AbstractView implements DataObjectListener {
+import debug from 'debug';
+import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
+import {PatientController} from "./PatientController";
+
+const logger = debug('patient-demographic-view');
+
+export class PatientDemographicsCompositeView extends AbstractView implements DataObjectListener,PatientListener {
 
     constructor() {
         super({resultsContainerId:'',dataSourceId:'patientDemographics'});
     }
 
+    hidden(): void {
+    }
+
     onDocumentLoaded() {
         super.onDocumentLoaded();
+        this.render();
+        PatientController.getInstance().addListener(this);
+    }
+
+    render(): void {
+        logger('render');
+
+        browserUtil.removeAllChildren(this.containerEl);
 
         const demographicsView =
             <div id={"demographics-view"} className={"container-fluid"}>
@@ -30,7 +49,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                     <div id={"patient-basics"} className={"col-12-sm col-md-6"}>
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">Contact Details</h5>
+                                <h5 className="card-title">Patient Basics</h5>
                                 <div className="card-text" id={"patient-basics-details"}></div>
                             </div>
                         </div>
@@ -60,15 +79,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         this.containerEl.append(demographicsView)
     }
 
-
-    hidden(): void {
-    }
-
-    render(): void {
-    }
-
-    show(): void {
-    }
+    show(): void {}
 
     update(controller: DataObjectController, typeName: string, dataObj: any): void {
     }
@@ -79,5 +90,48 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     delete(controller: DataObjectController, typeName: string, dataObj: any): void {
     }
 
+    private currentPatient:any|null = null;
 
+    patientClosed(patient: any): void {
+        logger(`handling patient closed`);
+        if (this.currentPatient && patient) {
+            if (isSameMongo(this.currentPatient,patient)) {
+                logger(`handling patient closed - is the current patient`);
+                this.currentPatient = null;
+                //this.render();
+            }
+        }
+    }
+
+    patientLoaded(patient: any): void {
+        logger(`handling patient loaded`);
+        if (this.currentPatient && patient) {
+            if (isSameMongo(this.currentPatient,patient)) {
+                logger(`handling patient loaded - is the current patient`);
+                if ((this.currentPatient.decorator) && (this.currentPatient.decorator === Decorator.Incomplete)) {
+                    this.currentPatient = patient;
+                    //this.render();
+                }
+            }
+        }
+    }
+
+    patientSaved(patient: any): void {
+        logger(`handling patient saved`);
+        if (this.currentPatient && patient) {
+            if (isSameMongo(this.currentPatient,patient)) {
+                logger(`handling patient saved - is the current patient`);
+                this.currentPatient = patient;
+                //this.render();
+            }
+        }
+
+    }
+
+    patientSelected(patient: any): void {
+        logger(`handling patient selected`);
+        this.currentPatient = patient;
+        this.render();
+
+    }
 }

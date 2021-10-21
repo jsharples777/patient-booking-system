@@ -86,7 +86,7 @@ export const VIEW_NAME = {
     appointmentTypeDetail: 'appointmentTypeDetail',
     users: 'usersList',
     userDetail: 'userDetail',
-    openPatients: 'openPatients'
+    openPatients: 'Open Patients'
 }
 
 export const VIEW_CONTAINER = {
@@ -102,8 +102,8 @@ export const PatientSearchSidebarPrefs: SidebarPrefs = {
 }
 
 export const PatientSearchSidebarContainers = {
-    container: 'recentPatientSearches',
-    openRecords: 'openPatientRecords'
+    container: 'patientSearchZone',
+    openRecords: 'openPatientZone'
 }
 
 export const AppointmentTypesSidebarPrefs: SidebarPrefs = {

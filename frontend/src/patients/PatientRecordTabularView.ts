@@ -1,6 +1,25 @@
 import {TabularViewContainer, TabularViewDOMConfig} from "ui-framework-jps";
 
 export class PatientRecordTabularView extends TabularViewContainer {
+    private static _instance: PatientRecordTabularView;
+
+    public static getInstance(): PatientRecordTabularView {
+        if (!(PatientRecordTabularView._instance)) {
+            PatientRecordTabularView._instance = new PatientRecordTabularView();
+        }
+        return PatientRecordTabularView._instance;
+    }
+
+    public static TAB_DEMOGRAPHICS = 'demographics';
+    public static TAB_CONSULTS = 'consults';
+    public static TAB_SCRIPTS = 'scripts';
+    public static TAB_RESULTS = 'results';
+    public static TAB_DOCUMENTS = 'documents';
+    public static TAB_VACCINATIONS = 'vaccinations';
+    public static TAB_WORKCOVER = 'workcover';
+    public static TAB_TASKS = 'tasks';
+    public static TAB_ARCHIVE = 'archive';
+
     protected static config: TabularViewDOMConfig = {
         containedById: 'patientRecord',
         containerId: 'patientRecordTabularView',
@@ -22,7 +41,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
         },
         tabs: [
             {
-                id: 'demographics',
+                id: PatientRecordTabularView.TAB_DEMOGRAPHICS,
                 element: {
                     type: 'li',
                     classes: 'nav-item'
@@ -36,7 +55,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
                 isDefaultActive: true
             },
             {
-                id: 'consults',
+                id: PatientRecordTabularView.TAB_CONSULTS,
                 element: {
                     type: 'li',
                     classes: 'nav-item'
@@ -50,7 +69,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
                 isDefaultActive: false
             },
             {
-                id: 'scripts',
+                id: PatientRecordTabularView.TAB_SCRIPTS,
                 element: {
                     type: 'li',
                     classes: 'nav-item'
@@ -64,7 +83,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
                 isDefaultActive: false
             },
             {
-                id: 'results',
+                id: PatientRecordTabularView.TAB_RESULTS,
                 element: {
                     type: 'li',
                     classes: 'nav-item'
@@ -78,7 +97,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
                 isDefaultActive: false
             },
             {
-                id: 'documents',
+                id: PatientRecordTabularView.TAB_DOCUMENTS,
                 element: {
                     type: 'li',
                     classes: 'nav-item'
@@ -92,7 +111,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
                 isDefaultActive: false
             },
             {
-                id: 'vaccinations',
+                id: PatientRecordTabularView.TAB_VACCINATIONS,
                 element: {
                     type: 'li',
                     classes: 'nav-item'
@@ -106,7 +125,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
                 isDefaultActive: false
             },
             {
-                id: 'workcover',
+                id: PatientRecordTabularView.TAB_WORKCOVER,
                 element: {
                     type: 'li',
                     classes: 'nav-item'
@@ -120,7 +139,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
                 isDefaultActive: false
             },
             {
-                id: 'tasks',
+                id: PatientRecordTabularView.TAB_TASKS,
                 element: {
                     type: 'li',
                     classes: 'nav-item'
@@ -134,7 +153,7 @@ export class PatientRecordTabularView extends TabularViewContainer {
                 isDefaultActive: false
             },
             {
-                id: 'archive',
+                id: PatientRecordTabularView.TAB_ARCHIVE,
                 element: {
                     type: 'li',
                     classes: 'nav-item'
@@ -150,7 +169,9 @@ export class PatientRecordTabularView extends TabularViewContainer {
         ],
     }
 
-    constructor() {
+    private constructor() {
         super(PatientRecordTabularView.config);
     }
+
+
 }

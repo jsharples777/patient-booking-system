@@ -58726,37 +58726,44 @@ class TabularViewContainer {
                 }
                 else {
                     logger(`tab ${targetId} is not active - setting active and letting the views know`);
-                    this.tabElements.forEach((tabElement, index) => {
-                        const tabViewElement = this.tabViewElements[index];
-                        const foundIndex = this.views.findIndex((tabView) => tabView.tabId === tabId);
-                        let view = null;
-                        if (foundIndex >= 0) {
-                            view = this.views[foundIndex].view;
-                        }
-                        let tabElementId = tabElement.getAttribute('id');
-                        if (tabElementId) {
-                            if (tabElementId === targetId) {
-                                // mark the tab as active and let the view know
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabElement, [{ name: 'active', value: 'true' }]);
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tabViewElement, 'd-none');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabElement, 'active');
-                                if (view)
-                                    view.show();
-                            }
-                            else {
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAttributes(tabElement, ['active']);
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabViewElement, 'd-none');
-                                _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tabElement, 'active');
-                                if (view)
-                                    view.hidden();
-                            }
-                        }
-                    });
+                    this.selectTab(tabId);
                 }
                 // let the listeners know
                 this.listeners.forEach((listener) => listener.tabChanged(this, tabId));
             }
         }
+    }
+    selectTab(tabId) {
+        this.tabElements.forEach((tabElement, index) => {
+            const tabViewElement = this.tabViewElements[index];
+            const foundIndex = this.views.findIndex((tabView) => tabView.tabId === tabId);
+            let view = null;
+            if (foundIndex >= 0) {
+                view = this.views[foundIndex].view;
+            }
+            let tabElementId = tabElement.getAttribute('id');
+            if (tabElementId) {
+                const idComponents = tabElementId.split('.');
+                const tabIdForTabElement = idComponents[idComponents.length - 1];
+                if (tabElementId) {
+                    if (tabIdForTabElement === tabId) {
+                        // mark the tab as active and let the view know
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addAttributes(tabElement, [{ name: 'active', value: 'true' }]);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tabViewElement, 'd-none');
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabElement, 'active');
+                        if (view)
+                            view.show();
+                    }
+                    else {
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeAttributes(tabElement, ['active']);
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].addClasses(tabViewElement, 'd-none');
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_1__["default"].removeClasses(tabElement, 'active');
+                        if (view)
+                            view.hidden();
+                    }
+                }
+            }
+        });
     }
 }
 //# sourceMappingURL=TabularViewContainer.js.map

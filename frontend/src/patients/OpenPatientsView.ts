@@ -1,16 +1,23 @@
 import debug from 'debug';
 import {
     AbstractStatefulCollectionView,
-    CollectionViewDOMConfig, ContextualInformationHelper,
+    CollectionViewDOMConfig,
+    CollectionViewEventHandlerDelegateUsingContext,
+    CollectionViewListenerForwarder,
+    ContextualInformationHelper,
     isSameMongo,
     KeyType,
-    ListViewRenderer, ListViewRendererUsingContext, MemoryBufferStateManager,
+    ListViewRenderer,
+    ListViewRendererUsingContext,
+    MemoryBufferStateManager,
     Modifier,
     StateManager,
     View
 } from "ui-framework-jps";
 import {Decorator, DRAGGABLE, STATE_NAMES, VIEW_NAME} from "../AppTypes";
 import Controller from "../Controller";
+import {PatientController} from "./PatientController";
+
 
 
 const vLogger = debug('open-patients');
@@ -34,7 +41,7 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
             resultsContainerId: 'openPatientRecords',
             dataSourceId: VIEW_NAME.openPatients,
             drop: {
-                acceptFrom: [DRAGGABLE.fromUserSearch],
+                acceptFrom: [DRAGGABLE.fromPatientSearch],
                 acceptTypes: [DRAGGABLE.typePatientSummary]
             }
         },
@@ -83,43 +90,48 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
                 confirm:true
             },
 
-        ]
+        ],
+        sorter: OpenPatientsView.sortPatients
         
     };
 
-    protected localisedSM: StateManager;
+    private static sortPatients(item1: any, item2: any) {
+        let result = -1;
+        if (item1.name > item2.name) result = 1;
+        return result;
+    }
 
     constructor() {
-        super(OpenPatientsView.DOMConfig, Controller.getInstance().getStateManager(), STATE_NAMES.patients);
+        super(OpenPatientsView.DOMConfig, PatientController.getInstance().getStateManager(), STATE_NAMES.openPatients);
         OpenPatientsView._instance = this;
 
         this.renderer = new ListViewRendererUsingContext(this, this);
+        this.eventHandlerDelegate = new CollectionViewEventHandlerDelegateUsingContext(this, <CollectionViewListenerForwarder>this.eventForwarder);
+
 
         this.updateViewForNamedCollection = this.updateViewForNamedCollection.bind(this);
+        this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);
+        this.getItemInNamedCollection = this.getItemInNamedCollection.bind(this);
+        this.getItemId = this.getItemId.bind(this);
 
-        // register state change listening
-        this.localisedSM = new MemoryBufferStateManager(isSameMongo);
-        this.localisedSM.addChangeListenerForName(STATE_NAMES.openPatients, this);
-
-        ContextualInformationHelper.getInstance().addContextFromView(this, STATE_NAMES.patients, 'Open Patient Records');
-
-    }
-
-    updateViewForNamedCollection(name: string, newState: any) {
-        if (name === STATE_NAMES.openPatients) {
-            super.updateViewForNamedCollection('',newState);
-        }
+        ContextualInformationHelper.getInstance().addContextFromView(this, STATE_NAMES.openPatients, 'Open Patient Records');
 
     }
-
 
     onDocumentLoaded() {
         super.onDocumentLoaded();
-        super.updateViewForNamedCollection(STATE_NAMES.openPatients, this.localisedSM.getStateByName(STATE_NAMES.openPatients));
     }
 
     getIdForItemInNamedCollection(name: string, item: any) {
         return item._id;
+    }
+
+    public getItemInNamedCollection(name: string, compareWith: any): any {
+        console.log(name);
+        console.log(compareWith);
+        let result = this.stateManager.findItemInState(name, compareWith);
+        console.log(result);
+        return result;
     }
 
 
@@ -139,26 +151,12 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
         return Modifier.normal;
     }
 
-
     compareItemsForEquality(item1: any, item2: any): boolean {
         return isSameMongo(item1, item2);
     }
 
-    itemAction(view: View, actionName: string, selectedItem: any) {
-        vLoggerDetail(selectedItem);
-        if (actionName === OpenPatientsView.ACTION_CLOSE) {
-            vLogger(`open patient ${selectedItem.firstname} with id ${selectedItem.id} closing - removing`);
-            this.localisedSM.removeItemFromState(STATE_NAMES.openPatients, selectedItem, true);
-        }
-        else {
-            vLogger(`saving patient ${selectedItem.firstname} with id ${selectedItem.id}`);
-            selectedItem.decorator = Decorator.Complete;
-            this.localisedSM.updateItemInState(STATE_NAMES.openPatients, selectedItem, true);
-            let patientRecord = JSON.parse(JSON.stringify(selectedItem));
-            delete patientRecord.decorator;
-            Controller.getInstance().getStateManager().updateItemInState(STATE_NAMES.patients,patientRecord,false);
-        }
-    }
+
+
 
 
 }

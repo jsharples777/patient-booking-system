@@ -1,7 +1,7 @@
 import {PatientSearchSidebarContainers, PatientSearchSidebarPrefs} from "../AppTypes";
 import {SidebarViewContainer} from "ui-framework-jps";
 import {PatientSearchView} from "./PatientSearchView";
-import Controller from "../Controller";
+import {OpenPatientsView} from "./OpenPatientsView";
 
 export class PatientSearchSidebar extends SidebarViewContainer {
 
@@ -9,8 +9,10 @@ export class PatientSearchSidebar extends SidebarViewContainer {
 
     private constructor() {
         super(PatientSearchSidebarPrefs);
-        const recentSearches = new PatientSearchView(Controller.getInstance().getStateManager());
+        const recentSearches = new PatientSearchView();
         this.addView(recentSearches, {containerId: PatientSearchSidebarContainers.container});
+        const openPatients = new OpenPatientsView();
+        this.addView(openPatients, {containerId: PatientSearchSidebarContainers.openRecords});
     }
 
     public static getInstance(): PatientSearchSidebar {

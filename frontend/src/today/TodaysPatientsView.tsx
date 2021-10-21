@@ -102,7 +102,9 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
         this.containerEl = document.getElementById('todays-patients');
     }
 
-    protected handleOpenPatient(event:MouseEvent) {
+    // @ts-ignore
+    protected handleOpenPatient(event:MouseEvent<HTMLAnchorElement>) {
+        console.log('blah');
         event.preventDefault();
         event.stopPropagation();
         // @ts-ignore
@@ -138,7 +140,7 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
                 <div className="shadow card col-sm-12 col-md-4 mr-1 mt-2" >
                     <img className="card-img-top" src="/img/spinner.gif" alt="Card image cap"></img>
                     <div className="card-body">
-                        <h5 className="card-title"><a href={"#"} data-id={patient._id} onClick={(event) => this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a></h5>
+                        <h5 className="card-title"><a href={"#"} data-id={patient._id} onClick={this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a></h5>
                         <h6 className="card-subtitle mb-2 text-muted">DOB: {moment(patient.dob).format('DD/MM/YYYY')}</h6>
                         <p className="card-text">{address(patient)}</p>
                     </div>
@@ -151,7 +153,7 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
             return (
                 <div className="shadow card col-sm-12 col-md-4 mr-1 mt-2 w-100" >
                     <div className="card-body">
-                        <h5 className="card-title"><a href={"#"} data-id={patient._id} onClick={(event) => this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a></h5>
+                        <h5 className="card-title"><a href={"#"} data-id={patient._id} onClick={this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a></h5>
                         <h6 className="card-subtitle mb-2 text-muted">DOB: {moment(patient.dob).format('DD/MM/YYYY')}</h6>
                         <p className="card-text">{address(patient)}</p>
                     </div>

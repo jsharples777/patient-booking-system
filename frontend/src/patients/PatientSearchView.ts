@@ -64,8 +64,8 @@ export class PatientSearchView extends AbstractStatefulCollectionView {
     };
     protected localisedSM: StateManager;
 
-    constructor(stateManager: StateManager) {
-        super(PatientSearchView.DOMConfig, stateManager, STATE_NAMES.patientSearch);
+    constructor() {
+        super(PatientSearchView.DOMConfig, Controller.getInstance().getStateManager(), STATE_NAMES.patientSearch);
 
         this.renderer = new ListViewRenderer(this, this);
 
