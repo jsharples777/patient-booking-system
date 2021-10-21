@@ -123,6 +123,7 @@ contribute to this project.
 20. [ts-loader](https://github.com/TypeStrong/ts-loader)
 21. [Bootstrap 4 Round Buttons](https://www.geeksforgeeks.org/how-to-get-circular-buttons-in-bootstrap-4/)
 22. [Mobiscroll](https://mobiscroll.com/)
+23. [GraphQL](https://graphql.org/)
 
 
 # Questions
