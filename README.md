@@ -1,9 +1,4 @@
-# Fitness Tracker     [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-        include: [
-          path.join(__dirname, '../src'), // + any other paths that need to be transpiled
-          /\/node_modules\/ui-framework-jps/,
-        ],
+# Patient Booking System    [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Table of Contents
 
@@ -20,8 +15,7 @@
 
 # Project Description
 
-This [web application](https://fitness-tracker-jps.herokuapp.com/) allows the user to register and start tracking their
-workouts.
+This [web application](https://pbs-jps.herokuapp.com/) allows the user to manage appointments for a medical practice.
 
 The user is presented with:
 
