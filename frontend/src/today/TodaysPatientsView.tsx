@@ -111,7 +111,10 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
         const patientId = event.target.getAttribute('data-id');
         logger(`Handling open patient with patient id ${patientId}`)
         if (patientId) {
-            PatientController.getInstance().openPatientRecord(patientId);
+            const foundIndex = this.patients.findIndex((patient) => isSameMongo(patient,{_id:patientId}));
+            if (foundIndex >= 0) {
+                PatientController.getInstance().openPatientRecord(this.patients[foundIndex]);
+            }
         }
     }
 

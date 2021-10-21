@@ -40,16 +40,21 @@ export class PatientController implements StateChangeListener,CollectionViewList
         return PatientController._instance;
     }
 
-    public openPatientRecord(patientId:string):void {
+    public openPatientRecordWithPatientId(patientId:string):void {
+        // FIND IT FIRST
+        asdfasfasdfasdf
+
+
         logger(`Handling opening patient record ${patientId}`);
-        let patient:any|null = null;
-        if (Controller.getInstance().getStateManager().isItemInState(STATE_NAMES.patients,{_id:patientId})) {
-            patient = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patients,{_id:patientId});
-        }
-        else {
-            patient = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch,{_id:patientId});
-            patient.decorator = Decorator.Incomplete;
-        }
+        let patient = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch,{_id:patientId});
+        patient.decorator = Decorator.Incomplete;
+        this.listeners.forEach((listener) => listener.patientSelected(patient));
+
+        //Controller.getInstance().getStateManager().
+    }
+
+    public openPatientRecord(patient:any):void {
+
         this.listeners.forEach((listener) => listener.patientSelected(patient));
     }
 
@@ -139,7 +144,7 @@ export class PatientController implements StateChangeListener,CollectionViewList
     itemDropped(view: View, droppedItem: any): void {
         logger(`Handling drop of item`);
         logger(droppedItem);
-        this.openPatientRecord(droppedItem._id);
+        this.openPatientRecordWithPatientId(droppedItem._id);
     }
 
     itemSelected(view: CollectionView, selectedItem: any): void {

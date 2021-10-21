@@ -60,7 +60,7 @@ export class TodayView {
         options.onEventClick = (args: any) => {
             logger(args.event);
             if (args.event.patientId) {
-                PatientController.getInstance().openPatientRecord(args.event.patientId);
+                PatientController.getInstance().openPatientRecordWithPatientId(args.event.patientId);
             }
         }
         options.renderScheduleEvent = AppointmentControllerHelper.getInstance().handleAppointmentRendering;
