@@ -19,26 +19,16 @@ This [web application](https://pbs-jps.herokuapp.com/) allows the user to manage
 
 The user is presented with:
 
-1. A dashboard carousel showing their latest current workout and can scroll through and see their previous workouts.
-2. Through the navigation, and buttons on their workouts, they can access all types of exercise (cardio/strength)
-   created by any user;
-3. Add their own named exercise, delete their own exercises, and edit the details on an exercise (distance and duration
-   for cardio, sets/reps/weight and duration for strength based);
-4. They can easily add exercises to the current active workout by:
-    - clicking on the "transfer" button from the exercise type list;
-    - dragging an exercise type to the current workout if open;
-    - copying the exercises from a previous workout in the their dashboard in one easy click, or access the right click
-      menu
-5. View a graphical summary of their last seven workouts to track their progress.
+1. The ability to view and create/modify/delete appointments for each active provider.
+2. Chat with other users of the system to discuss patient issues.
+3. Update their password.
+4. View and update patient demographic details.
 
-A logged in user also has access to:
+An admin user can further:
 
-1. A user search function (by username) to find other users of the website
-2. The ability to create chat sessions with users, including group chats
-3. A user can leave a chat at any time
-4. A user can note some users as favourites, and will be notified if a user in their favourite list logs in/out
-5. A user can note some users as blocked, preventing those users from invite them to chat rooms and sending them
-   messages
+1.  Update other users, changing their privileges and/or resetting their password and current status
+2.  Update appointment types, choosing the types color and/or icon classes
+3.  Update the appointment "templates", automatic regularly scheduled appointment types per provider
 
 As a technical note, the chat sessions are persisted and offline messages are received on login.
 
@@ -66,33 +56,39 @@ If the user is idle, the session expires in 24 hours.
 
 `MODE` - `Production`
 
+`ENABLE_SOCKETS` - data synchronisation and chat subsystem, set to `Y`
+
 `MQ_FILE` - Location of the offline message queue storage file (default `./db/queue.json`)
 
 `MQ_INTERVAL` - Milliseconds between queue persistence (default `10000` - 10 seconds)
 
 `SM_EXPIRY_CHAT` - number of minutes to keep a chat room persisted with no activity (default `43200` - 30 days)
 
-`SM_EXPIRY_SCORESHEET` - number of minutes to keep a score sheet room persisted with no activity (default `60`)
-
 `VIEW_RELATIVE_PATH` - location of the handlebars files in production, should be set to `/../../`
+
+`DEMO_MODE` - obfuscate the patient demographics for demonstration purposes, should be `N` in normal use.
+
+`QL-SCHEMA` - graph QL schema definition, set to `./config/schema.graphql`
 
 # User Story
 
 ```
-As a USER I want to be able to keep track of my workouts, and once logged into the site
-THEN I can choose to view my previous workouts and/or add exercises to my new (current) workout
-As a USER I want to be able to create exercises types that I will add/update/delete to/from workouts
-THEN I want to be able to copy those exercises into the current workout via multiple easy to use means
-As a USER I want to be able to review a 7 workout summary to track my progress, displayed graphically
+As a USER I want to be able to keep track of the appointments for the providers in my system, and once logged into the site
+THEN I can view the appointment book, navigate to different dates, and filter by the providers
+THEN I can view a patients demographics and update them as necessary
+As a USER I want to be able to create chat to other users of the system if I have queries about my work or queries about patients
+THEN I want to be able to set a priority on the message and optionally attach a patient
 
-As a USER I want to be able to find other users of the site
-THEN I can save users as Favourites or, for privacy reasons, save a user to a Blocked
-THEN I want to be notified if a Favourite user logins/out to the site
-As a USER I want to be able to chat with another user, creating a chat conversation with that user
-THEN I can close the chat room if I so choose
-THEN I can also add another user, creating a group chat, by dragging them into the chat from the User Search
-As a USER if I log off the site for a time, when I log back in, I want to receive any messages
-FROM non-Blocked users when I log back in, with notifications telling me what I have waiting to review
+
+As an ADMIN USER I want to be able to manage other users of the system
+THEN I can create and update users, setting their privileges, provider details, and optionally reset their password
+As an ADMIN USER I want to be to manage the the types of appointments available
+THEN I can edit each tyep of appointment, setting a view colour and optional icon
+As an ADMIN USER I want to be able to manage the "appointment templates"
+THEN I can view what regular appointments and their types for each provider are set in the system and modify them
+
+As a PROVIDER when I log in I want to view my appointments for today and load the patient records for those appointments
+THEN I want to be able to view each open patient and modify details as needed
 ```
 
 # Screenshot
@@ -125,14 +121,15 @@ contribute to this project.
 18. [ts-node](https://github.com/TypeStrong/ts-node)
 19. [tsc-watch](https://www.npmjs.com/package/tsc-watch)
 20. [ts-loader](https://github.com/TypeStrong/ts-loader)
-21. [Chart.js](https://www.chartjs.org/)
-22. [Bootstrap 4 Round Buttons](https://www.geeksforgeeks.org/how-to-get-circular-buttons-in-bootstrap-4/)
+21. [Bootstrap 4 Round Buttons](https://www.geeksforgeeks.org/how-to-get-circular-buttons-in-bootstrap-4/)
+22. [Mobiscroll](https://mobiscroll.com/)
+
 
 # Questions
 
 > **Direct your questions about this project to:**
 >
->  *GitHub:* [Github Project Link](https://github.com/jsharples777/fitness-tracker)
+>  *GitHub:* [Github Project Link](https://github.com/jsharples777/patient-booking-system)
 >
 >  *Email:* [jamie.sharples@gmail.com](mailto:jamie.sharples@gmail.com)
 
