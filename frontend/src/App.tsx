@@ -100,7 +100,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.apptTypeSidebar = new SidebarViewContainer(AppointmentTypesSidebarPrefs);
         new AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
 
-        ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).onDocumentLoaded();
+        ClinicChatSidebar.getInstance().onDocumentLoaded();
 
         const patientView = PatientRecordTabularView.getInstance();
         patientView.addViewToTab('demographics', new PatientDemographicsCompositeView());
@@ -144,7 +144,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 
     hideAllSideBars() {
-        ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).eventHide(null);
+        ClinicChatSidebar.getInstance().eventHide(null);
         PatientSearchSidebar.getInstance().eventHide(null);
         this.usersSidebar.eventHide(null);
         this.apptTypeSidebar.eventHide(null);
@@ -159,7 +159,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
             window.location.href = API_Config.login;
             return;
         }
-        ClinicChatSidebar.getInstance(Controller.getInstance().getStateManager()).eventShow(null);
+        ClinicChatSidebar.getInstance().eventShow(null);
         if (roomName) {
             ClinicChatListView.getInstance().selectChatRoom(roomName);
         }

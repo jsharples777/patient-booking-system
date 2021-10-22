@@ -54524,6 +54524,9 @@ class NotificationController {
                 // is this a user join/leave?
                 if ((displayMessage.from.trim().length === 0) && (!this.notificationOptions.showUserJoinLeaveChatNotification))
                     return;
+                // is the message from us?
+                if (displayMessage.from === _ChatManager__WEBPACK_IMPORTED_MODULE_0__.ChatManager.getInstance().getCurrentUser())
+                    return;
                 // provide visual notifications if do not disturb is not on, unless the message is marked priority
                 let notificationType = _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.message;
                 let showNotification = this.notificationOptions.showNormalPriorityMessageNotifications;

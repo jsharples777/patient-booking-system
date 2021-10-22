@@ -1,14 +1,14 @@
 import {
     CollectionView,
     CollectionViewListener,
-    copyObject,
+    copyObject, DRAGGABLE_TYPE,
     isSameMongo,
     MemoryBufferStateManager,
     StateChangeListener,
     StateManager,
     View
 } from "ui-framework-jps";
-import {Decorator, STATE_NAMES} from "../AppTypes";
+import {Decorator, DRAGGABLE, STATE_NAMES} from "../AppTypes";
 import debug from 'debug';
 import Controller from "../Controller";
 import {OpenPatientsView} from "./OpenPatientsView";
@@ -16,10 +16,12 @@ import {PatientRecordTabularView} from "./PatientRecordTabularView";
 import {PatientListener} from "./PatientListener";
 import {PatientObjectDefinitions} from "../model/PatientObjectDefinitions";
 import App from "../App";
+import {AttachmentListener} from "../clinic-chat/AttachmentListener";
+import {ClinicChatDetailView} from "../clinic-chat/ClinicChatDetailView";
 
 const logger = debug('patient-controller');
 
-export class PatientController implements StateChangeListener, CollectionViewListener {
+export class PatientController implements StateChangeListener, CollectionViewListener, AttachmentListener{
     private static _instance: PatientController;
     private stateManager: StateManager;
     private listeners: PatientListener[] = [];
@@ -91,6 +93,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
     public onDocumentLoaded(): void {
         PatientObjectDefinitions.loadPatientDefinitions();
         OpenPatientsView.getInstance().addEventCollectionListener(this);
+        ClinicChatDetailView.getInstance().addAttachmentListener(this);
 
     }
 
@@ -195,6 +198,12 @@ export class PatientController implements StateChangeListener, CollectionViewLis
     protected isPatientInOpenList(patientId: string): boolean {
         let patient = this.stateManager.findItemInState(STATE_NAMES.openPatients, {_id: patientId});
         return (patient._id);
+    }
+
+    attachmentClicked(dataType: string, dataIdentifier: string): void {
+        if (dataType === DRAGGABLE.typePatientSummary) {
+            this.openPatientRecordWithPatientId(dataIdentifier);
+        }
     }
 
 }

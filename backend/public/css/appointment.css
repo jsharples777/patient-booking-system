@@ -42,6 +42,10 @@
     padding-right: 10px;
 }
 
+.md-custom-event-type:hover {
+    cursor: default;
+}
+
 .md-custom-event-template-type {
     align-content: center;
     color: #eee;
@@ -52,6 +56,9 @@
 .md-custom-event-details {
     padding-left: 5px;
 }
+.md-custom-event-details:hover {
+    cursor: default;
+}
 
 .md-custom-event-title {
     padding-top: 2px;
@@ -60,17 +67,26 @@
     padding-left: 10px;
 }
 
+.md-custom-event-title:hover {
+    cursor: pointer;
+}
 .md-custom-event-time {
     font-size: 10px;
     color: black;
     padding-top: 3px;
     padding-left: 20px;
 }
+.md-custom-event-time:hover {
+    cursor: default;
+}
 
 .md-custom-event-icon-cont {
     position: absolute;
     right: 5px;
     bottom: 0px;
+}
+.md-custom-event-icon-cont:hover {
+    cursor: default;
 }
 
 .md-custom-event-icon {
@@ -80,6 +96,9 @@
     padding-left: 5px;
     font-size: 12pt;
     text-align: right;
+}
+.md-custom-event-icon:hover {
+    cursor: default;
 }
 
 .md-switching-view-cont .mbsc-segmented {

@@ -58,8 +58,8 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
     protected currentlySelectedPatient: any | null;
     private listeners: AttachmentListener[] = [];
 
-    private constructor(stateManager: StateManager) {
-        this.stateManager = stateManager;
+    private constructor() {
+        this.stateManager = Controller.getInstance().getStateManager();
         this.selectedChatLog = null;
 
         // handler binding
@@ -76,9 +76,9 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         this.stateManager.addChangeListenerForName(APP_STATE_NAMES.patientSearch, this);
     }
 
-    public static getInstance(stateManager: StateManager): ClinicChatDetailView {
+    public static getInstance(): ClinicChatDetailView {
         if (!(ClinicChatDetailView._instance)) {
-            ClinicChatDetailView._instance = new ClinicChatDetailView(stateManager);
+            ClinicChatDetailView._instance = new ClinicChatDetailView();
         }
         return ClinicChatDetailView._instance;
     }

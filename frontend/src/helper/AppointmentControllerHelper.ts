@@ -156,7 +156,7 @@ export class AppointmentControllerHelper implements StateChangeListener {
     }
 
     public getColourForAppointmentType(appointmentType: string) {
-        let result = `rgba(10, 100, 100, 50)`;
+        let result = `#333333`;
         if (this.appointmentTypes) {
             const foundIndex = this.appointmentTypes.findIndex((type) => type.name === appointmentType);
             if (foundIndex >= 0) result = this.appointmentTypes[foundIndex].colour;
@@ -386,15 +386,13 @@ export class AppointmentControllerHelper implements StateChangeListener {
             `        <span>${data.start} - ${data.end}</span>`;
         if (icons.trim().length > 0) {
             buffer += '' +
-                `        <span class="md-custom-event-img-cont">${icons}</span>` +
-                '      </div>' +
-                '  </div>' +
-                '</div>';
-        } else {
-            buffer += '' +
-                '  </div>' +
-                '</div>';
+            `        <span class="md-custom-event-img-cont">${icons}</span>` +
+            '      </div>';
         }
+            buffer += '' +
+            '  </div>' +
+            '</div>'
+
         return buffer;
     }
 
@@ -410,21 +408,23 @@ export class AppointmentControllerHelper implements StateChangeListener {
             '  <div class="md-custom-event-wrapper">' +
             '    <div class="container-fluid">' +
             '    <div class="row ">' +
-            `      <div style="background:${data.color}" class="col-sm-12 col-md-2 md-custom-event-type">${data.original.type}</div>` +
-            `      <div class="col-sm-4 col-md-6 md-custom-event-title">${data.title}</div>` +
-            '      <div class="col-sm-6 col-md-4 d-flex w-100 justify-content-between md-custom-event-time">' +
+            `       <div style="background:${data.color}" class="col-12 md-custom-event-type">${data.original.type}</div>` +
+            '    </div>'+
+            '    <div class="row "> '+
+            `       <div class="col-sm-4 col-md-6 col-lg-12 md-custom-event-title">${data.title}</div>` +
+            '       <div class="col-sm-6 col-md-4 col-lg-12 d-flex w-100 justify-content-between md-custom-event-time">' +
             `        <span>${data.start} - ${data.end}</span>`;
         if (icons.trim().length > 0) {
             buffer += '' +
-                `        <span class="md-custom-event-img-cont">${icons}</span>` +
-                '      </div>' +
-                '  </div>' +
-                '</div>';
-        } else {
-            buffer += '' +
-                '  </div>' +
-                '</div>';
+            `        <span class="md-custom-event-img-cont">${icons}</span>` +
+            '      </div>' +
+            '    </div>';
         }
+        //if (data.original.patientId) buffer += '</div><div class="row"><div class="col-12"><button mbsc-button class="md-custom-event-btn" data-color="dark" data-variant="outline">Patient</button></div></div>';
+            buffer += '</div>' +
+            '  </div>' +
+            '</div>';
+
         return buffer;
     }
 

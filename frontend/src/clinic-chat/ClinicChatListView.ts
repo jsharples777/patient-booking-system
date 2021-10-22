@@ -100,9 +100,16 @@ export class ClinicChatListView extends AbstractStatefulCollectionView implement
                 return results;
             }
         },
+        sorter: ClinicChatListView.sort
     };
     protected selectedChatLog: ChatLog | null = null;
     private doNotDisturbEl: HTMLInputElement | null = null;
+
+    private static sort(item1:any, item2:any):number {
+        let result = -1;
+        if (item1.name > item2.name) result = 1;
+        return result;
+    }
 
     private constructor() {
         super(ClinicChatListView.DOMConfig, new MemoryBufferStateManager(isSameRoom), STATE_NAMES.chatLogs);

@@ -1,5 +1,5 @@
 import {AppointmentController} from "./AppointmentController";
-import {datepicker, Datepicker, eventcalendar, Eventcalendar, snackbar} from "@mobiscroll/javascript";
+import {datepicker, Datepicker, eventcalendar, Eventcalendar, snackbar, toast} from "@mobiscroll/javascript";
 import debug from "debug";
 import {STATE_NAMES, VIEW_CONTAINER} from "../AppTypes";
 import moment from "moment";
@@ -79,15 +79,20 @@ export class AppointmentBookView {
                 message: 'Event deleted'
             });
         };
-        options.onEventClick = (args: any) => {
-            logger(args.event);
-            if (args.event.editable) {
-                AppointmentController.getInstance().getModel().oldEvent = Object.assign({}, args.event);
-                AppointmentController.getInstance().getModel().tempEvent = args.event;
+        options.onEventClick = (event: any,inst:any) => {
+            logger(event.event);
+            if (event.event.editable) {
+                if (event.domEvent.target.classList.contains('md-custom-event-title')) {
+                    if (event.event.patientId) PatientController.getInstance().openPatientRecordWithPatientId(event.event.patientId);
+                }
+                else {
+                    AppointmentController.getInstance().getModel().oldEvent = Object.assign({}, event.event);
+                    AppointmentController.getInstance().getModel().tempEvent = event.event;
 
-                if (!AppointmentDetailModal.getInstance().isVisible()) {
-                    logger(args);
-                    AppointmentDetailModal.getInstance().updateAppointment(args);
+                    if (!AppointmentDetailModal.getInstance().isVisible()) {
+                        logger(event);
+                        AppointmentDetailModal.getInstance().updateAppointment(event);
+                    }
                 }
             }
         }

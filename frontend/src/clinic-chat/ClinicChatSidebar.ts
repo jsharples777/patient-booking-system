@@ -14,19 +14,19 @@ export class ClinicChatSidebar extends SidebarViewContainer {
     }
     private static _instance: ClinicChatSidebar;
 
-    private constructor(stateManager: StateManager) {
+    private constructor() {
         super(ClinicChatSidebar.SidebarPrefs);
         const chatView = ClinicChatListView.getInstance();
         this.addView(chatView, {containerId: ClinicChatSidebar.SidebarContainers.chatLogs});
 
-        const chatLogView = ClinicChatDetailView.getInstance(stateManager);
+        const chatLogView = ClinicChatDetailView.getInstance();
         this.addView(chatLogView, {containerId: ClinicChatSidebar.SidebarContainers.chatLog});
         chatView.addEventListener(chatLogView);
     }
 
-    public static getInstance(stateManager: StateManager): ClinicChatSidebar {
+    public static getInstance(): ClinicChatSidebar {
         if (!(ClinicChatSidebar._instance)) {
-            ClinicChatSidebar._instance = new ClinicChatSidebar(stateManager);
+            ClinicChatSidebar._instance = new ClinicChatSidebar();
         }
         return ClinicChatSidebar._instance;
     }

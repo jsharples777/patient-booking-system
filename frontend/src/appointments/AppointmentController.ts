@@ -141,6 +141,7 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
                 logger('Converted to event');
                 logger(result);
 
+                AppointmentBookView.getInstance().getCalender().removeEvent(result);
                 AppointmentBookView.getInstance().getCalender().addEvent(result);
             }
         }
@@ -166,7 +167,8 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
                 logger('Converted to event');
                 logger(result);
 
-                AppointmentBookView.getInstance().getCalender().updateEvent(result);
+                AppointmentBookView.getInstance().getCalender().removeEvent(result);
+                AppointmentBookView.getInstance().getCalender().addEvent(result);
             }
         }
     }

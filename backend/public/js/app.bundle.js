@@ -1007,6 +1007,7 @@ class AppointmentTemplateController {
       logger('New Appointment Template inserted by another user');
       logger(appointment);
       const result = this.getEventForAppointmentTemplate(appointment);
+      _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
       if (result) _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().addEvent(result);
     }
   }
@@ -1024,7 +1025,8 @@ class AppointmentTemplateController {
       logger('Appointment updated by another user');
       logger(appointment);
       const result = this.getEventForAppointmentTemplate(appointment);
-      if (result) _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().updateEvent(result);
+      _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
+      if (result) _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().addEvent(result);
     }
   }
 
@@ -1939,16 +1941,20 @@ class AppointmentBookView {
       });
     };
 
-    options.onEventClick = args => {
-      logger(args.event);
+    options.onEventClick = (event, inst) => {
+      logger(event.event);
 
-      if (args.event.editable) {
-        _AppointmentController__WEBPACK_IMPORTED_MODULE_0__.AppointmentController.getInstance().getModel().oldEvent = Object.assign({}, args.event);
-        _AppointmentController__WEBPACK_IMPORTED_MODULE_0__.AppointmentController.getInstance().getModel().tempEvent = args.event;
+      if (event.event.editable) {
+        if (event.domEvent.target.classList.contains('md-custom-event-title')) {
+          if (event.event.patientId) _patients_PatientController__WEBPACK_IMPORTED_MODULE_8__.PatientController.getInstance().openPatientRecordWithPatientId(event.event.patientId);
+        } else {
+          _AppointmentController__WEBPACK_IMPORTED_MODULE_0__.AppointmentController.getInstance().getModel().oldEvent = Object.assign({}, event.event);
+          _AppointmentController__WEBPACK_IMPORTED_MODULE_0__.AppointmentController.getInstance().getModel().tempEvent = event.event;
 
-        if (!_AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_6__.AppointmentDetailModal.getInstance().isVisible()) {
-          logger(args);
-          _AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_6__.AppointmentDetailModal.getInstance().updateAppointment(args);
+          if (!_AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_6__.AppointmentDetailModal.getInstance().isVisible()) {
+            logger(event);
+            _AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_6__.AppointmentDetailModal.getInstance().updateAppointment(event);
+          }
         }
       }
     };
@@ -2175,6 +2181,7 @@ class AppointmentController {
         const result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
         logger('Converted to event');
         logger(result);
+        _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().removeEvent(result);
         _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().addEvent(result);
       }
     }
@@ -2197,7 +2204,8 @@ class AppointmentController {
         const result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
         logger('Converted to event');
         logger(result);
-        _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().updateEvent(result);
+        _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().removeEvent(result);
+        _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().addEvent(result);
       }
     }
   }
@@ -2959,8 +2967,8 @@ class ClinicChatDetailView {
 
   listeners = [];
 
-  constructor(stateManager) {
-    this.stateManager = stateManager;
+  constructor() {
+    this.stateManager = _Controller__WEBPACK_IMPORTED_MODULE_5__["default"].getInstance().getStateManager();
     this.selectedChatLog = null; // handler binding
 
     this.handleAddMessage = this.handleAddMessage.bind(this);
@@ -2975,9 +2983,9 @@ class ClinicChatDetailView {
     this.stateManager.addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_4__.STATE_NAMES.patientSearch, this);
   }
 
-  static getInstance(stateManager) {
+  static getInstance() {
     if (!ClinicChatDetailView._instance) {
-      ClinicChatDetailView._instance = new ClinicChatDetailView(stateManager);
+      ClinicChatDetailView._instance = new ClinicChatDetailView();
     }
 
     return ClinicChatDetailView._instance;
@@ -3541,10 +3549,17 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
 
         return results;
       }
-    }
+    },
+    sorter: ClinicChatListView.sort
   };
   selectedChatLog = null;
   doNotDisturbEl = null;
+
+  static sort(item1, item2) {
+    let result = -1;
+    if (item1.name > item2.name) result = 1;
+    return result;
+  }
 
   constructor() {
     super(ClinicChatListView.DOMConfig, new ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.MemoryBufferStateManager(ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.isSameRoom), ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.chatLogs);
@@ -3821,22 +3836,22 @@ class ClinicChatSidebar extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.Si
     chatLog: 'chatLogRoom'
   };
 
-  constructor(stateManager) {
+  constructor() {
     super(ClinicChatSidebar.SidebarPrefs);
     const chatView = _ClinicChatListView__WEBPACK_IMPORTED_MODULE_0__.ClinicChatListView.getInstance();
     this.addView(chatView, {
       containerId: ClinicChatSidebar.SidebarContainers.chatLogs
     });
-    const chatLogView = _ClinicChatDetailView__WEBPACK_IMPORTED_MODULE_1__.ClinicChatDetailView.getInstance(stateManager);
+    const chatLogView = _ClinicChatDetailView__WEBPACK_IMPORTED_MODULE_1__.ClinicChatDetailView.getInstance();
     this.addView(chatLogView, {
       containerId: ClinicChatSidebar.SidebarContainers.chatLog
     });
     chatView.addEventListener(chatLogView);
   }
 
-  static getInstance(stateManager) {
+  static getInstance() {
     if (!ClinicChatSidebar._instance) {
-      ClinicChatSidebar._instance = new ClinicChatSidebar(stateManager);
+      ClinicChatSidebar._instance = new ClinicChatSidebar();
     }
 
     return ClinicChatSidebar._instance;
@@ -4015,7 +4030,7 @@ class AppointmentControllerHelper {
   }
 
   getColourForAppointmentType(appointmentType) {
-    let result = `rgba(10, 100, 100, 50)`;
+    let result = `#333333`;
 
     if (this.appointmentTypes) {
       const foundIndex = this.appointmentTypes.findIndex(type => type.name === appointmentType);
@@ -4227,11 +4242,10 @@ class AppointmentControllerHelper {
     let buffer = '' + '<div class="md-custom-event-cont" style="border-left: 5px solid ' + data.color + ';background:' + data.color + '">' + '  <div class="md-custom-event-wrapper">' + '    <div class="container-fluid">' + '    <div class="row">' + `      <div style="background:${data.color}" class="col-12 md-custom-event-template-type">${data.original.type}</div>` + '    </div>' + '    <div class="row">' + '      <div class="col-12 d-flex w-100 justify-content-between md-custom-event-time">' + `        <span>${data.start} - ${data.end}</span>`;
 
     if (icons.trim().length > 0) {
-      buffer += '' + `        <span class="md-custom-event-img-cont">${icons}</span>` + '      </div>' + '  </div>' + '</div>';
-    } else {
-      buffer += '' + '  </div>' + '</div>';
+      buffer += '' + `        <span class="md-custom-event-img-cont">${icons}</span>` + '      </div>';
     }
 
+    buffer += '' + '  </div>' + '</div>';
     return buffer;
   }
 
@@ -4241,14 +4255,14 @@ class AppointmentControllerHelper {
     const icons = AppointmentControllerHelper.getInstance().getIconsForEvent(data.original);
     logger(`Applicable icons`);
     logger(icons);
-    let buffer = '' + '<div class="md-custom-event-cont" style="border-left: 5px solid ' + data.color + ';background:' + data.color + '">' + '  <div class="md-custom-event-wrapper">' + '    <div class="container-fluid">' + '    <div class="row ">' + `      <div style="background:${data.color}" class="col-sm-12 col-md-2 md-custom-event-type">${data.original.type}</div>` + `      <div class="col-sm-4 col-md-6 md-custom-event-title">${data.title}</div>` + '      <div class="col-sm-6 col-md-4 d-flex w-100 justify-content-between md-custom-event-time">' + `        <span>${data.start} - ${data.end}</span>`;
+    let buffer = '' + '<div class="md-custom-event-cont" style="border-left: 5px solid ' + data.color + ';background:' + data.color + '">' + '  <div class="md-custom-event-wrapper">' + '    <div class="container-fluid">' + '    <div class="row ">' + `       <div style="background:${data.color}" class="col-12 md-custom-event-type">${data.original.type}</div>` + '    </div>' + '    <div class="row "> ' + `       <div class="col-sm-4 col-md-6 col-lg-12 md-custom-event-title">${data.title}</div>` + '       <div class="col-sm-6 col-md-4 col-lg-12 d-flex w-100 justify-content-between md-custom-event-time">' + `        <span>${data.start} - ${data.end}</span>`;
 
     if (icons.trim().length > 0) {
-      buffer += '' + `        <span class="md-custom-event-img-cont">${icons}</span>` + '      </div>' + '  </div>' + '</div>';
-    } else {
-      buffer += '' + '  </div>' + '</div>';
-    }
+      buffer += '' + `        <span class="md-custom-event-img-cont">${icons}</span>` + '      </div>' + '    </div>';
+    } //if (data.original.patientId) buffer += '</div><div class="row"><div class="col-12"><button mbsc-button class="md-custom-event-btn" data-color="dark" data-variant="outline">Patient</button></div></div>';
 
+
+    buffer += '</div>' + '  </div>' + '</div>';
     return buffer;
   }
 
@@ -4531,6 +4545,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
 /* harmony import */ var _model_PatientObjectDefinitions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../model/PatientObjectDefinitions */ "./src/model/PatientObjectDefinitions.ts");
 /* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../App */ "./src/App.tsx");
+/* harmony import */ var _clinic_chat_ClinicChatDetailView__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../clinic-chat/ClinicChatDetailView */ "./src/clinic-chat/ClinicChatDetailView.ts");
+
 
 
 
@@ -4616,6 +4632,7 @@ class PatientController {
   onDocumentLoaded() {
     _model_PatientObjectDefinitions__WEBPACK_IMPORTED_MODULE_6__.PatientObjectDefinitions.loadPatientDefinitions();
     _OpenPatientsView__WEBPACK_IMPORTED_MODULE_4__.OpenPatientsView.getInstance().addEventCollectionListener(this);
+    _clinic_chat_ClinicChatDetailView__WEBPACK_IMPORTED_MODULE_8__.ClinicChatDetailView.getInstance().addAttachmentListener(this);
   }
 
   stateChanged(managerName, name, newValue) {}
@@ -4718,6 +4735,12 @@ class PatientController {
       _id: patientId
     });
     return patient._id;
+  }
+
+  attachmentClicked(dataType, dataIdentifier) {
+    if (dataType === _AppTypes__WEBPACK_IMPORTED_MODULE_1__.DRAGGABLE.typePatientSummary) {
+      this.openPatientRecordWithPatientId(dataIdentifier);
+    }
   }
 
 }
@@ -5548,7 +5571,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().onDocumentLoaded();
     this.apptTypeSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.AppointmentTypesSidebarPrefs);
     new _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__.AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).onDocumentLoaded();
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance().onDocumentLoaded();
     const patientView = _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_15__.PatientRecordTabularView.getInstance();
     patientView.addViewToTab('demographics', new _patients_PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_16__.PatientDemographicsCompositeView());
     patientView.onDocumentLoaded();
@@ -5585,7 +5608,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
   hideAllSideBars() {
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).eventHide(null);
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance().eventHide(null);
     _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().eventHide(null);
     this.usersSidebar.eventHide(null);
     this.apptTypeSidebar.eventHide(null);
@@ -5600,7 +5623,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
       return;
     }
 
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance(_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().getStateManager()).eventShow(null);
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance().eventShow(null);
 
     if (roomName) {
       _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_13__.ClinicChatListView.getInstance().selectChatRoom(roomName);

@@ -141,6 +141,7 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
             logger(appointment);
 
             const result = this.getEventForAppointmentTemplate(appointment);
+            AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
             if (result) AppointmentTemplateView.getInstance().getCalender().addEvent(result);
         }
     }
@@ -160,7 +161,8 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
             logger(appointment);
 
             const result = this.getEventForAppointmentTemplate(appointment);
-            if (result) AppointmentTemplateView.getInstance().getCalender().updateEvent(result);
+            AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
+            if (result) AppointmentTemplateView.getInstance().getCalender().addEvent(result);
         }
     }
 
