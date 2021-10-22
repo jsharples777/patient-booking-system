@@ -29,6 +29,11 @@ import {PatientController} from "./patients/PatientController";
 const logger = debug('app');
 
 export default class App extends React.Component implements UnreadMessageCountListener {
+    private static _instance:App;
+
+    public static getInstance(): App {
+        return App._instance;
+    }
 
     private thisEl: HTMLDivElement | null = null;
     private chatNavigationItem: HTMLAnchorElement | null = null;
@@ -39,6 +44,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     public constructor() {
         // @ts-ignore
         super();
+        App._instance = this;
 
         let todaysPatients: any[] = [];
 
@@ -212,7 +218,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
     }
 
-    protected handleShowPatientRecord(event: Event): void {
+    public handleShowPatientRecord(event: Event): void {
         if (event) {
             event.preventDefault();
             event.stopPropagation();

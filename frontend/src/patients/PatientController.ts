@@ -15,6 +15,7 @@ import {OpenPatientsView} from "./OpenPatientsView";
 import {PatientRecordTabularView} from "./PatientRecordTabularView";
 import {PatientListener} from "./PatientListener";
 import {PatientObjectDefinitions} from "../model/PatientObjectDefinitions";
+import App from "../App";
 
 const logger = debug('patient-controller');
 
@@ -66,6 +67,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
             // make a copy
             patient = copyObject(patient);
         }
+        App.getInstance().handleShowPatientRecord(null);
         this.listeners.forEach((listener) => listener.patientSelected(patient));
     }
 

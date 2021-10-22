@@ -4530,6 +4530,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _OpenPatientsView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./OpenPatientsView */ "./src/patients/OpenPatientsView.ts");
 /* harmony import */ var _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
 /* harmony import */ var _model_PatientObjectDefinitions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../model/PatientObjectDefinitions */ "./src/model/PatientObjectDefinitions.ts");
+/* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../App */ "./src/App.tsx");
+
 
 
 
@@ -4591,6 +4593,7 @@ class PatientController {
       patient = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(patient);
     }
 
+    _App__WEBPACK_IMPORTED_MODULE_7__["default"].getInstance().handleShowPatientRecord(null);
     this.listeners.forEach(listener => listener.patientSelected(patient));
   }
 
@@ -5487,6 +5490,10 @@ __webpack_require__.r(__webpack_exports__);
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('app');
 class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
+  static getInstance() {
+    return App._instance;
+  }
+
   thisEl = null;
   chatNavigationItem = null;
   apptTypeSidebar = null;
@@ -5495,6 +5502,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   constructor() {
     // @ts-ignore
     super();
+    App._instance = this;
     let todaysPatients = [];
     this.state = {
       todaysPatients: todaysPatients
