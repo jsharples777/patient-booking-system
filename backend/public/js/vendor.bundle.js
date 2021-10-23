@@ -52287,12 +52287,16 @@ class BasicFieldOperations {
         switch (field.type) { // only need to change dates
             case (_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.date): {
                 //convert to underlying number format
-                result = moment__WEBPACK_IMPORTED_MODULE_0___default()(currentValue, 'DD/MM/YYYY').format('YYYYMMDD');
+                if (currentValue.trim().length === 10) {
+                    result = moment__WEBPACK_IMPORTED_MODULE_0___default()(currentValue, 'DD/MM/YYYY').format('YYYYMMDD');
+                }
                 break;
             }
             case (_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.datetime): {
                 //convert to underlying number format
-                result = moment__WEBPACK_IMPORTED_MODULE_0___default()(currentValue, 'DD/MM/YYYY HH:mm:ss').format('YYYYMMDDHHmmss');
+                if (currentValue.trim().length === 19) {
+                    result = moment__WEBPACK_IMPORTED_MODULE_0___default()(currentValue, 'DD/MM/YYYY HH:mm:ss').format('YYYYMMDDHHmmss');
+                }
                 break;
             }
             case (_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.boolean): {
@@ -52301,7 +52305,10 @@ class BasicFieldOperations {
             }
             case (_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.id): {
                 if (field.idType === _ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_3__.KeyType.number) {
-                    result = parseInt(currentValue);
+                    let parsed = parseInt(currentValue);
+                    if (!isNaN(parsed)) {
+                        result = parsed;
+                    }
                 }
                 break;
             }
@@ -52456,14 +52463,25 @@ class BasicFieldOperations {
         // }
         // either not yet seen or value has changed from previous
         if (currentValue) { // only attempt to render non-empty dates
+            currentValue += '';
             let newValue = currentValue;
             switch (fieldDef.type) {
                 case (_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.date): {
-                    newValue = moment__WEBPACK_IMPORTED_MODULE_0___default()(currentValue, 'YYYYMMDD').format('DD/MM/YYYY');
+                    if (currentValue.trim().length === 8) {
+                        newValue = moment__WEBPACK_IMPORTED_MODULE_0___default()(currentValue, 'YYYYMMDD').format('DD/MM/YYYY');
+                    }
+                    else {
+                        newValue = '';
+                    }
                     break;
                 }
                 case (_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_1__.FieldType.datetime): {
-                    newValue = moment__WEBPACK_IMPORTED_MODULE_0___default()(currentValue, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm:ss');
+                    if (currentValue.trim().length === 14) {
+                        newValue = moment__WEBPACK_IMPORTED_MODULE_0___default()(currentValue, 'YYYYMMDDHHmmss').format('DD/MM/YYYY HH:mm:ss');
+                    }
+                    else {
+                        newValue = '';
+                    }
                     break;
                 }
             }

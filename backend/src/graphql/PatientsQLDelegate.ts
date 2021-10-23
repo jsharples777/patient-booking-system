@@ -32,14 +32,14 @@ export default class PatientsQLDelegate {
                         hasWarnings: 1,
                     },
                     warnings: 1,
-                    contact:1,
-                    lastSeen:1,
-                    lastSeenBy:1,
-                    dob:1,
-                    dod:1,
-                    gender:1,
-                    ethnicity:1,
-                    countryofbirth:1
+                    contact: 1,
+                    lastSeen: 1,
+                    lastSeenBy: 1,
+                    dob: 1,
+                    dod: 1,
+                    gender: 1,
+                    ethnicity: 1,
+                    countryofbirth: 1
                 }
             };
             MongoDataSource.getInstance().getDatabase().collection(collection).find({}, projection).sort({
@@ -62,9 +62,22 @@ export default class PatientsQLDelegate {
 
     }
 
-    public static postMigrationProcessPatientThirdPass(patient:Document) {
+    public static postMigrationProcessPatientThirdPass(patient: Document) {
         if (patient) {
             if (patient.isPostProcessed) {
+
+                if (patient.dod) {
+                    if (patient.dod === -1) {
+                        delete patient.dod;
+                        let collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
+                        MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: patient._id}, patient).then((result) => {
+                            logger(result);
+                        }).catch((err) => {
+                            logger(err);
+                        });
+
+                    }
+                }
 
 
                 logger(`Patient ${patient.name.firstname} ${patient.name.surname} undo post processed`);
@@ -72,13 +85,16 @@ export default class PatientsQLDelegate {
 
                 logger(`Checking for contact details`)
                 if (patient.flags) {
+
+
+
                     if (patient.flags.isAccountHolder) {
                         logger(`Patient ${patient._id} is account holder, setting contact owner to this patient`);
                         // update the contact
                         let collection = process.env.DB_COLLECTION_CONTACTS || 'pms-contacts';
-                        MongoDataSource.getInstance().getDatabase().collection(collection).updateOne({_id:patient.contact._id},{$set: {owner: patient._id}}).then((result) => {
+                        MongoDataSource.getInstance().getDatabase().collection(collection).updateOne({_id: patient.contact._id}, {$set: {owner: patient._id}}).then((result) => {
                             logger(result);
-                        }).catch ((err) => {
+                        }).catch((err) => {
                             logger(err);
                         });
                     }
@@ -87,7 +103,7 @@ export default class PatientsQLDelegate {
         }
     }
 
-    public static postMigrationProcessPatientFirstPass(patient:Document) {
+    public static postMigrationProcessPatientFirstPass(patient: Document) {
         // consolidate contacts
         if (patient) {
             if (!(patient.isPostProcessed)) {
@@ -107,7 +123,7 @@ export default class PatientsQLDelegate {
                         let collection = process.env.DB_COLLECTION_CONTACTS || 'pms-contacts';
                         MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(newContact).then((result) => {
                             logger(result);
-                        }).catch ((err) => {
+                        }).catch((err) => {
                             logger(err);
                         });
 
@@ -120,65 +136,62 @@ export default class PatientsQLDelegate {
                         });
                         logger(`Updating patient`);
                         collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
-                        MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:patient._id},patient);
+                        MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: patient._id}, patient);
                     }
                 }
             }
         }
 
     }
-    public static postMigrationProcessPatientSecondPass(patient:Document) {
+
+    public static postMigrationProcessPatientSecondPass(patient: Document) {
         // consolidate contacts
         if (patient) {
-            // if (!(patient.isPostProcessed)) {
+            logger(`Patient ${patient.name.firstname} ${patient.name.surname} not yet post processed`);
 
 
-                logger(`Patient ${patient.name.firstname} ${patient.name.surname} not yet post processed`);
+            logger(`Checking for contact details`)
+            if (patient.flags) {
+                if (!(patient.flags.isAccountHolder)) {
+                    patient.isPostProcessed = true;
+                    logger(`Patient ${patient._id} is not account holder, finding contact for legacy account holder ${patient.flags.legacyAccountHolderId}`);
+                    // create the new contact
+                    let collection = process.env.DB_COLLECTION_CONTACTS || 'pms-contacts';
+                    MongoDataSource.getInstance().getDatabase().collection(collection).findOne({legacyAccountHolderId: patient.flags.legacyAccountHolderId}).then((result) => {
+                        logger(result);
+                        if (result) {
+                            logger(`Found account holder contact, updating patient`);
+                            result.contact._id = result._id;
+                            result.contact.line1 = result.line1;
+                            result.contact.line2 = result.line2;
+                            result.contact.suburb = result.suburb;
+                            result.contact.postcode = result.postcode;
+                            result.contact.state = result.state;
+                            result.contact.country = result.country;
+                            result.contact.home = result.home;
+                            result.contact.work = result.work;
+                            result.contact.mobile = result.mobile;
+                        }
+                    }).catch((err) => {
+                        logger(err);
+                    });
 
+                    logger(`Correcting pathology received dates`);
+                    patient.results.forEach((pathology: any) => {
+                        if (isNaN(pathology.received)) {
+                            pathology.received = -1;
+                        }
 
-                logger(`Checking for contact details`)
-                if (patient.flags) {
-                    if (!(patient.flags.isAccountHolder)) {
-                        patient.isPostProcessed = true;
-                        logger(`Patient ${patient._id} is not account holder, finding contact for legacy account holder ${patient.flags.legacyAccountHolderId}`);
-                        // create the new contact
-                        let collection = process.env.DB_COLLECTION_CONTACTS || 'pms-contacts';
-                        MongoDataSource.getInstance().getDatabase().collection(collection).findOne({legacyAccountHolderId:patient.flags.legacyAccountHolderId}).then((result) => {
-                            logger(result);
-                            if (result) {
-                                logger(`Found account holder contact, updating patient`);
-                                result.contact._id = result._id;
-                                result.contact.line1 = result.line1;
-                                result.contact.line2 = result.line2;
-                                result.contact.suburb = result.suburb;
-                                result.contact.postcode = result.postcode;
-                                result.contact.state = result.state;
-                                result.contact.country = result.country;
-                                result.contact.home = result.home;
-                                result.contact.work = result.work;
-                                result.contact.mobile = result.mobile;
-                            }
-                        }).catch ((err) => {
-                            logger(err);
-                        });
-
-                        logger(`Correcting pathology received dates`);
-                        patient.results.forEach((pathology: any) => {
-                            if (isNaN(pathology.received)) {
-                                pathology.received = -1;
-                            }
-
-                        });
-                        logger(`Updating patient`);
-                        collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
-                        MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:patient._id},patient);
-                    }
+                    });
+                    logger(`Updating patient`);
+                    collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
+                    MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: patient._id}, patient);
                 }
-            // }
+            }
+
         }
 
     }
-
 
 
     public static async postProcessAll() {
@@ -200,18 +213,18 @@ export default class PatientsQLDelegate {
         }
     }
 
-    public static async getPatientContact(contactId:string){
+    public static async getPatientContact(contactId: string) {
         const collection = process.env.DB_COLLECTION_CONTACTS || 'pms-contacts';
-        const contact = await MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id:contactId});
+        const contact = await MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id: contactId});
         return contact;
     }
 
-    public static demoise(patient:Document) {
+    public static demoise(patient: Document) {
         const enableDemo = ((process.env.ENABLE_DEMO === 'Y') || false);
         if (enableDemo && patient) {
             logger(`DEMO MODE ACTIVATED`);
-            patient.name.firstname = patient.name.firstname.substr(0,2) + 'xxxxxx';
-            patient.name.surname = patient.name.surname.substr(0,2) + 'xxxxxx';
+            patient.name.firstname = patient.name.firstname.substr(0, 2) + 'xxxxxx';
+            patient.name.surname = patient.name.surname.substr(0, 2) + 'xxxxxx';
             if (patient.contact) {
                 patient.contact.line1 = '1 Demo Street';
                 patient.contact.line2 = '';
@@ -248,9 +261,9 @@ export default class PatientsQLDelegate {
 
                 resolve(result);
             }).catch((err) => {
-                    logger(err);
-                    reject(err);
-                });
+                logger(err);
+                reject(err);
+            });
         });
 
     }

@@ -131,9 +131,9 @@ export class PatientSearchView extends AbstractStatefulCollectionView {
     eventPatientSelected(event: Event, ui: any) {
         event.preventDefault();
         event.stopPropagation();
-        vLogger(`User ${ui.item.label} with id ${ui.item.value} selected`);
+        vLogger(`patient ${ui.item.label} with id ${ui.item.value} selected`);
         // @ts-ignore
-        event.target.innerText = '';
+        event.target.value = ui.item.label;
 
         // add the selected user to the recent user searches
         if (this.localisedSM.isItemInState(STATE_NAMES.recentPatientSearches, {_id: ui.item.value})) return;

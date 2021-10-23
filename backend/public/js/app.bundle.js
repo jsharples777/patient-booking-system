@@ -264,7 +264,7 @@ class Controller {
       serverURL: '',
       apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
       apis: {
-        findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' + '    line1,\n' + '    line2,\n' + '    suburb\n' + '    postcode,\n' + '    state,\n' + '    country,\n' + '    home,\n' + '    work,\n' + '    mobile,\n' + '    nokname,\n' + '    nokphone},\n' + 'lastSeen,\n' + 'lastSeenBy,\n' + 'dob,\n' + 'dod,\n' + 'gender,\n' + 'ethnicity,\n' + 'countryofbirth}}',
+        findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' + '    owner,\n' + '    line1,\n' + '    line2,\n' + '    suburb\n' + '    postcode,\n' + '    state,\n' + '    country,\n' + '    home,\n' + '    work,\n' + '    mobile,\n' + '    nokname,\n' + '    nokphone},\n' + 'lastSeen,\n' + 'lastSeenBy,\n' + 'dob,\n' + 'dod,\n' + 'gender,\n' + 'ethnicity,\n' + 'countryofbirth}}',
         create: '',
         destroy: '',
         update: '',
@@ -5176,9 +5176,9 @@ class PatientSearchView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Ab
   eventPatientSelected(event, ui) {
     event.preventDefault();
     event.stopPropagation();
-    vLogger(`User ${ui.item.label} with id ${ui.item.value} selected`); // @ts-ignore
+    vLogger(`patient ${ui.item.label} with id ${ui.item.value} selected`); // @ts-ignore
 
-    event.target.innerText = ''; // add the selected user to the recent user searches
+    event.target.value = ui.item.label; // add the selected user to the recent user searches
 
     if (this.localisedSM.isItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.recentPatientSearches, {
       _id: ui.item.value
@@ -5864,9 +5864,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PatientController__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./PatientController */ "./src/patients/PatientController.ts");
 /* harmony import */ var ui_framework_jps_dist_framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
 /* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
 /** @jsx jsxCreateElement */
 
 /*** @jsxFrag jsxCreateFragment */
+
+
 
 
 
@@ -5898,8 +5903,11 @@ class NamePermissionChecker {
 
 }
 class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AbstractView {
+  static ICON_Linked = '<i class="fas fa-link"></i>';
+  static ICON_Unlinked = '<i class="fas fa-unlink"></i>';
   currentPatient = null;
   initialised = false;
+  linkToPatientId = '';
 
   constructor() {
     super({
@@ -5907,6 +5915,8 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       dataSourceId: 'patientDemographics'
     });
     this.handlePostCodeSearch = this.handlePostCodeSearch.bind(this);
+    this.eventLinkUnlink = this.eventLinkUnlink.bind(this);
+    this.handlePatientSearch = this.handlePatientSearch.bind(this);
   }
 
   hidden() {}
@@ -5916,6 +5926,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     this.render();
     _PatientController__WEBPACK_IMPORTED_MODULE_4__.PatientController.getInstance().addListener(this);
     _Controller__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.postCodes, this);
+    _Controller__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().getStateManager().addChangeListenerForName(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patientSearch, this);
   }
 
   render() {
@@ -5923,12 +5934,28 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].removeAllChildren(this.containerEl);
     const demographicsView = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "demographics-view",
-      className: "container-fluid"
+      className: "container-fluid mt-4"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       className: "row"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "col-sm-12 col-md-6"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h4", {
+      id: "banner-patient"
+    })), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "col-sm-12 col-md-6  d-flex w-100 justify-content-between"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h6", null, "Link Contact Details To:"), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("input", {
+      type: 'text',
+      id: 'patient-demographics-fast-patient-search'
+    }), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("button", {
+      id: "contact-link-unlink",
+      className: "btn btn-primary"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("i", {
+      className: "fas fa-link"
+    })))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "row"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "patient-name",
-      className: "col-12-sm col-md-6"
+      className: "col-12-sm col-md-6 mb-2"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       className: "shadow card"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
@@ -5940,7 +5967,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       id: _AppTypes__WEBPACK_IMPORTED_MODULE_1__.VIEW_CONTAINER.patientName
     })))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "patient-basics",
-      className: "col-12-sm col-md-6"
+      className: "col-12-sm col-md-6 mb-2"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       className: "shadow card"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
@@ -5954,7 +5981,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       className: "row"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "patient-contact",
-      className: "col-12-sm col-md-6"
+      className: "col-12-sm col-md-6 mb-2"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       className: "shadow card"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
@@ -5966,7 +5993,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       id: _AppTypes__WEBPACK_IMPORTED_MODULE_1__.VIEW_CONTAINER.patientContact
     })))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "patient-identifiers",
-      className: "col-12-sm col-md-6"
+      className: "col-12-sm col-md-6 mb-2"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       className: "shadow card"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
@@ -5979,6 +6006,10 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     })))))); // @ts-ignore
 
     this.containerEl.append(demographicsView);
+    this.patientBannerDetailsEl = document.getElementById("banner-patient");
+    this.fastPatientSearchEl = document.getElementById("patient-demographics-fast-patient-search");
+    this.btnLinkUnlinkEl = document.getElementById("contact-link-unlink");
+    this.btnLinkUnlinkEl.addEventListener('click', this.eventLinkUnlink);
   }
 
   show() {
@@ -6066,6 +6097,15 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     }
   }
 
+  handlePatientSearch(event, ui) {
+    event.preventDefault();
+    event.stopPropagation();
+    logger(`User ${ui.item.label} with id ${ui.item.value} selected`); // @ts-ignore
+
+    event.target.value = ui.item.label;
+    this.linkToPatientId = ui.item.value;
+  }
+
   patientClosed(patient) {
     logger(`handling patient closed`);
 
@@ -6112,6 +6152,84 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     }
   }
 
+  eventLinkUnlink(event) {
+    event.stopPropagation();
+    event.preventDefault(); // reverse any link
+
+    if (this.isLinked) {
+      this.setLinked(false);
+    } else {
+      if (this.linkToPatientId.trim().length > 0) {
+        this.setLinked(true);
+      }
+    }
+  }
+
+  setLinked(isLinked) {
+    if (isLinked) {
+      this.isLinked = true; // set the contact elements to readonly
+
+      this.contactForm.setFieldReadOnly('line1');
+      this.contactForm.setFieldReadOnly('line2');
+      this.contactForm.setFieldReadOnly('suburb');
+      this.contactForm.setFieldReadOnly('postcode');
+      this.contactForm.setFieldReadOnly('country');
+      this.contactForm.setFieldReadOnly('home');
+      this.contactForm.setFieldReadOnly('mobile');
+      const linkedToPatient = _Controller__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patientSearch, {
+        _id: this.linkToPatientId
+      });
+
+      if (linkedToPatient) {
+        // show the patient linked to
+        // @ts-ignore
+        this.fastPatientSearchEl.value = `${linkedToPatient.name.firstname} ${linkedToPatient.name.surname}`;
+
+        if (this.currentPatient.contact) {
+          this.currentPatient.oldContact = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(this.currentPatient.contact);
+          this.currentPatient.contact.line1 = linkedToPatient.contact.line1;
+          this.currentPatient.contact.line2 = linkedToPatient.contact.line2;
+          this.currentPatient.contact.suburb = linkedToPatient.contact.suburb;
+          this.currentPatient.contact.postcode = linkedToPatient.contact.postcode;
+          this.currentPatient.contact.country = linkedToPatient.contact.country;
+          this.currentPatient.contact.home = linkedToPatient.contact.home;
+          this.currentPatient.contact.mobile = linkedToPatient.contact.mobile;
+          this.currentPatient.contact.owner = linkedToPatient._id;
+          this.currentPatient.contact._id = linkedToPatient.contact._id;
+        } else {
+          this.currentPatient.contact = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(linkedToPatient.contact);
+        }
+
+        this.contactView.displayItem(this.currentPatient.contact);
+      }
+
+      this.btnLinkUnlinkEl.innerHTML = PatientDemographicsCompositeView.ICON_Unlinked;
+    } else {
+      this.isLinked = false;
+
+      if (this.currentPatient.oldContact) {
+        this.currentPatient.contact = this.currentPatient.oldContact;
+        delete this.currentPatient.oldContact;
+      } else {
+        this.currentPatient.contact._id = (0,uuid__WEBPACK_IMPORTED_MODULE_8__["default"])();
+        this.currentPatient.contact.owner = this.currentPatient._id;
+      } // enable the contact elements
+
+
+      this.contactForm.clearFieldReadOnly('line1');
+      this.contactForm.clearFieldReadOnly('line2');
+      this.contactForm.clearFieldReadOnly('suburb');
+      this.contactForm.clearFieldReadOnly('postcode');
+      this.contactForm.clearFieldReadOnly('country');
+      this.contactForm.clearFieldReadOnly('home');
+      this.contactForm.clearFieldReadOnly('mobile'); // @ts-ignore
+
+      this.fastPatientSearchEl.value = '';
+      this.linkToPatientId = '';
+      this.btnLinkUnlinkEl.innerHTML = PatientDemographicsCompositeView.ICON_Linked;
+    }
+  }
+
   patientSelected(patient) {
     logger(`handling patient selected`);
     logger(patient);
@@ -6120,6 +6238,23 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     this.contactView.displayItem(patient.contact);
     this.identifiersView.displayItem(patient.identifiers);
     this.nameView.displayItem(patient.name);
+    let dob = "";
+    if (patient.dob) dob = moment__WEBPACK_IMPORTED_MODULE_7___default()(patient.dob, 'YYYYMMDD').format('DD/MM/YYYY');
+    let linkIcon = '<i class="fas fa-link"></i>';
+    this.setLinked(false);
+
+    if (patient.contact) {
+      if (patient.contact.owner) {
+        if (patient.contact.owner !== patient._id) {
+          linkIcon = '<i class="fas fa-unlink"></i>';
+          this.linkToPatientId = patient.contact.owner;
+          this.setLinked(true);
+        }
+      }
+    }
+
+    this.patientBannerDetailsEl.innerHTML = `${patient.name.firstname} ${patient.name.surname} (DOB:${dob})`;
+    this.btnLinkUnlinkEl.innerHTML = linkIcon;
   }
 
   filterResults(managerName, name, filterResults) {}
@@ -6162,7 +6297,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
         const postCodeSearchElByPostCode = $(el);
         logger(postCodeSearchElByPostCode); // @ts-ignore
 
-        postCodeSearchElByPostCode.on('autocompleteselect', this.handlePostCodeSearch);
+        postCodeSearchElByPostCode.on('autocompleteselect', this.handlePatientSearch);
         postCodeSearchElByPostCode.autocomplete({
           source: fastSearchValues
         });
@@ -6171,6 +6306,30 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
           minLength: 2
         });
       }
+    }
+
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patientSearch) {
+      logger(`Handling patient search`);
+      const fastSearchValues = [];
+      newState.forEach(item => {
+        const searchValue = {
+          label: `${item.name.firstname} ${item.name.surname}`,
+          value: item._id
+        };
+        fastSearchValues.push(searchValue);
+      });
+      logger(`Setting up fast search for suburbs ${this.fastPatientSearchEl}`);
+      const autocompletePatientSearch = $(this.fastPatientSearchEl);
+      logger(autocompletePatientSearch); // @ts-ignore
+
+      autocompletePatientSearch.on('autocompleteselect', this.handlePatientSearch);
+      autocompletePatientSearch.autocomplete({
+        source: fastSearchValues
+      });
+      autocompletePatientSearch.autocomplete('option', {
+        disabled: false,
+        minLength: 2
+      });
     }
   }
 

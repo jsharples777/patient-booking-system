@@ -150,7 +150,8 @@ type Contact {
     work: String,
     mobile:String,
     nokname:String,
-    nokphone:String
+    nokphone:String,
+    owner:String
 }
 
 type PatientSearchItem {
