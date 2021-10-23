@@ -18,11 +18,11 @@ export class PatientObjectDefinitions {
         const nameDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.name, 'Name', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "title", "Title", FieldType.choice, false, "Name", new SimpleValueDataSource([
             {name: '', value: ''},
-            {name: 'Master', value: 'master'},
-            {name: 'Miss', value: 'miss'},
-            {name: 'Ms', value: 'ms'},
-            {name: 'Mr', value: 'mr'},
-            {name: 'Mrs', value: 'mrs'}
+            {name: 'Master', value: 'Master'},
+            {name: 'Miss', value: 'Miss'},
+            {name: 'Ms', value: 'Ms'},
+            {name: 'Mr', value: 'Mr'},
+            {name: 'Mrs', value: 'Mrs'}
         ]));
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "firstname", "First Name", FieldType.text, true, "First name");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(nameDef, "middlename", "Middle Name", FieldType.text, false, "Middle name(s)");
@@ -53,18 +53,18 @@ export class PatientObjectDefinitions {
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "work", "Work Phone", FieldType.text, false, "Work phone");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "mobile", "Mobile Phone", FieldType.text, true, "Mobile phone");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "nokname", "NOK Name", FieldType.text, false, "Next of kin name");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "nokphone", "NOK Phone", FieldType.text, true, "Next of kin phone");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(contactDef, "nokphone", "NOK Phone", FieldType.text, false, "Next of kin phone");
 
         logger(`Contact type data object definition`);
-        logger(nameDef);
+        logger(contactDef);
 
         // Patient identifiers details
         const identifiersDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.identifiers, 'Contact', true, true, false, '_id');
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "medicare", "Medicare", FieldType.text, false, "Medicare number");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "medicareRef", "Medicare Ref", FieldType.text, false, "Medicare reference number");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "legacyId", "Legacy Id", FieldType.text, false, "Legacy Id");
+        let fieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "legacyId", "Legacy Id", FieldType.id, false, "Legacy Id");
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "dva", "DVA", FieldType.text, false, "DVA number");
-        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "dvaColour", "DVA Colour", FieldType.choice, true, "DVA colour", new SimpleValueDataSource(
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "dvaColour", "DVA Colour", FieldType.choice, false, "DVA colour", new SimpleValueDataSource(
             [
                 {name: '', value: ''},
                 {name: 'White', value: 'white'},
@@ -75,7 +75,29 @@ export class PatientObjectDefinitions {
         BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(identifiersDef, "ihi", "IHI", FieldType.integer, false, "Individual health identifier");
 
         logger(`Identifiers type data object definition`);
-        logger(nameDef);
+        logger(identifiersDef);
+
+        // Patient identifiers details
+        const basicsDef: DataObjectDefinition = ObjectDefinitionRegistry.getInstance().addDefinition(STATE_NAMES.basics, 'Basics', true, true, true, '_id');
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(basicsDef, "dob", "DOB", FieldType.date, true, "Date of birth");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(basicsDef, "dod", "DOD", FieldType.date, false, "Date of death");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(basicsDef, "gender", "Gender", FieldType.choice, true, "Gender", new SimpleValueDataSource(
+            [
+                {name: 'Female', value: 'F'},
+                {name: 'Male', value: 'M'},
+                {name: 'Non-binary', value: 'N'},
+                {name: 'Not stated', value: 'S'},
+            ]
+        ));
+        fieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(basicsDef, "lastSeen", "Last Seen", FieldType.date, false, "Last seen");
+        fieldDef.displayOnly = true;
+        fieldDef = BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(basicsDef, "lastSeenBy", "Last Seen By", FieldType.text, false, "Last seen by");
+        fieldDef.displayOnly = true;
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(basicsDef, "ethnicity", "Ethnicity", FieldType.text, false, "Ethnicity");
+        BasicObjectDefinitionFactory.getInstance().addStringFieldToObjDefinition(basicsDef, "countryofbirth", "Birth Country", FieldType.text, false, "Country of birth");
+
+        logger(`Basics type data object definition`);
+        logger(basicsDef);
 
     }
 }

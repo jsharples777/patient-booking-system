@@ -30,10 +30,20 @@ router.get("/:id", function (req, res) {
 
     MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id: req.params.id}).then((result: Document | null) => {
         logger(result);
-        if (result) PatientsQLDelegate.demoise(result);
+        if (result) {
+            PatientsQLDelegate.getPatientContact(result.contact._id).then((contact) => {
+                result.contact = contact;
+                PatientsQLDelegate.demoise(result);
+                res.json(result);
+                res.end();
+            });
+        }
+        else {
+            res.json(result);
+            res.end();
+        }
 
-        res.json(result);
-        res.end();
+
     })
         .catch((err) => {
             res.render('error', {
@@ -43,21 +53,6 @@ router.get("/:id", function (req, res) {
         });
 });
 
-
-router.get("/:id", function (req, res) {
-    logger("Starting route GET /patient by legacy id");
-    try {
-        MongoDataSource.getInstance().getPatientById(req.params.id).then((jsonData) => {
-            res.json(jsonData);
-            res.end();
-        });
-    } catch (err) {
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    }
-});
 
 
 export = router;

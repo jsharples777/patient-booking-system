@@ -62,6 +62,31 @@ export default class PatientsQLDelegate {
 
     }
 
+    public static postMigrationProcessPatientThirdPass(patient:Document) {
+        if (patient) {
+            if (patient.isPostProcessed) {
+
+
+                logger(`Patient ${patient.name.firstname} ${patient.name.surname} undo post processed`);
+
+
+                logger(`Checking for contact details`)
+                if (patient.flags) {
+                    if (patient.flags.isAccountHolder) {
+                        logger(`Patient ${patient._id} is account holder, setting contact owner to this patient`);
+                        // update the contact
+                        let collection = process.env.DB_COLLECTION_CONTACTS || 'pms-contacts';
+                        MongoDataSource.getInstance().getDatabase().collection(collection).updateOne({_id:patient.contact._id},{$set: {owner: patient._id}}).then((result) => {
+                            logger(result);
+                        }).catch ((err) => {
+                            logger(err);
+                        });
+                    }
+                }
+            }
+        }
+    }
+
     public static postMigrationProcessPatientFirstPass(patient:Document) {
         // consolidate contacts
         if (patient) {
@@ -105,7 +130,7 @@ export default class PatientsQLDelegate {
     public static postMigrationProcessPatientSecondPass(patient:Document) {
         // consolidate contacts
         if (patient) {
-            if (!(patient.isPostProcessed)) {
+            // if (!(patient.isPostProcessed)) {
 
 
                 logger(`Patient ${patient.name.firstname} ${patient.name.surname} not yet post processed`);
@@ -123,6 +148,15 @@ export default class PatientsQLDelegate {
                             if (result) {
                                 logger(`Found account holder contact, updating patient`);
                                 result.contact._id = result._id;
+                                result.contact.line1 = result.line1;
+                                result.contact.line2 = result.line2;
+                                result.contact.suburb = result.suburb;
+                                result.contact.postcode = result.postcode;
+                                result.contact.state = result.state;
+                                result.contact.country = result.country;
+                                result.contact.home = result.home;
+                                result.contact.work = result.work;
+                                result.contact.mobile = result.mobile;
                             }
                         }).catch ((err) => {
                             logger(err);
@@ -140,10 +174,12 @@ export default class PatientsQLDelegate {
                         MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:patient._id},patient);
                     }
                 }
-            }
+            // }
         }
 
     }
+
+
 
     public static async postProcessAll() {
         const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
@@ -157,7 +193,11 @@ export default class PatientsQLDelegate {
             let patient = await cursor.next();
             if (patient) PatientsQLDelegate.postMigrationProcessPatientSecondPass(patient);
         }
-
+        cursor = MongoDataSource.getInstance().getDatabase().collection(collection).find({});
+        while (await cursor.hasNext()) {
+            let patient = await cursor.next();
+            if (patient) PatientsQLDelegate.postMigrationProcessPatientThirdPass(patient);
+        }
     }
 
     public static async getPatientContact(contactId:string){

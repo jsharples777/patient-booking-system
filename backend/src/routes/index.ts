@@ -4,6 +4,8 @@ import debug from 'debug';
 import {ensureAuthenticated} from "./auth";
 import {MongoDataSource} from "../db/MongoDataSource";
 import PatientsQLDelegate from "../graphql/PatientsQLDelegate";
+import {v4} from "uuid";
+import {Document} from "mongodb";
 
 const router = express.Router();
 
@@ -69,5 +71,27 @@ router.get('/postprocess', (req, res) => {
 
     });
 });
+
+router.get('/postprocesspostcodes', (req, res) => {
+    console.log(`url: ${req.url}`);
+    const collection = process.env.DB_COLLECTION_POSTCODES || 'pms-post-codes';
+
+    MongoDataSource.getInstance().getDatabase().collection(collection).find({}).toArray().then((results) => {
+        results.forEach((result) => {
+            let postCode = {
+                _id:v4(),
+                suburb:result.suburb[0],
+                postcode:parseInt(result.postcode[0]),
+                state:result.state[0]
+            } as Document;
+            MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(postCode);
+            MongoDataSource.getInstance().getDatabase().collection(collection).deleteOne(result);
+        });
+        res.send('Completed');
+
+    });
+
+});
+
 
 export = router;

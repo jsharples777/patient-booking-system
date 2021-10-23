@@ -167,11 +167,13 @@ type PatientSearchItem {
     dod:Int,
     gender:String,
     ethnicity:String,
-    countryofbirth:String
+    countryofbirth:String,
+    owner:String
 }
 
 input ContactInput {
     _id: String,
+    owner:String,
     line1: String,
     line2: String,
     suburb: String
@@ -765,6 +767,13 @@ input UserInput {
     password:String
 }
 
+type PostCode {
+    _id:String,
+    suburb:String,
+    postcode:Int,
+    state:String
+}
+
 
 type Query {
     getAppointments:[Appointment]
@@ -774,6 +783,7 @@ type Query {
     getAppointmentTemplates:[AppointmentTemplate]
     getPatient(id:String):Patient
     getUsers:[User]
+    getPostCodes:[PostCode]
 }
 
 type Mutation {

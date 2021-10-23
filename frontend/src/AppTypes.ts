@@ -24,6 +24,7 @@ export const STATE_NAMES = {
     providers: 'provider',
     appointmentTemplates: 'appointmentTemplate',
     patients: 'patient',
+    basics: 'basic',
     name: 'name',
     contact: 'contact',
     identifiers: 'identifiers',
@@ -43,7 +44,8 @@ export const STATE_NAMES = {
     vaccinations: 'vaccination',
     wcc: 'wcc',
     modifiedDates: 'modifiedDate',
-    loadedPatients: 'loadedPatients'
+    loadedPatients: 'loadedPatients',
+    postCodes:'postCode'
 
 }
 
@@ -86,12 +88,21 @@ export const VIEW_NAME = {
     appointmentTypeDetail: 'appointmentTypeDetail',
     users: 'usersList',
     userDetail: 'userDetail',
-    openPatients: 'Open Patients'
+    openPatients: 'Open Patients',
+    patientName:'Patient Name',
+    patientBasics:'Patient Basics',
+    patientContact:'Patient Contact',
+    patientIdentifiers:'Patient Identifiers'
 }
 
 export const VIEW_CONTAINER = {
     calendarControl: 'calendarControl',
-    calendarDetail: 'calendarDetail'
+    calendarDetail: 'calendarDetail',
+    patientName:'patient-name-details',
+    patientBasics:'patient-basics-details',
+    patientContact:'patient-contact-details',
+    patientIdentifiers:'patient-identifier-details'
+
 }
 
 

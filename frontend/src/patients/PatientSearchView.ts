@@ -12,6 +12,7 @@ import {
 } from "ui-framework-jps";
 import {DRAGGABLE, STATE_NAMES, VIEW_NAME} from "../AppTypes";
 import Controller from "../Controller";
+import {PatientController} from "./PatientController";
 
 
 const vLogger = debug('patient-search');
@@ -61,6 +62,16 @@ export class PatientSearchView extends AbstractStatefulCollectionView {
                 from: DRAGGABLE.fromPatientSearch
             },
         },
+        extraActions: [
+            {
+                name:'Open Record',
+                button: {
+                    classes: 'btn bg-primary text-white btn-circle btn-sm',
+                    iconClasses: 'fas fa-clipboard-list'
+                },
+                confirm:false
+            }
+        ]
     };
     protected localisedSM: StateManager;
 
@@ -177,6 +188,11 @@ export class PatientSearchView extends AbstractStatefulCollectionView {
         vLoggerDetail(selectedItem);
         vLogger(`Recent search patient ${selectedItem.firstname} with id ${selectedItem.id} deleted - removing`);
         this.localisedSM.removeItemFromState(STATE_NAMES.recentPatientSearches, selectedItem, true);
+    }
+
+    itemAction(view: View, actionName: string, selectedItem: any) {
+        vLogger(`Handling open patient record`);
+        PatientController.getInstance().openPatientRecordWithPatientId(selectedItem._id);
     }
 
 

@@ -68,6 +68,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
         } else {
             // make a copy
             patient = copyObject(patient);
+            patient.decorator = Decorator.Complete;
         }
         App.getInstance().handleShowPatientRecord(null);
         this.listeners.forEach((listener) => listener.patientSelected(patient));
@@ -91,7 +92,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
     }
 
     public onDocumentLoaded(): void {
-        PatientObjectDefinitions.loadPatientDefinitions();
+
         OpenPatientsView.getInstance().addEventCollectionListener(this);
         ClinicChatDetailView.getInstance().addAttachmentListener(this);
 
@@ -115,7 +116,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
             }
             case STATE_NAMES.openPatients: {
                 // found new patient in buffer, let listeners know
-                logger(`patient loaded - added to open patients`);
+                logger(`patient loaded - added to open patients - informing listeners`);
                 logger(itemAdded);
                 this.listeners.forEach((listener) => listener.patientLoaded(itemAdded));
                 break;

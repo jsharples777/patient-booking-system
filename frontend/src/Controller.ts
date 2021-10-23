@@ -25,6 +25,7 @@ import {
     StateChangeListener,
     StateManager
 } from "ui-framework-jps";
+import {PatientObjectDefinitions} from "./model/PatientObjectDefinitions";
 
 
 const cLogger = debug('controller-ts');
@@ -333,6 +334,27 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 idField: '_id'
             },
             {
+                stateName: STATE_NAMES.postCodes,
+                serverURL: '',
+                apiURL: API_Config.graphQL,
+                apis: {
+                    findAll: 'query {getPostCodes {_id,suburb,postcode,state}}',
+                    create: '',
+                    destroy: '',
+                    update: '',
+                    find: '',
+                },
+                data: {
+                    findAll: 'getPostCodes',
+                    create: '',
+                    destroy: '',
+                    update: '',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
+            },
+            {
                 stateName: STATE_NAMES.users,
                 serverURL: '',
                 apiURL: API_Config.graphQL,
@@ -406,7 +428,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
         aggregateSM.addStateManager(memorySM, [], false);
         //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patients], false);
-        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.users, STATE_NAMES.appointments, STATE_NAMES.patientSearch, STATE_NAMES.recentPatientSearches, STATE_NAMES.appointmentTypes, STATE_NAMES.providers, STATE_NAMES.appointmentTemplates], false);
+        aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.postCodes, STATE_NAMES.users, STATE_NAMES.appointments, STATE_NAMES.patientSearch, STATE_NAMES.recentPatientSearches, STATE_NAMES.appointmentTypes, STATE_NAMES.providers, STATE_NAMES.appointmentTemplates], false);
         //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
         aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.clinicConfig, STATE_NAMES.patients], false);
         this.stateManager = aggregateSM;
@@ -419,6 +441,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
         // data objects
         this.setupDataObjectDefinitions();
+        PatientObjectDefinitions.loadPatientDefinitions();
 
         return this;
     }
@@ -449,6 +472,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
             // load the users
             this.getStateManager().getStateByName(STATE_NAMES.users);
+            this.getStateManager().getStateByName(STATE_NAMES.postCodes);
             this.getStateManager().getStateByName(STATE_NAMES.appointmentTypes);
             this.getStateManager().getStateByName(STATE_NAMES.providers);
             this.getStateManager().getStateByName(STATE_NAMES.appointmentTemplates);

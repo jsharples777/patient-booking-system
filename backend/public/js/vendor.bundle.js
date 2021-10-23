@@ -52582,11 +52582,11 @@ class BasicFieldOperations {
         return result;
     }
 }
-BasicFieldOperations.dateRegex = /^((0?[1-9]|[12]\d|31)\/(0?[13578]|1[02])\/(\d{2}|\d{4})|(0?[1-9]|[12]\d|30)\/(0?[469]|11])\/(\d{2}|\d{4})|(0?[1-9]|1\d|2[0-8])\/02\/(\d{2}|\d{4})|(29\/02\/(\d{2})?(0[48]|[2468][048]|[13579][26]))|(29\/02\/([02468][048]|[13579][26])00))$/;
+BasicFieldOperations.dateRegex = /^((0?[1-9]|[12]\d|30|31)\/(0?[13578]|1[02])\/(\d{2}|\d{4})|(0?[1-9]|[12]\d|30)\/(0?[469]|11])\/(\d{2}|\d{4})|(0?[1-9]|1\d|2[0-8])\/02\/(\d{2}|\d{4})|(29\/02\/(\d{2})?(0[48]|[2468][048]|[13579][26]))|(29\/02\/([02468][048]|[13579][26])00))$/;
 BasicFieldOperations.emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/;
 BasicFieldOperations.shortTimeRegex = /^([01]\d|2[0-3]):?([0-5]\d)$/;
 BasicFieldOperations.timeRegex = /^([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)$/;
-BasicFieldOperations.dateTimeRegex = /^((0?[1-9]|[12]\d|31)\/(0?[13578]|1[02])\/(\d{2}|\d{4})|(0?[1-9]|[12]\d|30)\/(0?[469]|11])\/(\d{2}|\d{4})|(0?[1-9]|1\d|2[0-8])\/02\/(\d{2}|\d{4})|(29\/02\/(\d{2})?(0[48]|[2468][048]|[13579][26]))|(29\/02\/([02468][048]|[13579][26])00))\s([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)$/;
+BasicFieldOperations.dateTimeRegex = /^((0?[1-9]|[12]\d|30|31)\/(0?[13578]|1[02])\/(\d{2}|\d{4})|(0?[1-9]|[12]\d|30)\/(0?[469]|11])\/(\d{2}|\d{4})|(0?[1-9]|1\d|2[0-8])\/02\/(\d{2}|\d{4})|(29\/02\/(\d{2})?(0[48]|[2468][048]|[13579][26]))|(29\/02\/([02468][048]|[13579][26])00))\s([01]\d|2[0-3]):?([0-5]\d):?([0-5]\d)$/;
 BasicFieldOperations.basicPasswordRegex = /^[a-zA-Z0-9]{8,15}$/;
 BasicFieldOperations.integerRegex = /^[+-]?\d+$/;
 BasicFieldOperations.floatRegexp = /^[+-]?\d+(\.\d+)?$/;
@@ -58679,6 +58679,7 @@ class TabularViewContainer {
                 this.tabElements.push(tabEl);
             }
         });
+        containedByEl.appendChild(tabViewContainerEl);
         // create the view containers and let the views know what contains them
         this.config.tabs.forEach((tab) => {
             logger(`Constructing tab ${tab.id} view`);
@@ -58709,7 +58710,6 @@ class TabularViewContainer {
             }
             this.tabViewElements.push(tabViewEl);
         });
-        containedByEl.appendChild(tabViewContainerEl);
     }
     handleTabClicked(event) {
         logger(`handling tab clicked`);
@@ -59383,8 +59383,9 @@ class ItemViewElementFactory {
         return ItemViewElementFactory._instance;
     }
     createFormElements(form, listeners, formConfig, fieldListeners) {
+        const formId = form.getId();
         let formEl = document.createElement('form');
-        formEl.setAttribute('id', formConfig.id);
+        formEl.setAttribute('id', formId);
         formEl.setAttribute('name', formConfig.displayName);
         if (formConfig.classes)
             _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(formEl, formConfig.classes);
@@ -59415,22 +59416,22 @@ class ItemViewElementFactory {
             group.fields.forEach((field) => {
                 switch (field.elementType) {
                     case (_CommonTypes__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.textarea): {
-                        const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createTAFormFieldComponentElement(formConfig.id, containerEl, field, fieldListeners);
+                        const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createTAFormFieldComponentElement(formId, containerEl, field, fieldListeners);
                         formTAElements.push(fieldEl);
                         break;
                     }
                     case (_CommonTypes__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.select): {
-                        const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createSelectFormFieldComponentElement(formConfig.id, containerEl, field, fieldListeners);
+                        const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createSelectFormFieldComponentElement(formId, containerEl, field, fieldListeners);
                         formSelectElements.push(fieldEl);
                         break;
                     }
                     case (_CommonTypes__WEBPACK_IMPORTED_MODULE_2__.UIFieldType.radioGroup): {
-                        const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createRadioGroupFormFieldComponentElement(formConfig.id, containerEl, field, fieldListeners);
+                        const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createRadioGroupFormFieldComponentElement(formId, containerEl, field, fieldListeners);
                         formRBGElements.push(fieldEl);
                         break;
                     }
                     default: {
-                        const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createInputFormFieldComponentElement(formConfig.id, containerEl, field, fieldListeners);
+                        const fieldEl = _FieldInputElementFactory__WEBPACK_IMPORTED_MODULE_1__.FieldInputElementFactory.getInstance().createInputFormFieldComponentElement(formId, containerEl, field, fieldListeners);
                         formInputElements.push(fieldEl);
                     }
                 }
@@ -59512,9 +59513,10 @@ class ItemViewElementFactory {
         return result;
     }
     createButton(form, formConfig, listeners, buttonDef, eventType) {
+        const formId = form.getId();
         let buttonEl = document.createElement('button');
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(buttonEl, buttonDef.classes);
-        buttonEl.setAttribute('id', `${formConfig.id}.${eventType}`);
+        buttonEl.setAttribute('id', `${formId}.${eventType}`);
         if (buttonDef.text) {
             buttonEl.innerText = buttonDef.text;
         }
@@ -59534,7 +59536,7 @@ class ItemViewElementFactory {
                 identifier: formConfig.id,
                 eventType: eventType
             };
-            listeners.forEach((listener) => listener.valuesChanged(itemEvent));
+            listeners.forEach((listener) => listener.valuesChanged(formConfig.displayName, itemEvent));
         });
         return buttonEl;
     }
@@ -61364,7 +61366,7 @@ class BasicTableRowImplementation extends _view_item_DefaultItemView__WEBPACK_IM
             identifier: this.getId(),
             eventType: _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.SAVING
         };
-        this.valuesChanged(event, this.currentDataObj);
+        this.valuesChanged(this.dataObjDef.displayName, event, this.currentDataObj);
     }
     getRowElement() {
         let result = null;
@@ -63177,7 +63179,7 @@ class DefaultItemView {
                 identifier: this.getId(),
                 eventType: _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.CANCELLING
             };
-            this.valuesChanged(itemEvent);
+            this.valuesChanged(this.dataObjDef.displayName, itemEvent);
         }
     }
     delete() {
@@ -63187,7 +63189,7 @@ class DefaultItemView {
                 identifier: this.getId(),
                 eventType: _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.DELETING
             };
-            this.valuesChanged(itemEvent);
+            this.valuesChanged(this.dataObjDef.displayName, itemEvent);
         }
     }
     save() {
@@ -63197,7 +63199,7 @@ class DefaultItemView {
                 identifier: this.getId(),
                 eventType: _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ItemEventType.SAVING
             };
-            this.valuesChanged(itemEvent);
+            this.valuesChanged(this.dataObjDef.displayName, itemEvent);
         }
     }
     hasChanged() {
@@ -63327,7 +63329,7 @@ class DefaultItemView {
         }
         this.setReadOnly();
     }
-    valuesChanged(event, values) {
+    valuesChanged(name, event, values) {
         // catch form events for user leaving the Item View
         let shouldCancelChange = false;
         switch (event.eventType) {
@@ -63548,7 +63550,7 @@ class DefaultItemView {
         return formattedResult;
     }
     informListeners(event, dataObj) {
-        this.listeners.forEach((listener) => listener.valuesChanged(event, dataObj));
+        this.listeners.forEach((listener) => listener.valuesChanged(this.dataObjDef.displayName, event, dataObj));
     }
     findFieldUiConfig(fieldDef) {
         dlogger(`Finding field UI Config for field ${fieldDef.displayName}`);
@@ -63933,7 +63935,47 @@ class DefaultItemView {
             if (this.factoryElements.unsavedMessage)
                 this.factoryElements.unsavedMessage.innerHTML = 'Pending changes to save';
         }
+        this.listeners.forEach((listener) => listener.viewHasChanges(this.dataObjDef.displayName));
     }
+    getFieldValue(fieldId) {
+        let result = null;
+        const field = this.getFieldFromDataFieldId(fieldId);
+        if (field) {
+            result = field.getValue();
+        }
+        return result;
+    }
+    setFieldValue(fieldId, newValue) {
+        const field = this.getFieldFromDataFieldId(fieldId);
+        if (field) {
+            field.setValue(newValue);
+        }
+    }
+    clearFieldReadOnly(fieldId) {
+        const field = this.getFieldFromDataFieldId(fieldId);
+        if (field) {
+            field.clearReadOnly();
+        }
+    }
+    setFieldReadOnly(fieldId) {
+        const field = this.getFieldFromDataFieldId(fieldId);
+        if (field) {
+            field.setReadOnly();
+        }
+    }
+    clearFieldInvalid(fieldId) {
+        const field = this.getFieldFromDataFieldId(fieldId);
+        if (field) {
+            field.setValid();
+        }
+    }
+    setFieldInvalid(fieldId, message) {
+        const field = this.getFieldFromDataFieldId(fieldId);
+        if (field) {
+            field.setInvalid(message);
+        }
+    }
+    viewHasChanges(name) { }
 }
 //# sourceMappingURL=DefaultItemView.js.map
 
@@ -64795,7 +64837,7 @@ class FormDetailViewRenderer {
         }
         return result;
     }
-    valuesChanged(event, formValues) {
+    valuesChanged(name, event, formValues) {
         var _a;
         // catch form events for user leaving the form
         switch (event.eventType) {
@@ -64866,6 +64908,8 @@ class FormDetailViewRenderer {
     }
     getItemId(from, item) {
         return "";
+    }
+    viewHasChanges(name) {
     }
 }
 //# sourceMappingURL=FormDetailViewRenderer.js.map

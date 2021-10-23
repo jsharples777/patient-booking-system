@@ -8,6 +8,7 @@ import AppointmentTypesQLDelegate from "./AppointmentTypesQLDelegate";
 import ProvidersQLDelegate from "./ProvidersQLDelegate";
 import AppointmentTemplatesQLDelegate from "./AppointmentTemplatesQLDelegate";
 import UsersQLDelegate from "./UsersQLDelegate";
+import PostCodesQLDelegate from "./PostCodesQLDelegate";
 
 const dsLogger = debug('data-source');
 
@@ -26,7 +27,8 @@ export default class DataSource {
                 getProviders: ProvidersQLDelegate.getProviders,
                 getAppointmentTemplates: AppointmentTemplatesQLDelegate.getAppointmentTemplates,
                 getPatient: PatientsQLDelegate.getPatient,
-                getUsers:UsersQLDelegate.getUsers
+                getUsers:UsersQLDelegate.getUsers,
+                getPostCodes:PostCodesQLDelegate.getPostCodes
             },
             Mutation: {
                 addAppointment: AppointmentsQLDelegate.addAppointment,
