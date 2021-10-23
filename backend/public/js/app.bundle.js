@@ -6167,15 +6167,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
 
   setLinked(isLinked) {
     if (isLinked) {
-      this.isLinked = true; // set the contact elements to readonly
-
-      this.contactForm.setFieldReadOnly('line1');
-      this.contactForm.setFieldReadOnly('line2');
-      this.contactForm.setFieldReadOnly('suburb');
-      this.contactForm.setFieldReadOnly('postcode');
-      this.contactForm.setFieldReadOnly('country');
-      this.contactForm.setFieldReadOnly('home');
-      this.contactForm.setFieldReadOnly('mobile');
+      this.isLinked = true;
       const linkedToPatient = _Controller__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patientSearch, {
         _id: this.linkToPatientId
       });
@@ -6200,7 +6192,15 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
           this.currentPatient.contact = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(linkedToPatient.contact);
         }
 
-        this.contactView.displayItem(this.currentPatient.contact);
+        this.contactView.displayItem(this.currentPatient.contact); // set the contact elements to readonly
+
+        this.contactForm.setFieldReadOnly('line1');
+        this.contactForm.setFieldReadOnly('line2');
+        this.contactForm.setFieldReadOnly('suburb');
+        this.contactForm.setFieldReadOnly('postcode');
+        this.contactForm.setFieldReadOnly('country');
+        this.contactForm.setFieldReadOnly('home');
+        this.contactForm.setFieldReadOnly('mobile');
       }
 
       this.btnLinkUnlinkEl.innerHTML = PatientDemographicsCompositeView.ICON_Unlinked;
@@ -6213,8 +6213,9 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       } else {
         this.currentPatient.contact._id = (0,uuid__WEBPACK_IMPORTED_MODULE_8__["default"])();
         this.currentPatient.contact.owner = this.currentPatient._id;
-      } // enable the contact elements
+      }
 
+      this.contactView.displayItem(this.currentPatient.contact); // enable the contact elements
 
       this.contactForm.clearFieldReadOnly('line1');
       this.contactForm.clearFieldReadOnly('line2');

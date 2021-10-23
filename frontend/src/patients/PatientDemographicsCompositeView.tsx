@@ -323,14 +323,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     private setLinked(isLinked:boolean):void {
         if (isLinked) {
             this.isLinked = true;
-            // set the contact elements to readonly
-            this.contactForm.setFieldReadOnly('line1');
-            this.contactForm.setFieldReadOnly('line2');
-            this.contactForm.setFieldReadOnly('suburb');
-            this.contactForm.setFieldReadOnly('postcode');
-            this.contactForm.setFieldReadOnly('country');
-            this.contactForm.setFieldReadOnly('home');
-            this.contactForm.setFieldReadOnly('mobile');
+
             const linkedToPatient = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch,{_id:this.linkToPatientId});
             if (linkedToPatient) { // show the patient linked to
                 // @ts-ignore
@@ -354,6 +347,14 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                     this.currentPatient.contact = copyObject(linkedToPatient.contact);
                 }
                 this.contactView.displayItem(this.currentPatient.contact);
+                // set the contact elements to readonly
+                this.contactForm.setFieldReadOnly('line1');
+                this.contactForm.setFieldReadOnly('line2');
+                this.contactForm.setFieldReadOnly('suburb');
+                this.contactForm.setFieldReadOnly('postcode');
+                this.contactForm.setFieldReadOnly('country');
+                this.contactForm.setFieldReadOnly('home');
+                this.contactForm.setFieldReadOnly('mobile');
             }
             this.btnLinkUnlinkEl.innerHTML = PatientDemographicsCompositeView.ICON_Unlinked;
         }
@@ -368,7 +369,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                 this.currentPatient.contact._id = v4();
                 this.currentPatient.contact.owner = this.currentPatient._id;
             }
-
+            this.contactView.displayItem(this.currentPatient.contact);
 
             // enable the contact elements
             this.contactForm.clearFieldReadOnly('line1');
