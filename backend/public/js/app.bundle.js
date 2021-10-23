@@ -5561,6 +5561,408 @@ class TodayView {
 
 /***/ }),
 
+/***/ "./src/users/UserValidationHelper.ts":
+/*!*******************************************!*\
+  !*** ./src/users/UserValidationHelper.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "UserValidationHelper": () => (/* binding */ UserValidationHelper)
+/* harmony export */ });
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('user-validation-helper');
+class UserValidationHelper {
+  constructor() {}
+
+  static getInstance() {
+    if (!UserValidationHelper._instance) {
+      UserValidationHelper._instance = new UserValidationHelper();
+    }
+
+    return UserValidationHelper._instance;
+  }
+
+  setupValidationForDetailsForm(form) {
+    /*
+    *
+    * Create user rules
+    *
+     */
+    let rule = {
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.create,
+      targetDataFieldId: 'resetPassword',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
+      conditions: []
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
+    rule = {
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.create,
+      targetDataFieldId: 'isProvider',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
+      conditions: []
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
+    rule = {
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.create,
+      targetDataFieldId: 'password',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid,
+      conditions: [{
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.isNotNull
+      }]
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
+    rule = {
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.update,
+      targetDataFieldId: 'password',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show,
+      conditions: [{
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
+        sourceDataFieldId: 'resetPassword',
+        values: 'true'
+      }]
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
+    rule = {
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.update,
+      targetDataFieldId: 'password',
+      response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
+      conditions: [{
+        comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
+        sourceDataFieldId: 'resetPassword',
+        values: 'false'
+      }]
+    };
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addViewValidator(this);
+  }
+
+  applyRulesToTargetField(form, viewMode, fieldDef, onlyRulesOfType) {
+    const result = {
+      ruleFailed: false
+    }; // are we dealing with the form for users?
+
+    if (form.getDataObjectDefinition().id === _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.users) {
+      // we are only checking for invalid state
+      if (onlyRulesOfType && onlyRulesOfType === ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.invalid || !onlyRulesOfType) {
+        // are we dealing with the reset password field?
+        if (fieldDef.id === 'password') {
+          logger('User form, password field, invalid check'); // what is the value of the field reset password
+
+          const resetField = form.getFieldFromDataFieldId('resetPassword');
+
+          if (resetField) {
+            const resetValue = resetField.getValue();
+            logger(`User form, password field, invalid check - reset is ${resetValue}`);
+
+            if (resetValue && resetValue === 'true') {
+              // check the password value
+              const passwordField = form.getFieldFromDataFieldId(fieldDef.id);
+
+              if (passwordField) {
+                const passwordValue = passwordField.getValue();
+                logger(`User form, password field, invalid check - reset is ${resetValue}, password is "${passwordValue}"`);
+
+                if (passwordValue) {
+                  if (passwordValue.trim().length === 0) {
+                    logger(`User form, password field, invalid check - FAILED`);
+                    result.ruleFailed = true;
+                    result.message = 'Password must be supplied.';
+                  }
+                } else {
+                  logger(`User form, password field, invalid check - FAILED`);
+                  result.ruleFailed = true;
+                  result.message = 'Password must be supplied.';
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/users/UsersCollectionView.ts":
+/*!******************************************!*\
+  !*** ./src/users/UsersCollectionView.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "UsersCollectionView": () => (/* binding */ UsersCollectionView)
+/* harmony export */ });
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('users-view');
+class UsersCollectionView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.AbstractStatefulCollectionView {
+  static DOMConfig = {
+    viewConfig: {
+      resultsContainerId: _AppTypes__WEBPACK_IMPORTED_MODULE_0__.UsersSidebarContainers.list,
+      dataSourceId: _AppTypes__WEBPACK_IMPORTED_MODULE_0__.VIEW_NAME.users
+    },
+    resultsElement: {
+      type: 'tr',
+      attributes: [{
+        name: 'href',
+        value: '#'
+      }],
+      classes: ''
+    },
+    keyId: '_id',
+    keyType: ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.KeyType.string,
+    modifiers: {
+      normal: '',
+      inactive: 'table-secondary',
+      active: 'table-success',
+      warning: 'table-danger'
+    },
+    icons: {
+      normal: '',
+      inactive: '',
+      active: '',
+      warning: ''
+    },
+    detail: {
+      containerClasses: 'd-flex w-100 justify-content-between',
+      textElement: {
+        type: 'span',
+        classes: 'mb-1'
+      },
+      select: true,
+      icons: (name, item) => {
+        const results = [];
+
+        if (item.isAdmin) {
+          results.push("fas fa-user-cog");
+        }
+
+        if (item.isProvider) {
+          results.push("fas fa-user-md");
+        }
+
+        return results;
+      }
+    },
+    sorter: UsersCollectionView.sortUsers
+  };
+
+  constructor(stateManager) {
+    super(UsersCollectionView.DOMConfig, stateManager, _AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.users);
+    const userDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.ObjectDefinitionRegistry.getInstance().findDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.users);
+
+    if (userDef) {
+      const displayOrders = [];
+      displayOrders.push({
+        fieldId: 'username',
+        displayOrder: 1
+      });
+      displayOrders.push({
+        fieldId: 'isCurrent',
+        displayOrder: 2
+      });
+      displayOrders.push({
+        fieldId: 'isAdmin',
+        displayOrder: 3
+      });
+      displayOrders.push({
+        fieldId: 'isProvider',
+        displayOrder: 4
+      });
+      displayOrders.push({
+        fieldId: 'providerNo',
+        displayOrder: 5
+      });
+      const tableUIConfig = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BootstrapTableConfigHelper.getInstance().generateTableConfig(userDef, displayOrders, 1, false, true);
+      tableUIConfig.headerColumns[1].element.classes += ' text-center';
+      tableUIConfig.headerColumns[2].element.classes += ' text-center';
+      tableUIConfig.headerColumns[3].element.classes += ' text-center';
+      tableUIConfig.headerColumns[4].element.classes += ' text-center';
+      this.renderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.TabularViewRendererUsingContext(this, this, tableUIConfig);
+      this.eventHandlerDelegate = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.CollectionViewEventHandlerDelegateUsingContext(this, this.eventForwarder);
+      this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);
+      this.getItemId = this.getItemId.bind(this);
+      ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.ContextualInformationHelper.getInstance().addContextFromView(this, _AppTypes__WEBPACK_IMPORTED_MODULE_0__.STATE_NAMES.users, 'Users');
+    }
+  }
+
+  static sortUsers(item1, item2) {
+    let result = -1;
+    if (item1.name > item2.name) result = 1;
+    return result;
+  }
+
+  getItemDescription(from, item) {
+    let buffer = '';
+    buffer += `<strong style="text-colour:${item.colour}">` + item.username + '</strong> ';
+    buffer += '<br/>';
+    return buffer;
+  }
+
+  canDeleteItem(view, selectedItem) {
+    logger(`Can Delete ${selectedItem}`);
+    return false;
+  }
+
+  compareItemsForEquality(item1, item2) {
+    return (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.isSameMongo)(item1, item2);
+  }
+
+  getIdForItemInNamedCollection(name, item) {
+    return item._id;
+  }
+
+  renderDisplayForItemInNamedCollection(containerEl, name, item) {
+    containerEl.innerHTML = item.username;
+  }
+
+  hasPermissionToDeleteItemInNamedCollection(name, item) {
+    logger(`Has delete permission ${item}`);
+    return false;
+  }
+
+  getModifierForItemInNamedCollection(name, item) {
+    if (item.isCurrent) {
+      return ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.Modifier.normal;
+    }
+
+    return ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.Modifier.inactive;
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/users/UsersCompositeView.ts":
+/*!*****************************************!*\
+  !*** ./src/users/UsersCompositeView.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "UsersCompositeView": () => (/* binding */ UsersCompositeView)
+/* harmony export */ });
+/* harmony import */ var _Controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Controller */ "./src/Controller.ts");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
+/* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../AppTypes */ "./src/AppTypes.ts");
+/* harmony import */ var ui_framework_jps_dist_framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
+/* harmony import */ var _UsersCollectionView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./UsersCollectionView */ "./src/users/UsersCollectionView.ts");
+/* harmony import */ var _UserValidationHelper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./UserValidationHelper */ "./src/users/UserValidationHelper.ts");
+
+
+
+
+
+
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('users-composite-view');
+class UsersCompositeView {
+  constructor(sideBar) {
+    this.sideBar = sideBar;
+  }
+
+  onDocumentLoaded() {
+    const apptTypes = new _UsersCollectionView__WEBPACK_IMPORTED_MODULE_5__.UsersCollectionView(_Controller__WEBPACK_IMPORTED_MODULE_0__["default"].getInstance().getStateManager());
+    this.sideBar.addView(apptTypes, {
+      containerId: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.UsersSidebarContainers.list
+    });
+    const userDef = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.ObjectDefinitionRegistry.getInstance().findDefinition(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users);
+
+    if (userDef) {
+      const detailRenderer = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.FormDetailViewRenderer(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.UsersSidebarContainers.detail, userDef, new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DefaultFieldPermissionChecker(), ui_framework_jps_dist_framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_4__.BootstrapFormConfigHelper.getInstance(), false);
+      const usersDetailView = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.DetailViewImplementation({
+        resultsContainerId: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.UsersSidebarContainers.detail,
+        dataSourceId: _AppTypes__WEBPACK_IMPORTED_MODULE_3__.VIEW_NAME.userDetail
+      }, detailRenderer);
+      const viewLinker = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.LinkedCollectionDetailController(_AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users, apptTypes);
+      viewLinker.addLinkedDetailView(usersDetailView);
+      this.sideBar.onDocumentLoaded();
+      const startingDisplayOrder = ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.BasicObjectDefinitionFactory.getInstance().generateStartingDisplayOrder(userDef);
+      usersDetailView.initialise(startingDisplayOrder, false, true);
+      const detailForm = detailRenderer.getForm();
+
+      if (detailForm) {
+        logger(`Setting up validation rules for ${detailForm.getId()}`);
+        logger(detailForm);
+        _UserValidationHelper__WEBPACK_IMPORTED_MODULE_6__.UserValidationHelper.getInstance().setupValidationForDetailsForm(detailForm);
+      } // setup the event handling for the create new exercise type button
+
+
+      const createUser = document.getElementById('addNewUser');
+      logger(`Setting up button for creating users`);
+      logger(createUser);
+
+      if (createUser) {
+        createUser.addEventListener('click', event => {
+          logger(`Asking view linker to start a new object`);
+          viewLinker.startNewObject();
+        });
+      }
+
+      viewLinker.addListener(this);
+    }
+  }
+
+  create(controller, typeName, dataObj) {
+    logger(`Handling create`);
+
+    switch (typeName) {
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users:
+        {
+          logger(`Handling create new user`);
+          logger(dataObj);
+          _Controller__WEBPACK_IMPORTED_MODULE_0__["default"].getInstance().getStateManager().addNewItemToState(typeName, dataObj, false);
+          break;
+        }
+    }
+  }
+
+  delete(controller, typeName, dataObj) {
+    return;
+  }
+
+  update(controller, typeName, dataObj) {
+    logger(`Handling update`);
+
+    switch (typeName) {
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_3__.STATE_NAMES.users:
+        {
+          logger(`Handling update user`);
+          logger(dataObj);
+          _Controller__WEBPACK_IMPORTED_MODULE_0__["default"].getInstance().getStateManager().updateItemInState(typeName, dataObj, false);
+          break;
+        }
+    }
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/App.tsx":
 /*!*********************!*\
   !*** ./src/App.tsx ***!
@@ -5592,6 +5994,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _patients_PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./patients/PatientDemographicsCompositeView */ "./src/patients/PatientDemographicsCompositeView.tsx");
 /* harmony import */ var _today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./today/TodaysPatientsView */ "./src/today/TodaysPatientsView.tsx");
 /* harmony import */ var _patients_PatientController__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./patients/PatientController */ "./src/patients/PatientController.ts");
+/* harmony import */ var _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./users/UsersCompositeView */ "./src/users/UsersCompositeView.ts");
+
 
 
 
@@ -5671,6 +6075,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().onDocumentLoaded();
     this.apptTypeSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.AppointmentTypesSidebarPrefs);
     new _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__.AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
+    this.usersSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.UsersSidebarPrefs);
+    new _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_19__.UsersCompositeView(this.usersSidebar).onDocumentLoaded();
     _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance().onDocumentLoaded();
     const patientView = _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_15__.PatientRecordTabularView.getInstance();
     patientView.addViewToTab('demographics', new _patients_PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_16__.PatientDemographicsCompositeView());

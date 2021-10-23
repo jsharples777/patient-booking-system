@@ -1,7 +1,7 @@
 import debug from 'debug';
 import Controller from './Controller';
 
-import {API_Config, AppointmentTypesSidebarPrefs, NAVIGATION,} from "./AppTypes";
+import {API_Config, AppointmentTypesSidebarPrefs, NAVIGATION, UsersSidebarPrefs,} from "./AppTypes";
 import React, {ReactNode} from "react";
 import ReactDOM from "react-dom";
 import {AppointmentController} from "./appointments/AppointmentController";
@@ -24,6 +24,7 @@ import {PatientRecordTabularView} from "./patients/PatientRecordTabularView";
 import {PatientDemographicsCompositeView} from "./patients/PatientDemographicsCompositeView";
 import {TodaysPatientsView} from "./today/TodaysPatientsView";
 import {PatientController} from "./patients/PatientController";
+import {UsersCompositeView} from "./users/UsersCompositeView";
 
 
 const logger = debug('app');
@@ -99,6 +100,9 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
         this.apptTypeSidebar = new SidebarViewContainer(AppointmentTypesSidebarPrefs);
         new AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
+
+        this.usersSidebar = new SidebarViewContainer(UsersSidebarPrefs);
+        new UsersCompositeView(this.usersSidebar).onDocumentLoaded();
 
         ClinicChatSidebar.getInstance().onDocumentLoaded();
 
