@@ -256,7 +256,7 @@ class Controller {
       findAll: true,
       create: true,
       update: true,
-      destroy: true
+      destroy: false
     }]);
     const qlSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.GraphQLApiStateManager.getInstance();
     qlSM.initialise([{
@@ -4527,6 +4527,7 @@ class OpenPatientsView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Abs
     this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);
     this.getItemInNamedCollection = this.getItemInNamedCollection.bind(this);
     this.getItemId = this.getItemId.bind(this);
+    this.getModifierForItemInNamedCollection = this.getModifierForItemInNamedCollection.bind(this);
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.ContextualInformationHelper.getInstance().addContextFromView(this, _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.openPatients, 'Open Patient Records');
   }
 
@@ -4540,7 +4541,7 @@ class OpenPatientsView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Abs
 
   static sortPatients(item1, item2) {
     let result = -1;
-    if (item1.name > item2.name) result = 1;
+    if (item1.name.firstname > item2.name.firstname) result = 1;
     return result;
   }
 
@@ -4565,12 +4566,8 @@ class OpenPatientsView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Abs
     let result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal;
     vLoggerDetail(`Checking for item modifiers`);
     vLoggerDetail(item);
-    if (item.decorator && item.decerator === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.Decorator.Modified) result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning;
+    if (item.decorator === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.Decorator.Modified) result = ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning;
     return result;
-  }
-
-  getSecondaryModifierForItemInNamedCollection(name, item) {
-    return ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.Modifier.normal;
   }
 
   compareItemsForEquality(item1, item2) {
@@ -4601,6 +4598,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
 /* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../App */ "./src/App.tsx");
 /* harmony import */ var _clinic_chat_ClinicChatDetailView__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../clinic-chat/ClinicChatDetailView */ "./src/clinic-chat/ClinicChatDetailView.ts");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_8__);
+
 
 
 
@@ -4668,20 +4668,39 @@ class PatientController {
     this.listeners.forEach(listener => listener.patientSelected(patient));
   }
 
-  closePatientRecord(patient) {
+  _closeRecord(patient) {
     logger(`patient ${patient.firstname} with id ${patient.id} closing - closing`);
     PatientController.getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, patient, true);
     this.listeners.forEach(listener => listener.patientClosed(patient));
   }
 
+  closePatientRecord(patient) {
+    // has the patient changed?
+    if (patient.decorator) {
+      if (patient.decorator === _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Modified) {
+        logger(`Patient marked as modified`);
+        ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AlertManager.getInstance().startAlert(this, 'Patient Records', `Patient ${patient.name.firstname} ${patient.name.surname} has changes.  Do you want to discard those changes?`, {
+          patient: patient
+        });
+      } else {
+        this._closeRecord(patient);
+      }
+    } else {
+      this._closeRecord(patient);
+    }
+  }
+
   savePatientRecord(patient) {
-    logger(`saving patient ${patient.firstname} with id ${patient.id}`);
-    patient.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Complete;
-    PatientController.getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, patient, true);
-    this.listeners.forEach(listener => listener.patientSaved(patient));
-    let patientRecord = JSON.parse(JSON.stringify(patient));
+    logger(`saving patient ${patient.name.firstname} with id ${patient._id}`);
+    let patientRecord = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(patient);
     delete patientRecord.decorator;
+    delete patient.oldContact;
+    patientRecord.modified = parseInt(moment__WEBPACK_IMPORTED_MODULE_8___default()().format('YYYYMMDDHHmmss'));
+    patientRecord.modifiedBy = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getLoggedInUsername();
     _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patients, patientRecord, false);
+    patientRecord.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Complete;
+    PatientController.getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, patientRecord, true);
+    logger(patientRecord);
   }
 
   onDocumentLoaded() {
@@ -4725,9 +4744,14 @@ class PatientController {
       case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients:
         {
           // found new patient in buffer, let listeners know
-          logger(`patient loaded`);
-          logger(itemNewValue);
-          this.listeners.forEach(listener => listener.patientLoaded(itemNewValue));
+          if (itemNewValue.decorator !== _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Modified) {
+            logger(`patient loaded`);
+            logger(itemNewValue);
+            this.listeners.forEach(listener => listener.patientLoaded(itemNewValue));
+          } else {
+            this.listeners.forEach(listener => listener.patientChanged(itemNewValue));
+          }
+
           break;
         }
     }
@@ -4782,6 +4806,7 @@ class PatientController {
     logger(`Handling selected item`);
     logger(selectedItem);
     _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_5__.PatientRecordTabularView.getInstance().selectTab(_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_5__.PatientRecordTabularView.TAB_DEMOGRAPHICS);
+    this.openPatientRecord(selectedItem);
   }
 
   isPatientInOpenList(patientId) {
@@ -4794,6 +4819,12 @@ class PatientController {
   attachmentClicked(dataType, dataIdentifier) {
     if (dataType === _AppTypes__WEBPACK_IMPORTED_MODULE_1__.DRAGGABLE.typePatientSummary) {
       this.openPatientRecordWithPatientId(dataIdentifier);
+    }
+  }
+
+  completed(event) {
+    if (event.outcome === ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.AlertType.confirmed) {
+      this._closeRecord(event.context.patient);
     }
   }
 
@@ -5820,7 +5851,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'patient-demographic-view open-patients open-patients-detail app api-ts-results  patient-controller todays-patients-view today-view'; // today-controller todays-patients-view today-view';//tabular-view-container';//default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'state-manager-ms app api-ts-results  patient-controller'; // today-controller todays-patients-view today-view';//tabular-view-container';//default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
@@ -5938,22 +5969,6 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       className: "row"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
-      className: "col-sm-12 col-md-6"
-    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h4", {
-      id: "banner-patient"
-    })), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
-      className: "col-sm-12 col-md-6  d-flex w-100 justify-content-between"
-    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h6", null, "Link Contact Details To:"), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("input", {
-      type: 'text',
-      id: 'patient-demographics-fast-patient-search'
-    }), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("button", {
-      id: "contact-link-unlink",
-      className: "btn btn-primary"
-    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("i", {
-      className: "fas fa-link"
-    })))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
-      className: "row"
-    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "patient-name",
       className: "col-12-sm col-md-6 mb-2"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
@@ -5965,7 +5980,23 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     }, "Name Details"), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       className: "card-text",
       id: _AppTypes__WEBPACK_IMPORTED_MODULE_1__.VIEW_CONTAINER.patientName
-    })))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+    }))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "shadow card"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-body"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h5", {
+      className: "card-title"
+    }, "Contact Link"), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
+      className: "card-text"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("input", {
+      type: 'text',
+      id: 'patient-demographics-fast-patient-search'
+    }), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("button", {
+      id: "contact-link-unlink",
+      className: "ml-2 btn btn-primary"
+    }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("i", {
+      className: "fas fa-link"
+    })))))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       id: "patient-basics",
       className: "col-12-sm col-md-6 mb-2"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
@@ -6006,7 +6037,6 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     })))))); // @ts-ignore
 
     this.containerEl.append(demographicsView);
-    this.patientBannerDetailsEl = document.getElementById("banner-patient");
     this.fastPatientSearchEl = document.getElementById("patient-demographics-fast-patient-search");
     this.btnLinkUnlinkEl = document.getElementById("contact-link-unlink");
     this.btnLinkUnlinkEl.addEventListener('click', this.eventLinkUnlink);
@@ -6031,6 +6061,11 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
         this.nameView.onDocumentLoaded();
         this.nameView.initialise(startingDisplayOrder, false, true);
         this.nameView.show();
+        this.nameForm = renderer.getForm();
+
+        if (this.nameForm) {
+          this.nameForm.addListener(this);
+        }
       }
 
       if (contactDef) {
@@ -6046,6 +6081,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
         this.contactForm = renderer.getForm();
         logger(`Setting up fast search for post codes/suburbs`);
         logger(this.contactForm);
+        this.contactForm.addListener(this);
       }
 
       if (basicsDef) {
@@ -6058,6 +6094,11 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
         this.basicsView.onDocumentLoaded();
         this.basicsView.initialise(startingDisplayOrder, false, true);
         this.basicsView.show();
+        this.basicsForm = renderer.getForm();
+
+        if (this.basicsForm) {
+          this.basicsForm.addListener(this);
+        }
       }
 
       if (identifiersDef) {
@@ -6070,6 +6111,11 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
         this.identifiersView.onDocumentLoaded();
         this.identifiersView.initialise(startingDisplayOrder, false, true);
         this.identifiersView.show();
+        this.identifiersForm = renderer.getForm();
+
+        if (this.identifiersForm) {
+          this.identifiersForm.addListener(this);
+        }
       }
     }
   }
@@ -6094,6 +6140,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       this.contactForm.setFieldValue('suburb', postCode.suburb);
       this.contactForm.setFieldValue('postcode', postCode.postcode);
       this.contactForm.setFieldValue('state', postCode.state);
+      this.markPatientChanged();
     }
   }
 
@@ -6107,6 +6154,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
   }
 
   patientClosed(patient) {
+    this.viewHasChanged = false;
     logger(`handling patient closed`);
 
     if (this.currentPatient && patient) {
@@ -6122,21 +6170,23 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
   }
 
   patientLoaded(patient) {
+    this.viewHasChanged = false;
     logger(`handling patient loaded`);
 
     if (this.currentPatient && patient) {
       if ((0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.isSameMongo)(this.currentPatient, patient)) {
-        logger(`handling patient loaded - is the current patient`);
-        logger(this.currentPatient);
+        logger(`handling patient loaded - is the current patient - updating full details`);
+        this.currentPatient = patient;
+        this.basicsView.displayItem(patient);
+        this.contactView.displayItem(patient.contact);
+        this.identifiersView.displayItem(patient.identifiers);
+        this.nameView.displayItem(patient.name);
 
-        if (this.currentPatient.decorator === _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Incomplete) {
-          logger(`handling patient loaded - is the current patient - updating full details`);
-          this.currentPatient = patient;
-          this.basicsView.displayItem(patient);
-          this.contactView.displayItem(patient.contact);
-          this.identifiersView.displayItem(patient.identifiers);
-          this.nameView.displayItem(patient.name);
+        if (this.isLinked) {
+          this.setLinked(true, false);
         }
+
+        logger(this.currentPatient);
       }
     }
   }
@@ -6147,7 +6197,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     if (this.currentPatient && patient) {
       if ((0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.isSameMongo)(this.currentPatient, patient)) {
         logger(`handling patient saved - is the current patient`);
-        this.currentPatient = patient;
+        this.patientSelected(patient);
       }
     }
   }
@@ -6165,7 +6215,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     }
   }
 
-  setLinked(isLinked) {
+  setLinked(isLinked, isChange = true) {
     if (isLinked) {
       this.isLinked = true;
       const linkedToPatient = _Controller__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patientSearch, {
@@ -6229,9 +6279,30 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       this.linkToPatientId = '';
       this.btnLinkUnlinkEl.innerHTML = PatientDemographicsCompositeView.ICON_Linked;
     }
+
+    if (isChange) {
+      this.contactForm.setChanged();
+      this.markPatientChanged();
+    }
+  }
+
+  resetLink() {
+    this.isLinked = false;
+    this.contactForm.clearFieldReadOnly('line1');
+    this.contactForm.clearFieldReadOnly('line2');
+    this.contactForm.clearFieldReadOnly('suburb');
+    this.contactForm.clearFieldReadOnly('postcode');
+    this.contactForm.clearFieldReadOnly('country');
+    this.contactForm.clearFieldReadOnly('home');
+    this.contactForm.clearFieldReadOnly('mobile'); // @ts-ignore
+
+    this.fastPatientSearchEl.value = '';
+    this.linkToPatientId = '';
+    this.btnLinkUnlinkEl.innerHTML = PatientDemographicsCompositeView.ICON_Linked;
   }
 
   patientSelected(patient) {
+    this.viewHasChanged = false;
     logger(`handling patient selected`);
     logger(patient);
     this.currentPatient = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(patient);
@@ -6242,19 +6313,18 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     let dob = "";
     if (patient.dob) dob = moment__WEBPACK_IMPORTED_MODULE_7___default()(patient.dob, 'YYYYMMDD').format('DD/MM/YYYY');
     let linkIcon = '<i class="fas fa-link"></i>';
-    this.setLinked(false);
+    this.resetLink();
 
     if (patient.contact) {
       if (patient.contact.owner) {
         if (patient.contact.owner !== patient._id) {
           linkIcon = '<i class="fas fa-unlink"></i>';
           this.linkToPatientId = patient.contact.owner;
-          this.setLinked(true);
+          this.setLinked(true, false);
         }
       }
     }
 
-    this.patientBannerDetailsEl.innerHTML = `${patient.name.firstname} ${patient.name.surname} (DOB:${dob})`;
     this.btnLinkUnlinkEl.innerHTML = linkIcon;
   }
 
@@ -6339,6 +6409,44 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
   stateChangedItemRemoved(managerName, name, itemRemoved) {}
 
   stateChangedItemUpdated(managerName, name, itemUpdated, itemNewValue) {}
+
+  valuesChanged(name, event, rowValues) {
+    return false;
+  }
+
+  viewHasChanges(name) {
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_1__.VIEW_NAME.patientIdentifiers) {
+      this.currentPatient.modifiedDates.identifiers = parseInt(moment__WEBPACK_IMPORTED_MODULE_7___default()().format('YYYYMMDDHHmmss'));
+    }
+
+    this.markPatientChanged();
+  }
+
+  markPatientChanged() {
+    this.viewHasChanged = true;
+    this.currentPatient.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Modified;
+    this.currentPatient.modified = parseInt(moment__WEBPACK_IMPORTED_MODULE_7___default()().format('YYYYMMDDHHmmss'));
+    this.currentPatient.modifiedBy = _Controller__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().getLoggedInUsername();
+    _PatientController__WEBPACK_IMPORTED_MODULE_4__.PatientController.getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, this.getCurrentPatient(), false);
+  }
+
+  getCurrentPatient() {
+    let result = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(this.currentPatient);
+    result.contact = this.contactForm.getFormattedDataObject();
+    result.name = this.nameForm.getFormattedDataObject();
+    result.identifiers = this.identifiersForm.getFormattedDataObject();
+    let basics = this.basicsForm.getFormattedDataObject();
+    result.dob = basics.dob;
+    result.dod = basics.dod;
+    result.gender = basics.gender;
+    result.ethnicity = basics.ethnicity;
+    result.countryofbirth = basics.countryofbirth;
+    return result;
+  }
+
+  patientChanged(patient) {
+    logger(`Patient changed`);
+  }
 
 }
 

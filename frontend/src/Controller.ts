@@ -226,7 +226,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
                 findAll: true,
                 create: true,
                 update: true,
-                destroy: true
+                destroy: false
             },
         ]);
         const qlSM = GraphQLApiStateManager.getInstance();

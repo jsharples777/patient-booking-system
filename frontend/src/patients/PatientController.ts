@@ -1,7 +1,11 @@
 import {
+    AlertEvent,
+    AlertListener,
+    AlertManager,
+    AlertType,
     CollectionView,
     CollectionViewListener,
-    copyObject, DRAGGABLE_TYPE,
+    copyObject,
     isSameMongo,
     MemoryBufferStateManager,
     StateChangeListener,
@@ -14,14 +18,14 @@ import Controller from "../Controller";
 import {OpenPatientsView} from "./OpenPatientsView";
 import {PatientRecordTabularView} from "./PatientRecordTabularView";
 import {PatientListener} from "./PatientListener";
-import {PatientObjectDefinitions} from "../model/PatientObjectDefinitions";
 import App from "../App";
 import {AttachmentListener} from "../clinic-chat/AttachmentListener";
 import {ClinicChatDetailView} from "../clinic-chat/ClinicChatDetailView";
+import moment from "moment";
 
 const logger = debug('patient-controller');
 
-export class PatientController implements StateChangeListener, CollectionViewListener, AttachmentListener{
+export class PatientController implements StateChangeListener, CollectionViewListener, AttachmentListener,AlertListener{
     private static _instance: PatientController;
     private stateManager: StateManager;
     private listeners: PatientListener[] = [];
@@ -74,21 +78,46 @@ export class PatientController implements StateChangeListener, CollectionViewLis
         this.listeners.forEach((listener) => listener.patientSelected(patient));
     }
 
-    public closePatientRecord(patient: any): void {
+    private _closeRecord(patient:any):void {
         logger(`patient ${patient.firstname} with id ${patient.id} closing - closing`);
         PatientController.getInstance().getStateManager().removeItemFromState(STATE_NAMES.openPatients, patient, true);
         this.listeners.forEach((listener) => listener.patientClosed(patient));
     }
 
-    public savePatientRecord(patient: any): void {
-        logger(`saving patient ${patient.firstname} with id ${patient.id}`);
-        patient.decorator = Decorator.Complete;
-        PatientController.getInstance().getStateManager().updateItemInState(STATE_NAMES.openPatients, patient, true);
-        this.listeners.forEach((listener) => listener.patientSaved(patient));
+    public closePatientRecord(patient: any): void {
+        // has the patient changed?
+        if (patient.decorator) {
+            if (patient.decorator === Decorator.Modified) {
+                logger(`Patient marked as modified`);
+                AlertManager.getInstance().startAlert(this,'Patient Records', `Patient ${patient.name.firstname} ${patient.name.surname} has changes.  Do you want to discard those changes?`,{patient:patient});
+            }
+            else {
+                this._closeRecord(patient);
+            }
+        }
+        else {
+            this._closeRecord(patient);
+        }
 
-        let patientRecord = JSON.parse(JSON.stringify(patient));
+    }
+
+    public savePatientRecord(patient: any): void {
+        logger(`saving patient ${patient.name.firstname} with id ${patient._id}`);
+
+
+        let patientRecord = copyObject(patient);
         delete patientRecord.decorator;
+        delete patient.oldContact;
+        patientRecord.modified = parseInt(moment().format('YYYYMMDDHHmmss'));
+        patientRecord.modifiedBy = Controller.getInstance().getLoggedInUsername();
+
         Controller.getInstance().getStateManager().updateItemInState(STATE_NAMES.patients, patientRecord, false);
+
+
+        patientRecord.decorator = Decorator.Complete;
+        PatientController.getInstance().getStateManager().updateItemInState(STATE_NAMES.openPatients, patientRecord, true);
+        logger(patientRecord);
+
     }
 
     public onDocumentLoaded(): void {
@@ -131,13 +160,19 @@ export class PatientController implements StateChangeListener, CollectionViewLis
         switch (name) {
             case STATE_NAMES.openPatients: {
                 // found new patient in buffer, let listeners know
-                logger(`patient loaded`);
-                logger(itemNewValue);
-                this.listeners.forEach((listener) => listener.patientLoaded(itemNewValue));
+                if (itemNewValue.decorator !== Decorator.Modified) {
+                    logger(`patient loaded`);
+                    logger(itemNewValue);
+                    this.listeners.forEach((listener) => listener.patientLoaded(itemNewValue));
+                }
+                else {
+                    this.listeners.forEach((listener) => listener.patientChanged(itemNewValue));
+                }
                 break;
             }
         }
     }
+
 
     getListenerName(): string {
         return 'Patient Controller';
@@ -193,6 +228,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
         logger(`Handling selected item`);
         logger(selectedItem);
         PatientRecordTabularView.getInstance().selectTab(PatientRecordTabularView.TAB_DEMOGRAPHICS);
+        this.openPatientRecord(selectedItem);
 
     }
 
@@ -204,6 +240,12 @@ export class PatientController implements StateChangeListener, CollectionViewLis
     attachmentClicked(dataType: string, dataIdentifier: string): void {
         if (dataType === DRAGGABLE.typePatientSummary) {
             this.openPatientRecordWithPatientId(dataIdentifier);
+        }
+    }
+
+    completed(event: AlertEvent): void {
+        if (event.outcome === AlertType.confirmed) {
+            this._closeRecord(event.context.patient);
         }
     }
 

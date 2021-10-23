@@ -92,6 +92,7 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
         this.getIdForItemInNamedCollection = this.getIdForItemInNamedCollection.bind(this);
         this.getItemInNamedCollection = this.getItemInNamedCollection.bind(this);
         this.getItemId = this.getItemId.bind(this);
+        this.getModifierForItemInNamedCollection = this.getModifierForItemInNamedCollection.bind(this);
 
         ContextualInformationHelper.getInstance().addContextFromView(this, STATE_NAMES.openPatients, 'Open Patient Records');
 
@@ -106,7 +107,7 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
 
     private static sortPatients(item1: any, item2: any) {
         let result = -1;
-        if (item1.name > item2.name) result = 1;
+        if (item1.name.firstname > item2.name.firstname) result = 1;
         return result;
     }
 
@@ -132,13 +133,10 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
         let result = Modifier.normal;
         vLoggerDetail(`Checking for item modifiers`);
         vLoggerDetail(item);
-        if ((item.decorator) && (item.decerator === Decorator.Modified)) result = Modifier.warning;
+        if (item.decorator === Decorator.Modified) result = Modifier.warning;
         return result;
     }
 
-    getSecondaryModifierForItemInNamedCollection(name: string, item: any): Modifier {
-        return Modifier.normal;
-    }
 
     compareItemsForEquality(item1: any, item2: any): boolean {
         return isSameMongo(item1, item2);

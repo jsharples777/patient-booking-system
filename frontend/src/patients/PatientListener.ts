@@ -6,4 +6,6 @@ export interface PatientListener {
     patientSaved(patient: any): void;
 
     patientLoaded(patient: any): void;
+
+    patientChanged(patient:any):void;
 }

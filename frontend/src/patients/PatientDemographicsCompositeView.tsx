@@ -10,7 +10,7 @@ import {
     DetailViewImplementation,
     Field, Form,
     FormDetailViewRenderer,
-    isSameMongo,
+    isSameMongo, ItemEvent, ItemViewListener,
     jsxCreateElement,
     jsxCreateFragment,
     ObjectDefinitionRegistry,
@@ -51,7 +51,7 @@ export class NamePermissionChecker implements ViewFieldPermissionChecker {
     }
 }
 
-export class PatientDemographicsCompositeView extends AbstractView implements DataObjectListener, PatientListener,StateChangeListener{
+export class PatientDemographicsCompositeView extends AbstractView implements DataObjectListener, PatientListener,StateChangeListener,ItemViewListener{
 
     private static ICON_Linked = '<i class="fas fa-link"></i>';
     private static ICON_Unlinked = '<i class="fas fa-unlink"></i>';
@@ -65,11 +65,13 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     private suburbElementId: string;
     private postCodeElementId: string;
     private contactForm: Form;
-    private patientBannerDetailsEl: HTMLElement;
     private fastPatientSearchEl: HTMLElement;
     private btnLinkUnlinkEl: HTMLElement;
     private linkToPatientId:string = '';
     private isLinked: boolean;
+    private nameForm: Form;
+    private basicsForm: Form;
+    private identifiersForm: Form;
 
     constructor() {
         super({resultsContainerId: '', dataSourceId: 'patientDemographics'});
@@ -98,21 +100,20 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         const demographicsView =
             <div id={"demographics-view"} className={"container-fluid mt-4"}>
                 <div className={"row"}>
-                    <div className={"col-sm-12 col-md-6"}>
-                        <h4 id={"banner-patient"}></h4>
-                    </div>
-                    <div className={"col-sm-12 col-md-6  d-flex w-100 justify-content-between"}>
-                        <h6>Link Contact Details To:</h6>
-                        <input type={'text'} id={'patient-demographics-fast-patient-search'}></input>
-                        <button id={"contact-link-unlink"} className={"btn btn-primary"}><i className="fas fa-link"></i></button>
-                    </div>
-                </div>
-                <div className={"row"}>
                     <div id={"patient-name"} className={"col-12-sm col-md-6 mb-2"}>
                         <div className="shadow card">
                             <div className="card-body">
                                 <h5 className="card-title">Name Details</h5>
                                 <div className="card-text" id={VIEW_CONTAINER.patientName}></div>
+                            </div>
+                        </div>
+                        <div className="shadow card">
+                            <div className="card-body">
+                                <h5 className="card-title">Contact Link</h5>
+                                <div className="card-text">
+                                    <input type={'text'} id={'patient-demographics-fast-patient-search'}></input>
+                                    <button id={"contact-link-unlink"} className={"ml-2 btn btn-primary"}><i className="fas fa-link"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -148,11 +149,11 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         // @ts-ignore
         this.containerEl.append(demographicsView);
         
-        this.patientBannerDetailsEl = document.getElementById("banner-patient");
         this.fastPatientSearchEl = document.getElementById("patient-demographics-fast-patient-search");
         this.btnLinkUnlinkEl = document.getElementById("contact-link-unlink");
         this.btnLinkUnlinkEl.addEventListener('click', this.eventLinkUnlink);
     }
+
 
     show(): void {
         if (!this.initialised) {
@@ -180,6 +181,11 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                 this.nameView.onDocumentLoaded();
                 this.nameView.initialise(startingDisplayOrder, false, true);
                 this.nameView.show();
+
+                this.nameForm = renderer.getForm();
+                if (this.nameForm) {
+                    this.nameForm.addListener(this);
+                }
             }
 
             if (contactDef) {
@@ -199,6 +205,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                 this.contactForm = renderer.getForm();
                 logger(`Setting up fast search for post codes/suburbs`);
                 logger(this.contactForm);
+                this.contactForm.addListener(this);
             }
             if (basicsDef) {
                 const renderer: FormDetailViewRenderer = new FormDetailViewRenderer(VIEW_CONTAINER.patientBasics, basicsDef, new NamePermissionChecker(), BootstrapFormConfigHelper.getInstance(), true);
@@ -213,6 +220,12 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                 this.basicsView.onDocumentLoaded();
                 this.basicsView.initialise(startingDisplayOrder, false, true);
                 this.basicsView.show();
+
+                this.basicsForm = renderer.getForm();
+                if (this.basicsForm) {
+                    this.basicsForm.addListener(this);
+                }
+
             }
             if (identifiersDef) {
                 const renderer: FormDetailViewRenderer = new FormDetailViewRenderer(VIEW_CONTAINER.patientIdentifiers, identifiersDef, new NamePermissionChecker(), BootstrapFormConfigHelper.getInstance(), true);
@@ -227,6 +240,11 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                 this.identifiersView.onDocumentLoaded();
                 this.identifiersView.initialise(startingDisplayOrder, false, true);
                 this.identifiersView.show();
+
+                this.identifiersForm = renderer.getForm();
+                if (this.identifiersForm) {
+                    this.identifiersForm.addListener(this);
+                }
             }
         }
     }
@@ -250,6 +268,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
             this.contactForm.setFieldValue('suburb',postCode.suburb);
             this.contactForm.setFieldValue('postcode',postCode.postcode);
             this.contactForm.setFieldValue('state',postCode.state);
+            this.markPatientChanged();
         }
     }
 
@@ -263,6 +282,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     }
 
     patientClosed(patient: any): void {
+        this.viewHasChanged = false;
         logger(`handling patient closed`);
         if (this.currentPatient && patient) {
             if (isSameMongo(this.currentPatient, patient)) {
@@ -277,19 +297,20 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     }
 
     patientLoaded(patient: any): void {
+        this.viewHasChanged = false;
         logger(`handling patient loaded`);
         if (this.currentPatient && patient) {
             if (isSameMongo(this.currentPatient, patient)) {
-                logger(`handling patient loaded - is the current patient`);
-                logger(this.currentPatient);
-                if (this.currentPatient.decorator === Decorator.Incomplete) {
-                    logger(`handling patient loaded - is the current patient - updating full details`);
-                    this.currentPatient = patient;
-                    this.basicsView.displayItem(patient);
-                    this.contactView.displayItem(patient.contact);
-                    this.identifiersView.displayItem(patient.identifiers);
-                    this.nameView.displayItem(patient.name);
+                logger(`handling patient loaded - is the current patient - updating full details`);
+                this.currentPatient = patient;
+                this.basicsView.displayItem(patient);
+                this.contactView.displayItem(patient.contact);
+                this.identifiersView.displayItem(patient.identifiers);
+                this.nameView.displayItem(patient.name);
+                if (this.isLinked) {
+                    this.setLinked(true,false);
                 }
+                logger(this.currentPatient);
             }
         }
     }
@@ -299,7 +320,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         if (this.currentPatient && patient) {
             if (isSameMongo(this.currentPatient, patient)) {
                 logger(`handling patient saved - is the current patient`);
-                this.currentPatient = patient;
+                this.patientSelected(patient);
             }
         }
 
@@ -320,7 +341,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         }
     }
 
-    private setLinked(isLinked:boolean):void {
+    private setLinked(isLinked:boolean,isChange:boolean = true):void {
         if (isLinked) {
             this.isLinked = true;
 
@@ -384,9 +405,32 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
             this.linkToPatientId = '';
             this.btnLinkUnlinkEl.innerHTML = PatientDemographicsCompositeView.ICON_Linked;
         }
+
+        if (isChange) {
+            this.contactForm.setChanged();
+            this.markPatientChanged();
+        }
     }
 
+    private resetLink():void {
+        this.isLinked = false;
+
+        this.contactForm.clearFieldReadOnly('line1');
+        this.contactForm.clearFieldReadOnly('line2');
+        this.contactForm.clearFieldReadOnly('suburb');
+        this.contactForm.clearFieldReadOnly('postcode');
+        this.contactForm.clearFieldReadOnly('country');
+        this.contactForm.clearFieldReadOnly('home');
+        this.contactForm.clearFieldReadOnly('mobile');
+        // @ts-ignore
+        this.fastPatientSearchEl.value = '';
+        this.linkToPatientId = '';
+        this.btnLinkUnlinkEl.innerHTML = PatientDemographicsCompositeView.ICON_Linked;
+    }
+
+
     patientSelected(patient: any): void {
+        this.viewHasChanged = false;
         logger(`handling patient selected`);
         logger(patient);
         this.currentPatient = copyObject(patient);
@@ -399,18 +443,17 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         if (patient.dob) dob = moment(patient.dob,'YYYYMMDD').format('DD/MM/YYYY');
 
         let linkIcon = '<i class="fas fa-link"></i>';
-        this.setLinked(false);
+        this.resetLink();
 
         if (patient.contact) {
             if (patient.contact.owner) {
                 if (patient.contact.owner !== patient._id) {
                     linkIcon = '<i class="fas fa-unlink"></i>';
                     this.linkToPatientId = patient.contact.owner;
-                    this.setLinked(true);
+                    this.setLinked(true,false);
                 }
             }
         }
-        this.patientBannerDetailsEl.innerHTML = `${patient.name.firstname} ${patient.name.surname} (DOB:${dob})`;
         this.btnLinkUnlinkEl.innerHTML = linkIcon;
     }
 
@@ -479,8 +522,46 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     }
 
     stateChangedItemAdded(managerName: string, name: string, itemAdded: any): void {}
-
     stateChangedItemRemoved(managerName: string, name: string, itemRemoved: any): void {}
-
     stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, itemNewValue: any): void {}
+
+    valuesChanged(name: string, event: ItemEvent, rowValues?: any): boolean {
+        return false;
+    }
+
+    viewHasChanges(name: string): void {
+        if (name === VIEW_NAME.patientIdentifiers) {
+            this.currentPatient.modifiedDates.identifiers = parseInt(moment().format('YYYYMMDDHHmmss'));
+        }
+
+        this.markPatientChanged();
+    }
+
+    markPatientChanged():void {
+        this.viewHasChanged = true;
+        this.currentPatient.decorator = Decorator.Modified;
+        this.currentPatient.modified = parseInt(moment().format('YYYYMMDDHHmmss'));
+        this.currentPatient.modifiedBy = Controller.getInstance().getLoggedInUsername();
+        PatientController.getInstance().getStateManager().updateItemInState(STATE_NAMES.openPatients,this.getCurrentPatient(),false);
+    }
+
+    getCurrentPatient():any {
+        let result = copyObject(this.currentPatient);
+
+        result.contact = this.contactForm.getFormattedDataObject();
+        result.name = this.nameForm.getFormattedDataObject();
+        result.identifiers = this.identifiersForm.getFormattedDataObject();
+        let basics = this.basicsForm.getFormattedDataObject();
+        result.dob = basics.dob;
+        result.dod = basics.dod;
+        result.gender = basics.gender;
+        result.ethnicity = basics.ethnicity;
+        result.countryofbirth = basics.countryofbirth;
+
+        return result;
+    }
+
+    patientChanged(patient: any): void {
+        logger(`Patient changed`);
+    }
 }

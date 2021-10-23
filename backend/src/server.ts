@@ -87,8 +87,9 @@ app.use(compression()); // add compression support
 app.use('/', express.static('./public')); // root directory of static content
 app.use('/dist', express.static('./dist')); // root directory of static content
 app.use(cookieParser()); // add cookie support
-app.use(bodyParser.json()); // add POST JSON support
-app.use(bodyParser.urlencoded({extended: true})); // and POST URL Encoded form support
+app.use(bodyParser.json({ limit: '50mb' })); // add POST JSON support
+app.use(bodyParser.urlencoded({limit: '50mb',extended: true})); // and POST URL Encoded form support
+
 
 
 app.use(session({

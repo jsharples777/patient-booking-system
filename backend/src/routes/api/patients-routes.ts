@@ -3,6 +3,7 @@ import {MongoDataSource} from "../../db/MongoDataSource";
 import {Document} from "mongodb";
 import debug from "debug";
 import PatientsQLDelegate from "../../graphql/PatientsQLDelegate";
+import {SocketManager} from "server-socket-framework-jps";
 
 const router = express.Router();
 
@@ -51,6 +52,20 @@ router.get("/:id", function (req, res) {
                 error: err
             });
         });
+});
+
+router.put('/', (req, res) => {
+    logger(`Starting route PUT /patient by id ${req.body._id}`);
+    const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
+    MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:req.body._id},req.body).then((result) => {
+        // @ts-ignore
+        //const message:DataMessage = {type:"update",stateName: "patient",data:req.body, user:req.body.modifiedBy}
+        //SocketManager.getInstance().sendDataMessage(message);
+        res.json(req.body);
+    }).catch((err) => {
+        logger(err);
+        res.status(400).json(err);
+    });
 });
 
 

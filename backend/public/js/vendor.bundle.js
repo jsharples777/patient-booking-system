@@ -55470,7 +55470,14 @@ class BrowserStorageStateManager extends _AbstractStateManager__WEBPACK_IMPORTED
         let state = this._getState(name);
         lsLogger(`adding item to state ${name}`);
         lsLogger(stateObj);
-        state.value.push(stateObj);
+        const valueIndex = state.value.findIndex((element) => this.getEqualityFnForName(name)(element, stateObj));
+        if (valueIndex >= 0) {
+            state.value.splice(valueIndex, 1, stateObj);
+            lsLogger(`item was already in state, updating instead ${name}`);
+        }
+        else {
+            state.value.push(stateObj);
+        }
         this._replaceNamedStateInStorage(state);
     }
     _removeItemFromState(name, stateObj, isPersisted) {
@@ -56436,7 +56443,14 @@ class MemoryBufferStateManager extends _AbstractStateManager__WEBPACK_IMPORTED_M
             let state = this.applicationState[foundIndex];
             msManager(`adding item to state ${name}`);
             msManager(stateObj);
-            state.value.push(stateObj);
+            const valueIndex = state.value.findIndex((element) => this.getEqualityFnForName(name)(element, stateObj));
+            if (valueIndex >= 0) {
+                state.value.splice(valueIndex, 1, stateObj);
+                msManager(`item was already in state, updating instead ${name}`);
+            }
+            else {
+                state.value.push(stateObj);
+            }
         }
     }
     _removeItemFromState(name, stateObj, isPersisted) {
@@ -62889,6 +62903,7 @@ const avLoggerDetails = debug__WEBPACK_IMPORTED_MODULE_0___default()('abstract-v
 class AbstractView {
     constructor(uiConfig) {
         this.containerEl = null;
+        this.viewHasChanged = false;
         this.uiConfig = uiConfig;
         this.viewEl = null;
         this.eventForwarder = new _delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_1__.ViewListenerForwarder();
@@ -62920,7 +62935,7 @@ class AbstractView {
         return this.uiConfig.dataSourceId;
     }
     hasChanged() {
-        return false;
+        return this.viewHasChanged;
     }
     getDataSourceKeyId() {
         return AbstractView.DATA_SOURCE;
@@ -63966,6 +63981,7 @@ class DefaultItemView {
     setFieldValue(fieldId, newValue) {
         const field = this.getFieldFromDataFieldId(fieldId);
         if (field) {
+            this.setChanged();
             field.setValue(newValue);
         }
     }
@@ -63994,6 +64010,10 @@ class DefaultItemView {
         }
     }
     viewHasChanges(name) { }
+    setChanged() {
+        this.hasChangedBoolean = true;
+        this.setUnsavedMessage();
+    }
 }
 //# sourceMappingURL=DefaultItemView.js.map
 
@@ -65209,6 +65229,18 @@ class ListViewRenderer {
                     }
                     break;
                 }
+                case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].removeClasses(childEl, uiConfig.modifiers.normal);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(childEl, uiConfig.modifiers.warning);
+                    if (uiConfig.icons && uiConfig.icons.warning) {
+                        let iconEl = document.createElement('i');
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_0__["default"].addClasses(iconEl, uiConfig.icons.warning);
+                        iconEl.setAttribute(uiConfig.keyId, resultDataKeyId);
+                        iconEl.setAttribute(dataSourceKeyId, uiConfig.viewConfig.dataSourceId);
+                        textEl.appendChild(iconEl);
+                    }
+                    break;
+                }
             }
         }
         return childEl;
@@ -65467,6 +65499,16 @@ class ListViewRendererUsingContext {
                             }
                             break;
                         }
+                    }
+                    break;
+                }
+                case _ConfigurationTypes__WEBPACK_IMPORTED_MODULE_1__.Modifier.warning: {
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeClasses(childEl, uiConfig.modifiers.normal);
+                    _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(childEl, uiConfig.modifiers.warning);
+                    if (uiConfig.icons && uiConfig.icons.warning) {
+                        let iconEl = document.createElement('i');
+                        _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].addClasses(iconEl, uiConfig.icons.warning);
+                        textEl.appendChild(iconEl);
                     }
                     break;
                 }
