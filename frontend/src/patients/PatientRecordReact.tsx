@@ -20,7 +20,5 @@ export class PatientRecordReact extends React.Component {
         const patientView = PatientRecordTabularView.getInstance();
         patientView.addViewToTab('demographics', new PatientDemographicsCompositeView());
         patientView.onDocumentLoaded();
-        PatientController.getInstance().onDocumentLoaded();
-
     }
 }

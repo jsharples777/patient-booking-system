@@ -121,7 +121,7 @@ export class OpenPatientsView extends AbstractStatefulCollectionView {
 
     public getItemInNamedCollection(name: string, compareWith: any): any {
         let result = this.stateManager.findItemInState(name, compareWith);
-            return result;
+        return result;
     }
 
 

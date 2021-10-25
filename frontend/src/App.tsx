@@ -103,7 +103,6 @@ export default class App extends React.Component implements UnreadMessageCountLi
         // @ts-ignore
         this.thisEl = document.getElementById('root');
 
-        PatientSearchSidebar.getInstance().onDocumentLoaded();
 
         this.apptTypeSidebar = new SidebarViewContainer(AppointmentTypesSidebarPrefs);
         new AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
@@ -111,11 +110,8 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.usersSidebar = new SidebarViewContainer(UsersSidebarPrefs);
         new UsersCompositeView(this.usersSidebar).onDocumentLoaded();
 
+        PatientSearchSidebar.getInstance().onDocumentLoaded();
         ClinicChatSidebar.getInstance().onDocumentLoaded();
-
-        // const patientView = PatientRecordTabularView.getInstance();
-        // patientView.addViewToTab('demographics', new PatientDemographicsCompositeView());
-        // patientView.onDocumentLoaded();
 
         TodaysPatientsView.getInstance().onDocumentLoaded(this);
 
@@ -141,7 +137,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
             showUserJoinLeaveChatNotification: false
         });
         NotificationController.getInstance().onDocumentLoaded();
-        // PatientController.getInstance().onDocumentLoaded();
+        PatientController.getInstance().onDocumentLoaded();
         Controller.getInstance().onDocumentLoaded();
 
         if (Controller.getInstance().isProvider()) {

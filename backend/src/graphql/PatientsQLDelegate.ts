@@ -161,28 +161,31 @@ export default class PatientsQLDelegate {
                         logger(result);
                         if (result) {
                             logger(`Found account holder contact, updating patient`);
-                            result.contact._id = result._id;
-                            result.contact.line1 = result.line1;
-                            result.contact.line2 = result.line2;
-                            result.contact.suburb = result.suburb;
-                            result.contact.postcode = result.postcode;
-                            result.contact.state = result.state;
-                            result.contact.country = result.country;
-                            result.contact.home = result.home;
-                            result.contact.work = result.work;
-                            result.contact.mobile = result.mobile;
+                            patient.contact._id = result._id;
+                            patient.contact.line1 = result.line1;
+                            patient.contact.line2 = result.line2;
+                            patient.contact.suburb = result.suburb;
+                            patient.contact.postcode = result.postcode;
+                            patient.contact.state = result.state;
+                            patient.contact.country = result.country;
+                            patient.contact.home = result.home;
+                            patient.contact.work = result.work;
+                            patient.contact.mobile = result.mobile;
                         }
                     }).catch((err) => {
                         logger(err);
                     });
 
                     logger(`Correcting pathology received dates`);
-                    patient.results.forEach((pathology: any) => {
-                        if (isNaN(pathology.received)) {
-                            pathology.received = -1;
-                        }
+                    if (patient.results) {
+                        patient.results.forEach((pathology: any) => {
+                            if (isNaN(pathology.received)) {
+                                pathology.received = -1;
+                            }
 
-                    });
+                        });
+                    }
+
                     logger(`Updating patient`);
                     collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
                     MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: patient._id}, patient);

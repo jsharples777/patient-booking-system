@@ -6024,10 +6024,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./clinic-chat/ClinicChatListView */ "./src/clinic-chat/ClinicChatListView.ts");
 /* harmony import */ var _today_TodayController__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./today/TodayController */ "./src/today/TodayController.ts");
 /* harmony import */ var _today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./today/TodaysPatientsView */ "./src/today/TodaysPatientsView.tsx");
-/* harmony import */ var _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./users/UsersCompositeView */ "./src/users/UsersCompositeView.ts");
-/* harmony import */ var _appointments_AppointmentBookReact__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./appointments/AppointmentBookReact */ "./src/appointments/AppointmentBookReact.tsx");
-/* harmony import */ var _appointment_templates_AppointmentTemplatesReact__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./appointment-templates/AppointmentTemplatesReact */ "./src/appointment-templates/AppointmentTemplatesReact.tsx");
-/* harmony import */ var _patients_PatientRecordReact__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./patients/PatientRecordReact */ "./src/patients/PatientRecordReact.tsx");
+/* harmony import */ var _patients_PatientController__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./patients/PatientController */ "./src/patients/PatientController.ts");
+/* harmony import */ var _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./users/UsersCompositeView */ "./src/users/UsersCompositeView.ts");
+/* harmony import */ var _appointments_AppointmentBookReact__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./appointments/AppointmentBookReact */ "./src/appointments/AppointmentBookReact.tsx");
+/* harmony import */ var _appointment_templates_AppointmentTemplatesReact__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./appointment-templates/AppointmentTemplatesReact */ "./src/appointment-templates/AppointmentTemplatesReact.tsx");
+/* harmony import */ var _patients_PatientRecordReact__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./patients/PatientRecordReact */ "./src/patients/PatientRecordReact.tsx");
+
 
 
 
@@ -6095,7 +6097,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
       className: "row",
       id: "todays-patients"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_13__.TodaysPatientsView, null)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_appointments_AppointmentBookReact__WEBPACK_IMPORTED_MODULE_15__.AppointmentBookReact, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_appointment_templates_AppointmentTemplatesReact__WEBPACK_IMPORTED_MODULE_16__.AppointmentTemplatesReact, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_patients_PatientRecordReact__WEBPACK_IMPORTED_MODULE_17__.PatientRecordReact, null));
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_13__.TodaysPatientsView, null)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_appointments_AppointmentBookReact__WEBPACK_IMPORTED_MODULE_16__.AppointmentBookReact, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_appointment_templates_AppointmentTemplatesReact__WEBPACK_IMPORTED_MODULE_17__.AppointmentTemplatesReact, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_patients_PatientRecordReact__WEBPACK_IMPORTED_MODULE_18__.PatientRecordReact, null));
   }
 
   componentDidMount() {
@@ -6103,15 +6105,12 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     logger('document loaded'); // @ts-ignore
 
     this.thisEl = document.getElementById('root');
-    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_8__.PatientSearchSidebar.getInstance().onDocumentLoaded();
     this.apptTypeSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.AppointmentTypesSidebarPrefs);
     new _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_9__.AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
     this.usersSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.UsersSidebarPrefs);
-    new _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__.UsersCompositeView(this.usersSidebar).onDocumentLoaded();
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_10__.ClinicChatSidebar.getInstance().onDocumentLoaded(); // const patientView = PatientRecordTabularView.getInstance();
-    // patientView.addViewToTab('demographics', new PatientDemographicsCompositeView());
-    // patientView.onDocumentLoaded();
-
+    new _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_15__.UsersCompositeView(this.usersSidebar).onDocumentLoaded();
+    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_8__.PatientSearchSidebar.getInstance().onDocumentLoaded();
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_10__.ClinicChatSidebar.getInstance().onDocumentLoaded();
     _today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_13__.TodaysPatientsView.getInstance().onDocumentLoaded(this);
     this.setupNavigationItemHandling(); // AppointmentTemplateController.getInstance().onDocumentLoaded();
 
@@ -6132,8 +6131,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
       showFavouriteUserLoggedOutNotification: false,
       showUserJoinLeaveChatNotification: false
     });
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.NotificationController.getInstance().onDocumentLoaded(); // PatientController.getInstance().onDocumentLoaded();
-
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.NotificationController.getInstance().onDocumentLoaded();
+    _patients_PatientController__WEBPACK_IMPORTED_MODULE_14__.PatientController.getInstance().onDocumentLoaded();
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
 
     if (_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().isProvider()) {
@@ -7006,10 +7005,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "PatientRecordReact": () => (/* binding */ PatientRecordReact)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _PatientController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PatientController */ "./src/patients/PatientController.ts");
-/* harmony import */ var _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
-/* harmony import */ var _PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PatientDemographicsCompositeView */ "./src/patients/PatientDemographicsCompositeView.tsx");
-
+/* harmony import */ var _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
+/* harmony import */ var _PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PatientDemographicsCompositeView */ "./src/patients/PatientDemographicsCompositeView.tsx");
 
 
 
@@ -7026,10 +7023,9 @@ class PatientRecordReact extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
   }
 
   componentDidMount() {
-    const patientView = _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_2__.PatientRecordTabularView.getInstance();
-    patientView.addViewToTab('demographics', new _PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_3__.PatientDemographicsCompositeView());
+    const patientView = _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_1__.PatientRecordTabularView.getInstance();
+    patientView.addViewToTab('demographics', new _PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_2__.PatientDemographicsCompositeView());
     patientView.onDocumentLoaded();
-    _PatientController__WEBPACK_IMPORTED_MODULE_1__.PatientController.getInstance().onDocumentLoaded();
   }
 
 }

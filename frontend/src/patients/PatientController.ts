@@ -189,23 +189,12 @@ export class PatientController implements StateChangeListener, CollectionViewLis
         return true;
     }
 
-    documentLoaded(view: View): void {
-    }
-
-    hideRequested(view: View): void {
-    }
-
-    showRequested(view: View): void {
-    }
-
-    itemDeleted(view: View, selectedItem: any): void {
-    }
-
-    itemDeselected(view: CollectionView, selectedItem: any): void {
-    }
-
-    itemDragStarted(view: CollectionView, selectedItem: any): void {
-    }
+    documentLoaded(view: View): void {}
+    hideRequested(view: View): void {}
+    showRequested(view: View): void {}
+    itemDeleted(view: View, selectedItem: any): void {}
+    itemDeselected(view: CollectionView, selectedItem: any): void {}
+    itemDragStarted(view: CollectionView, selectedItem: any): void {}
 
     itemAction(view: View, actionName: string, selectedItem: any): void {
         logger(`Handling action ${actionName} selected item`);
@@ -229,7 +218,6 @@ export class PatientController implements StateChangeListener, CollectionViewLis
         logger(selectedItem);
         PatientRecordTabularView.getInstance().selectTab(PatientRecordTabularView.TAB_DEMOGRAPHICS);
         this.openPatientRecord(selectedItem);
-
     }
 
     protected isPatientInOpenList(patientId: string): boolean {
