@@ -6291,7 +6291,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'users-composite-view app api-ts-results user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'default-item-view-validation validation-helper-functions users-composite-view app api-ts-results user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
