@@ -105,7 +105,7 @@ export class UsersCollectionView extends AbstractStatefulCollectionView implemen
 
     private static sortUsers(item1: any, item2: any) {
         let result = -1;
-        if (item1.name > item2.name) result = 1;
+        if (item1.username > item2.username) result = 1;
         return result;
     }
 

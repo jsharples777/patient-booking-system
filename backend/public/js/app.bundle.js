@@ -5724,6 +5724,7 @@ class UserValidationHelper {
       }
     }
 
+    logger(result);
     return result;
   }
 
@@ -5843,7 +5844,7 @@ class UsersCollectionView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_2__.
 
   static sortUsers(item1, item2) {
     let result = -1;
-    if (item1.name > item2.name) result = 1;
+    if (item1.username > item2.username) result = 1;
     return result;
   }
 
@@ -6290,8 +6291,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'notification-controller app api-ts-results  patient-controller'; // today-controller todays-patients-view today-view';//tabular-view-container';//default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
-//localStorage.debug = 'socket-listener';
+localStorage.debug = 'users-composite-view app api-ts-results user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);

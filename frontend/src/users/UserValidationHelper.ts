@@ -132,10 +132,10 @@ export class UserValidationHelper implements ViewFieldValidator {
                         }
                     }
                 }
-
-
             }
         }
+
+        logger(result);
 
         return result;
     }
