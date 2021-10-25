@@ -124,13 +124,17 @@ export default class App extends React.Component implements UnreadMessageCountLi
             showNormalPriorityMessageNotifications: true,
             showHighPriorityMessageNotifications: true,
             showUrgentPriorityMessageNotifications: true,
+            showNormalPriorityMessageNotificationsInOS: true,
+            showHighPriorityMessageNotificationsInOS: true,
+            showUrgentPriorityMessageNotificationsInOS: true,
             showInvitationDeclinedNotifications: false,
             showInvitedNotifications: false,
             showOfflineMessageNotification: true,
             showFavouriteUserLoggedInNotification: false,
             showFavouriteUserLoggedOutNotification: false,
             showUserJoinLeaveChatNotification: false
-        })
+        });
+        NotificationController.getInstance().onDocumentLoaded();
         PatientController.getInstance().onDocumentLoaded();
         Controller.getInstance().onDocumentLoaded();
 

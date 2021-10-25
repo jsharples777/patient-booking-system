@@ -124,6 +124,11 @@ contribute to this project.
 21. [Bootstrap 4 Round Buttons](https://www.geeksforgeeks.org/how-to-get-circular-buttons-in-bootstrap-4/)
 22. [Mobiscroll](https://mobiscroll.com/)
 23. [GraphQL](https://graphql.org/)
+24. [Notification System](https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API)
+25. [UI Framework](https://www.npmjs.com/package/ui-framework-jps)
+26. [Server Socket Framework](https://www.npmjs.com/package/server-socket-framework-jps)
+27. [JSX without React](https://betterprogramming.pub/how-to-use-jsx-without-react-21d23346e5dc)
+28. [Mongoose with TypeScript](https://thecodebarbarian.com/working-with-mongoose-in-typescript.html)
 
 
 # Questions

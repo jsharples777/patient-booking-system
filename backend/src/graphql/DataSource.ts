@@ -9,6 +9,7 @@ import ProvidersQLDelegate from "./ProvidersQLDelegate";
 import AppointmentTemplatesQLDelegate from "./AppointmentTemplatesQLDelegate";
 import UsersQLDelegate from "./UsersQLDelegate";
 import PostCodesQLDelegate from "./PostCodesQLDelegate";
+import AppointmentTypesMongooseQLDelegate from "./AppointmentTypesMongooseQLDelegate";
 
 const dsLogger = debug('data-source');
 
@@ -23,7 +24,8 @@ export default class DataSource {
             Query: {
                 getAppointments: AppointmentsQLDelegate.getAppointments,
                 getPatientSearchDetails: PatientsQLDelegate.getPatientSearchDetails,
-                getAppointmentTypes: AppointmentTypesQLDelegate.getAppointmentTypes,
+                // getAppointmentTypes: AppointmentTypesQLDelegate.getAppointmentTypes,
+                getAppointmentTypes: AppointmentTypesMongooseQLDelegate.getAppointmentTypes,
                 getProviders: ProvidersQLDelegate.getProviders,
                 getAppointmentTemplates: AppointmentTemplatesQLDelegate.getAppointmentTemplates,
                 getPatient: PatientsQLDelegate.getPatient,
@@ -34,8 +36,10 @@ export default class DataSource {
                 addAppointment: AppointmentsQLDelegate.addAppointment,
                 updateAppointment: AppointmentsQLDelegate.updateAppointment,
                 deleteAppointment: AppointmentsQLDelegate.deleteAppointment,
-                addAppointmentType: AppointmentTypesQLDelegate.addAppointmentType,
-                updateAppointmentType: AppointmentTypesQLDelegate.updateAppointmentType,
+                // addAppointmentType: AppointmentTypesQLDelegate.addAppointmentType,
+                addAppointmentType: AppointmentTypesMongooseQLDelegate.addAppointmentType,
+                // updateAppointmentType: AppointmentTypesQLDelegate.updateAppointmentType,
+                updateAppointmentType: AppointmentTypesMongooseQLDelegate.updateAppointmentType,
                 deleteAppointmentType: AppointmentTypesQLDelegate.deleteAppointmentType,
                 addProvider: ProvidersQLDelegate.addProvider,
                 updateProvider: ProvidersQLDelegate.updateProvider,
