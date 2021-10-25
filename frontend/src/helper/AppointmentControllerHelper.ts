@@ -4,7 +4,7 @@ import {StateChangeListener} from "ui-framework-jps";
 import debug from 'debug';
 import moment from "moment";
 import {computeTimeStringFromStartTimeAndDurationInSeconds} from "../DurationFunctions";
-import {ScheduleLoadedListener} from "./ScheduleLoadedListener";
+import {ScheduleListener} from "./ScheduleListener";
 
 
 const logger = debug('appointment-controller-helper');
@@ -20,7 +20,7 @@ export class AppointmentControllerHelper implements StateChangeListener {
     private clinicConfig: any | null = null;
     private patientSearch: any[] = [];
     private providers: any[] = [];
-    private listeners: ScheduleLoadedListener[] = [];
+    private listeners: ScheduleListener[] = [];
 
     private constructor() {
         Controller.getInstance().getStateManager().addChangeListenerForName(STATE_NAMES.clinicConfig, this);
@@ -39,7 +39,7 @@ export class AppointmentControllerHelper implements StateChangeListener {
         return AppointmentControllerHelper._instance;
     }
 
-    public addListener(listener: ScheduleLoadedListener) {
+    public addListener(listener: ScheduleListener) {
         this.listeners.push(listener);
     }
 
@@ -285,7 +285,12 @@ export class AppointmentControllerHelper implements StateChangeListener {
             }
             case (STATE_NAMES.appointmentTypes): {
                 this.appointmentTypes = newValue;
-                this.listeners.forEach((listener) => listener.loadedAppointmentTypes(this.appointmentTypes));
+
+                let nonStatusAppointmentTypes:any[] = [];
+                this.appointmentTypes.forEach((type: any) => {
+                    if (!(type.isStatus)) nonStatusAppointmentTypes.push(type.name);
+                });
+                this.listeners.forEach((listener) => listener.loadedAppointmentTypes(nonStatusAppointmentTypes));
                 break;
 
             }
@@ -309,7 +314,12 @@ export class AppointmentControllerHelper implements StateChangeListener {
         switch (name) {
             case (STATE_NAMES.appointmentTypes): {
                 this.appointmentTypes = Controller.getInstance().getStateManager().getStateByName(name);
-                this.listeners.forEach((listener) => listener.loadedAppointmentTypes(this.appointmentTypes));
+                let nonStatusAppointmentTypes:any[] = [];
+                this.appointmentTypes.forEach((type: any) => {
+                    if (!(type.isStatus)) nonStatusAppointmentTypes.push(type.name);
+                });
+                this.listeners.forEach((listener) => listener.loadedAppointmentTypes(nonStatusAppointmentTypes));
+                this.listeners.forEach((listener) => listener.refreshDisplay());
                 break;
 
             }

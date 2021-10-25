@@ -9,7 +9,7 @@ import {AppointmentFilterView} from "./AppointmentFilterView";
 import {AppointmentDetailModal} from "./AppointmentDetailModal";
 import {v4} from "uuid";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
-import {ScheduleLoadedListener} from "../helper/ScheduleLoadedListener";
+import {ScheduleListener} from "../helper/ScheduleListener";
 
 
 const logger = debug('appointment-controller');
@@ -22,7 +22,7 @@ type AppointmentDataElements = {
     loadDateFinish: number,
 }
 
-export class AppointmentController implements StateChangeListener, ScheduleLoadedListener {
+export class AppointmentController implements StateChangeListener, ScheduleListener {
 
     private static _instance: AppointmentController;
     private dataElements: AppointmentDataElements = {
@@ -141,8 +141,11 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
                 logger('Converted to event');
                 logger(result);
 
-                AppointmentBookView.getInstance().getCalender().removeEvent(result);
-                AppointmentBookView.getInstance().getCalender().addEvent(result);
+                if (result) {
+                    AppointmentBookView.getInstance().getCalender().removeEvent(result);
+                    AppointmentBookView.getInstance().getCalender().addEvent(result);
+                    this.refreshDisplay();
+                }
             }
         }
     }
@@ -167,14 +170,22 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
                 logger('Converted to event');
                 logger(result);
 
-                AppointmentBookView.getInstance().getCalender().removeEvent(result);
-                AppointmentBookView.getInstance().getCalender().addEvent(result);
+                if (result) {
+                    AppointmentBookView.getInstance().getCalender().removeEvent(result);
+                    AppointmentBookView.getInstance().getCalender().addEvent(result);
+                    this.refreshDisplay();
+                }
             }
         }
     }
 
     loadedAppointmentTypes(appointmentTypes: any[]): void {
         AppointmentDetailModal.getInstance().setupAppointmentTypeDropDown(appointmentTypes);
+        const appointments = AppointmentBookView.getInstance().getCalender().getEvents();
+        appointments.forEach((appointment) => {
+            appointment.color = AppointmentControllerHelper.getInstance().getColourForAppointment(appointment);
+        });
+        AppointmentBookView.getInstance().getCalender().updateEvent(appointments);
     }
 
     loadedClinicAppointmentBookConfig(clinicConfig: any): void {
@@ -226,6 +237,11 @@ export class AppointmentController implements StateChangeListener, ScheduleLoade
                 }
             }
         });
+    }
+
+    refreshDisplay(): void {
+
+        //AppointmentBookView.getInstance().getCalender().refresh();
     }
 
 

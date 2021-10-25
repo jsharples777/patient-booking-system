@@ -8,7 +8,7 @@ import {AppointmentTemplateView} from "./AppointmentTemplateView";
 import {AppointmentTemplateFilterView} from "./AppointmentTemplateFilterView";
 import {AppointmentTemplateDetailModal} from "./AppointmentTemplateDetailModal";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
-import {ScheduleLoadedListener} from "../helper/ScheduleLoadedListener";
+import {ScheduleListener} from "../helper/ScheduleListener";
 
 
 const logger = debug('appointment-template-controller');
@@ -22,7 +22,7 @@ type AppointmentTemplateDataElements = {
     currentLastDate: number
 }
 
-export class AppointmentTemplateController implements StateChangeListener, ScheduleLoadedListener {
+export class AppointmentTemplateController implements StateChangeListener, ScheduleListener {
     private static _instance: AppointmentTemplateController;
     private dataElements: AppointmentTemplateDataElements = {
         oldEvent: null,
@@ -141,8 +141,11 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
             logger(appointment);
 
             const result = this.getEventForAppointmentTemplate(appointment);
-            AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
-            if (result) AppointmentTemplateView.getInstance().getCalender().addEvent(result);
+            if (result) {
+                AppointmentTemplateView.getInstance().getCalender().removeEvent(result);
+                AppointmentTemplateView.getInstance().getCalender().addEvent(result);
+                this.refreshDisplay();
+            }
         }
     }
 
@@ -152,6 +155,7 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
             logger(appointment);
 
             AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
+            this.refreshDisplay();
         }
     }
 
@@ -161,9 +165,16 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
             logger(appointment);
 
             const result = this.getEventForAppointmentTemplate(appointment);
-            AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
-            if (result) AppointmentTemplateView.getInstance().getCalender().addEvent(result);
+            if (result) {
+                AppointmentTemplateView.getInstance().getCalender().removeEvent(result);
+                AppointmentTemplateView.getInstance().getCalender().addEvent(result);
+                this.refreshDisplay();
+            }
         }
+    }
+
+    refreshDisplay(): void {
+        AppointmentTemplateView.getInstance().getCalender().refresh();
     }
 
 

@@ -1041,8 +1041,12 @@ class AppointmentTemplateController {
       logger('New Appointment Template inserted by another user');
       logger(appointment);
       const result = this.getEventForAppointmentTemplate(appointment);
-      _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
-      if (result) _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().addEvent(result);
+
+      if (result) {
+        _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent(result);
+        _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().addEvent(result);
+        this.refreshDisplay();
+      }
     }
   }
 
@@ -1051,6 +1055,7 @@ class AppointmentTemplateController {
       logger('Appointment Template deleted by another user');
       logger(appointment);
       _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
+      this.refreshDisplay();
     }
   }
 
@@ -1059,9 +1064,17 @@ class AppointmentTemplateController {
       logger('Appointment updated by another user');
       logger(appointment);
       const result = this.getEventForAppointmentTemplate(appointment);
-      _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent([appointment._id]);
-      if (result) _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().addEvent(result);
+
+      if (result) {
+        _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().removeEvent(result);
+        _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().addEvent(result);
+        this.refreshDisplay();
+      }
     }
+  }
+
+  refreshDisplay() {
+    _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().refresh();
   }
 
 }
@@ -1086,11 +1099,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./AppointmentTemplateView */ "./src/appointment-templates/AppointmentTemplateView.ts");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
 /* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../helper/AppointmentControllerHelper */ "./src/helper/AppointmentControllerHelper.ts");
+/* harmony import */ var _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../appointments/AppointmentController */ "./src/appointments/AppointmentController.ts");
+
 
 
 
@@ -1189,13 +1204,9 @@ class AppointmentTemplateDetailModal {
   }
 
   setupAppointmentTypeDropDown(appointmentTypes) {
-    const types = [];
-    appointmentTypes.forEach(type => {
-      if (!type.isStatus) types.push(type.name);
-    }); // add the patient search values to the data of the select dropdown
-
+    // add the patient search values to the data of the select dropdown
     this.viewElements.appointmentTypeDropdown = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.select)('#event-appt-type-template', {
-      data: types,
+      data: appointmentTypes,
       onChange: (event, inst) => {
         _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().tempEvent.type = event.valueText;
       }
@@ -1235,9 +1246,9 @@ class AppointmentTemplateDetailModal {
 
           const mobiId = _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_2__.AppointmentTemplateController.getInstance().getModel().tempEvent.id; // generate a new UUID
 
-          const appointmentId = (0,uuid__WEBPACK_IMPORTED_MODULE_9__["default"])(); // get the colour for the event type
+          const appointmentId = (0,uuid__WEBPACK_IMPORTED_MODULE_10__["default"])(); // get the colour for the event type
 
-          const colour = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().getColourForAppointmentType('Consulting');
+          const colour = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().getColourForAppointmentType(_appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_9__.AppointmentController.getInstance().getModel().tempEvent.type);
           const createdOn = parseInt(moment__WEBPACK_IMPORTED_MODULE_4___default()().format('YYYYDDMMHHmmss'));
           const updatedEvent = {
             id: appointmentId,
@@ -2215,8 +2226,12 @@ class AppointmentController {
         const result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
         logger('Converted to event');
         logger(result);
-        _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().removeEvent(result);
-        _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().addEvent(result);
+
+        if (result) {
+          _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().removeEvent(result);
+          _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().addEvent(result);
+          this.refreshDisplay();
+        }
       }
     }
   }
@@ -2238,14 +2253,23 @@ class AppointmentController {
         const result = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().getEventForAppointment(this.dataElements.loadDate, appointment);
         logger('Converted to event');
         logger(result);
-        _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().removeEvent(result);
-        _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().addEvent(result);
+
+        if (result) {
+          _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().removeEvent(result);
+          _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().addEvent(result);
+          this.refreshDisplay();
+        }
       }
     }
   }
 
   loadedAppointmentTypes(appointmentTypes) {
     _AppointmentDetailModal__WEBPACK_IMPORTED_MODULE_7__.AppointmentDetailModal.getInstance().setupAppointmentTypeDropDown(appointmentTypes);
+    const appointments = _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().getEvents();
+    appointments.forEach(appointment => {
+      appointment.color = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().getColourForAppointment(appointment);
+    });
+    _AppointmentBookView__WEBPACK_IMPORTED_MODULE_5__.AppointmentBookView.getInstance().getCalender().updateEvent(appointments);
   }
 
   loadedClinicAppointmentBookConfig(clinicConfig) {
@@ -2295,6 +2319,9 @@ class AppointmentController {
         }
       }
     });
+  }
+
+  refreshDisplay() {//AppointmentBookView.getInstance().getCalender().refresh();
   }
 
 }
@@ -2449,13 +2476,9 @@ class AppointmentDetailModal {
   }
 
   setupAppointmentTypeDropDown(appointmentTypes) {
-    const types = [];
-    appointmentTypes.forEach(type => {
-      if (!type.isStatus) types.push(type.name);
-    }); // add the patient search values to the data of the select dropdown
-
+    // add the patient search values to the data of the select dropdown
     this.viewElements.appointmentTypeDropdown = (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.select)('#' + _AppTypes__WEBPACK_IMPORTED_MODULE_0__.SELECT.appointmentType, {
-      data: types,
+      data: appointmentTypes,
       onChange: (event, inst) => {
         // @ts-ignore
         (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_1__.getInst)(AppointmentDetailModal.getInstance().viewElements.descriptionTextarea).value = event.valueText;
@@ -2506,7 +2529,7 @@ class AppointmentDetailModal {
 
           const appointmentId = (0,uuid__WEBPACK_IMPORTED_MODULE_9__["default"])(); // get the colour for the event type
 
-          const colour = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().getColourForAppointmentType('Consulting');
+          const colour = _helper_AppointmentControllerHelper__WEBPACK_IMPORTED_MODULE_8__.AppointmentControllerHelper.getInstance().getColourForAppointmentType(_AppointmentController__WEBPACK_IMPORTED_MODULE_2__.AppointmentController.getInstance().getModel().tempEvent.type);
           const createdOn = parseInt(moment__WEBPACK_IMPORTED_MODULE_4___default()().format('YYYYDDMMHHmmss'));
           const updatedEvent = {
             id: appointmentId,
@@ -3629,6 +3652,9 @@ class ClinicChatListView extends ui_framework_jps__WEBPACK_IMPORTED_MODULE_1__.A
         showNormalPriorityMessageNotifications: doNotDisturb,
         showHighPriorityMessageNotifications: doNotDisturb,
         showUrgentPriorityMessageNotifications: true,
+        showNormalPriorityMessageNotificationsInOS: doNotDisturb,
+        showHighPriorityMessageNotificationsInOS: doNotDisturb,
+        showUrgentPriorityMessageNotificationsInOS: true,
         showInvitationDeclinedNotifications: false,
         showInvitedNotifications: false,
         showOfflineMessageNotification: true,
@@ -4196,7 +4222,11 @@ class AppointmentControllerHelper {
       case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.appointmentTypes:
         {
           this.appointmentTypes = newValue;
-          this.listeners.forEach(listener => listener.loadedAppointmentTypes(this.appointmentTypes));
+          let nonStatusAppointmentTypes = [];
+          this.appointmentTypes.forEach(type => {
+            if (!type.isStatus) nonStatusAppointmentTypes.push(type.name);
+          });
+          this.listeners.forEach(listener => listener.loadedAppointmentTypes(nonStatusAppointmentTypes));
           break;
         }
 
@@ -4218,7 +4248,12 @@ class AppointmentControllerHelper {
       case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.appointmentTypes:
         {
           this.appointmentTypes = _Controller__WEBPACK_IMPORTED_MODULE_0__["default"].getInstance().getStateManager().getStateByName(name);
-          this.listeners.forEach(listener => listener.loadedAppointmentTypes(this.appointmentTypes));
+          let nonStatusAppointmentTypes = [];
+          this.appointmentTypes.forEach(type => {
+            if (!type.isStatus) nonStatusAppointmentTypes.push(type.name);
+          });
+          this.listeners.forEach(listener => listener.loadedAppointmentTypes(nonStatusAppointmentTypes));
+          this.listeners.forEach(listener => listener.refreshDisplay());
           break;
         }
     }
@@ -5980,23 +6015,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppTypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppTypes */ "./src/AppTypes.ts");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./appointments/AppointmentController */ "./src/appointments/AppointmentController.ts");
-/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
-/* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
-/* harmony import */ var _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./appointment-templates/AppointmentTemplateController */ "./src/appointment-templates/AppointmentTemplateController.ts");
-/* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./patients/PatientSearchSidebar */ "./src/patients/PatientSearchSidebar.ts");
-/* harmony import */ var _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./appointment-types/AppointmentTypesCompositeView */ "./src/appointment-types/AppointmentTypesCompositeView.ts");
-/* harmony import */ var _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./clinic-chat/ClinicChatSidebar */ "./src/clinic-chat/ClinicChatSidebar.ts");
-/* harmony import */ var _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./clinic-chat/ClinicChatListView */ "./src/clinic-chat/ClinicChatListView.ts");
-/* harmony import */ var _today_TodayController__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./today/TodayController */ "./src/today/TodayController.ts");
-/* harmony import */ var _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./patients/PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
-/* harmony import */ var _patients_PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./patients/PatientDemographicsCompositeView */ "./src/patients/PatientDemographicsCompositeView.tsx");
-/* harmony import */ var _today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./today/TodaysPatientsView */ "./src/today/TodaysPatientsView.tsx");
-/* harmony import */ var _patients_PatientController__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./patients/PatientController */ "./src/patients/PatientController.ts");
-/* harmony import */ var _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./users/UsersCompositeView */ "./src/users/UsersCompositeView.ts");
-
-
+/* harmony import */ var ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ui-framework-jps */ "./node_modules/ui-framework-jps/dist/index.js");
+/* harmony import */ var _mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @mobiscroll/javascript */ "./node_modules/@mobiscroll/javascript/dist/esm5/mobiscroll.javascript.min.js");
+/* harmony import */ var ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ui-framework-jps/dist/framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./patients/PatientSearchSidebar */ "./src/patients/PatientSearchSidebar.ts");
+/* harmony import */ var _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./appointment-types/AppointmentTypesCompositeView */ "./src/appointment-types/AppointmentTypesCompositeView.ts");
+/* harmony import */ var _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./clinic-chat/ClinicChatSidebar */ "./src/clinic-chat/ClinicChatSidebar.ts");
+/* harmony import */ var _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./clinic-chat/ClinicChatListView */ "./src/clinic-chat/ClinicChatListView.ts");
+/* harmony import */ var _today_TodayController__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./today/TodayController */ "./src/today/TodayController.ts");
+/* harmony import */ var _today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./today/TodaysPatientsView */ "./src/today/TodaysPatientsView.tsx");
+/* harmony import */ var _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./users/UsersCompositeView */ "./src/users/UsersCompositeView.ts");
+/* harmony import */ var _appointments_AppointmentBookReact__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./appointments/AppointmentBookReact */ "./src/appointments/AppointmentBookReact.tsx");
+/* harmony import */ var _appointment_templates_AppointmentTemplatesReact__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./appointment-templates/AppointmentTemplatesReact */ "./src/appointment-templates/AppointmentTemplatesReact.tsx");
+/* harmony import */ var _patients_PatientRecordReact__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./patients/PatientRecordReact */ "./src/patients/PatientRecordReact.tsx");
 
 
 
@@ -6048,7 +6079,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
 
   render() {
     logger("Rendering App");
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(react__WEBPACK_IMPORTED_MODULE_3__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
       id: "today",
       className: "container-fluid d-none"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
@@ -6064,7 +6095,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
       className: "row",
       id: "todays-patients"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_17__.TodaysPatientsView, null))))));
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_13__.TodaysPatientsView, null)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_appointments_AppointmentBookReact__WEBPACK_IMPORTED_MODULE_15__.AppointmentBookReact, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_appointment_templates_AppointmentTemplatesReact__WEBPACK_IMPORTED_MODULE_16__.AppointmentTemplatesReact, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_patients_PatientRecordReact__WEBPACK_IMPORTED_MODULE_17__.PatientRecordReact, null));
   }
 
   componentDidMount() {
@@ -6072,26 +6103,28 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     logger('document loaded'); // @ts-ignore
 
     this.thisEl = document.getElementById('root');
-    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().onDocumentLoaded();
-    this.apptTypeSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.AppointmentTypesSidebarPrefs);
-    new _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_11__.AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
-    this.usersSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.UsersSidebarPrefs);
-    new _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_19__.UsersCompositeView(this.usersSidebar).onDocumentLoaded();
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance().onDocumentLoaded();
-    const patientView = _patients_PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_15__.PatientRecordTabularView.getInstance();
-    patientView.addViewToTab('demographics', new _patients_PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_16__.PatientDemographicsCompositeView());
-    patientView.onDocumentLoaded();
-    _today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_17__.TodaysPatientsView.getInstance().onDocumentLoaded(this);
-    this.setupNavigationItemHandling();
-    _appointments_AppointmentController__WEBPACK_IMPORTED_MODULE_5__.AppointmentController.getInstance().onDocumentLoaded();
-    _appointment_templates_AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_8__.AppointmentTemplateController.getInstance().onDocumentLoaded();
-    _today_TodayController__WEBPACK_IMPORTED_MODULE_14__.TodayController.getInstance().onDocumentLoaded();
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.ContextualInformationHelper.getInstance().onDocumentLoaded();
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.SecurityManager.getInstance().onDocumentLoaded(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
-    ui_framework_jps__WEBPACK_IMPORTED_MODULE_6__.NotificationController.getInstance().setOptions({
+    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_8__.PatientSearchSidebar.getInstance().onDocumentLoaded();
+    this.apptTypeSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.AppointmentTypesSidebarPrefs);
+    new _appointment_types_AppointmentTypesCompositeView__WEBPACK_IMPORTED_MODULE_9__.AppointmentTypesCompositeView(this.apptTypeSidebar).onDocumentLoaded();
+    this.usersSidebar = new ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.SidebarViewContainer(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.UsersSidebarPrefs);
+    new _users_UsersCompositeView__WEBPACK_IMPORTED_MODULE_14__.UsersCompositeView(this.usersSidebar).onDocumentLoaded();
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_10__.ClinicChatSidebar.getInstance().onDocumentLoaded(); // const patientView = PatientRecordTabularView.getInstance();
+    // patientView.addViewToTab('demographics', new PatientDemographicsCompositeView());
+    // patientView.onDocumentLoaded();
+
+    _today_TodaysPatientsView__WEBPACK_IMPORTED_MODULE_13__.TodaysPatientsView.getInstance().onDocumentLoaded(this);
+    this.setupNavigationItemHandling(); // AppointmentTemplateController.getInstance().onDocumentLoaded();
+
+    _today_TodayController__WEBPACK_IMPORTED_MODULE_12__.TodayController.getInstance().onDocumentLoaded();
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.ContextualInformationHelper.getInstance().onDocumentLoaded();
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.SecurityManager.getInstance().onDocumentLoaded(_AppTypes__WEBPACK_IMPORTED_MODULE_2__.NAVIGATION.logout);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.NotificationController.getInstance().setOptions({
       showNormalPriorityMessageNotifications: true,
       showHighPriorityMessageNotifications: true,
       showUrgentPriorityMessageNotifications: true,
+      showNormalPriorityMessageNotificationsInOS: true,
+      showHighPriorityMessageNotificationsInOS: true,
+      showUrgentPriorityMessageNotificationsInOS: true,
       showInvitationDeclinedNotifications: false,
       showInvitedNotifications: false,
       showOfflineMessageNotification: true,
@@ -6099,7 +6132,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
       showFavouriteUserLoggedOutNotification: false,
       showUserJoinLeaveChatNotification: false
     });
-    _patients_PatientController__WEBPACK_IMPORTED_MODULE_18__.PatientController.getInstance().onDocumentLoaded();
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.NotificationController.getInstance().onDocumentLoaded(); // PatientController.getInstance().onDocumentLoaded();
+
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().onDocumentLoaded();
 
     if (_Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().isProvider()) {
@@ -6114,8 +6148,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
   hideAllSideBars() {
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance().eventHide(null);
-    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().eventHide(null);
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_10__.ClinicChatSidebar.getInstance().eventHide(null);
+    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_8__.PatientSearchSidebar.getInstance().eventHide(null);
     this.usersSidebar.eventHide(null);
     this.apptTypeSidebar.eventHide(null);
   }
@@ -6129,10 +6163,10 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
       return;
     }
 
-    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_12__.ClinicChatSidebar.getInstance().eventShow(null);
+    _clinic_chat_ClinicChatSidebar__WEBPACK_IMPORTED_MODULE_10__.ClinicChatSidebar.getInstance().eventShow(null);
 
     if (roomName) {
-      _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_13__.ClinicChatListView.getInstance().selectChatRoom(roomName);
+      _clinic_chat_ClinicChatListView__WEBPACK_IMPORTED_MODULE_11__.ClinicChatListView.getInstance().selectChatRoom(roomName);
     }
   }
 
@@ -6162,10 +6196,10 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     }
 
     logger(`Showing appointment book`);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', false);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
   }
 
   handleShowAppointmentTemplates(event) {
@@ -6175,10 +6209,10 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     }
 
     logger(`Showing appointment templates`);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', false);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
   }
 
   handleShowToday(event) {
@@ -6188,10 +6222,10 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     }
 
     logger(`Showing today`);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', false);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', false);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', true);
   }
 
   handleShowPatientRecord(event) {
@@ -6201,15 +6235,15 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     }
 
     logger(`Showing patient record`);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
-    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_9__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', false);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('appointmentBook'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('appointmentTemplates'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('today'), 'd-none', true);
+    ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_7__["default"].addRemoveClasses(document.getElementById('patientRecord'), 'd-none', false);
   }
 
   handleShowPatientSearch(event) {
     logger(`Showing patient search`);
-    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_10__.PatientSearchSidebar.getInstance().eventShow(null);
+    _patients_PatientSearchSidebar__WEBPACK_IMPORTED_MODULE_8__.PatientSearchSidebar.getInstance().eventShow(null);
   }
 
   handleShowAppointmentTypes(event) {
@@ -6257,13 +6291,13 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'state-manager-ms app api-ts-results  patient-controller'; // today-controller todays-patients-view today-view';//tabular-view-container';//default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'notification-controller app api-ts-results  patient-controller'; // today-controller todays-patients-view today-view';//tabular-view-container';//default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
 $(function () {
-  (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_7__.setOptions)({
+  (0,_mobiscroll_javascript__WEBPACK_IMPORTED_MODULE_6__.setOptions)({
     theme: 'ios',
     themeVariant: 'light'
   }); // @ts-ignore
@@ -6278,6 +6312,108 @@ $(function () {
   });
   react_dom__WEBPACK_IMPORTED_MODULE_4__.render(element, document.getElementById('root'));
 });
+
+/***/ }),
+
+/***/ "./src/appointment-templates/AppointmentTemplatesReact.tsx":
+/*!*****************************************************************!*\
+  !*** ./src/appointment-templates/AppointmentTemplatesReact.tsx ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "AppointmentTemplatesReact": () => (/* binding */ AppointmentTemplatesReact)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentTemplateController */ "./src/appointment-templates/AppointmentTemplateController.ts");
+
+
+class AppointmentTemplatesReact extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      id: "appointmentTemplates",
+      className: "container-fluid d-none"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "col-sm-12 col-md-9"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "col-12"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      id: "templateDetail"
+    }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "col-sm-12 col-md-3"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      id: "providerFilter"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "mbsc-form-group-title"
+    }, "Providers")))));
+  }
+
+  componentDidMount() {
+    _AppointmentTemplateController__WEBPACK_IMPORTED_MODULE_1__.AppointmentTemplateController.getInstance().onDocumentLoaded();
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/appointments/AppointmentBookReact.tsx":
+/*!***************************************************!*\
+  !*** ./src/appointments/AppointmentBookReact.tsx ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "AppointmentBookReact": () => (/* binding */ AppointmentBookReact)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _AppointmentController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentController */ "./src/appointments/AppointmentController.ts");
+
+
+class AppointmentBookReact extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      id: "appointmentBook",
+      className: "container-fluid d-none"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "col-sm-12 col-md-5"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      id: "calendarControl"
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "col-sm-12 col-md-7"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      id: "providers"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "mbsc-form-group-title"
+    }, "Providers")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "row"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      className: "col-12 scroll-calendar-detail"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      id: "calendarDetail"
+    }))));
+  }
+
+  componentDidMount() {
+    _AppointmentController__WEBPACK_IMPORTED_MODULE_1__.AppointmentController.getInstance().onDocumentLoaded();
+  }
+
+}
 
 /***/ }),
 
@@ -6852,6 +6988,48 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
 
   patientChanged(patient) {
     logger(`Patient changed`);
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/patients/PatientRecordReact.tsx":
+/*!*********************************************!*\
+  !*** ./src/patients/PatientRecordReact.tsx ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PatientRecordReact": () => (/* binding */ PatientRecordReact)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _PatientController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PatientController */ "./src/patients/PatientController.ts");
+/* harmony import */ var _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PatientRecordTabularView */ "./src/patients/PatientRecordTabularView.ts");
+/* harmony import */ var _PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PatientDemographicsCompositeView */ "./src/patients/PatientDemographicsCompositeView.tsx");
+
+
+
+
+class PatientRecordReact extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      id: "patientRecord",
+      className: "container-fluid d-none"
+    });
+  }
+
+  componentDidMount() {
+    const patientView = _PatientRecordTabularView__WEBPACK_IMPORTED_MODULE_2__.PatientRecordTabularView.getInstance();
+    patientView.addViewToTab('demographics', new _PatientDemographicsCompositeView__WEBPACK_IMPORTED_MODULE_3__.PatientDemographicsCompositeView());
+    patientView.onDocumentLoaded();
+    _PatientController__WEBPACK_IMPORTED_MODULE_1__.PatientController.getInstance().onDocumentLoaded();
   }
 
 }

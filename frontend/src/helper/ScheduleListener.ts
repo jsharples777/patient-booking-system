@@ -1,4 +1,4 @@
-export interface ScheduleLoadedListener {
+export interface ScheduleListener {
     loadedPatientSearch(patientSearch: any[]): void;
 
     loadedProviders(providers: any[]): void;
@@ -6,4 +6,6 @@ export interface ScheduleLoadedListener {
     loadedClinicAppointmentBookConfig(clinicConfig: any): void;
 
     loadedAppointmentTypes(appointmentTypes: any[]): void;
+
+    refreshDisplay():void;
 }

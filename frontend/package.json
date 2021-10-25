@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
-    "wcompileß": "tsc-watch",
+    "wcompile": "tsc-watch",
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch",
     "lint": "eslint --ext js,jsx,tsx,ts --fix ."
@@ -22,7 +22,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "socket.io-client": "^4.1.3",
-    "ui-framework-jps": "^1.1.8",
+    "ui-framework-jps": "^1.1.7-10",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

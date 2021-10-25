@@ -8,6 +8,7 @@ import {v4} from "uuid";
 import {SecurityManager} from "ui-framework-jps";
 import debug from "debug";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
+import {AppointmentController} from "../appointments/AppointmentController";
 
 const logger = debug('appointment-template-detail-view');
 
@@ -119,15 +120,9 @@ export class AppointmentTemplateDetailModal {
 
     public setupAppointmentTypeDropDown(appointmentTypes: any[]) {
 
-        const types: any[] = [];
-
-        appointmentTypes.forEach((type: any) => {
-            if (!(type.isStatus)) types.push(type.name);
-        });
-
         // add the patient search values to the data of the select dropdown
         this.viewElements.appointmentTypeDropdown = select('#event-appt-type-template', {
-            data: types,
+            data: appointmentTypes,
             onChange: (event: any, inst: any) => {
                 AppointmentTemplateController.getInstance().getModel().tempEvent.type = event.valueText;
             }
@@ -175,7 +170,7 @@ export class AppointmentTemplateDetailModal {
                         // generate a new UUID
                         const appointmentId = v4();
                         // get the colour for the event type
-                        const colour = AppointmentControllerHelper.getInstance().getColourForAppointmentType('Consulting');
+                        const colour = AppointmentControllerHelper.getInstance().getColourForAppointmentType(AppointmentController.getInstance().getModel().tempEvent.type);
 
                         const createdOn = parseInt(moment().format('YYYYDDMMHHmmss'));
 

@@ -3,14 +3,14 @@ import moment from "moment";
 import {STATE_NAMES} from "../AppTypes";
 import Controller from "../Controller";
 import {StateChangeListener} from "ui-framework-jps";
-import {ScheduleLoadedListener} from "../helper/ScheduleLoadedListener";
+import {ScheduleListener} from "../helper/ScheduleListener";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 import {TodayView} from "./TodayView";
 import {TodaysPatientsView} from "./TodaysPatientsView";
 
 const logger = debug('today-controller');
 
-export class TodayController implements StateChangeListener, ScheduleLoadedListener {
+export class TodayController implements StateChangeListener, ScheduleListener {
     private static _instance: TodayController;
 
     private constructor() {

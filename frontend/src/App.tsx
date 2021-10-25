@@ -25,6 +25,9 @@ import {PatientDemographicsCompositeView} from "./patients/PatientDemographicsCo
 import {TodaysPatientsView} from "./today/TodaysPatientsView";
 import {PatientController} from "./patients/PatientController";
 import {UsersCompositeView} from "./users/UsersCompositeView";
+import {AppointmentBookReact} from "./appointments/AppointmentBookReact";
+import {AppointmentTemplatesReact} from "./appointment-templates/AppointmentTemplatesReact";
+import {PatientRecordReact} from "./patients/PatientRecordReact";
 
 
 const logger = debug('app');
@@ -70,22 +73,26 @@ export default class App extends React.Component implements UnreadMessageCountLi
     render(): ReactNode {
         logger("Rendering App");
         return (
-            <div id="today" className="container-fluid d-none">
-                <div className="row">
-                    <div className="col-sm-12 col-md-3">
-                        <div id="todayDetail">
-
+            <React.Fragment>
+                <div id="today" className="container-fluid d-none">
+                    <div className="row">
+                        <div className="col-sm-12 col-md-3">
+                            <div id="todayDetail">
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-sm-12 col-md-9">
-                        <div className="container-fluid">
-                            <div className="row" id="todays-patients">
-                                <TodaysPatientsView/>
+                        <div className="col-sm-12 col-md-9">
+                            <div className="container-fluid">
+                                <div className="row" id="todays-patients">
+                                    <TodaysPatientsView/>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <AppointmentBookReact/>
+                <AppointmentTemplatesReact/>
+                <PatientRecordReact/>
+            </React.Fragment>
         )
     }
 
@@ -106,17 +113,16 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
         ClinicChatSidebar.getInstance().onDocumentLoaded();
 
-        const patientView = PatientRecordTabularView.getInstance();
-        patientView.addViewToTab('demographics', new PatientDemographicsCompositeView());
-        patientView.onDocumentLoaded();
+        // const patientView = PatientRecordTabularView.getInstance();
+        // patientView.addViewToTab('demographics', new PatientDemographicsCompositeView());
+        // patientView.onDocumentLoaded();
 
         TodaysPatientsView.getInstance().onDocumentLoaded(this);
 
 
         this.setupNavigationItemHandling();
 
-        AppointmentController.getInstance().onDocumentLoaded();
-        AppointmentTemplateController.getInstance().onDocumentLoaded();
+        // AppointmentTemplateController.getInstance().onDocumentLoaded();
         TodayController.getInstance().onDocumentLoaded();
         ContextualInformationHelper.getInstance().onDocumentLoaded();
         SecurityManager.getInstance().onDocumentLoaded(NAVIGATION.logout);
@@ -135,7 +141,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
             showUserJoinLeaveChatNotification: false
         });
         NotificationController.getInstance().onDocumentLoaded();
-        PatientController.getInstance().onDocumentLoaded();
+        // PatientController.getInstance().onDocumentLoaded();
         Controller.getInstance().onDocumentLoaded();
 
         if (Controller.getInstance().isProvider()) {
@@ -288,7 +294,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'state-manager-ms app api-ts-results  patient-controller';// today-controller todays-patients-view today-view';//tabular-view-container';//default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
+localStorage.debug = 'notification-controller app api-ts-results  patient-controller';// today-controller todays-patients-view today-view';//tabular-view-container';//default-item-view default-item-view-detail default-item-view-detail-validation';// basic-table-row basic-table-row-detail abstract-field colour-editor colour-input-field editing-event-listener';// tabular-item-view-renderer default-item-view default-item-view-detail';   //tabular-view-container';//user-validation-helper validation-manager validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 

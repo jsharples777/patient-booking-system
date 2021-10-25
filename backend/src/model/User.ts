@@ -26,7 +26,7 @@ UserSchema.virtual('isProvider').get(function(this:User) {
             result = true;
         }
     }
-    return false;
+    return result;
 });
 
 // 3. Create a Model.

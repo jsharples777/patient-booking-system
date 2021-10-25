@@ -53390,11 +53390,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Poller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Poller */ "./node_modules/ui-framework-jps/dist/framework/network/Poller.js");
 /* harmony import */ var _state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../state/IndexedDBStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/IndexedDBStateManager.js");
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
 /* harmony import */ var _DownloadManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DownloadManager */ "./node_modules/ui-framework-jps/dist/framework/network/DownloadManager.js");
 /* harmony import */ var _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../notification/NotificationManager */ "./node_modules/ui-framework-jps/dist/framework/notification/NotificationManager.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _state_EncryptedIndexedDBStateManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../state/EncryptedIndexedDBStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/EncryptedIndexedDBStateManager.js");
+
 
 
 
@@ -53405,7 +53407,14 @@ const logger = debug__WEBPACK_IMPORTED_MODULE_4___default()('offline-manager');
 class OfflineManager {
     constructor() {
         this.serverBackOnline = this.serverBackOnline.bind(this);
-        const indexedDB = new _state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_1__.IndexedDBStateManager();
+        const useEncryption = localStorage.getItem(OfflineManager.LOCALSTORAGE_KEY_USE_ENCRYPTION);
+        let indexedDB;
+        if (useEncryption) {
+            indexedDB = new _state_EncryptedIndexedDBStateManager__WEBPACK_IMPORTED_MODULE_5__.EncryptedIndexedDBStateManager();
+        }
+        else {
+            indexedDB = new _state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_1__.IndexedDBStateManager();
+        }
         indexedDB.initialise(OfflineManager.DB_NAME, [{ name: OfflineManager.OBJECT_STORE, keyField: '_id' }]);
         this.persistence = indexedDB;
         this.persistence.addChangeListenerForName(OfflineManager.OBJECT_STORE, this);
@@ -53433,7 +53442,7 @@ class OfflineManager {
             _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_3__.NotificationManager.getInstance().show('Server', 'Server is offline, queueing local changes for when server is available', _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_3__.NotificationType.warning);
         }
         // save the request with an id
-        jsonRequest._id = (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])();
+        jsonRequest._id = (0,uuid__WEBPACK_IMPORTED_MODULE_6__["default"])();
         logger('Adding offline request');
         logger(jsonRequest);
         this.persistence.addNewItemToState(OfflineManager.OBJECT_STORE, jsonRequest, false);
@@ -53464,6 +53473,7 @@ class OfflineManager {
 }
 OfflineManager.DB_NAME = 'offline.manager.db';
 OfflineManager.OBJECT_STORE = 'offline.manager.db.requests';
+OfflineManager.LOCALSTORAGE_KEY_USE_ENCRYPTION = 'offline-manager.use-encryption';
 //# sourceMappingURL=OfflineManager.js.map
 
 /***/ }),
@@ -54444,7 +54454,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const notLogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('notification-controller');
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('notification-controller');
 class NotificationController {
     constructor() {
         this.chatManager = _ChatManager__WEBPACK_IMPORTED_MODULE_0__.ChatManager.getInstance();
@@ -54454,6 +54464,9 @@ class NotificationController {
             showNormalPriorityMessageNotifications: true,
             showHighPriorityMessageNotifications: true,
             showUrgentPriorityMessageNotifications: true,
+            showNormalPriorityMessageNotificationsInOS: true,
+            showHighPriorityMessageNotificationsInOS: true,
+            showUrgentPriorityMessageNotificationsInOS: true,
             showInvitationDeclinedNotifications: true,
             showInvitedNotifications: true,
             showOfflineMessageNotification: true,
@@ -54468,6 +54481,82 @@ class NotificationController {
         this.handleFavouriteUserLoggedOut = this.handleFavouriteUserLoggedOut.bind(this);
         this.chatManager.addChatEventHandler(this);
         this.chatManager.addChatUserEventHandler(this);
+    }
+    checkNotificationPromise() {
+        try {
+            Notification.requestPermission().then();
+        }
+        catch (e) {
+            return false;
+        }
+        return true;
+    }
+    setupOSNotifications() {
+        function handlePermission(permission) {
+            switch (Notification.permission) {
+                case "default":
+                case "denied": {
+                    logger('User declined to allow OS notifications');
+                    break;
+                }
+            }
+        }
+        // Let's check if the browser supports notifications
+        if (!('Notification' in window)) {
+            logger("This browser does not support notifications.");
+        }
+        else {
+            if (this.checkNotificationPromise()) {
+                Notification.requestPermission()
+                    .then((permission) => {
+                    handlePermission(permission);
+                });
+            }
+            else {
+                Notification.requestPermission(function (permission) {
+                    handlePermission(permission);
+                });
+            }
+        }
+    }
+    onDocumentLoaded() {
+        this.setupOSNotifications();
+    }
+    sendOSNotification(title, message, priority) {
+        if (window.Notification && Notification.permission === "granted") {
+            logger(`Sending OS notification ${Notification.permission}`);
+            let showNotification = false;
+            let tag = null;
+            switch (priority) {
+                case _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Normal: {
+                    showNotification = (this.notificationOptions.showNormalPriorityMessageNotificationsInOS);
+                    tag = 'normal';
+                    break;
+                }
+                case _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.High: {
+                    showNotification = (this.notificationOptions.showHighPriorityMessageNotificationsInOS);
+                    tag = 'high';
+                    break;
+                }
+                case _Types__WEBPACK_IMPORTED_MODULE_3__.Priority.Urgent: {
+                    showNotification = (this.notificationOptions.showUrgentPriorityMessageNotificationsInOS);
+                    // no tag for urgent, want all of them to appear
+                    break;
+                }
+            }
+            logger(`Show notification? ${showNotification} OS Notification (title='${title},message='${message},tag=${tag}) - priority was ${priority}`);
+            if (showNotification) {
+                if (tag) {
+                    new Notification(title, { body: message, tag: tag });
+                }
+                else {
+                    new Notification(title, { body: message });
+                }
+            }
+        }
+        else {
+            logger(`Sending OS notification ${Notification.permission} or not found in window object`);
+        }
     }
     static getInstance() {
         if (!(NotificationController._instance)) {
@@ -54531,8 +54620,8 @@ class NotificationController {
         this.chatListeners.forEach((listener) => listener.handleChatLogsUpdated());
     }
     handleChatLogUpdated(log, wasOffline = false) {
-        notLogger(`Handle chat log updated`);
-        notLogger(log);
+        logger(`Handle chat log updated`);
+        logger(log);
         // pass on the changes
         this.chatListeners.forEach((listener) => listener.handleChatLogUpdated(log, wasOffline));
         if (!wasOffline) {
@@ -54560,19 +54649,21 @@ class NotificationController {
                         break;
                     }
                 }
-                if (showNotification)
+                if (showNotification) {
                     _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(displayMessage.from, displayMessage.message, notificationType, 3000);
+                    this.sendOSNotification(displayMessage.from, displayMessage.message, displayMessage.priority);
+                }
             }
         }
     }
     handleLoggedInUsersUpdated(usernames) {
-        notLogger(`Handle logged in users updated`);
-        notLogger(usernames);
+        logger(`Handle logged in users updated`);
+        logger(usernames);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleLoggedInUsersUpdated(usernames));
     }
     handleFavouriteUserLoggedIn(username) {
-        notLogger(`Handle favourite user ${username} logged in`);
+        logger(`Handle favourite user ${username} logged in`);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUserLoggedIn(username));
         // provide visual notifications if do not disturb is not on
@@ -54580,18 +54671,18 @@ class NotificationController {
             _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged in.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.warning, 5000);
     }
     handleFavouriteUserLoggedOut(username) {
-        notLogger(`Handle favourite user ${username} logged out`);
+        logger(`Handle favourite user ${username} logged out`);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUserLoggedOut(username));
         if (this.notificationOptions.showFavouriteUserLoggedOutNotification)
             _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged out.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.priority, 4000);
     }
     handleBlockedUsersChanged(usernames) {
-        notLogger(`Handle blocked users changed to ${usernames}`);
+        logger(`Handle blocked users changed to ${usernames}`);
         this.chatUserListeners.forEach((listener) => listener.handleBlockedUsersChanged(usernames));
     }
     handleFavouriteUsersChanged(usernames) {
-        notLogger(`Handle favourite users changed to ${usernames}`);
+        logger(`Handle favourite users changed to ${usernames}`);
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUsersChanged(usernames));
     }
     startChatWithUser(username) {
@@ -66200,104 +66291,105 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "ObjectDefinitionRegistry": () => (/* reexport safe */ _framework_model_ObjectDefinitionRegistry__WEBPACK_IMPORTED_MODULE_5__.ObjectDefinitionRegistry),
 /* harmony export */   "ApiUtil": () => (/* reexport safe */ _framework_network_ApiUtil__WEBPACK_IMPORTED_MODULE_6__.ApiUtil),
 /* harmony export */   "DownloadManager": () => (/* reexport safe */ _framework_network_DownloadManager__WEBPACK_IMPORTED_MODULE_7__.DownloadManager),
-/* harmony export */   "RequestType": () => (/* reexport safe */ _framework_network_Types__WEBPACK_IMPORTED_MODULE_8__.RequestType),
-/* harmony export */   "queueType": () => (/* reexport safe */ _framework_network_Types__WEBPACK_IMPORTED_MODULE_8__.queueType),
-/* harmony export */   "NotificationType": () => (/* reexport safe */ _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_9__.NotificationType),
-/* harmony export */   "NotificationManager": () => (/* reexport safe */ _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_9__.NotificationManager),
-/* harmony export */   "SecurityManager": () => (/* reexport safe */ _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_10__.SecurityManager),
-/* harmony export */   "ChatManager": () => (/* reexport safe */ _framework_socket_ChatManager__WEBPACK_IMPORTED_MODULE_11__.ChatManager),
-/* harmony export */   "NotificationController": () => (/* reexport safe */ _framework_socket_NotificationController__WEBPACK_IMPORTED_MODULE_12__.NotificationController),
-/* harmony export */   "DataChangeType": () => (/* reexport safe */ _framework_socket_SocketListener__WEBPACK_IMPORTED_MODULE_13__.DataChangeType),
-/* harmony export */   "SocketManager": () => (/* reexport safe */ _framework_socket_SocketManager__WEBPACK_IMPORTED_MODULE_14__.SocketManager),
-/* harmony export */   "Priority": () => (/* reexport safe */ _framework_socket_Types__WEBPACK_IMPORTED_MODULE_15__.Priority),
-/* harmony export */   "InviteType": () => (/* reexport safe */ _framework_socket_Types__WEBPACK_IMPORTED_MODULE_15__.InviteType),
-/* harmony export */   "AbstractStateManager": () => (/* reexport safe */ _framework_state_AbstractStateManager__WEBPACK_IMPORTED_MODULE_16__.AbstractStateManager),
-/* harmony export */   "AggregateStateManager": () => (/* reexport safe */ _framework_state_AggregateStateManager__WEBPACK_IMPORTED_MODULE_17__.AggregateStateManager),
-/* harmony export */   "AsyncStateManagerWrapper": () => (/* reexport safe */ _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_18__.AsyncStateManagerWrapper),
-/* harmony export */   "BrowserStorageStateManager": () => (/* reexport safe */ _framework_state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_19__.BrowserStorageStateManager),
-/* harmony export */   "EncryptedBrowserStorageStateManager": () => (/* reexport safe */ _framework_state_EncryptedBrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_20__.EncryptedBrowserStorageStateManager),
-/* harmony export */   "EncryptedIndexedDBStateManager": () => (/* reexport safe */ _framework_state_EncryptedIndexedDBStateManager__WEBPACK_IMPORTED_MODULE_21__.EncryptedIndexedDBStateManager),
-/* harmony export */   "GraphQLApiStateManager": () => (/* reexport safe */ _framework_state_GraphQLApiStateManager__WEBPACK_IMPORTED_MODULE_22__.GraphQLApiStateManager),
-/* harmony export */   "IndexedDBStateManager": () => (/* reexport safe */ _framework_state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_23__.IndexedDBStateManager),
-/* harmony export */   "RESTApiStateManager": () => (/* reexport safe */ _framework_state_RESTApiStateManager__WEBPACK_IMPORTED_MODULE_24__.RESTApiStateManager),
-/* harmony export */   "MemoryBufferStateManager": () => (/* reexport safe */ _framework_state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_25__.MemoryBufferStateManager),
-/* harmony export */   "StateManagerType": () => (/* reexport safe */ _framework_state_StateManager__WEBPACK_IMPORTED_MODULE_26__.StateManagerType),
-/* harmony export */   "jsxCreateFragment": () => (/* reexport safe */ _framework_jsx_JSXParser__WEBPACK_IMPORTED_MODULE_27__.jsxCreateFragment),
-/* harmony export */   "jsxCreateElement": () => (/* reexport safe */ _framework_jsx_JSXParser__WEBPACK_IMPORTED_MODULE_27__.jsxCreateElement),
-/* harmony export */   "Modifier": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.Modifier),
-/* harmony export */   "KeyType": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.KeyType),
-/* harmony export */   "SidebarLocation": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.SidebarLocation),
-/* harmony export */   "RowPosition": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.RowPosition),
-/* harmony export */   "ActionType": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.ActionType),
-/* harmony export */   "SCREEN_WIDTH_LARGE": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.SCREEN_WIDTH_LARGE),
-/* harmony export */   "SCREEN_WIDTH_SMALL": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.SCREEN_WIDTH_SMALL),
-/* harmony export */   "SCREEN_WIDTH_MEDIUM": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__.SCREEN_WIDTH_MEDIUM),
-/* harmony export */   "AlertType": () => (/* reexport safe */ _framework_ui_alert_AlertListener__WEBPACK_IMPORTED_MODULE_29__.AlertType),
-/* harmony export */   "AlertManager": () => (/* reexport safe */ _framework_ui_alert_AlertManager__WEBPACK_IMPORTED_MODULE_30__.AlertManager),
-/* harmony export */   "BlockedUserView": () => (/* reexport safe */ _framework_ui_chat_BlockedUserView__WEBPACK_IMPORTED_MODULE_31__.BlockedUserView),
-/* harmony export */   "ChatLogDetailView": () => (/* reexport safe */ _framework_ui_chat_ChatLogDetailView__WEBPACK_IMPORTED_MODULE_32__.ChatLogDetailView),
-/* harmony export */   "ChatLogsView": () => (/* reexport safe */ _framework_ui_chat_ChatLogsView__WEBPACK_IMPORTED_MODULE_33__.ChatLogsView),
-/* harmony export */   "ChatRoomsSidebar": () => (/* reexport safe */ _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_34__.ChatRoomsSidebar),
-/* harmony export */   "STATE_NAMES": () => (/* reexport safe */ _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_35__.STATE_NAMES),
-/* harmony export */   "DRAGGABLE": () => (/* reexport safe */ _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_35__.DRAGGABLE),
-/* harmony export */   "VIEW_NAME": () => (/* reexport safe */ _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_35__.VIEW_NAME),
-/* harmony export */   "FavouriteUserView": () => (/* reexport safe */ _framework_ui_chat_FavouriteUserView__WEBPACK_IMPORTED_MODULE_36__.FavouriteUserView),
-/* harmony export */   "UserSearchSidebar": () => (/* reexport safe */ _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_37__.UserSearchSidebar),
-/* harmony export */   "UserSearchView": () => (/* reexport safe */ _framework_ui_chat_UserSearchView__WEBPACK_IMPORTED_MODULE_38__.UserSearchView),
-/* harmony export */   "SidebarViewContainer": () => (/* reexport safe */ _framework_ui_container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_39__.SidebarViewContainer),
-/* harmony export */   "TabularViewContainer": () => (/* reexport safe */ _framework_ui_container_TabularViewContainer__WEBPACK_IMPORTED_MODULE_40__.TabularViewContainer),
-/* harmony export */   "ContextualInformationHelper": () => (/* reexport safe */ _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_41__.ContextualInformationHelper),
-/* harmony export */   "ItemViewElementFactory": () => (/* reexport safe */ _framework_ui_factory_ItemViewElementFactory__WEBPACK_IMPORTED_MODULE_42__.ItemViewElementFactory),
-/* harmony export */   "BasicFormImplementation": () => (/* reexport safe */ _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_43__.BasicFormImplementation),
-/* harmony export */   "AbstractField": () => (/* reexport safe */ _framework_ui_field_AbstractField__WEBPACK_IMPORTED_MODULE_44__.AbstractField),
-/* harmony export */   "InputField": () => (/* reexport safe */ _framework_ui_field_InputField__WEBPACK_IMPORTED_MODULE_45__.InputField),
-/* harmony export */   "TextAreaField": () => (/* reexport safe */ _framework_ui_field_TextAreaField__WEBPACK_IMPORTED_MODULE_46__.TextAreaField),
-/* harmony export */   "SelectField": () => (/* reexport safe */ _framework_ui_field_SelectField__WEBPACK_IMPORTED_MODULE_47__.SelectField),
-/* harmony export */   "RadioButtonGroupField": () => (/* reexport safe */ _framework_ui_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_48__.RadioButtonGroupField),
-/* harmony export */   "ColourInputField": () => (/* reexport safe */ _framework_ui_field_ColourInputField__WEBPACK_IMPORTED_MODULE_49__.ColourInputField),
-/* harmony export */   "ConditionResponse": () => (/* reexport safe */ _framework_ui_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_50__.ConditionResponse),
-/* harmony export */   "MultipleConditionLogic": () => (/* reexport safe */ _framework_ui_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_50__.MultipleConditionLogic),
-/* harmony export */   "ValidationManager": () => (/* reexport safe */ _framework_ui_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_51__.ValidationManager),
-/* harmony export */   "ValidationHelperFunctions": () => (/* reexport safe */ _framework_ui_validation_ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_52__.ValidationHelperFunctions),
-/* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_53__.BootstrapFormConfigHelper),
-/* harmony export */   "BootstrapTableConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_54__.BootstrapTableConfigHelper),
-/* harmony export */   "BootstrapTableRowConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableRowConfigHelper__WEBPACK_IMPORTED_MODULE_55__.BootstrapTableRowConfigHelper),
-/* harmony export */   "LimitedChoiceTextRenderer": () => (/* reexport safe */ _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_56__.LimitedChoiceTextRenderer),
-/* harmony export */   "LinkedCollectionDetailController": () => (/* reexport safe */ _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_57__.LinkedCollectionDetailController),
-/* harmony export */   "RBGFieldOperations": () => (/* reexport safe */ _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_58__.RBGFieldOperations),
-/* harmony export */   "SimpleValueDataSource": () => (/* reexport safe */ _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_59__.SimpleValueDataSource),
-/* harmony export */   "ColourEditor": () => (/* reexport safe */ _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_60__.ColourEditor),
-/* harmony export */   "DefaultItemView": () => (/* reexport safe */ _framework_ui_view_item_DefaultItemView__WEBPACK_IMPORTED_MODULE_61__.DefaultItemView),
-/* harmony export */   "DefaultFieldPermissionChecker": () => (/* reexport safe */ _framework_ui_view_item_DefaultFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_62__.DefaultFieldPermissionChecker),
-/* harmony export */   "AbstractView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_63__.AbstractView),
-/* harmony export */   "AbstractCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_64__.AbstractCollectionView),
-/* harmony export */   "AbstractStatefulCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_65__.AbstractStatefulCollectionView),
-/* harmony export */   "DefaultPermissionChecker": () => (/* reexport safe */ _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_66__.DefaultPermissionChecker),
-/* harmony export */   "DetailViewImplementation": () => (/* reexport safe */ _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_67__.DetailViewImplementation),
-/* harmony export */   "CarouselViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_68__.CarouselViewRenderer),
-/* harmony export */   "CarouselViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_69__.CarouselViewRendererUsingContext),
-/* harmony export */   "FormDetailViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_70__.FormDetailViewRenderer),
-/* harmony export */   "ListViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_71__.ListViewRenderer),
-/* harmony export */   "ListViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_72__.ListViewRendererUsingContext),
-/* harmony export */   "TabularViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_73__.TabularViewRendererUsingContext),
-/* harmony export */   "ViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_74__.ViewListenerForwarder),
-/* harmony export */   "DetailViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__.DetailViewListenerForwarder),
-/* harmony export */   "CollectionViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_76__.CollectionViewListenerForwarder),
-/* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_77__.CollectionViewEventHandlerDelegate),
-/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_78__.CollectionViewEventHandlerDelegateUsingContext),
-/* harmony export */   "truncateString": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.truncateString),
-/* harmony export */   "convertHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.convertHexToNumber),
-/* harmony export */   "convertSingleHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.convertSingleHexToNumber),
-/* harmony export */   "isHexValueDark": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.isHexValueDark),
-/* harmony export */   "copyObject": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__.copyObject),
-/* harmony export */   "isSameMongo": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSameMongo),
-/* harmony export */   "isSame": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSame),
-/* harmony export */   "isSameUsername": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSameUsername),
-/* harmony export */   "isSameRoom": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__.isSameRoom),
-/* harmony export */   "addDurations": () => (/* reexport safe */ _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_81__.addDurations),
-/* harmony export */   "BrowserUtil": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__.BrowserUtil),
-/* harmony export */   "getElementOffset": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__.getElementOffset),
-/* harmony export */   "BasicTableRowImplementation": () => (/* reexport safe */ _framework_ui_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_83__.BasicTableRowImplementation)
+/* harmony export */   "OfflineManager": () => (/* reexport safe */ _framework_network_OfflineManager__WEBPACK_IMPORTED_MODULE_8__.OfflineManager),
+/* harmony export */   "RequestType": () => (/* reexport safe */ _framework_network_Types__WEBPACK_IMPORTED_MODULE_9__.RequestType),
+/* harmony export */   "queueType": () => (/* reexport safe */ _framework_network_Types__WEBPACK_IMPORTED_MODULE_9__.queueType),
+/* harmony export */   "NotificationType": () => (/* reexport safe */ _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_10__.NotificationType),
+/* harmony export */   "NotificationManager": () => (/* reexport safe */ _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_10__.NotificationManager),
+/* harmony export */   "SecurityManager": () => (/* reexport safe */ _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_11__.SecurityManager),
+/* harmony export */   "ChatManager": () => (/* reexport safe */ _framework_socket_ChatManager__WEBPACK_IMPORTED_MODULE_12__.ChatManager),
+/* harmony export */   "NotificationController": () => (/* reexport safe */ _framework_socket_NotificationController__WEBPACK_IMPORTED_MODULE_13__.NotificationController),
+/* harmony export */   "DataChangeType": () => (/* reexport safe */ _framework_socket_SocketListener__WEBPACK_IMPORTED_MODULE_14__.DataChangeType),
+/* harmony export */   "SocketManager": () => (/* reexport safe */ _framework_socket_SocketManager__WEBPACK_IMPORTED_MODULE_15__.SocketManager),
+/* harmony export */   "Priority": () => (/* reexport safe */ _framework_socket_Types__WEBPACK_IMPORTED_MODULE_16__.Priority),
+/* harmony export */   "InviteType": () => (/* reexport safe */ _framework_socket_Types__WEBPACK_IMPORTED_MODULE_16__.InviteType),
+/* harmony export */   "AbstractStateManager": () => (/* reexport safe */ _framework_state_AbstractStateManager__WEBPACK_IMPORTED_MODULE_17__.AbstractStateManager),
+/* harmony export */   "AggregateStateManager": () => (/* reexport safe */ _framework_state_AggregateStateManager__WEBPACK_IMPORTED_MODULE_18__.AggregateStateManager),
+/* harmony export */   "AsyncStateManagerWrapper": () => (/* reexport safe */ _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_19__.AsyncStateManagerWrapper),
+/* harmony export */   "BrowserStorageStateManager": () => (/* reexport safe */ _framework_state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_20__.BrowserStorageStateManager),
+/* harmony export */   "EncryptedBrowserStorageStateManager": () => (/* reexport safe */ _framework_state_EncryptedBrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_21__.EncryptedBrowserStorageStateManager),
+/* harmony export */   "EncryptedIndexedDBStateManager": () => (/* reexport safe */ _framework_state_EncryptedIndexedDBStateManager__WEBPACK_IMPORTED_MODULE_22__.EncryptedIndexedDBStateManager),
+/* harmony export */   "GraphQLApiStateManager": () => (/* reexport safe */ _framework_state_GraphQLApiStateManager__WEBPACK_IMPORTED_MODULE_23__.GraphQLApiStateManager),
+/* harmony export */   "IndexedDBStateManager": () => (/* reexport safe */ _framework_state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_24__.IndexedDBStateManager),
+/* harmony export */   "RESTApiStateManager": () => (/* reexport safe */ _framework_state_RESTApiStateManager__WEBPACK_IMPORTED_MODULE_25__.RESTApiStateManager),
+/* harmony export */   "MemoryBufferStateManager": () => (/* reexport safe */ _framework_state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_26__.MemoryBufferStateManager),
+/* harmony export */   "StateManagerType": () => (/* reexport safe */ _framework_state_StateManager__WEBPACK_IMPORTED_MODULE_27__.StateManagerType),
+/* harmony export */   "jsxCreateFragment": () => (/* reexport safe */ _framework_jsx_JSXParser__WEBPACK_IMPORTED_MODULE_28__.jsxCreateFragment),
+/* harmony export */   "jsxCreateElement": () => (/* reexport safe */ _framework_jsx_JSXParser__WEBPACK_IMPORTED_MODULE_28__.jsxCreateElement),
+/* harmony export */   "Modifier": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_29__.Modifier),
+/* harmony export */   "KeyType": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_29__.KeyType),
+/* harmony export */   "SidebarLocation": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_29__.SidebarLocation),
+/* harmony export */   "RowPosition": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_29__.RowPosition),
+/* harmony export */   "ActionType": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_29__.ActionType),
+/* harmony export */   "SCREEN_WIDTH_LARGE": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_29__.SCREEN_WIDTH_LARGE),
+/* harmony export */   "SCREEN_WIDTH_SMALL": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_29__.SCREEN_WIDTH_SMALL),
+/* harmony export */   "SCREEN_WIDTH_MEDIUM": () => (/* reexport safe */ _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_29__.SCREEN_WIDTH_MEDIUM),
+/* harmony export */   "AlertType": () => (/* reexport safe */ _framework_ui_alert_AlertListener__WEBPACK_IMPORTED_MODULE_30__.AlertType),
+/* harmony export */   "AlertManager": () => (/* reexport safe */ _framework_ui_alert_AlertManager__WEBPACK_IMPORTED_MODULE_31__.AlertManager),
+/* harmony export */   "BlockedUserView": () => (/* reexport safe */ _framework_ui_chat_BlockedUserView__WEBPACK_IMPORTED_MODULE_32__.BlockedUserView),
+/* harmony export */   "ChatLogDetailView": () => (/* reexport safe */ _framework_ui_chat_ChatLogDetailView__WEBPACK_IMPORTED_MODULE_33__.ChatLogDetailView),
+/* harmony export */   "ChatLogsView": () => (/* reexport safe */ _framework_ui_chat_ChatLogsView__WEBPACK_IMPORTED_MODULE_34__.ChatLogsView),
+/* harmony export */   "ChatRoomsSidebar": () => (/* reexport safe */ _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_35__.ChatRoomsSidebar),
+/* harmony export */   "STATE_NAMES": () => (/* reexport safe */ _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_36__.STATE_NAMES),
+/* harmony export */   "DRAGGABLE": () => (/* reexport safe */ _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_36__.DRAGGABLE),
+/* harmony export */   "VIEW_NAME": () => (/* reexport safe */ _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_36__.VIEW_NAME),
+/* harmony export */   "FavouriteUserView": () => (/* reexport safe */ _framework_ui_chat_FavouriteUserView__WEBPACK_IMPORTED_MODULE_37__.FavouriteUserView),
+/* harmony export */   "UserSearchSidebar": () => (/* reexport safe */ _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_38__.UserSearchSidebar),
+/* harmony export */   "UserSearchView": () => (/* reexport safe */ _framework_ui_chat_UserSearchView__WEBPACK_IMPORTED_MODULE_39__.UserSearchView),
+/* harmony export */   "SidebarViewContainer": () => (/* reexport safe */ _framework_ui_container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_40__.SidebarViewContainer),
+/* harmony export */   "TabularViewContainer": () => (/* reexport safe */ _framework_ui_container_TabularViewContainer__WEBPACK_IMPORTED_MODULE_41__.TabularViewContainer),
+/* harmony export */   "ContextualInformationHelper": () => (/* reexport safe */ _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_42__.ContextualInformationHelper),
+/* harmony export */   "ItemViewElementFactory": () => (/* reexport safe */ _framework_ui_factory_ItemViewElementFactory__WEBPACK_IMPORTED_MODULE_43__.ItemViewElementFactory),
+/* harmony export */   "BasicFormImplementation": () => (/* reexport safe */ _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_44__.BasicFormImplementation),
+/* harmony export */   "AbstractField": () => (/* reexport safe */ _framework_ui_field_AbstractField__WEBPACK_IMPORTED_MODULE_45__.AbstractField),
+/* harmony export */   "InputField": () => (/* reexport safe */ _framework_ui_field_InputField__WEBPACK_IMPORTED_MODULE_46__.InputField),
+/* harmony export */   "TextAreaField": () => (/* reexport safe */ _framework_ui_field_TextAreaField__WEBPACK_IMPORTED_MODULE_47__.TextAreaField),
+/* harmony export */   "SelectField": () => (/* reexport safe */ _framework_ui_field_SelectField__WEBPACK_IMPORTED_MODULE_48__.SelectField),
+/* harmony export */   "RadioButtonGroupField": () => (/* reexport safe */ _framework_ui_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_49__.RadioButtonGroupField),
+/* harmony export */   "ColourInputField": () => (/* reexport safe */ _framework_ui_field_ColourInputField__WEBPACK_IMPORTED_MODULE_50__.ColourInputField),
+/* harmony export */   "ConditionResponse": () => (/* reexport safe */ _framework_ui_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_51__.ConditionResponse),
+/* harmony export */   "MultipleConditionLogic": () => (/* reexport safe */ _framework_ui_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_51__.MultipleConditionLogic),
+/* harmony export */   "ValidationManager": () => (/* reexport safe */ _framework_ui_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_52__.ValidationManager),
+/* harmony export */   "ValidationHelperFunctions": () => (/* reexport safe */ _framework_ui_validation_ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_53__.ValidationHelperFunctions),
+/* harmony export */   "BootstrapFormConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_54__.BootstrapFormConfigHelper),
+/* harmony export */   "BootstrapTableConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_55__.BootstrapTableConfigHelper),
+/* harmony export */   "BootstrapTableRowConfigHelper": () => (/* reexport safe */ _framework_ui_helper_BootstrapTableRowConfigHelper__WEBPACK_IMPORTED_MODULE_56__.BootstrapTableRowConfigHelper),
+/* harmony export */   "LimitedChoiceTextRenderer": () => (/* reexport safe */ _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_57__.LimitedChoiceTextRenderer),
+/* harmony export */   "LinkedCollectionDetailController": () => (/* reexport safe */ _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_58__.LinkedCollectionDetailController),
+/* harmony export */   "RBGFieldOperations": () => (/* reexport safe */ _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_59__.RBGFieldOperations),
+/* harmony export */   "SimpleValueDataSource": () => (/* reexport safe */ _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_60__.SimpleValueDataSource),
+/* harmony export */   "ColourEditor": () => (/* reexport safe */ _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_61__.ColourEditor),
+/* harmony export */   "DefaultItemView": () => (/* reexport safe */ _framework_ui_view_item_DefaultItemView__WEBPACK_IMPORTED_MODULE_62__.DefaultItemView),
+/* harmony export */   "DefaultFieldPermissionChecker": () => (/* reexport safe */ _framework_ui_view_item_DefaultFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_63__.DefaultFieldPermissionChecker),
+/* harmony export */   "AbstractView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_64__.AbstractView),
+/* harmony export */   "AbstractCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_65__.AbstractCollectionView),
+/* harmony export */   "AbstractStatefulCollectionView": () => (/* reexport safe */ _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_66__.AbstractStatefulCollectionView),
+/* harmony export */   "DefaultPermissionChecker": () => (/* reexport safe */ _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_67__.DefaultPermissionChecker),
+/* harmony export */   "DetailViewImplementation": () => (/* reexport safe */ _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_68__.DetailViewImplementation),
+/* harmony export */   "CarouselViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_69__.CarouselViewRenderer),
+/* harmony export */   "CarouselViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_70__.CarouselViewRendererUsingContext),
+/* harmony export */   "FormDetailViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_71__.FormDetailViewRenderer),
+/* harmony export */   "ListViewRenderer": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_72__.ListViewRenderer),
+/* harmony export */   "ListViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_73__.ListViewRendererUsingContext),
+/* harmony export */   "TabularViewRendererUsingContext": () => (/* reexport safe */ _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_74__.TabularViewRendererUsingContext),
+/* harmony export */   "ViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__.ViewListenerForwarder),
+/* harmony export */   "DetailViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_76__.DetailViewListenerForwarder),
+/* harmony export */   "CollectionViewListenerForwarder": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_77__.CollectionViewListenerForwarder),
+/* harmony export */   "CollectionViewEventHandlerDelegate": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_78__.CollectionViewEventHandlerDelegate),
+/* harmony export */   "CollectionViewEventHandlerDelegateUsingContext": () => (/* reexport safe */ _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_79__.CollectionViewEventHandlerDelegateUsingContext),
+/* harmony export */   "truncateString": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__.truncateString),
+/* harmony export */   "convertHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__.convertHexToNumber),
+/* harmony export */   "convertSingleHexToNumber": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__.convertSingleHexToNumber),
+/* harmony export */   "isHexValueDark": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__.isHexValueDark),
+/* harmony export */   "copyObject": () => (/* reexport safe */ _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__.copyObject),
+/* harmony export */   "isSameMongo": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__.isSameMongo),
+/* harmony export */   "isSame": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__.isSame),
+/* harmony export */   "isSameUsername": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__.isSameUsername),
+/* harmony export */   "isSameRoom": () => (/* reexport safe */ _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__.isSameRoom),
+/* harmony export */   "addDurations": () => (/* reexport safe */ _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_82__.addDurations),
+/* harmony export */   "BrowserUtil": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_83__.BrowserUtil),
+/* harmony export */   "getElementOffset": () => (/* reexport safe */ _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_83__.getElementOffset),
+/* harmony export */   "BasicTableRowImplementation": () => (/* reexport safe */ _framework_ui_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_84__.BasicTableRowImplementation)
 /* harmony export */ });
 /* harmony import */ var _framework_CommonTypes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./framework/CommonTypes */ "./node_modules/ui-framework-jps/dist/framework/CommonTypes.js");
 /* harmony import */ var _framework_model_BasicFieldOperations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./framework/model/BasicFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/model/BasicFieldOperations.js");
@@ -66307,82 +66399,83 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _framework_model_ObjectDefinitionRegistry__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./framework/model/ObjectDefinitionRegistry */ "./node_modules/ui-framework-jps/dist/framework/model/ObjectDefinitionRegistry.js");
 /* harmony import */ var _framework_network_ApiUtil__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./framework/network/ApiUtil */ "./node_modules/ui-framework-jps/dist/framework/network/ApiUtil.js");
 /* harmony import */ var _framework_network_DownloadManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./framework/network/DownloadManager */ "./node_modules/ui-framework-jps/dist/framework/network/DownloadManager.js");
-/* harmony import */ var _framework_network_Types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./framework/network/Types */ "./node_modules/ui-framework-jps/dist/framework/network/Types.js");
-/* harmony import */ var _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./framework/notification/NotificationManager */ "./node_modules/ui-framework-jps/dist/framework/notification/NotificationManager.js");
-/* harmony import */ var _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./framework/security/SecurityManager */ "./node_modules/ui-framework-jps/dist/framework/security/SecurityManager.js");
-/* harmony import */ var _framework_socket_ChatManager__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./framework/socket/ChatManager */ "./node_modules/ui-framework-jps/dist/framework/socket/ChatManager.js");
-/* harmony import */ var _framework_socket_NotificationController__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./framework/socket/NotificationController */ "./node_modules/ui-framework-jps/dist/framework/socket/NotificationController.js");
-/* harmony import */ var _framework_socket_SocketListener__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./framework/socket/SocketListener */ "./node_modules/ui-framework-jps/dist/framework/socket/SocketListener.js");
-/* harmony import */ var _framework_socket_SocketManager__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./framework/socket/SocketManager */ "./node_modules/ui-framework-jps/dist/framework/socket/SocketManager.js");
-/* harmony import */ var _framework_socket_Types__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./framework/socket/Types */ "./node_modules/ui-framework-jps/dist/framework/socket/Types.js");
-/* harmony import */ var _framework_state_AbstractStateManager__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./framework/state/AbstractStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/AbstractStateManager.js");
-/* harmony import */ var _framework_state_AggregateStateManager__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./framework/state/AggregateStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/AggregateStateManager.js");
-/* harmony import */ var _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./framework/state/AsyncStateManagerWrapper */ "./node_modules/ui-framework-jps/dist/framework/state/AsyncStateManagerWrapper.js");
-/* harmony import */ var _framework_state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./framework/state/BrowserStorageStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/BrowserStorageStateManager.js");
-/* harmony import */ var _framework_state_EncryptedBrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./framework/state/EncryptedBrowserStorageStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/EncryptedBrowserStorageStateManager.js");
-/* harmony import */ var _framework_state_EncryptedIndexedDBStateManager__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./framework/state/EncryptedIndexedDBStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/EncryptedIndexedDBStateManager.js");
-/* harmony import */ var _framework_state_GraphQLApiStateManager__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./framework/state/GraphQLApiStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/GraphQLApiStateManager.js");
-/* harmony import */ var _framework_state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./framework/state/IndexedDBStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/IndexedDBStateManager.js");
-/* harmony import */ var _framework_state_RESTApiStateManager__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./framework/state/RESTApiStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/RESTApiStateManager.js");
-/* harmony import */ var _framework_state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./framework/state/MemoryBufferStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/MemoryBufferStateManager.js");
-/* harmony import */ var _framework_state_StateManager__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./framework/state/StateManager */ "./node_modules/ui-framework-jps/dist/framework/state/StateManager.js");
-/* harmony import */ var _framework_jsx_JSXParser__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./framework/jsx/JSXParser */ "./node_modules/ui-framework-jps/dist/framework/jsx/JSXParser.js");
-/* harmony import */ var _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./framework/ui/ConfigurationTypes */ "./node_modules/ui-framework-jps/dist/framework/ui/ConfigurationTypes.js");
-/* harmony import */ var _framework_ui_alert_AlertListener__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./framework/ui/alert/AlertListener */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertListener.js");
-/* harmony import */ var _framework_ui_alert_AlertManager__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./framework/ui/alert/AlertManager */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertManager.js");
-/* harmony import */ var _framework_ui_chat_BlockedUserView__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./framework/ui/chat/BlockedUserView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/BlockedUserView.js");
-/* harmony import */ var _framework_ui_chat_ChatLogDetailView__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./framework/ui/chat/ChatLogDetailView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/ChatLogDetailView.js");
-/* harmony import */ var _framework_ui_chat_ChatLogsView__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./framework/ui/chat/ChatLogsView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/ChatLogsView.js");
-/* harmony import */ var _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./framework/ui/chat/ChatRoomsSidebar */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/ChatRoomsSidebar.js");
-/* harmony import */ var _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./framework/ui/chat/ChatTypes */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/ChatTypes.js");
-/* harmony import */ var _framework_ui_chat_FavouriteUserView__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./framework/ui/chat/FavouriteUserView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/FavouriteUserView.js");
-/* harmony import */ var _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchSidebar */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/UserSearchSidebar.js");
-/* harmony import */ var _framework_ui_chat_UserSearchView__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/UserSearchView.js");
-/* harmony import */ var _framework_ui_container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./framework/ui/container/SidebarViewContainer */ "./node_modules/ui-framework-jps/dist/framework/ui/container/SidebarViewContainer.js");
-/* harmony import */ var _framework_ui_container_TabularViewContainer__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./framework/ui/container/TabularViewContainer */ "./node_modules/ui-framework-jps/dist/framework/ui/container/TabularViewContainer.js");
-/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/context/ContextualInformationHelper.js");
-/* harmony import */ var _framework_ui_factory_ItemViewElementFactory__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./framework/ui/factory/ItemViewElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/factory/ItemViewElementFactory.js");
-/* harmony import */ var _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./framework/ui/form/BasicFormImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/form/BasicFormImplementation.js");
-/* harmony import */ var _framework_ui_field_AbstractField__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./framework/ui/field/AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js");
-/* harmony import */ var _framework_ui_field_InputField__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./framework/ui/field/InputField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/InputField.js");
-/* harmony import */ var _framework_ui_field_TextAreaField__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./framework/ui/field/TextAreaField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/TextAreaField.js");
-/* harmony import */ var _framework_ui_field_SelectField__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./framework/ui/field/SelectField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/SelectField.js");
-/* harmony import */ var _framework_ui_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./framework/ui/field/RadioButtonGroupField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/RadioButtonGroupField.js");
-/* harmony import */ var _framework_ui_field_ColourInputField__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./framework/ui/field/ColourInputField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/ColourInputField.js");
-/* harmony import */ var _framework_ui_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./framework/ui/validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationTypeDefs.js");
-/* harmony import */ var _framework_ui_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./framework/ui/validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationManager.js");
-/* harmony import */ var _framework_ui_validation_ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./framework/ui/validation/ValidationHelperFunctions */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationHelperFunctions.js");
-/* harmony import */ var _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_BootstrapTableRowConfigHelper__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableRowConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableRowConfigHelper.js");
-/* harmony import */ var _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./framework/ui/helper/LimitedChoiceTextRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
-/* harmony import */ var _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./framework/ui/helper/LinkedCollectionDetailController */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LinkedCollectionDetailController.js");
-/* harmony import */ var _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./framework/ui/helper/RBGFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/RBGFieldOperations.js");
-/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./framework/ui/helper/SimpleValueDataSource */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/SimpleValueDataSource.js");
-/* harmony import */ var _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./framework/ui/helper/ColourEditor */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/ColourEditor.js");
-/* harmony import */ var _framework_ui_view_item_DefaultItemView__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./framework/ui/view/item/DefaultItemView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/item/DefaultItemView.js");
-/* harmony import */ var _framework_ui_view_item_DefaultFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./framework/ui/view/item/DefaultFieldPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/item/DefaultFieldPermissionChecker.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractStatefulCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
-/* harmony import */ var _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./framework/ui/view/implementation/DefaultPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DefaultPermissionChecker.js");
-/* harmony import */ var _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./framework/ui/view/implementation/DetailViewImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DetailViewImplementation.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./framework/ui/view/renderer/FormDetailViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/FormDetailViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRenderer.js");
-/* harmony import */ var _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./framework/ui/view/renderer/TabularViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js");
-/* harmony import */ var _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./framework/ui/view/delegate/ViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./framework/ui/view/delegate/DetailViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegate */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
-/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js");
-/* harmony import */ var _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./framework/util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
-/* harmony import */ var _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./framework/util/EqualityFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js");
-/* harmony import */ var _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./framework/util/DurationFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js");
-/* harmony import */ var _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
-/* harmony import */ var _framework_ui_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./framework/ui/table/BasicTableRowImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/table/BasicTableRowImplementation.js");
+/* harmony import */ var _framework_network_OfflineManager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./framework/network/OfflineManager */ "./node_modules/ui-framework-jps/dist/framework/network/OfflineManager.js");
+/* harmony import */ var _framework_network_Types__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./framework/network/Types */ "./node_modules/ui-framework-jps/dist/framework/network/Types.js");
+/* harmony import */ var _framework_notification_NotificationManager__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./framework/notification/NotificationManager */ "./node_modules/ui-framework-jps/dist/framework/notification/NotificationManager.js");
+/* harmony import */ var _framework_security_SecurityManager__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./framework/security/SecurityManager */ "./node_modules/ui-framework-jps/dist/framework/security/SecurityManager.js");
+/* harmony import */ var _framework_socket_ChatManager__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./framework/socket/ChatManager */ "./node_modules/ui-framework-jps/dist/framework/socket/ChatManager.js");
+/* harmony import */ var _framework_socket_NotificationController__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./framework/socket/NotificationController */ "./node_modules/ui-framework-jps/dist/framework/socket/NotificationController.js");
+/* harmony import */ var _framework_socket_SocketListener__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./framework/socket/SocketListener */ "./node_modules/ui-framework-jps/dist/framework/socket/SocketListener.js");
+/* harmony import */ var _framework_socket_SocketManager__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./framework/socket/SocketManager */ "./node_modules/ui-framework-jps/dist/framework/socket/SocketManager.js");
+/* harmony import */ var _framework_socket_Types__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./framework/socket/Types */ "./node_modules/ui-framework-jps/dist/framework/socket/Types.js");
+/* harmony import */ var _framework_state_AbstractStateManager__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./framework/state/AbstractStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/AbstractStateManager.js");
+/* harmony import */ var _framework_state_AggregateStateManager__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./framework/state/AggregateStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/AggregateStateManager.js");
+/* harmony import */ var _framework_state_AsyncStateManagerWrapper__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./framework/state/AsyncStateManagerWrapper */ "./node_modules/ui-framework-jps/dist/framework/state/AsyncStateManagerWrapper.js");
+/* harmony import */ var _framework_state_BrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./framework/state/BrowserStorageStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/BrowserStorageStateManager.js");
+/* harmony import */ var _framework_state_EncryptedBrowserStorageStateManager__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./framework/state/EncryptedBrowserStorageStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/EncryptedBrowserStorageStateManager.js");
+/* harmony import */ var _framework_state_EncryptedIndexedDBStateManager__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./framework/state/EncryptedIndexedDBStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/EncryptedIndexedDBStateManager.js");
+/* harmony import */ var _framework_state_GraphQLApiStateManager__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./framework/state/GraphQLApiStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/GraphQLApiStateManager.js");
+/* harmony import */ var _framework_state_IndexedDBStateManager__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./framework/state/IndexedDBStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/IndexedDBStateManager.js");
+/* harmony import */ var _framework_state_RESTApiStateManager__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./framework/state/RESTApiStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/RESTApiStateManager.js");
+/* harmony import */ var _framework_state_MemoryBufferStateManager__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./framework/state/MemoryBufferStateManager */ "./node_modules/ui-framework-jps/dist/framework/state/MemoryBufferStateManager.js");
+/* harmony import */ var _framework_state_StateManager__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./framework/state/StateManager */ "./node_modules/ui-framework-jps/dist/framework/state/StateManager.js");
+/* harmony import */ var _framework_jsx_JSXParser__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./framework/jsx/JSXParser */ "./node_modules/ui-framework-jps/dist/framework/jsx/JSXParser.js");
+/* harmony import */ var _framework_ui_ConfigurationTypes__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./framework/ui/ConfigurationTypes */ "./node_modules/ui-framework-jps/dist/framework/ui/ConfigurationTypes.js");
+/* harmony import */ var _framework_ui_alert_AlertListener__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./framework/ui/alert/AlertListener */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertListener.js");
+/* harmony import */ var _framework_ui_alert_AlertManager__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./framework/ui/alert/AlertManager */ "./node_modules/ui-framework-jps/dist/framework/ui/alert/AlertManager.js");
+/* harmony import */ var _framework_ui_chat_BlockedUserView__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./framework/ui/chat/BlockedUserView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/BlockedUserView.js");
+/* harmony import */ var _framework_ui_chat_ChatLogDetailView__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./framework/ui/chat/ChatLogDetailView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/ChatLogDetailView.js");
+/* harmony import */ var _framework_ui_chat_ChatLogsView__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./framework/ui/chat/ChatLogsView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/ChatLogsView.js");
+/* harmony import */ var _framework_ui_chat_ChatRoomsSidebar__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./framework/ui/chat/ChatRoomsSidebar */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/ChatRoomsSidebar.js");
+/* harmony import */ var _framework_ui_chat_ChatTypes__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./framework/ui/chat/ChatTypes */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/ChatTypes.js");
+/* harmony import */ var _framework_ui_chat_FavouriteUserView__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./framework/ui/chat/FavouriteUserView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/FavouriteUserView.js");
+/* harmony import */ var _framework_ui_chat_UserSearchSidebar__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchSidebar */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/UserSearchSidebar.js");
+/* harmony import */ var _framework_ui_chat_UserSearchView__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./framework/ui/chat/UserSearchView */ "./node_modules/ui-framework-jps/dist/framework/ui/chat/UserSearchView.js");
+/* harmony import */ var _framework_ui_container_SidebarViewContainer__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./framework/ui/container/SidebarViewContainer */ "./node_modules/ui-framework-jps/dist/framework/ui/container/SidebarViewContainer.js");
+/* harmony import */ var _framework_ui_container_TabularViewContainer__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./framework/ui/container/TabularViewContainer */ "./node_modules/ui-framework-jps/dist/framework/ui/container/TabularViewContainer.js");
+/* harmony import */ var _framework_ui_context_ContextualInformationHelper__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./framework/ui/context/ContextualInformationHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/context/ContextualInformationHelper.js");
+/* harmony import */ var _framework_ui_factory_ItemViewElementFactory__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./framework/ui/factory/ItemViewElementFactory */ "./node_modules/ui-framework-jps/dist/framework/ui/factory/ItemViewElementFactory.js");
+/* harmony import */ var _framework_ui_form_BasicFormImplementation__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./framework/ui/form/BasicFormImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/form/BasicFormImplementation.js");
+/* harmony import */ var _framework_ui_field_AbstractField__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./framework/ui/field/AbstractField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/AbstractField.js");
+/* harmony import */ var _framework_ui_field_InputField__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./framework/ui/field/InputField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/InputField.js");
+/* harmony import */ var _framework_ui_field_TextAreaField__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./framework/ui/field/TextAreaField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/TextAreaField.js");
+/* harmony import */ var _framework_ui_field_SelectField__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./framework/ui/field/SelectField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/SelectField.js");
+/* harmony import */ var _framework_ui_field_RadioButtonGroupField__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./framework/ui/field/RadioButtonGroupField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/RadioButtonGroupField.js");
+/* harmony import */ var _framework_ui_field_ColourInputField__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./framework/ui/field/ColourInputField */ "./node_modules/ui-framework-jps/dist/framework/ui/field/ColourInputField.js");
+/* harmony import */ var _framework_ui_validation_ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./framework/ui/validation/ValidationTypeDefs */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationTypeDefs.js");
+/* harmony import */ var _framework_ui_validation_ValidationManager__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./framework/ui/validation/ValidationManager */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationManager.js");
+/* harmony import */ var _framework_ui_validation_ValidationHelperFunctions__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./framework/ui/validation/ValidationHelperFunctions */ "./node_modules/ui-framework-jps/dist/framework/ui/validation/ValidationHelperFunctions.js");
+/* harmony import */ var _framework_ui_helper_BootstrapFormConfigHelper__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapFormConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper.js");
+/* harmony import */ var _framework_ui_helper_BootstrapTableConfigHelper__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableConfigHelper.js");
+/* harmony import */ var _framework_ui_helper_BootstrapTableRowConfigHelper__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./framework/ui/helper/BootstrapTableRowConfigHelper */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/BootstrapTableRowConfigHelper.js");
+/* harmony import */ var _framework_ui_helper_LimitedChoiceTextRenderer__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./framework/ui/helper/LimitedChoiceTextRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LimitedChoiceTextRenderer.js");
+/* harmony import */ var _framework_ui_helper_LinkedCollectionDetailController__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./framework/ui/helper/LinkedCollectionDetailController */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/LinkedCollectionDetailController.js");
+/* harmony import */ var _framework_ui_helper_RBGFieldOperations__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./framework/ui/helper/RBGFieldOperations */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/RBGFieldOperations.js");
+/* harmony import */ var _framework_ui_helper_SimpleValueDataSource__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./framework/ui/helper/SimpleValueDataSource */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/SimpleValueDataSource.js");
+/* harmony import */ var _framework_ui_helper_ColourEditor__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./framework/ui/helper/ColourEditor */ "./node_modules/ui-framework-jps/dist/framework/ui/helper/ColourEditor.js");
+/* harmony import */ var _framework_ui_view_item_DefaultItemView__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./framework/ui/view/item/DefaultItemView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/item/DefaultItemView.js");
+/* harmony import */ var _framework_ui_view_item_DefaultFieldPermissionChecker__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./framework/ui/view/item/DefaultFieldPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/item/DefaultFieldPermissionChecker.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractView__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractView.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractCollectionView__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractCollectionView.js");
+/* harmony import */ var _framework_ui_view_implementation_AbstractStatefulCollectionView__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./framework/ui/view/implementation/AbstractStatefulCollectionView */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/AbstractStatefulCollectionView.js");
+/* harmony import */ var _framework_ui_view_implementation_DefaultPermissionChecker__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./framework/ui/view/implementation/DefaultPermissionChecker */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DefaultPermissionChecker.js");
+/* harmony import */ var _framework_ui_view_implementation_DetailViewImplementation__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./framework/ui/view/implementation/DetailViewImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/view/implementation/DetailViewImplementation.js");
+/* harmony import */ var _framework_ui_view_renderer_CarouselViewRenderer__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_CarouselViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./framework/ui/view/renderer/CarouselViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/CarouselViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_renderer_FormDetailViewRenderer__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./framework/ui/view/renderer/FormDetailViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/FormDetailViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_ListViewRenderer__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRenderer */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRenderer.js");
+/* harmony import */ var _framework_ui_view_renderer_ListViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./framework/ui/view/renderer/ListViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/ListViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_renderer_TabularViewRendererUsingContext__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./framework/ui/view/renderer/TabularViewRendererUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/renderer/TabularViewRendererUsingContext.js");
+/* harmony import */ var _framework_ui_view_delegate_ViewListenerForwarder__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./framework/ui/view/delegate/ViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/ViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_DetailViewListenerForwarder__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./framework/ui/view/delegate/DetailViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/DetailViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewListenerForwarder__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewListenerForwarder */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewListenerForwarder.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegate__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegate */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegate.js");
+/* harmony import */ var _framework_ui_view_delegate_CollectionViewEventHandlerDelegateUsingContext__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext */ "./node_modules/ui-framework-jps/dist/framework/ui/view/delegate/CollectionViewEventHandlerDelegateUsingContext.js");
+/* harmony import */ var _framework_util_MiscFunctions__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./framework/util/MiscFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/MiscFunctions.js");
+/* harmony import */ var _framework_util_EqualityFunctions__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./framework/util/EqualityFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/EqualityFunctions.js");
+/* harmony import */ var _framework_util_DurationFunctions__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./framework/util/DurationFunctions */ "./node_modules/ui-framework-jps/dist/framework/util/DurationFunctions.js");
+/* harmony import */ var _framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./framework/util/BrowserUtil */ "./node_modules/ui-framework-jps/dist/framework/util/BrowserUtil.js");
+/* harmony import */ var _framework_ui_table_BasicTableRowImplementation__WEBPACK_IMPORTED_MODULE_84__ = __webpack_require__(/*! ./framework/ui/table/BasicTableRowImplementation */ "./node_modules/ui-framework-jps/dist/framework/ui/table/BasicTableRowImplementation.js");
 
 
 
@@ -66390,6 +66483,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* network utils */
+
 
 
 
