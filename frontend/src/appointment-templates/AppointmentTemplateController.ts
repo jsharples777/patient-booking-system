@@ -177,5 +177,8 @@ export class AppointmentTemplateController implements StateChangeListener, Sched
         AppointmentTemplateView.getInstance().getCalender().refresh();
     }
 
+    foundResult(managerName: string, name: string, foundItem: any): void {
+    }
+
 
 }

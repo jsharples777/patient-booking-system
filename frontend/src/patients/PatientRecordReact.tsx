@@ -1,6 +1,4 @@
 import React from "react";
-import {AppointmentTemplateController} from "./AppointmentTemplateController";
-import {PatientController} from "./PatientController";
 import {PatientRecordTabularView} from "./PatientRecordTabularView";
 import {PatientDemographicsCompositeView} from "./PatientDemographicsCompositeView";
 

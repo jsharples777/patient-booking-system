@@ -696,6 +696,9 @@ export default class Controller implements StateChangeListener, DataObjectListen
         return result;
     }
 
+    foundResult(managerName: string, name: string, foundItem: any): void {
+    }
+
 }
 
 class IsProviderDerivedField implements DerivedField {

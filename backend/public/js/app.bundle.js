@@ -687,6 +687,8 @@ class Controller {
     return result;
   }
 
+  foundResult(managerName, name, foundItem) {}
+
 }
 
 class IsProviderDerivedField {
@@ -1076,6 +1078,8 @@ class AppointmentTemplateController {
   refreshDisplay() {
     _AppointmentTemplateView__WEBPACK_IMPORTED_MODULE_5__.AppointmentTemplateView.getInstance().getCalender().refresh();
   }
+
+  foundResult(managerName, name, foundItem) {}
 
 }
 
@@ -2324,6 +2328,8 @@ class AppointmentController {
   refreshDisplay() {//AppointmentBookView.getInstance().getCalender().refresh();
   }
 
+  foundResult(managerName, name, foundItem) {}
+
 }
 
 /***/ }),
@@ -3506,6 +3512,8 @@ class ClinicChatDetailView {
     ui_framework_jps_dist_framework_util_BrowserUtil__WEBPACK_IMPORTED_MODULE_2__["default"].removeAllChildren(this.chatLogDiv);
   }
 
+  foundResult(managerName, name, foundItem) {}
+
 }
 
 /***/ }),
@@ -4335,6 +4343,8 @@ class AppointmentControllerHelper {
     return buffer;
   }
 
+  foundResult(managerName, name, foundItem) {}
+
 }
 
 /***/ }),
@@ -4745,22 +4755,20 @@ class PatientController {
 
   stateChanged(managerName, name, newValue) {}
 
+  foundResult(managerName, name, foundItem) {
+    foundItem.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Complete;
+    logger(`patient loaded - adding to open patients`);
+    logger(foundItem); // found new patient to add to buffer
+
+    if (this.isPatientInOpenList(foundItem._id)) {
+      this.stateManager.updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, foundItem, true);
+    } else {
+      this.stateManager.addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, foundItem, true);
+    }
+  }
+
   stateChangedItemAdded(managerName, name, itemAdded) {
     switch (name) {
-      case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patients:
-        {
-          logger(`patient loaded - adding to open patients`);
-          logger(itemAdded); // found new patient to add to buffer
-
-          if (this.isPatientInOpenList(itemAdded._id)) {
-            this.stateManager.updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, itemAdded, true);
-          } else {
-            this.stateManager.addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, itemAdded, true);
-          }
-
-          break;
-        }
-
       case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients:
         {
           // found new patient in buffer, let listeners know
@@ -4771,8 +4779,6 @@ class PatientController {
         }
     }
   }
-
-  stateChangedItemRemoved(managerName, name, itemRemoved) {}
 
   stateChangedItemUpdated(managerName, name, itemUpdated, itemNewValue) {
     switch (name) {
@@ -4791,6 +4797,8 @@ class PatientController {
         }
     }
   }
+
+  stateChangedItemRemoved(managerName, name, itemRemoved) {}
 
   getListenerName() {
     return 'Patient Controller';
@@ -5486,6 +5494,12 @@ class TodayController {
 
   loadedProviders(providers) {}
 
+  refreshDisplay() {
+    _TodayView__WEBPACK_IMPORTED_MODULE_5__.TodayView.getInstance().getCalender().refresh();
+  }
+
+  foundResult(managerName, name, foundItem) {}
+
 }
 
 /***/ }),
@@ -5640,7 +5654,7 @@ class UserValidationHelper {
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
     rule = {
-      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.create,
+      viewMode: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ViewMode.any,
       targetDataFieldId: 'isProvider',
       response: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide,
       conditions: []
@@ -5662,7 +5676,7 @@ class UserValidationHelper {
       conditions: [{
         comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
         sourceDataFieldId: 'resetPassword',
-        values: 'true'
+        values: 'false'
       }]
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
@@ -5673,7 +5687,7 @@ class UserValidationHelper {
       conditions: [{
         comparison: ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ComparisonType.hasValue,
         sourceDataFieldId: 'resetPassword',
-        values: 'false'
+        values: 'true'
       }]
     };
     ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.ValidationManager.getInstance().addRuleToView(form, rule);
@@ -6291,7 +6305,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'default-item-view-validation app api-ts-results user-validation-helper validation-manager validation-manager-execute-rule validation-manager-multiple-condition-rule-results validation-helper-functions validation-manager-rule-failure'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'app api-ts-results patient-controller'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
@@ -6846,7 +6860,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     this.viewHasChanged = false;
     logger(`handling patient selected`);
     logger(patient);
-    this.currentPatient = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(patient);
+    this.currentPatient = patient;
     this.basicsView.displayItem(patient);
     this.contactView.displayItem(patient.contact);
     this.identifiersView.displayItem(patient.identifiers);
@@ -6972,7 +6986,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
   }
 
   getCurrentPatient() {
-    let result = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(this.currentPatient);
+    let result = this.currentPatient;
     result.contact = this.contactForm.getFormattedDataObject();
     result.name = this.nameForm.getFormattedDataObject();
     result.identifiers = this.identifiersForm.getFormattedDataObject();
@@ -6988,6 +7002,8 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
   patientChanged(patient) {
     logger(`Patient changed`);
   }
+
+  foundResult(managerName, name, foundItem) {}
 
 }
 
@@ -7246,19 +7262,7 @@ class TodaysPatientsView extends react__WEBPACK_IMPORTED_MODULE_6__.Component {
     }
   }
 
-  stateChangedItemAdded(managerName, name, itemAdded) {
-    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients) {
-      logger(`Patient added to state with id ${itemAdded._id}`); // was this a patient we asked for?
-
-      const foundIndex = this.patientsNotYetLoaded.findIndex(patientId => patientId === itemAdded._id);
-
-      if (foundIndex >= 0) {
-        // remove from our internal queue
-        this.patientsNotYetLoaded.splice(foundIndex, 1);
-        this.replacePatientSummaryWithPatient(itemAdded);
-      }
-    }
-  }
+  stateChangedItemAdded(managerName, name, itemAdded) {}
 
   stateChangedItemRemoved(managerName, name, itemRemoved) {}
 
@@ -7288,6 +7292,22 @@ class TodaysPatientsView extends react__WEBPACK_IMPORTED_MODULE_6__.Component {
     if (this.applicationView) this.applicationView.setState({
       todaysPatients: this.patients
     });
+  }
+
+  foundResult(managerName, name, foundItem) {
+    console.log(foundItem);
+
+    if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients) {
+      logger(`Patient added to state with id ${foundItem._id}`); // was this a patient we asked for?
+
+      const foundIndex = this.patientsNotYetLoaded.findIndex(patientId => patientId === foundItem._id);
+
+      if (foundIndex >= 0) {
+        // remove from our internal queue
+        this.patientsNotYetLoaded.splice(foundIndex, 1);
+        this.replacePatientSummaryWithPatient(foundItem);
+      }
+    }
   }
 
 }

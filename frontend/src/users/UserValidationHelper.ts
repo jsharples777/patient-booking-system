@@ -44,7 +44,7 @@ export class UserValidationHelper implements ViewFieldValidator {
         ValidationManager.getInstance().addRuleToView(form, rule);
 
         rule = {
-            viewMode: ViewMode.create,
+            viewMode: ViewMode.any,
             targetDataFieldId: 'isProvider',
             response: ConditionResponse.hide,
             conditions: []
@@ -72,7 +72,7 @@ export class UserValidationHelper implements ViewFieldValidator {
                 {
                     comparison: ComparisonType.hasValue,
                     sourceDataFieldId: 'resetPassword',
-                    values: 'true'
+                    values: 'false'
                 }
             ]
         }
@@ -85,7 +85,7 @@ export class UserValidationHelper implements ViewFieldValidator {
                 {
                     comparison: ComparisonType.hasValue,
                     sourceDataFieldId: 'resetPassword',
-                    values: 'false'
+                    values: 'true'
                 }
             ]
         }

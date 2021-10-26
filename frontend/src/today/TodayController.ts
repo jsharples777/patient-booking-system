@@ -170,4 +170,11 @@ export class TodayController implements StateChangeListener, ScheduleListener {
     loadedProviders(providers: any[]): void {
     }
 
+    refreshDisplay(): void {
+        TodayView.getInstance().getCalender().refresh();
+    }
+
+    foundResult(managerName: string, name: string, foundItem: any): void {
+    }
+
 }

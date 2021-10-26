@@ -25,7 +25,6 @@ import browserUtil from "ui-framework-jps/dist/framework/util/BrowserUtil";
 import {PatientController} from "./PatientController";
 import {BootstrapFormConfigHelper} from "ui-framework-jps/dist/framework/ui/helper/BootstrapFormConfigHelper";
 import Controller from "../Controller";
-import {Fragment} from "@mobiscroll/javascript/dist/src/preact/renderer";
 import moment from "moment";
 import {v4} from "uuid";
 
@@ -433,7 +432,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         this.viewHasChanged = false;
         logger(`handling patient selected`);
         logger(patient);
-        this.currentPatient = copyObject(patient);
+        this.currentPatient = patient;
         this.basicsView.displayItem(patient);
         this.contactView.displayItem(patient.contact);
         this.identifiersView.displayItem(patient.identifiers);
@@ -546,7 +545,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     }
 
     getCurrentPatient():any {
-        let result = copyObject(this.currentPatient);
+        let result = this.currentPatient;
 
         result.contact = this.contactForm.getFormattedDataObject();
         result.name = this.nameForm.getFormattedDataObject();
@@ -563,5 +562,8 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
 
     patientChanged(patient: any): void {
         logger(`Patient changed`);
+    }
+
+    foundResult(managerName: string, name: string, foundItem: any): void {
     }
 }

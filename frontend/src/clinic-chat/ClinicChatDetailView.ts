@@ -542,6 +542,9 @@ export class ClinicChatDetailView implements View, ChatEventListener, Collection
         browserUtil.removeAllChildren(this.chatLogDiv);
     }
 
+    foundResult(managerName: string, name: string, foundItem: any): void {
+    }
+
 }
 
 

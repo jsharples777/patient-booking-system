@@ -190,16 +190,7 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
     }
 
     stateChangedItemAdded(managerName: string, name: string, itemAdded: any): void {
-        if (name === STATE_NAMES.patients) {
-            logger(`Patient added to state with id ${itemAdded._id}`);
-            // was this a patient we asked for?
-            const foundIndex = this.patientsNotYetLoaded.findIndex((patientId) => patientId === itemAdded._id);
-            if (foundIndex >= 0) {
-                // remove from our internal queue
-                this.patientsNotYetLoaded.splice(foundIndex, 1);
-                this.replacePatientSummaryWithPatient(itemAdded);
-            }
-        }
+
     }
 
     stateChangedItemRemoved(managerName: string, name: string, itemRemoved: any): void {
@@ -226,6 +217,20 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
 
     private _render() {
         if (this.applicationView) this.applicationView.setState({todaysPatients: this.patients});
+    }
+
+    foundResult(managerName: string, name: string, foundItem: any): void {
+        console.log(foundItem);
+        if (name === STATE_NAMES.patients) {
+            logger(`Patient added to state with id ${foundItem._id}`);
+            // was this a patient we asked for?
+            const foundIndex = this.patientsNotYetLoaded.findIndex((patientId) => patientId === foundItem._id);
+            if (foundIndex >= 0) {
+                // remove from our internal queue
+                this.patientsNotYetLoaded.splice(foundIndex, 1);
+                this.replacePatientSummaryWithPatient(foundItem);
+            }
+        }
     }
 
 

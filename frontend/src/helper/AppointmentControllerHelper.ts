@@ -438,5 +438,8 @@ export class AppointmentControllerHelper implements StateChangeListener {
         return buffer;
     }
 
+    foundResult(managerName: string, name: string, foundItem: any): void {
+    }
+
 
 }

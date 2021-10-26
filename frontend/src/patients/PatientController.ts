@@ -130,19 +130,21 @@ export class PatientController implements StateChangeListener, CollectionViewLis
     stateChanged(managerName: string, name: string, newValue: any) {
     }
 
+
+    foundResult(managerName: string, name: string, foundItem: any): void {
+        foundItem.decorator = Decorator.Complete;
+        logger(`patient loaded - adding to open patients`);
+        logger(foundItem);
+        // found new patient to add to buffer
+        if (this.isPatientInOpenList(foundItem._id)) {
+            this.stateManager.updateItemInState(STATE_NAMES.openPatients, foundItem, true);
+        } else {
+            this.stateManager.addNewItemToState(STATE_NAMES.openPatients, foundItem, true);
+        }
+    }
+
     stateChangedItemAdded(managerName: string, name: string, itemAdded: any) {
         switch (name) {
-            case STATE_NAMES.patients: {
-                logger(`patient loaded - adding to open patients`);
-                logger(itemAdded);
-                // found new patient to add to buffer
-                if (this.isPatientInOpenList(itemAdded._id)) {
-                    this.stateManager.updateItemInState(STATE_NAMES.openPatients, itemAdded, true);
-                } else {
-                    this.stateManager.addNewItemToState(STATE_NAMES.openPatients, itemAdded, true);
-                }
-                break;
-            }
             case STATE_NAMES.openPatients: {
                 // found new patient in buffer, let listeners know
                 logger(`patient loaded - added to open patients - informing listeners`);
@@ -151,9 +153,6 @@ export class PatientController implements StateChangeListener, CollectionViewLis
                 break;
             }
         }
-    }
-
-    stateChangedItemRemoved(managerName: string, name: string, itemRemoved: any) {
     }
 
     stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, itemNewValue: any) {
@@ -172,6 +171,10 @@ export class PatientController implements StateChangeListener, CollectionViewLis
             }
         }
     }
+
+    stateChangedItemRemoved(managerName: string, name: string, itemRemoved: any) {
+    }
+
 
 
     getListenerName(): string {
@@ -236,5 +239,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
             this._closeRecord(event.context.patient);
         }
     }
+
+
 
 }

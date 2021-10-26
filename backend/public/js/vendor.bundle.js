@@ -53470,6 +53470,8 @@ class OfflineManager {
     }
     filterResults(managerName, name, filterResults) {
     }
+    foundResult(managerName, name, foundItem) {
+    }
 }
 OfflineManager.DB_NAME = 'offline.manager.db';
 OfflineManager.OBJECT_STORE = 'offline.manager.db.requests';
@@ -54454,7 +54456,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const notLogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('notification-controller');
+const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('notification-controller');
 class NotificationController {
     constructor() {
         this.chatManager = _ChatManager__WEBPACK_IMPORTED_MODULE_0__.ChatManager.getInstance();
@@ -54496,14 +54498,14 @@ class NotificationController {
             switch (Notification.permission) {
                 case "default":
                 case "denied": {
-                    notLogger('User declined to allow OS notifications');
+                    logger('User declined to allow OS notifications');
                     break;
                 }
             }
         }
         // Let's check if the browser supports notifications
         if (!('Notification' in window)) {
-            notLogger("This browser does not support notifications.");
+            logger("This browser does not support notifications.");
         }
         else {
             if (this.checkNotificationPromise()) {
@@ -54524,6 +54526,7 @@ class NotificationController {
     }
     sendOSNotification(title, message, priority) {
         if (window.Notification && Notification.permission === "granted") {
+            logger(`Sending OS notification ${Notification.permission}`);
             let showNotification = false;
             let tag = null;
             switch (priority) {
@@ -54543,6 +54546,7 @@ class NotificationController {
                     break;
                 }
             }
+            logger(`Show notification? ${showNotification} OS Notification (title='${title},message='${message},tag=${tag}) - priority was ${priority}`);
             if (showNotification) {
                 if (tag) {
                     new Notification(title, { body: message, tag: tag });
@@ -54551,6 +54555,9 @@ class NotificationController {
                     new Notification(title, { body: message });
                 }
             }
+        }
+        else {
+            logger(`Sending OS notification ${Notification.permission} or not found in window object`);
         }
     }
     static getInstance() {
@@ -54615,8 +54622,8 @@ class NotificationController {
         this.chatListeners.forEach((listener) => listener.handleChatLogsUpdated());
     }
     handleChatLogUpdated(log, wasOffline = false) {
-        notLogger(`Handle chat log updated`);
-        notLogger(log);
+        logger(`Handle chat log updated`);
+        logger(log);
         // pass on the changes
         this.chatListeners.forEach((listener) => listener.handleChatLogUpdated(log, wasOffline));
         if (!wasOffline) {
@@ -54652,13 +54659,13 @@ class NotificationController {
         }
     }
     handleLoggedInUsersUpdated(usernames) {
-        notLogger(`Handle logged in users updated`);
-        notLogger(usernames);
+        logger(`Handle logged in users updated`);
+        logger(usernames);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleLoggedInUsersUpdated(usernames));
     }
     handleFavouriteUserLoggedIn(username) {
-        notLogger(`Handle favourite user ${username} logged in`);
+        logger(`Handle favourite user ${username} logged in`);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUserLoggedIn(username));
         // provide visual notifications if do not disturb is not on
@@ -54666,18 +54673,18 @@ class NotificationController {
             _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged in.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.warning, 5000);
     }
     handleFavouriteUserLoggedOut(username) {
-        notLogger(`Handle favourite user ${username} logged out`);
+        logger(`Handle favourite user ${username} logged out`);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUserLoggedOut(username));
         if (this.notificationOptions.showFavouriteUserLoggedOutNotification)
             _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged out.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.priority, 4000);
     }
     handleBlockedUsersChanged(usernames) {
-        notLogger(`Handle blocked users changed to ${usernames}`);
+        logger(`Handle blocked users changed to ${usernames}`);
         this.chatUserListeners.forEach((listener) => listener.handleBlockedUsersChanged(usernames));
     }
     handleFavouriteUsersChanged(usernames) {
-        notLogger(`Handle favourite users changed to ${usernames}`);
+        logger(`Handle favourite users changed to ${usernames}`);
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUsersChanged(usernames));
     }
     startChatWithUser(username) {
@@ -55037,6 +55044,9 @@ class AbstractStateManager {
     }
     receivedFilterResults(name, filterResults) {
         this.delegate.informChangeListenersForStateWithName(name, filterResults, _StateManager__WEBPACK_IMPORTED_MODULE_1__.StateEventType.FilterResults, null);
+    }
+    receivedFoundItem(name, foundItem) {
+        this.delegate.informChangeListenersForStateWithName(name, foundItem, _StateManager__WEBPACK_IMPORTED_MODULE_1__.StateEventType.FindItem, null);
     }
     suppressEvents() {
         this.delegate.suppressEvents();
@@ -55485,6 +55495,9 @@ class AsyncStateManagerWrapper extends _AbstractStateManager__WEBPACK_IMPORTED_M
     filterResults(managerName, name, filterResults) {
         asyncLogger(`Wrapped SM has supplied filter results ${name} passing to top level SM`);
         this.topLevelSM.receivedFilterResults(name, filterResults);
+    }
+    foundResult(managerName, name, foundItem) {
+        this.topLevelSM.receivedFoundItem(name, foundItem);
     }
 }
 //# sourceMappingURL=AsyncStateManagerWrapper.js.map
@@ -56066,7 +56079,7 @@ class GraphQLApiStateManager {
         logger(`callback for find item for state ${associatedStateName} with status ${status} - FORWARDING`);
         if (status >= 200 && status <= 299) { // do we have any data?
             logger(data);
-            this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
+            this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.FindItem, null);
         }
     }
 }
@@ -56864,7 +56877,7 @@ class RESTApiStateManager {
         logger(`callback for find item for state ${associatedStateName} with status ${status} - FORWARDING`);
         if (status >= 200 && status <= 299) { // do we have any data?
             logger(data);
-            this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.ItemAdded, null);
+            this.delegate.informChangeListenersForStateWithName(associatedStateName, data, _StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.FindItem, null);
         }
     }
     callbackForAddItem(data, status, associatedStateName, wasOffline) {
@@ -56960,6 +56973,10 @@ class StateChangedDelegate {
                             listener.filterResults(this.managerName, name, stateObjValue);
                             break;
                         }
+                        case (_StateManager__WEBPACK_IMPORTED_MODULE_0__.StateEventType.FindItem): {
+                            listener.foundResult(this.managerName, name, stateObjValue);
+                            break;
+                        }
                     }
                 }
                 catch (err) {
@@ -57018,6 +57035,7 @@ var StateEventType;
     StateEventType[StateEventType["ItemDeleted"] = 2] = "ItemDeleted";
     StateEventType[StateEventType["StateChanged"] = 3] = "StateChanged";
     StateEventType[StateEventType["FilterResults"] = 4] = "FilterResults";
+    StateEventType[StateEventType["FindItem"] = 5] = "FindItem";
 })(StateEventType || (StateEventType = {}));
 var StateManagerType;
 (function (StateManagerType) {
@@ -57746,6 +57764,8 @@ class ChatLogDetailView {
     }
     clearChatLog() {
         _util_BrowserUtil__WEBPACK_IMPORTED_MODULE_3__["default"].removeAllChildren(this.chatLogDiv);
+    }
+    foundResult(managerName, name, foundItem) {
     }
 }
 ChatLogDetailView.newFormId = "newMessage";
@@ -61906,6 +61926,110 @@ class ValidationManager {
     getName() {
         return "Validation Manager";
     }
+    createRuleCondition(validatableView, targetField, rule, condition) {
+        let result = null;
+        if (!(condition.values) && !(condition.sourceDataFieldId)) { // direct field comparison
+            logger(`Rule added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - condition is a simple comparison of target field (isNull, isNotNull)`);
+            if ((condition.comparison === _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.isNotNull) || (condition.comparison === _CommonTypes__WEBPACK_IMPORTED_MODULE_3__.ComparisonType.isNull)) {
+                result = {
+                    comparison: condition.comparison
+                };
+            }
+            else {
+                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - condition is a simple comparison of target field (isNull, isNotNull) - comparison type is invalid`);
+            }
+        }
+        else if ((condition.values) && (condition.sourceDataFieldId)) { // is this a target field value comparison?
+            logger(`Rule adding for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} with values ${condition.values}`);
+            let sourceField = validatableView.getFieldFromDataFieldId(condition.sourceDataFieldId);
+            if (!sourceField) {
+                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
+            }
+            else {
+                result = {
+                    sourceField: sourceField,
+                    comparison: condition.comparison,
+                    values: condition.values
+                };
+                sourceField.addFieldListener(this);
+            }
+        }
+        else if ((condition.values) && !(condition.sourceDataFieldId)) { // is this a value comparison?
+            logger(`Rule adding for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - values ${condition.values}`);
+            // add a new value rule to the internal structure
+            result = { values: condition.values, comparison: condition.comparison };
+            if (targetField)
+                targetField.addFieldListener(this);
+        }
+        else if ((condition.sourceDataFieldId) && (!condition.values)) { // is this a field vs field comparison
+            logger(`Rule adding for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId}`);
+            let sourceField = validatableView.getFieldFromDataFieldId(condition.sourceDataFieldId);
+            if (!sourceField) {
+                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
+            }
+            else {
+                if (this.canCompareSourceAndTarget(validatableView, rule, sourceField, targetField)) {
+                    result = {
+                        sourceField: sourceField,
+                        comparison: condition.comparison
+                    };
+                    sourceField.addFieldListener(this);
+                }
+            }
+        }
+        return result;
+    }
+    canCompareSourceAndTarget(validatableView, rule, sourceField, targetField) {
+        let result = true;
+        /*
+           are we comparing two fields that can be compared?
+           allowed combinations are:
+           date|datetime vs date|datetime
+           time|short time vs time|short time
+           boolean vs boolean
+           integer|float vs number|float
+           any other vs any other
+         */
+        let sourceType = sourceField.getFieldDefinition().type;
+        let targetType = targetField === null || targetField === void 0 ? void 0 : targetField.getFieldDefinition().type;
+        switch (targetType) {
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date):
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime): {
+                if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime) &&
+                    (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date)) {
+                    flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is date(time), source is NOT`);
+                    result = false;
+                }
+                break;
+            }
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time):
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime): {
+                if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time) &&
+                    (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime)) {
+                    flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is time, source is NOT`);
+                    result = false;
+                }
+                break;
+            }
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean): {
+                if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean)) {
+                    flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is boolean, source is NOT`);
+                    result = false;
+                }
+                break;
+            }
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer):
+            case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float): {
+                if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer) &&
+                    (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float)) {
+                    flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is number, source is NOT`);
+                    result = false;
+                }
+                break;
+            }
+        }
+        return result;
+    }
     addRuleToView(validatableView, rule) {
         logger(`Adding rule on form ${validatableView.getId()} for target field ${rule.targetDataFieldId}`);
         /*
@@ -61917,125 +62041,49 @@ class ValidationManager {
         let targetField = validatableView.getFieldFromDataFieldId(rule.targetDataFieldId);
         if (!targetField) {
             flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - NOT FOUND in form`);
-            return false;
-        }
-        let convertedRule = {
-            viewMode: rule.viewMode,
-            targetField: targetField,
-            response: rule.response,
-            conditions: [],
-            multipleConditionLogic: _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails
-        };
-        if (rule.multipleConditionLogic) {
-            convertedRule.multipleConditionLogic = rule.multipleConditionLogic;
-        }
-        if (rule.conditions)
-            rule.conditions.forEach((condition) => {
-                // do we have one of values or source field?
-                if (!(condition.values) && !(condition.sourceDataFieldId)) {
-                    flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - a condition is missing both values and source field`);
-                    return false;
-                }
-                // is this a target field value comparison?
-                if ((condition.values) && (condition.sourceDataFieldId)) {
-                    logger(`Rule adding for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} with values ${condition.values}`);
-                    let sourceField = validatableView.getFieldFromDataFieldId(condition.sourceDataFieldId);
-                    if (!sourceField) {
-                        flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
-                        return false;
-                    }
-                    convertedRule.conditions.push({
-                        sourceField: sourceField,
-                        comparison: condition.comparison,
-                        values: condition.values
-                    });
-                    sourceField.addFieldListener(this);
-                }
-                else if ((condition.values) && !(condition.sourceDataFieldId)) { // is this a value comparison?
-                    logger(`Rule adding for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - values ${condition.values}`);
-                    // add a new value rule to the internal structure
-                    convertedRule.conditions.push({ values: condition.values, comparison: condition.comparison });
-                    if (targetField)
-                        targetField.addFieldListener(this);
-                }
-                else if ((condition.sourceDataFieldId) && (!condition.values)) { // is this a field vs field comparison
-                    logger(`Rule adding for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId}`);
-                    let sourceField = validatableView.getFieldFromDataFieldId(condition.sourceDataFieldId);
-                    if (!sourceField) {
-                        flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - source field ${condition.sourceDataFieldId} NOT FOUND`);
-                        return false;
-                    }
-                    /*
-                       are we comparing two fields that can be compared?
-                       allowed combinations are:
-                       date|datetime vs date|datetime
-                       time|short time vs time|short time
-                       boolean vs boolean
-                       integer|float vs number|float
-                       any other vs any other
-                     */
-                    let sourceType = sourceField.getFieldDefinition().type;
-                    let targetType = targetField === null || targetField === void 0 ? void 0 : targetField.getFieldDefinition().type;
-                    switch (targetType) {
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date):
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime): {
-                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.datetime) &&
-                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.date)) {
-                                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is date(time), source is NOT`);
-                                return false;
-                            }
-                            break;
-                        }
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time):
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime): {
-                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.time) &&
-                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.shortTime)) {
-                                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is time, source is NOT`);
-                                return false;
-                            }
-                            break;
-                        }
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean): {
-                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.boolean)) {
-                                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is boolean, source is NOT`);
-                                return false;
-                            }
-                            break;
-                        }
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer):
-                        case (_model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float): {
-                            if ((sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.integer) &&
-                                (sourceType !== _model_DataObjectTypeDefs__WEBPACK_IMPORTED_MODULE_2__.FieldType.float)) {
-                                flogger(`Rule not added for form ${validatableView.getId()} for target field ${rule.targetDataFieldId} - target is number, source is NOT`);
-                                return false;
-                            }
-                            break;
-                        }
-                    }
-                    convertedRule.conditions.push({ sourceField: sourceField, comparison: condition.comparison });
-                    sourceField.addFieldListener(this);
-                }
-            });
-        logger(`Converted rule to `);
-        logger(convertedRule);
-        let index = this.viewRules.findIndex((viewRule) => viewRule.validatableView.getId() === validatableView.getId());
-        let formRuleSet;
-        // store the rules for later execution
-        if (index < 0) {
-            formRuleSet = {
-                validatableView: validatableView,
-                rules: []
-            };
-            formRuleSet.rules.push(convertedRule);
-            this.viewRules.push(formRuleSet);
         }
         else {
-            formRuleSet = this.viewRules[index];
-            formRuleSet.rules.push(convertedRule);
+            let convertedRule = {
+                viewMode: rule.viewMode,
+                targetField: targetField,
+                response: rule.response,
+                conditions: [],
+                multipleConditionLogic: _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.MultipleConditionLogic.failIfAnyConditionFails
+            };
+            if (rule.multipleConditionLogic) {
+                convertedRule.multipleConditionLogic = rule.multipleConditionLogic;
+            }
+            if (rule.conditions) {
+                rule.conditions.forEach((condition) => {
+                    if (targetField) {
+                        const convertedCondition = this.createRuleCondition(validatableView, targetField, rule, condition);
+                        if (convertedCondition) {
+                            convertedRule.conditions.push(convertedCondition);
+                        }
+                    }
+                });
+            }
+            logger(`Converted rule to `);
+            logger(convertedRule);
+            logger(`Converted rule has ${convertedRule.conditions.length} conditions`);
+            let index = this.viewRules.findIndex((viewRule) => viewRule.validatableView.getId() === validatableView.getId());
+            let formRuleSet;
+            // store the rules for later execution
+            if (index < 0) {
+                formRuleSet = {
+                    validatableView: validatableView,
+                    rules: []
+                };
+                formRuleSet.rules.push(convertedRule);
+                this.viewRules.push(formRuleSet);
+            }
+            else {
+                formRuleSet = this.viewRules[index];
+                formRuleSet.rules.push(convertedRule);
+            }
+            logger(`Current set of rules for form ${validatableView.getId()}`);
+            logger(formRuleSet);
         }
-        logger(`Current set of rules for form ${validatableView.getId()}`);
-        logger(formRuleSet);
-        return true;
     }
     failedValidation(view, field, currentValue, message) {
     } // ignored, we might be causing
@@ -62236,10 +62284,10 @@ class ValidationManager {
             }
         }
         // for show and hide rules, we want the opposite effect (i.e. a success on conditions show cause the action)
-        if ((response.response === _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.hide) || (response.response === _ValidationTypeDefs__WEBPACK_IMPORTED_MODULE_0__.ConditionResponse.show)) {
-            response.ruleFailed = !response.ruleFailed;
-            erLogger(`Changing show/hide rule result to opposite boolean value to cause activation if the conditions were PASSED`);
-        }
+        // if ((response.response === ConditionResponse.hide) || (response.response === ConditionResponse.show)) {
+        //     response.ruleFailed = !response.ruleFailed;
+        //     erLogger(`Changing show/hide rule result to opposite boolean value to cause activation if the conditions were PASSED`);
+        // }
         return response;
     }
     getRulesForFieldChange(validatableView, dataFieldId, includeSourceFields) {
@@ -62960,6 +63008,8 @@ class AbstractStatefulCollectionView extends _AbstractCollectionView__WEBPACK_IM
         return this.getName();
     }
     filterResults(managerName, name, filterResults) {
+    }
+    foundResult(managerName, name, foundItem) {
     }
 }
 //# sourceMappingURL=AbstractStatefulCollectionView.js.map

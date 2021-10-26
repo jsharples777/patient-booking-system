@@ -244,5 +244,8 @@ export class AppointmentController implements StateChangeListener, ScheduleListe
         //AppointmentBookView.getInstance().getCalender().refresh();
     }
 
+    foundResult(managerName: string, name: string, foundItem: any): void {
+    }
+
 
 }
