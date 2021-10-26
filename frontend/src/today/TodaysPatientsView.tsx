@@ -220,12 +220,11 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
     }
 
     foundResult(managerName: string, name: string, foundItem: any): void {
-        console.log(foundItem);
         if (name === STATE_NAMES.patients) {
-            logger(`Patient added to state with id ${foundItem._id}`);
             // was this a patient we asked for?
             const foundIndex = this.patientsNotYetLoaded.findIndex((patientId) => patientId === foundItem._id);
             if (foundIndex >= 0) {
+                logger(`Patient loaded from state with id ${foundItem._id} - updating current patient summary`);
                 // remove from our internal queue
                 this.patientsNotYetLoaded.splice(foundIndex, 1);
                 this.replacePatientSummaryWithPatient(foundItem);

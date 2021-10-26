@@ -290,7 +290,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'app api-ts-results patient-controller';
+localStorage.debug = 'app api-ts-results patient-controller todays-patients-view';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 

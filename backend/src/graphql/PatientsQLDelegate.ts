@@ -249,18 +249,16 @@ export default class PatientsQLDelegate {
     }
 
     public static getPatient(_: any, data: any) {
-        logger(`Getting patient demographics for id ${data.id}`);
+        logger(`Getting patient for id ${data.id}`);
         logger(data);
         return new Promise((resolve, reject) => {
             const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
             MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id: data.id}).then((result: Document | null) => {
-                logger(result);
                 if (result) {
                     logger(`Getting contact for patient with contact id ${result.contact._id}`);
                     result.contact = PatientsQLDelegate.getPatientContact(result.contact._id);
                 }
                 if (result) PatientsQLDelegate.demoise(result);
-                logger(result);
 
                 resolve(result);
             }).catch((err) => {
@@ -292,11 +290,39 @@ export default class PatientsQLDelegate {
 
     public static updatePatient(_: any, data: any) {
         logger(`Updating Patient`);
-        logger(data);
         return new Promise((resolve, reject) => {
+            // update the contact record
+            if (data.patient.contact) {
+                if (data.patient.contact.owner) {
+                    if (data.patient.contact.owner === data.patient._id) {
+                        logger('the contact is owned by the current patient - finding');
+
+                        // find and update the contact, insert if needed
+                        let collection = process.env.DB_COLLECTION_CONTACTS || 'pms-contacts';
+                        MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id: data.contact._id}).then((contact) => {
+                            if (contact) { // contact exists - update it
+                                logger('the contact is owned by the current patient - found - updating');
+                                MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: contact._id}, data.patient.contact);
+                            } else { // no such contact, insert it
+                                logger('the contact is owned by the current patient - NOT found - creating');
+                                MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(data.patient.contact);
+                            }
+                        });
+                    }
+                }
+                else {
+                    logger(`contact has no owner, setting to current patient`);
+                    data.patient.contact.owner = data.patient._id;
+                }
+            }
+
+
+
             const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
             MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: data.patient._id}, data.patient).then((value) => {
-                logger(value);
+                logger(data.patient.name);
+                logger(data.patient.contact);
+                logger(data.patient.identifiers);
                 const message: DataMessage = {type: "update", stateName: "patient", data: data.patient, user: "-1"}
                 SocketManager.getInstance().sendDataMessage(message);
 

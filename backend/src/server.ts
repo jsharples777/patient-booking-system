@@ -52,7 +52,7 @@ const enablePeer = ((process.env.ENABLE_PEER === 'Y') || true);
 
 
 if (isDevelopment) {
-    debug.enable('data-source-appointment-types-mongoose data-source-appointment-types my-passport data-source-appointments data-source-patients mongoose-ds server db api route socket mongo-data-source my-passport data-source-appointment-templates data-source-appointment-types');
+    debug.enable('data-source-patients server db api route socket mongo-data-source my-passport');
 } else {
     debug.enable('server api route');
 }

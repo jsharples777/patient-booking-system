@@ -383,6 +383,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
 
             if (this.currentPatient.oldContact) {
                 this.currentPatient.contact = this.currentPatient.oldContact;
+                this.currentPatient.contact.owner = this.currentPatient._id;
                 delete this.currentPatient.oldContact;
             }
             else {
@@ -451,6 +452,9 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                     this.linkToPatientId = patient.contact.owner;
                     this.setLinked(true,false);
                 }
+            }
+            else {
+                patient.contact.owner = patient._id;
             }
         }
         this.btnLinkUnlinkEl.innerHTML = linkIcon;

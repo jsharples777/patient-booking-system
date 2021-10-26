@@ -7,7 +7,7 @@ import {
     CollectionViewListener,
     copyObject,
     isSameMongo,
-    MemoryBufferStateManager,
+    MemoryBufferStateManager, RESTApiStateManager,
     StateChangeListener,
     StateManager,
     View
@@ -102,21 +102,22 @@ export class PatientController implements StateChangeListener, CollectionViewLis
     }
 
     public savePatientRecord(patient: any): void {
-        logger(`saving patient ${patient.name.firstname} with id ${patient._id}`);
+        logger(`saving patient ${patient.name.firstname} ${patient.name.surname} with id ${patient._id}`);
 
 
-        let patientRecord = copyObject(patient);
-        delete patientRecord.decorator;
+        delete patient.decorator;
         delete patient.oldContact;
-        patientRecord.modified = parseInt(moment().format('YYYYMMDDHHmmss'));
-        patientRecord.modifiedBy = Controller.getInstance().getLoggedInUsername();
+        patient.modified = parseInt(moment().format('YYYYMMDDHHmmss'));
+        patient.modifiedBy = Controller.getInstance().getLoggedInUsername();
 
-        Controller.getInstance().getStateManager().updateItemInState(STATE_NAMES.patients, patientRecord, false);
+        const copyOfPatient = copyObject(patient);
+
+        RESTApiStateManager.getInstance().updateItemInState(STATE_NAMES.patients, copyOfPatient, false);
 
 
-        patientRecord.decorator = Decorator.Complete;
-        PatientController.getInstance().getStateManager().updateItemInState(STATE_NAMES.openPatients, patientRecord, true);
-        logger(patientRecord);
+        patient.decorator = Decorator.Complete;
+        PatientController.getInstance().getStateManager().updateItemInState(STATE_NAMES.openPatients, patient, true);
+        logger(patient);
 
     }
 
@@ -132,14 +133,19 @@ export class PatientController implements StateChangeListener, CollectionViewLis
 
 
     foundResult(managerName: string, name: string, foundItem: any): void {
-        foundItem.decorator = Decorator.Complete;
-        logger(`patient loaded - adding to open patients`);
-        logger(foundItem);
-        // found new patient to add to buffer
-        if (this.isPatientInOpenList(foundItem._id)) {
-            this.stateManager.updateItemInState(STATE_NAMES.openPatients, foundItem, true);
-        } else {
-            this.stateManager.addNewItemToState(STATE_NAMES.openPatients, foundItem, true);
+        switch (name) {
+            case STATE_NAMES.patients: {
+                foundItem.decorator = Decorator.Complete;
+                logger(`Found Result - patient loaded - adding to open patients`);
+                logger(foundItem);
+                // found new patient to add to buffer
+                if (this.isPatientInOpenList(foundItem._id)) {
+                    this.stateManager.updateItemInState(STATE_NAMES.openPatients, foundItem, true);
+                } else {
+                    this.stateManager.addNewItemToState(STATE_NAMES.openPatients, foundItem, true);
+                }
+                break;
+            }
         }
     }
 
@@ -147,7 +153,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
         switch (name) {
             case STATE_NAMES.openPatients: {
                 // found new patient in buffer, let listeners know
-                logger(`patient loaded - added to open patients - informing listeners`);
+                logger(`Item Added - patient loaded - added to open patients - informing listeners`);
                 logger(itemAdded);
                 this.listeners.forEach((listener) => listener.patientLoaded(itemAdded));
                 break;
@@ -158,16 +164,18 @@ export class PatientController implements StateChangeListener, CollectionViewLis
     stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, itemNewValue: any) {
         switch (name) {
             case STATE_NAMES.openPatients: {
-                // found new patient in buffer, let listeners know
-                if (itemNewValue.decorator !== Decorator.Modified) {
-                    logger(`patient loaded`);
-                    logger(itemNewValue);
-                    this.listeners.forEach((listener) => listener.patientLoaded(itemNewValue));
+                switch(itemNewValue.decorator) {
+                    case Decorator.Complete: {
+                        logger('Item Updated - Patient is complete, sending patient loaded');
+                        this.listeners.forEach((listener) => listener.patientLoaded(itemNewValue));
+                        break;
+                    }
+                    case (Decorator.Modified): {
+                        logger('Item Updated - Patient is modified, sending patient changed');
+                        this.listeners.forEach((listener) => listener.patientChanged(itemNewValue));
+                        break;
+                    }
                 }
-                else {
-                    this.listeners.forEach((listener) => listener.patientChanged(itemNewValue));
-                }
-                break;
             }
         }
     }

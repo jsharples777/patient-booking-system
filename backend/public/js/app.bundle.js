@@ -4736,16 +4736,16 @@ class PatientController {
   }
 
   savePatientRecord(patient) {
-    logger(`saving patient ${patient.name.firstname} with id ${patient._id}`);
-    let patientRecord = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(patient);
-    delete patientRecord.decorator;
+    logger(`saving patient ${patient.name.firstname} ${patient.name.surname} with id ${patient._id}`);
+    delete patient.decorator;
     delete patient.oldContact;
-    patientRecord.modified = parseInt(moment__WEBPACK_IMPORTED_MODULE_8___default()().format('YYYYMMDDHHmmss'));
-    patientRecord.modifiedBy = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getLoggedInUsername();
-    _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patients, patientRecord, false);
-    patientRecord.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Complete;
-    PatientController.getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, patientRecord, true);
-    logger(patientRecord);
+    patient.modified = parseInt(moment__WEBPACK_IMPORTED_MODULE_8___default()().format('YYYYMMDDHHmmss'));
+    patient.modifiedBy = _Controller__WEBPACK_IMPORTED_MODULE_3__["default"].getInstance().getLoggedInUsername();
+    const copyOfPatient = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(patient);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.RESTApiStateManager.getInstance().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patients, copyOfPatient, false);
+    patient.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Complete;
+    PatientController.getInstance().getStateManager().updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, patient, true);
+    logger(patient);
   }
 
   onDocumentLoaded() {
@@ -4756,14 +4756,21 @@ class PatientController {
   stateChanged(managerName, name, newValue) {}
 
   foundResult(managerName, name, foundItem) {
-    foundItem.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Complete;
-    logger(`patient loaded - adding to open patients`);
-    logger(foundItem); // found new patient to add to buffer
+    switch (name) {
+      case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patients:
+        {
+          foundItem.decorator = _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Complete;
+          logger(`Found Result - patient loaded - adding to open patients`);
+          logger(foundItem); // found new patient to add to buffer
 
-    if (this.isPatientInOpenList(foundItem._id)) {
-      this.stateManager.updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, foundItem, true);
-    } else {
-      this.stateManager.addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, foundItem, true);
+          if (this.isPatientInOpenList(foundItem._id)) {
+            this.stateManager.updateItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, foundItem, true);
+          } else {
+            this.stateManager.addNewItemToState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, foundItem, true);
+          }
+
+          break;
+        }
     }
   }
 
@@ -4772,7 +4779,7 @@ class PatientController {
       case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients:
         {
           // found new patient in buffer, let listeners know
-          logger(`patient loaded - added to open patients - informing listeners`);
+          logger(`Item Added - patient loaded - added to open patients - informing listeners`);
           logger(itemAdded);
           this.listeners.forEach(listener => listener.patientLoaded(itemAdded));
           break;
@@ -4784,16 +4791,21 @@ class PatientController {
     switch (name) {
       case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients:
         {
-          // found new patient in buffer, let listeners know
-          if (itemNewValue.decorator !== _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Modified) {
-            logger(`patient loaded`);
-            logger(itemNewValue);
-            this.listeners.forEach(listener => listener.patientLoaded(itemNewValue));
-          } else {
-            this.listeners.forEach(listener => listener.patientChanged(itemNewValue));
-          }
+          switch (itemNewValue.decorator) {
+            case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Complete:
+              {
+                logger('Item Updated - Patient is complete, sending patient loaded');
+                this.listeners.forEach(listener => listener.patientLoaded(itemNewValue));
+                break;
+              }
 
-          break;
+            case _AppTypes__WEBPACK_IMPORTED_MODULE_1__.Decorator.Modified:
+              {
+                logger('Item Updated - Patient is modified, sending patient changed');
+                this.listeners.forEach(listener => listener.patientChanged(itemNewValue));
+                break;
+              }
+          }
         }
     }
   }
@@ -6305,7 +6317,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results patient-controller'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'app api-ts-results patient-controller todays-patients-view'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
@@ -6814,6 +6826,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
 
       if (this.currentPatient.oldContact) {
         this.currentPatient.contact = this.currentPatient.oldContact;
+        this.currentPatient.contact.owner = this.currentPatient._id;
         delete this.currentPatient.oldContact;
       } else {
         this.currentPatient.contact._id = (0,uuid__WEBPACK_IMPORTED_MODULE_8__["default"])();
@@ -6877,6 +6890,8 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
           this.linkToPatientId = patient.contact.owner;
           this.setLinked(true, false);
         }
+      } else {
+        patient.contact.owner = patient._id;
       }
     }
 
@@ -7295,15 +7310,13 @@ class TodaysPatientsView extends react__WEBPACK_IMPORTED_MODULE_6__.Component {
   }
 
   foundResult(managerName, name, foundItem) {
-    console.log(foundItem);
-
     if (name === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patients) {
-      logger(`Patient added to state with id ${foundItem._id}`); // was this a patient we asked for?
-
+      // was this a patient we asked for?
       const foundIndex = this.patientsNotYetLoaded.findIndex(patientId => patientId === foundItem._id);
 
       if (foundIndex >= 0) {
-        // remove from our internal queue
+        logger(`Patient loaded from state with id ${foundItem._id} - updating current patient summary`); // remove from our internal queue
+
         this.patientsNotYetLoaded.splice(foundIndex, 1);
         this.replacePatientSummaryWithPatient(foundItem);
       }
