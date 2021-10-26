@@ -51,7 +51,9 @@ export default class AppointmentTypesQLDelegate {
                 }
                 SocketManager.getInstance().sendDataMessage(message);
 
-                resolve(data);
+                logger(data);
+                resolve(data.apptType);
+
             })
                 .catch((err) => {
                     logger(err);

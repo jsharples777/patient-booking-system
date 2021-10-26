@@ -281,7 +281,7 @@ export default class PatientsQLDelegate {
                 const message: DataMessage = {type: "create", stateName: "patient", data: data.patient, user: "-1",}
                 SocketManager.getInstance().sendDataMessage(message);
 
-                resolve(data);
+                resolve(data.patient);
             })
                 .catch((err) => {
                     logger(err);

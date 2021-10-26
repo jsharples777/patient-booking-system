@@ -62,7 +62,7 @@ export default class ProvidersQLDelegate {
                 const message: DataMessage = {type: "create", stateName: "provider", data: data.provider, user: "-1",}
                 SocketManager.getInstance().sendDataMessage(message);
 
-                resolve(data);
+                resolve(data.provider);
             })
                 .catch((err) => {
                     logger(err);

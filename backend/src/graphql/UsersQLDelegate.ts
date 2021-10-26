@@ -78,7 +78,7 @@ export default class UsersQLDelegate {
                 const message: DataMessage = {type: "create", stateName: "user", data: data.user, user: "-1",}
                 SocketManager.getInstance().sendDataMessage(message);
 
-                resolve(data);
+                resolve(data.user);
             })
             .catch((err) => {
                 logger(err);

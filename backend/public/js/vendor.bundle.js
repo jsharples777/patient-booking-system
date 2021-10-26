@@ -54454,7 +54454,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const logger = debug__WEBPACK_IMPORTED_MODULE_2___default()('notification-controller');
+const notLogger = debug__WEBPACK_IMPORTED_MODULE_2___default()('notification-controller');
 class NotificationController {
     constructor() {
         this.chatManager = _ChatManager__WEBPACK_IMPORTED_MODULE_0__.ChatManager.getInstance();
@@ -54496,14 +54496,14 @@ class NotificationController {
             switch (Notification.permission) {
                 case "default":
                 case "denied": {
-                    logger('User declined to allow OS notifications');
+                    notLogger('User declined to allow OS notifications');
                     break;
                 }
             }
         }
         // Let's check if the browser supports notifications
         if (!('Notification' in window)) {
-            logger("This browser does not support notifications.");
+            notLogger("This browser does not support notifications.");
         }
         else {
             if (this.checkNotificationPromise()) {
@@ -54524,7 +54524,6 @@ class NotificationController {
     }
     sendOSNotification(title, message, priority) {
         if (window.Notification && Notification.permission === "granted") {
-            logger(`Sending OS notification ${Notification.permission}`);
             let showNotification = false;
             let tag = null;
             switch (priority) {
@@ -54544,7 +54543,6 @@ class NotificationController {
                     break;
                 }
             }
-            logger(`Show notification? ${showNotification} OS Notification (title='${title},message='${message},tag=${tag}) - priority was ${priority}`);
             if (showNotification) {
                 if (tag) {
                     new Notification(title, { body: message, tag: tag });
@@ -54553,9 +54551,6 @@ class NotificationController {
                     new Notification(title, { body: message });
                 }
             }
-        }
-        else {
-            logger(`Sending OS notification ${Notification.permission} or not found in window object`);
         }
     }
     static getInstance() {
@@ -54620,8 +54615,8 @@ class NotificationController {
         this.chatListeners.forEach((listener) => listener.handleChatLogsUpdated());
     }
     handleChatLogUpdated(log, wasOffline = false) {
-        logger(`Handle chat log updated`);
-        logger(log);
+        notLogger(`Handle chat log updated`);
+        notLogger(log);
         // pass on the changes
         this.chatListeners.forEach((listener) => listener.handleChatLogUpdated(log, wasOffline));
         if (!wasOffline) {
@@ -54657,13 +54652,13 @@ class NotificationController {
         }
     }
     handleLoggedInUsersUpdated(usernames) {
-        logger(`Handle logged in users updated`);
-        logger(usernames);
+        notLogger(`Handle logged in users updated`);
+        notLogger(usernames);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleLoggedInUsersUpdated(usernames));
     }
     handleFavouriteUserLoggedIn(username) {
-        logger(`Handle favourite user ${username} logged in`);
+        notLogger(`Handle favourite user ${username} logged in`);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUserLoggedIn(username));
         // provide visual notifications if do not disturb is not on
@@ -54671,18 +54666,18 @@ class NotificationController {
             _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged in.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.warning, 5000);
     }
     handleFavouriteUserLoggedOut(username) {
-        logger(`Handle favourite user ${username} logged out`);
+        notLogger(`Handle favourite user ${username} logged out`);
         // allow the view to change the user statuses
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUserLoggedOut(username));
         if (this.notificationOptions.showFavouriteUserLoggedOutNotification)
             _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationManager.getInstance().show(username, `User ${username} has logged out.`, _notification_NotificationManager__WEBPACK_IMPORTED_MODULE_1__.NotificationType.priority, 4000);
     }
     handleBlockedUsersChanged(usernames) {
-        logger(`Handle blocked users changed to ${usernames}`);
+        notLogger(`Handle blocked users changed to ${usernames}`);
         this.chatUserListeners.forEach((listener) => listener.handleBlockedUsersChanged(usernames));
     }
     handleFavouriteUsersChanged(usernames) {
-        logger(`Handle favourite users changed to ${usernames}`);
+        notLogger(`Handle favourite users changed to ${usernames}`);
         this.chatUserListeners.forEach((listener) => listener.handleFavouriteUsersChanged(usernames));
     }
     startChatWithUser(username) {
