@@ -55,6 +55,7 @@ router.get("/:id", function (req, res) {
 
 router.put('/', (req, res) => {
     logger(`Starting route PUT /patient by id ${req.body._id}`);
+    logger(req.body.contact);
 
     // update the contact details
     PatientsQLDelegate.updatePatientContactDetails(req.body);

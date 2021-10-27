@@ -2,6 +2,7 @@ import debug from "debug";
 import {MongoDataSource} from "../db/MongoDataSource";
 import {Document} from "mongodb";
 import {DataMessage, SocketManager} from "server-socket-framework-jps";
+import {v4} from "uuid";
 
 const logger = debug('data-source-patients');
 
@@ -112,7 +113,7 @@ export default class PatientsQLDelegate {
     public static postMigrationProcessPatientFirstPass(patient: Document) {
         // consolidate contacts
         if (patient) {
-            if (!(patient.isPostProcessed)) {
+            //if (!(patient.isPostProcessed)) {
 
 
                 logger(`Patient ${patient.name.firstname} ${patient.name.surname} not yet post processed`);
@@ -124,6 +125,10 @@ export default class PatientsQLDelegate {
                         patient.isPostProcessed = true;
                         logger(`Patient ${patient._id} is account holder, creating new contact`);
                         let newContact = {...patient.contact};
+                        newContact._id = v4();
+                        newContact.owner = patient._id;
+                        patient.contact._id = newContact._id;
+                        patient.contact.owner = patient._id;
                         newContact.legacyAccountHolderId = patient.flags.legacyAccountHolderId;
                         // create the new contact
                         let collection = process.env.DB_COLLECTION_CONTACTS || 'pms-contacts';
@@ -146,7 +151,7 @@ export default class PatientsQLDelegate {
                     }
                 }
             }
-        }
+        //}
 
     }
 
@@ -177,6 +182,7 @@ export default class PatientsQLDelegate {
                             patient.contact.home = result.home;
                             patient.contact.work = result.work;
                             patient.contact.mobile = result.mobile;
+                            patient.contact.owner = result.owner;
                         }
                     }).catch((err) => {
                         logger(err);
@@ -215,11 +221,11 @@ export default class PatientsQLDelegate {
             let patient = await cursor.next();
             if (patient) PatientsQLDelegate.postMigrationProcessPatientSecondPass(patient);
         }
-        cursor = MongoDataSource.getInstance().getDatabase().collection(collection).find({});
-        while (await cursor.hasNext()) {
-            let patient = await cursor.next();
-            if (patient) PatientsQLDelegate.postMigrationProcessPatientThirdPass(patient);
-        }
+        // cursor = MongoDataSource.getInstance().getDatabase().collection(collection).find({});
+        // while (await cursor.hasNext()) {
+        //     let patient = await cursor.next();
+        //     if (patient) PatientsQLDelegate.postMigrationProcessPatientThirdPass(patient);
+        // }
     }
 
     public static async getPatientContact(contactId: string) {
@@ -299,16 +305,18 @@ export default class PatientsQLDelegate {
         if (patient.contact) {
             if (patient.contact.owner) {
                 if (patient.contact.owner === patient._id) {
-                    logger('the contact is owned by the current patient - finding');
+                    logger('the contact is owned by the current patient - finding any contact with owner of the current patient');
 
                     // find and update the contact, insert if needed
                     let collection = process.env.DB_COLLECTION_CONTACTS || 'pms-contacts';
-                    MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id: patient.contact._id}).then((contact) => {
+                    MongoDataSource.getInstance().getDatabase().collection(collection).findOne({owner: patient._id}).then((contact) => {
                         if (contact) { // contact exists - update it
                             logger('the contact is owned by the current patient - found - updating');
-                            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: patient.contact._id}, patient.contact);
+                            patient.contact._id = contact._id;
+                            MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id: contact._id}, patient.contact);
                         } else { // no such contact, insert it
                             logger('the contact is owned by the current patient - NOT found - creating');
+                            patient.contact._id = v4();
                             MongoDataSource.getInstance().getDatabase().collection(collection).insertOne(patient.contact);
                         }
                     });

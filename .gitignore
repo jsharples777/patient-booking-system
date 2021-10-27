@@ -11,3 +11,4 @@
 /backend/db/queue.json
 /backend/keytmp.pem
 /frontend/dist/
+/backend/public/js/vendor.bundle.js.LICENSE.txt
