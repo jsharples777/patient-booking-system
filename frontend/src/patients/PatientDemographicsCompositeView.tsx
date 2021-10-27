@@ -106,7 +106,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                                 <div className="card-text" id={VIEW_CONTAINER.patientName}></div>
                             </div>
                         </div>
-                        <div className="shadow card">
+                        <div className="shadow card mt-2">
                             <div className="card-body">
                                 <h5 className="card-title">Contact Link</h5>
                                 <div className="card-text">
@@ -406,7 +406,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                 this.currentPatient.contact._id = v4();
             }
             this.currentPatient.contact.owner = this.currentPatient._id;
-            logger(this.currentPatient.contact);
+            logger(copyObject(this.currentPatient.contact));
             this.contactView.displayItem(this.currentPatient.contact);
 
             // enable the contact elements
@@ -573,12 +573,22 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
 
 
         result.contact = this.contactForm.getFormattedDataObject();
-        logger(`Checking for linked contact for getCurrentPatient()`);
+        logger(`Checking for linked contact for getCurrentPatient() - patient id is ${result._id}, contact owner is ${copyOfContact.owner}`);
         logger(copyOfContact);
-        if (copyOfContact.owner !== result._id) {
-            logger(`Checking for linked contact for getCurrentPatient() - is a linked contact, updating owner and id`);
-            result.contact.owner = copyOfContact.owner;
-            result.contact._id = copyOfContact._id;
+        if (copyOfContact.owner) {
+            if (copyOfContact.owner !== result._id) {
+                logger(`Checking for linked contact for getCurrentPatient() - is a linked contact, updating owner and id`);
+                result.contact.owner = copyOfContact.owner;
+                result.contact._id = copyOfContact._id;
+            }
+            else {
+                logger(`Checking for linked contact for getCurrentPatient() - NOT linked contact, setting owner to current patient`);
+                result.contact.owner = result._id;
+            }
+        }
+        else {
+            logger(`Checking for linked contact for getCurrentPatient() - NO contact owner, setting owner to current patient`);
+            result.contact.owner = result._id;
         }
         result.name = this.nameForm.getFormattedDataObject();
         result.identifiers = this.identifiersForm.getFormattedDataObject();

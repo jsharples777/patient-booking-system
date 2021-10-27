@@ -117,10 +117,10 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
 
         const incompletePatientCard = (patient: any) => {
             return (
-                <div className="shadow card col-sm-12 col-md-4 mr-1 mt-2">
+                <div className="shadow card col-sm-12 col-md-4 mr-1 mt-2"  key={patient._id}>
                     <img className="card-img-top" src="/img/spinner.gif" alt="Card image cap"></img>
                     <div className="card-body">
-                        <h5 className="card-title"><a href={"#"} data-id={patient._id}
+                        <h5 className="card-title"><a href={"#"} data-id={patient._id} key={patient._id}
                                                       onClick={this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a>
                         </h5>
                         <h6 className="card-subtitle mb-2 text-muted">DOB: {moment(patient.dob).format('DD/MM/YYYY')}</h6>
@@ -133,9 +133,9 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
 
         const patientCard = (patient: any) => {
             return (
-                <div className="shadow card col-sm-12 col-md-4 mr-1 mt-2 w-100">
+                <div className="shadow card col-sm-12 col-md-4 mr-1 mt-2 w-100"  key={patient._id}>
                     <div className="card-body">
-                        <h5 className="card-title"><a href={"#"} data-id={patient._id}
+                        <h5 className="card-title"><a href={"#"} data-id={patient._id} key={patient._id}
                                                       onClick={this.handleOpenPatient}>{patient.name.firstname} {patient.name.surname}</a>
                         </h5>
                         <h6 className="card-subtitle mb-2 text-muted">DOB: {moment(patient.dob).format('DD/MM/YYYY')}</h6>
@@ -157,7 +157,7 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
         // });
         const patientMap = this.patients.map((patient) => {
             return (
-                <React.Fragment>
+                <React.Fragment key={patient._id}>
                     {(patient.decorator === Decorator.Incomplete) ? incompletePatientCard(patient) : patientCard(patient)}
                 </React.Fragment>
             );

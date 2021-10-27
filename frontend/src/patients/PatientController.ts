@@ -79,7 +79,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
     }
 
     private _closeRecord(patient:any):void {
-        logger(`patient ${patient.firstname} with id ${patient.id} closing - closing`);
+        logger(`patient ${patient.name.firstname} with id ${patient._id} closing - closing`);
         PatientController.getInstance().getStateManager().removeItemFromState(STATE_NAMES.openPatients, patient, true);
         this.listeners.forEach((listener) => listener.patientClosed(patient));
     }

@@ -4714,7 +4714,7 @@ class PatientController {
   }
 
   _closeRecord(patient) {
-    logger(`patient ${patient.firstname} with id ${patient.id} closing - closing`);
+    logger(`patient ${patient.name.firstname} with id ${patient._id} closing - closing`);
     PatientController.getInstance().getStateManager().removeItemFromState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.openPatients, patient, true);
     this.listeners.forEach(listener => listener.patientClosed(patient));
   }
@@ -6549,7 +6549,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       className: "card-text",
       id: _AppTypes__WEBPACK_IMPORTED_MODULE_1__.VIEW_CONTAINER.patientName
     }))), (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
-      className: "shadow card"
+      className: "shadow card mt-2"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("div", {
       className: "card-body"
     }, (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.jsxCreateElement)("h5", {
@@ -6850,7 +6850,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       }
 
       this.currentPatient.contact.owner = this.currentPatient._id;
-      logger(this.currentPatient.contact);
+      logger((0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(this.currentPatient.contact));
       this.contactView.displayItem(this.currentPatient.contact); // enable the contact elements
 
       this.contactForm.clearFieldReadOnly('line1');
@@ -7023,13 +7023,21 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     let result = this.currentPatient;
     const copyOfContact = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(result.contact);
     result.contact = this.contactForm.getFormattedDataObject();
-    logger(`Checking for linked contact for getCurrentPatient()`);
+    logger(`Checking for linked contact for getCurrentPatient() - patient id is ${result._id}, contact owner is ${copyOfContact.owner}`);
     logger(copyOfContact);
 
-    if (copyOfContact.owner !== result._id) {
-      logger(`Checking for linked contact for getCurrentPatient() - is a linked contact, updating owner and id`);
-      result.contact.owner = copyOfContact.owner;
-      result.contact._id = copyOfContact._id;
+    if (copyOfContact.owner) {
+      if (copyOfContact.owner !== result._id) {
+        logger(`Checking for linked contact for getCurrentPatient() - is a linked contact, updating owner and id`);
+        result.contact.owner = copyOfContact.owner;
+        result.contact._id = copyOfContact._id;
+      } else {
+        logger(`Checking for linked contact for getCurrentPatient() - NOT linked contact, setting owner to current patient`);
+        result.contact.owner = result._id;
+      }
+    } else {
+      logger(`Checking for linked contact for getCurrentPatient() - NO contact owner, setting owner to current patient`);
+      result.contact.owner = result._id;
     }
 
     result.name = this.nameForm.getFormattedDataObject();
@@ -7234,7 +7242,8 @@ class TodaysPatientsView extends react__WEBPACK_IMPORTED_MODULE_6__.Component {
 
     const incompletePatientCard = patient => {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement("div", {
-        className: "shadow card col-sm-12 col-md-4 mr-1 mt-2"
+        className: "shadow card col-sm-12 col-md-4 mr-1 mt-2",
+        key: patient._id
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement("img", {
         className: "card-img-top",
         src: "/img/spinner.gif",
@@ -7246,6 +7255,7 @@ class TodaysPatientsView extends react__WEBPACK_IMPORTED_MODULE_6__.Component {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement("a", {
         href: "#",
         "data-id": patient._id,
+        key: patient._id,
         onClick: this.handleOpenPatient
       }, patient.name.firstname, " ", patient.name.surname)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement("h6", {
         className: "card-subtitle mb-2 text-muted"
@@ -7256,7 +7266,8 @@ class TodaysPatientsView extends react__WEBPACK_IMPORTED_MODULE_6__.Component {
 
     const patientCard = patient => {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement("div", {
-        className: "shadow card col-sm-12 col-md-4 mr-1 mt-2 w-100"
+        className: "shadow card col-sm-12 col-md-4 mr-1 mt-2 w-100",
+        key: patient._id
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement("div", {
         className: "card-body"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement("h5", {
@@ -7264,6 +7275,7 @@ class TodaysPatientsView extends react__WEBPACK_IMPORTED_MODULE_6__.Component {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement("a", {
         href: "#",
         "data-id": patient._id,
+        key: patient._id,
         onClick: this.handleOpenPatient
       }, patient.name.firstname, " ", patient.name.surname)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement("h6", {
         className: "card-subtitle mb-2 text-muted"
@@ -7284,7 +7296,9 @@ class TodaysPatientsView extends react__WEBPACK_IMPORTED_MODULE_6__.Component {
 
 
     const patientMap = this.patients.map(patient => {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement(react__WEBPACK_IMPORTED_MODULE_6__.Fragment, null, patient.decorator === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.Decorator.Incomplete ? incompletePatientCard(patient) : patientCard(patient));
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement(react__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+        key: patient._id
+      }, patient.decorator === _AppTypes__WEBPACK_IMPORTED_MODULE_2__.Decorator.Incomplete ? incompletePatientCard(patient) : patientCard(patient));
     });
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6__.createElement(react__WEBPACK_IMPORTED_MODULE_6__.Fragment, null, patientMap);
   }
