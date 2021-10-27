@@ -30,7 +30,6 @@ router.get("/:id", function (req, res) {
     const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
 
     MongoDataSource.getInstance().getDatabase().collection(collection).findOne({_id: req.params.id}).then((result: Document | null) => {
-        logger(result);
         if (result) {
             PatientsQLDelegate.getPatientContact(result.contact._id).then((contact) => {
                 result.contact = contact;

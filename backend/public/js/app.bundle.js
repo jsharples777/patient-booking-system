@@ -4737,6 +4737,7 @@ class PatientController {
 
   savePatientRecord(patient) {
     logger(`saving patient ${patient.name.firstname} ${patient.name.surname} with id ${patient._id}`);
+    logger((0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(patient));
     delete patient.decorator;
     delete patient.oldContact;
     patient.modified = parseInt(moment__WEBPACK_IMPORTED_MODULE_8___default()().format('YYYYMMDDHHmmss'));
@@ -6812,9 +6813,13 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
           this.currentPatient.contact.mobile = linkedToPatient.contact.mobile;
           this.currentPatient.contact.owner = linkedToPatient._id;
           this.currentPatient.contact._id = linkedToPatient.contact._id;
+          logger(`contact updated to`);
+          logger((0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(this.currentPatient.contact));
         } else {
           logger(`No unlinked contact information`);
           this.currentPatient.contact = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(linkedToPatient.contact);
+          logger(`contact updated to`);
+          logger((0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(this.currentPatient.contact));
         }
 
         this.contactView.displayItem(this.currentPatient.contact); // set the contact elements to readonly
@@ -7016,7 +7021,17 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
 
   getCurrentPatient() {
     let result = this.currentPatient;
+    const copyOfContact = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(result.contact);
     result.contact = this.contactForm.getFormattedDataObject();
+    logger(`Checking for linked contact for getCurrentPatient()`);
+    logger(copyOfContact);
+
+    if (copyOfContact.owner !== result._id) {
+      logger(`Checking for linked contact for getCurrentPatient() - is a linked contact, updating owner and id`);
+      result.contact.owner = copyOfContact.owner;
+      result.contact._id = copyOfContact._id;
+    }
+
     result.name = this.nameForm.getFormattedDataObject();
     result.identifiers = this.identifiersForm.getFormattedDataObject();
     let basics = this.basicsForm.getFormattedDataObject();

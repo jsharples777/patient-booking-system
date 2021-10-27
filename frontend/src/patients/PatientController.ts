@@ -103,6 +103,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
 
     public savePatientRecord(patient: any): void {
         logger(`saving patient ${patient.name.firstname} ${patient.name.surname} with id ${patient._id}`);
+        logger(copyObject(patient));
 
 
         delete patient.decorator;

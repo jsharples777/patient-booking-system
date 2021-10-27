@@ -97,6 +97,12 @@ export default class PatientsQLDelegate {
                         }).catch((err) => {
                             logger(err);
                         });
+                        collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
+                        MongoDataSource.getInstance().getDatabase().collection(collection).updateOne({_id: patient._id}, {$set: {"contact.owner": patient._id}}).then((result) => {
+                            logger(result);
+                        }).catch((err) => {
+                            logger(err);
+                        });
                     }
                 }
             }

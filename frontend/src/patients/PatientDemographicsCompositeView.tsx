@@ -369,10 +369,14 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                     this.currentPatient.contact.mobile = linkedToPatient.contact.mobile;
                     this.currentPatient.contact.owner = linkedToPatient._id;
                     this.currentPatient.contact._id = linkedToPatient.contact._id;
+                    logger(`contact updated to`);
+                    logger(copyObject(this.currentPatient.contact));
                 }
                 else {
                     logger(`No unlinked contact information`);
                     this.currentPatient.contact = copyObject(linkedToPatient.contact);
+                    logger(`contact updated to`);
+                    logger(copyObject(this.currentPatient.contact));
                 }
                 this.contactView.displayItem(this.currentPatient.contact);
                 // set the contact elements to readonly
@@ -565,7 +569,17 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     getCurrentPatient():any {
         let result = this.currentPatient;
 
+        const copyOfContact = copyObject(result.contact);
+
+
         result.contact = this.contactForm.getFormattedDataObject();
+        logger(`Checking for linked contact for getCurrentPatient()`);
+        logger(copyOfContact);
+        if (copyOfContact.owner !== result._id) {
+            logger(`Checking for linked contact for getCurrentPatient() - is a linked contact, updating owner and id`);
+            result.contact.owner = copyOfContact.owner;
+            result.contact._id = copyOfContact._id;
+        }
         result.name = this.nameForm.getFormattedDataObject();
         result.identifiers = this.identifiersForm.getFormattedDataObject();
         let basics = this.basicsForm.getFormattedDataObject();
