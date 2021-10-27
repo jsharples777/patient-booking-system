@@ -56,6 +56,10 @@ router.get("/:id", function (req, res) {
 
 router.put('/', (req, res) => {
     logger(`Starting route PUT /patient by id ${req.body._id}`);
+
+    // update the contact details
+    PatientsQLDelegate.updatePatientContactDetails(req.body);
+
     const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
     MongoDataSource.getInstance().getDatabase().collection(collection).replaceOne({_id:req.body._id},req.body).then((result) => {
         // @ts-ignore
