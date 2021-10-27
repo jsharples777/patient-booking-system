@@ -6317,7 +6317,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'app api-ts-results patient-controller todays-patients-view'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'patient-demographic-view app api-ts-results patient-controller todays-patients-view'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);
@@ -6750,6 +6750,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
         this.nameView.displayItem(patient.name);
 
         if (this.isLinked) {
+          logger(`patient is linked on load`);
           this.setLinked(true, false);
         }
 
@@ -6774,9 +6775,11 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     event.preventDefault(); // reverse any link
 
     if (this.isLinked) {
+      logger(`patient is linked setting to unlinked`);
       this.setLinked(false);
     } else {
       if (this.linkToPatientId.trim().length > 0) {
+        logger(`patient is unlinked setting to linked to patient ${this.linkToPatientId}`);
         this.setLinked(true);
       }
     }
@@ -6785,17 +6788,21 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
   setLinked(isLinked, isChange = true) {
     if (isLinked) {
       this.isLinked = true;
+      logger(`setting patient linked to patient ${this.linkToPatientId}`);
       const linkedToPatient = _Controller__WEBPACK_IMPORTED_MODULE_6__["default"].getInstance().getStateManager().findItemInState(_AppTypes__WEBPACK_IMPORTED_MODULE_1__.STATE_NAMES.patientSearch, {
         _id: this.linkToPatientId
       });
 
       if (linkedToPatient) {
         // show the patient linked to
-        // @ts-ignore
+        logger(linkedToPatient); // @ts-ignore
+
         this.fastPatientSearchEl.value = `${linkedToPatient.name.firstname} ${linkedToPatient.name.surname}`;
 
         if (this.currentPatient.contact) {
           this.currentPatient.oldContact = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(this.currentPatient.contact);
+          logger(`Saving unlinked contact information`);
+          logger(this.currentPatient.oldContact);
           this.currentPatient.contact.line1 = linkedToPatient.contact.line1;
           this.currentPatient.contact.line2 = linkedToPatient.contact.line2;
           this.currentPatient.contact.suburb = linkedToPatient.contact.suburb;
@@ -6806,6 +6813,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
           this.currentPatient.contact.owner = linkedToPatient._id;
           this.currentPatient.contact._id = linkedToPatient.contact._id;
         } else {
+          logger(`No unlinked contact information`);
           this.currentPatient.contact = (0,ui_framework_jps__WEBPACK_IMPORTED_MODULE_0__.copyObject)(linkedToPatient.contact);
         }
 
@@ -6823,16 +6831,21 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
       this.btnLinkUnlinkEl.innerHTML = PatientDemographicsCompositeView.ICON_Unlinked;
     } else {
       this.isLinked = false;
+      logger(`Unlinking patient`);
 
       if (this.currentPatient.oldContact) {
+        logger(`Restoring unlinked contact information`);
+        logger(this.currentPatient.oldContact);
         this.currentPatient.contact = this.currentPatient.oldContact;
-        this.currentPatient.contact.owner = this.currentPatient._id;
         delete this.currentPatient.oldContact;
       } else {
+        logger(`Creating new contact information and setting owner to the patient`);
+        logger(this.currentPatient.oldContact);
         this.currentPatient.contact._id = (0,uuid__WEBPACK_IMPORTED_MODULE_8__["default"])();
-        this.currentPatient.contact.owner = this.currentPatient._id;
       }
 
+      this.currentPatient.contact.owner = this.currentPatient._id;
+      logger(this.currentPatient.contact);
       this.contactView.displayItem(this.currentPatient.contact); // enable the contact elements
 
       this.contactForm.clearFieldReadOnly('line1');
@@ -6849,6 +6862,7 @@ class PatientDemographicsCompositeView extends ui_framework_jps__WEBPACK_IMPORTE
     }
 
     if (isChange) {
+      logger(`Marking changed`);
       this.contactForm.setChanged();
       this.markPatientChanged();
     }

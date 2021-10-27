@@ -147,7 +147,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
 
         // @ts-ignore
         this.containerEl.append(demographicsView);
-        
+
         this.fastPatientSearchEl = document.getElementById("patient-demographics-fast-patient-search");
         this.btnLinkUnlinkEl = document.getElementById("contact-link-unlink");
         this.btnLinkUnlinkEl.addEventListener('click', this.eventLinkUnlink);
@@ -307,6 +307,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                 this.identifiersView.displayItem(patient.identifiers);
                 this.nameView.displayItem(patient.name);
                 if (this.isLinked) {
+                    logger(`patient is linked on load`);
                     this.setLinked(true,false);
                 }
                 logger(this.currentPatient);
@@ -331,10 +332,12 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
 
         // reverse any link
         if (this.isLinked) {
+            logger(`patient is linked setting to unlinked`);
             this.setLinked(false);
         }
         else {
             if (this.linkToPatientId.trim().length > 0) {
+                logger(`patient is unlinked setting to linked to patient ${this.linkToPatientId}`);
                 this.setLinked(true);
             }
         }
@@ -343,15 +346,19 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
     private setLinked(isLinked:boolean,isChange:boolean = true):void {
         if (isLinked) {
             this.isLinked = true;
+            logger(`setting patient linked to patient ${this.linkToPatientId}`);
 
             const linkedToPatient = Controller.getInstance().getStateManager().findItemInState(STATE_NAMES.patientSearch,{_id:this.linkToPatientId});
             if (linkedToPatient) { // show the patient linked to
+                logger(linkedToPatient);
                 // @ts-ignore
                 this.fastPatientSearchEl.value = `${linkedToPatient.name.firstname} ${linkedToPatient.name.surname}`;
 
                 if (this.currentPatient.contact) {
 
                     this.currentPatient.oldContact = copyObject(this.currentPatient.contact);
+                    logger(`Saving unlinked contact information`);
+                    logger(this.currentPatient.oldContact);
 
                     this.currentPatient.contact.line1 = linkedToPatient.contact.line1;
                     this.currentPatient.contact.line2 = linkedToPatient.contact.line2;
@@ -364,6 +371,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
                     this.currentPatient.contact._id = linkedToPatient.contact._id;
                 }
                 else {
+                    logger(`No unlinked contact information`);
                     this.currentPatient.contact = copyObject(linkedToPatient.contact);
                 }
                 this.contactView.displayItem(this.currentPatient.contact);
@@ -381,15 +389,20 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         else {
             this.isLinked = false;
 
+            logger(`Unlinking patient`);
             if (this.currentPatient.oldContact) {
+                logger(`Restoring unlinked contact information`);
+                logger(this.currentPatient.oldContact);
                 this.currentPatient.contact = this.currentPatient.oldContact;
-                this.currentPatient.contact.owner = this.currentPatient._id;
                 delete this.currentPatient.oldContact;
             }
             else {
+                logger(`Creating new contact information and setting owner to the patient`);
+                logger(this.currentPatient.oldContact);
                 this.currentPatient.contact._id = v4();
-                this.currentPatient.contact.owner = this.currentPatient._id;
             }
+            this.currentPatient.contact.owner = this.currentPatient._id;
+            logger(this.currentPatient.contact);
             this.contactView.displayItem(this.currentPatient.contact);
 
             // enable the contact elements
@@ -407,6 +420,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         }
 
         if (isChange) {
+            logger(`Marking changed`);
             this.contactForm.setChanged();
             this.markPatientChanged();
         }
