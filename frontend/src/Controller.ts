@@ -243,46 +243,46 @@ export default class Controller implements StateChangeListener, DataObjectListen
         ]);
         const qlSM = GraphQLApiStateManager.getInstance();
         qlSM.initialise([
-            // {
-            //     stateName: STATE_NAMES.patientSearch,
-            //     serverURL: '',
-            //     apiURL: API_Config.graphQL,
-            //     apis: {
-            //         findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' +
-            //             '    owner,\n' +
-            //             '    line1,\n' +
-            //             '    line2,\n' +
-            //             '    suburb\n' +
-            //             '    postcode,\n' +
-            //             '    state,\n' +
-            //             '    country,\n' +
-            //             '    home,\n' +
-            //             '    work,\n' +
-            //             '    mobile,\n' +
-            //             '    nokname,\n' +
-            //             '    nokphone},\n' +
-            //             'lastSeen,\n' +
-            //             'lastSeenBy,\n' +
-            //             'dob,\n' +
-            //             'dod,\n' +
-            //             'gender,\n' +
-            //             'ethnicity,\n' +
-            //             'countryofbirth}}',
-            //         create: '',
-            //         destroy: '',
-            //         update: '',
-            //         find: '',
-            //     },
-            //     data: {
-            //         findAll: 'getPatientSearchDetails',
-            //         create: '',
-            //         destroy: '',
-            //         update: '',
-            //         find: ''
-            //     },
-            //     isActive: true,
-            //     idField: '_id'
-            // },
+            {
+                stateName: STATE_NAMES.patientSearch,
+                serverURL: '',
+                apiURL: API_Config.graphQL,
+                apis: {
+                    findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' +
+                        '    owner,\n' +
+                        '    line1,\n' +
+                        '    line2,\n' +
+                        '    suburb\n' +
+                        '    postcode,\n' +
+                        '    state,\n' +
+                        '    country,\n' +
+                        '    home,\n' +
+                        '    work,\n' +
+                        '    mobile,\n' +
+                        '    nokname,\n' +
+                        '    nokphone},\n' +
+                        'lastSeen,\n' +
+                        'lastSeenBy,\n' +
+                        'dob,\n' +
+                        'dod,\n' +
+                        'gender,\n' +
+                        'ethnicity,\n' +
+                        'countryofbirth}}',
+                    create: '',
+                    destroy: '',
+                    update: '',
+                    find: '',
+                },
+                data: {
+                    findAll: 'getPatientSearchDetails',
+                    create: '',
+                    destroy: '',
+                    update: '',
+                    find: ''
+                },
+                isActive: true,
+                idField: '_id'
+            },
             {
                 stateName: STATE_NAMES.appointments,
                 serverURL: '',

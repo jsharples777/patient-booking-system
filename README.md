@@ -70,6 +70,8 @@ If the user is idle, the session expires in 24 hours.
 
 `QL-SCHEMA` - graph QL schema definition, set to `./config/schema.graphql`
 
+`TOKEN_SECRET` - JSON Web Token secret key, set to a suitable alphanumeric value.
+
 # User Story
 
 ```
@@ -93,7 +95,7 @@ THEN I want to be able to view each open patient and modify details as needed
 
 # Screenshot
 
-![screenshot](./backend/public/img/screenshot1.png)![screenshot2](./backend/public/img/screenshot2.png)
+![screenshot](./backend/public/img/screenshot.png)![screenshot2](./backend/public/img/screenshot2.png)![screenshot3](./backend/public/img/screenshot3.png)
 
 ## How to contribute
 
@@ -129,6 +131,9 @@ contribute to this project.
 26. [Server Socket Framework](https://www.npmjs.com/package/server-socket-framework-jps)
 27. [JSX without React](https://betterprogramming.pub/how-to-use-jsx-without-react-21d23346e5dc)
 28. [Mongoose with TypeScript](https://thecodebarbarian.com/working-with-mongoose-in-typescript.html)
+29. [Authentication and Authorization in Apollo Graph QL](https://www.apollographql.com/docs/apollo-server/security/authentication/)
+30. [How to Build Authentication in Node.js with JWT](https://www.section.io/engineering-education/how-to-build-authentication-api-with-jwt-token-in-nodejs/)
+31. [JSON Web Tokens](https://www.npmjs.com/package/jsonwebtoken)
 
 
 # Questions

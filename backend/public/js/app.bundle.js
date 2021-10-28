@@ -271,47 +271,27 @@ class Controller {
       destroy: false
     }]);
     const qlSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.GraphQLApiStateManager.getInstance();
-    qlSM.initialise([// {
-    //     stateName: STATE_NAMES.patientSearch,
-    //     serverURL: '',
-    //     apiURL: API_Config.graphQL,
-    //     apis: {
-    //         findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' +
-    //             '    owner,\n' +
-    //             '    line1,\n' +
-    //             '    line2,\n' +
-    //             '    suburb\n' +
-    //             '    postcode,\n' +
-    //             '    state,\n' +
-    //             '    country,\n' +
-    //             '    home,\n' +
-    //             '    work,\n' +
-    //             '    mobile,\n' +
-    //             '    nokname,\n' +
-    //             '    nokphone},\n' +
-    //             'lastSeen,\n' +
-    //             'lastSeenBy,\n' +
-    //             'dob,\n' +
-    //             'dod,\n' +
-    //             'gender,\n' +
-    //             'ethnicity,\n' +
-    //             'countryofbirth}}',
-    //         create: '',
-    //         destroy: '',
-    //         update: '',
-    //         find: '',
-    //     },
-    //     data: {
-    //         findAll: 'getPatientSearchDetails',
-    //         create: '',
-    //         destroy: '',
-    //         update: '',
-    //         find: ''
-    //     },
-    //     isActive: true,
-    //     idField: '_id'
-    // },
-    {
+    qlSM.initialise([{
+      stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch,
+      serverURL: '',
+      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
+      apis: {
+        findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' + '    owner,\n' + '    line1,\n' + '    line2,\n' + '    suburb\n' + '    postcode,\n' + '    state,\n' + '    country,\n' + '    home,\n' + '    work,\n' + '    mobile,\n' + '    nokname,\n' + '    nokphone},\n' + 'lastSeen,\n' + 'lastSeenBy,\n' + 'dob,\n' + 'dod,\n' + 'gender,\n' + 'ethnicity,\n' + 'countryofbirth}}',
+        create: '',
+        destroy: '',
+        update: '',
+        find: ''
+      },
+      data: {
+        findAll: 'getPatientSearchDetails',
+        create: '',
+        destroy: '',
+        update: '',
+        find: ''
+      },
+      isActive: true,
+      idField: '_id'
+    }, {
       stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments,
       serverURL: '',
       apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
