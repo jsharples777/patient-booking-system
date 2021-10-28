@@ -68,6 +68,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
         this.handleShowToday = this.handleShowToday.bind(this);
 
         Controller.getInstance().connectToApplication(this, window.localStorage);
+        SecurityManager.getInstance().setRequiresToken();
     }
 
     render(): ReactNode {
@@ -290,7 +291,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
 
 }
 
-localStorage.debug = 'patient-demographic-view app api-ts-results patient-controller todays-patients-view';
+localStorage.debug = 'app api-ts-results patient-controller security-manager download-manager';
 //localStorage.debug = 'socket-listener';
 localStorage.plugin = 'chat';
 

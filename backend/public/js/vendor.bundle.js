@@ -53000,6 +53000,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../security/SecurityManager */ "./node_modules/ui-framework-jps/dist/framework/security/SecurityManager.js");
+/* harmony import */ var _DownloadManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DownloadManager */ "./node_modules/ui-framework-jps/dist/framework/network/DownloadManager.js");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -53009,6 +53011,8 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
+
 
 const apiLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('api-ts');
 const apiResultsLogger = debug__WEBPACK_IMPORTED_MODULE_0___default()('api-ts-results');
@@ -53057,7 +53061,7 @@ class ApiUtil {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(Object.assign({}, request.originalRequest.params)),
         };
-        this.fetchJSON(request.originalRequest.url, postParameters, request.callback, request.queueType, request.requestId);
+        this.fetchJSON(request.originalRequest, postParameters, request.callback, request.queueType, request.requestId);
     }
     apiFetchJSONWithGet(request) {
         apiLogger(`Executing GET fetch with URL ${request.originalRequest.url} with id ${request.originalRequest.params.id}`);
@@ -53067,7 +53071,7 @@ class ApiUtil {
         };
         if (request.originalRequest.params.id && !request.wasOffline)
             request.originalRequest.url += `/${request.originalRequest.params.id}`;
-        this.fetchJSON(request.originalRequest.url, getParameters, request.callback, request.queueType, request.requestId);
+        this.fetchJSON(request.originalRequest, getParameters, request.callback, request.queueType, request.requestId);
     }
     apiFetchJSONWithDelete(request) {
         apiLogger(`Executing DELETE fetch with URL ${request.originalRequest.url} with id ${request.originalRequest.params.id}`);
@@ -53077,7 +53081,7 @@ class ApiUtil {
         };
         if (request.originalRequest.params.id && !request.wasOffline)
             request.originalRequest.url += `/${request.originalRequest.params.id}`;
-        this.fetchJSON(request.originalRequest.url, delParameters, request.callback, request.queueType, request.requestId);
+        this.fetchJSON(request.originalRequest, delParameters, request.callback, request.queueType, request.requestId);
     }
     apiFetchJSONWithPut(request) {
         apiLogger(`Executing PUT fetch with URL ${request.originalRequest.url} with id ${request.originalRequest.params.id}`);
@@ -53088,10 +53092,19 @@ class ApiUtil {
         };
         if (request.originalRequest.params.id && !request.wasOffline)
             request.originalRequest.url += `/${request.originalRequest.params.id}`;
-        this.fetchJSON(request.originalRequest.url, putParameters, request.callback, request.queueType, request.requestId);
+        this.fetchJSON(request.originalRequest, putParameters, request.callback, request.queueType, request.requestId);
     }
-    fetchJSON(url, parameters, callback, queueType, requestId) {
-        fetch(url, parameters)
+    simplePOSTJSON(request) {
+        let postParameters = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.assign({}, request.body))
+        };
+        if (request.jwt) {
+            // @ts-ignore
+            postParameters.headers['authorization'] = request.jwt;
+        }
+        fetch(request.url, postParameters)
             .then((response) => {
             apiLogger(`Response code was ${response.status}`);
             if (response.status >= 200 && response.status <= 299) {
@@ -53099,6 +53112,48 @@ class ApiUtil {
             }
             if (response.status === 400) {
                 apiResultsLogger(response.json());
+            }
+        })
+            .then((data) => {
+            apiResultsLogger(data);
+            request.callback(data, 200);
+        })
+            .catch((error) => {
+            apiLogger(error);
+            request.callback(null, 500);
+        });
+    }
+    fetchJSON(originalRequest, parameters, callback, queueType, requestId) {
+        // do we need to add a token the headers?
+        if (_security_SecurityManager__WEBPACK_IMPORTED_MODULE_1__.SecurityManager.getInstance().callsRequireToken()) {
+            apiLogger(`Security Manager - requires token for API calls`);
+            const headerName = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_1__.SecurityManager.getInstance().getTokenHeaderName();
+            const token = _security_SecurityManager__WEBPACK_IMPORTED_MODULE_1__.SecurityManager.getInstance().getToken();
+            apiLogger(`Header: ${headerName}:${token}`);
+            // @ts-ignore
+            parameters.headers[headerName] = token;
+        }
+        fetch(originalRequest.url, parameters)
+            .then((response) => {
+            apiLogger(`Response code was ${response.status}`);
+            if (response.status >= 200 && response.status <= 299) {
+                return response.json();
+            }
+            if (response.status === 400) {
+                apiResultsLogger(response.json());
+            }
+            if (response.status === 403) { // possibly web token expiry
+                apiResultsLogger(`Forbidden request`);
+                if (_security_SecurityManager__WEBPACK_IMPORTED_MODULE_1__.SecurityManager.getInstance().callsRequireToken()) {
+                    apiLogger(`Refreshing token and putting request back into the queue`);
+                    // ask for a new token
+                    _security_SecurityManager__WEBPACK_IMPORTED_MODULE_1__.SecurityManager.getInstance().refreshToken();
+                    // re-queue the request
+                    _DownloadManager__WEBPACK_IMPORTED_MODULE_2__.DownloadManager.getInstance().addApiRequest(originalRequest, true, false);
+                }
+                else {
+                    apiResultsLogger(response.json());
+                }
             }
         })
             .then((data) => {
@@ -53170,13 +53225,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "DownloadManager": () => (/* binding */ DownloadManager)
 /* harmony export */ });
-/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
+/* harmony import */ var uuid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/v4.js");
 /* harmony import */ var _Types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Types */ "./node_modules/ui-framework-jps/dist/framework/network/Types.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _CallbackRegistry__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CallbackRegistry */ "./node_modules/ui-framework-jps/dist/framework/network/CallbackRegistry.js");
 /* harmony import */ var _OfflineManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./OfflineManager */ "./node_modules/ui-framework-jps/dist/framework/network/OfflineManager.js");
 /* harmony import */ var _ApiUtil__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ApiUtil */ "./node_modules/ui-framework-jps/dist/framework/network/ApiUtil.js");
+/* harmony import */ var _security_SecurityManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../security/SecurityManager */ "./node_modules/ui-framework-jps/dist/framework/security/SecurityManager.js");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -53192,7 +53248,8 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 
-const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('api-ts');
+
+const logger = debug__WEBPACK_IMPORTED_MODULE_1___default()('download-manager');
 class DownloadManager {
     constructor() {
         this.backgroundQueue = [];
@@ -53201,6 +53258,7 @@ class DownloadManager {
         this.backgroundChangeListener = null;
         this.priorityChangeListener = null;
         this.callbackForQueueRequest = this.callbackForQueueRequest.bind(this);
+        _security_SecurityManager__WEBPACK_IMPORTED_MODULE_5__.SecurityManager.getInstance().addListener(this);
     }
     static getInstance() {
         if (!(DownloadManager._instance)) {
@@ -53247,7 +53305,7 @@ class DownloadManager {
     addApiRequest(jsonRequest, isPriority = false, wasOffline = false) {
         return __awaiter(this, void 0, void 0, function* () {
             // add a new requestId to the request for future tracking
-            const requestId = (0,uuid__WEBPACK_IMPORTED_MODULE_5__["default"])();
+            const requestId = (0,uuid__WEBPACK_IMPORTED_MODULE_6__["default"])();
             logger(`Adding Queue Request ${requestId}`);
             logger(jsonRequest);
             // are we currently offline?
@@ -53287,38 +53345,54 @@ class DownloadManager {
         });
     }
     processPriorityQueue() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const queueItem = this.priorityQueue.shift();
-            if (queueItem !== undefined)
-                this.inProgress.push(queueItem);
-            if (queueItem !== undefined)
-                this.initiateFetchForQueueItem(queueItem);
-        });
+        if (!(this.canProceed()))
+            return;
+        const queueItem = this.priorityQueue.shift();
+        if (queueItem !== undefined) {
+            this.inProgress.push(queueItem);
+            this.initiateFetchForQueueItem(queueItem);
+        }
     }
     processBackgroundQueue() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const queueItem = this.backgroundQueue.shift();
-            if (queueItem !== undefined)
-                this.inProgress.push(queueItem);
-            if (queueItem !== undefined)
-                this.initiateFetchForQueueItem(queueItem);
-        });
+        if (!(this.canProceed()))
+            return;
+        const queueItem = this.backgroundQueue.shift();
+        if (queueItem !== undefined) {
+            this.inProgress.push(queueItem);
+            this.initiateFetchForQueueItem(queueItem);
+        }
+    }
+    canProceed() {
+        let result = false;
+        if (_security_SecurityManager__WEBPACK_IMPORTED_MODULE_5__.SecurityManager.getInstance().callsRequireToken()) {
+            if (_security_SecurityManager__WEBPACK_IMPORTED_MODULE_5__.SecurityManager.getInstance().hasToken()) {
+                result = true;
+            }
+            else {
+                logger(`Security manager requires a token and does not yet have one, pausing queues`);
+            }
+        }
+        else {
+            result = true;
+        }
+        return result;
     }
     processQueues() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let totalQueuedItems = this.priorityQueue.length + this.backgroundQueue.length;
-            while (totalQueuedItems > 0) {
-                logger(`processing queue, items remaining ${totalQueuedItems}`);
-                // priority queue takes priority
-                if (this.priorityQueue.length > 0) {
-                    yield this.processPriorityQueue();
-                }
-                else if (this.backgroundQueue.length > 0) {
-                    yield this.processBackgroundQueue();
-                }
-                totalQueuedItems = this.priorityQueue.length + this.backgroundQueue.length;
+        // are we waiting for an authorisation token?
+        if (!(this.canProceed()))
+            return;
+        let totalQueuedItems = this.priorityQueue.length + this.backgroundQueue.length;
+        while (totalQueuedItems > 0) {
+            logger(`processing queue, items remaining ${totalQueuedItems}`);
+            // priority queue takes priority
+            if (this.priorityQueue.length > 0) {
+                this.processPriorityQueue();
             }
-        });
+            else if (this.backgroundQueue.length > 0) {
+                this.processBackgroundQueue();
+            }
+            totalQueuedItems = this.priorityQueue.length + this.backgroundQueue.length;
+        }
     }
     callbackForQueueRequest(jsonData, httpStatus, queueId, requestId) {
         // let the listeners know about the completion
@@ -53371,6 +53445,10 @@ class DownloadManager {
                 break;
             }
         }
+    }
+    tokenAvailable() {
+        logger(`Token now available, restarting queues`);
+        this.processQueues();
     }
 }
 //# sourceMappingURL=DownloadManager.js.map
@@ -53790,18 +53868,73 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debug */ "./node_modules/debug/src/browser.js");
 /* harmony import */ var debug__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debug__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _network_ApiUtil__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../network/ApiUtil */ "./node_modules/ui-framework-jps/dist/framework/network/ApiUtil.js");
+
 
 const logger = debug__WEBPACK_IMPORTED_MODULE_0___default()('security-manager');
 class SecurityManager {
     constructor() {
         this.hash = null;
         this.logoutEl = null;
+        this.requiresToken = false;
+        this.headerName = null;
+        this.token = null;
+        this.hasTokenValue = false;
+        this.listeners = [];
+        this.tokenURL = null;
+        this.callbackForToken = this.callbackForToken.bind(this);
     }
     static getInstance() {
         if (!(SecurityManager._instance)) {
             SecurityManager._instance = new SecurityManager();
         }
         return SecurityManager._instance;
+    }
+    getToken() {
+        return this.token;
+    }
+    hasToken() {
+        return this.hasTokenValue;
+    }
+    getTokenHeaderName() {
+        return this.headerName;
+    }
+    callsRequireToken() {
+        return this.requiresToken;
+    }
+    addListener(listener) {
+        this.listeners.push(listener);
+    }
+    callbackForToken(data, status) {
+        logger(`Callback - Getting token`);
+        if (status === 200) {
+            logger(`Token received`);
+            logger(data);
+            this.token = data;
+            this.hasTokenValue = true;
+            this.listeners.forEach((listener) => listener.tokenAvailable());
+        }
+    }
+    refreshToken() {
+        this.hasTokenValue = false;
+        this.token = null;
+        if (this.tokenURL) {
+            logger(`Getting token`);
+            let request = {
+                url: this.tokenURL,
+                body: {},
+                callback: this.callbackForToken
+            };
+            logger(request);
+            _network_ApiUtil__WEBPACK_IMPORTED_MODULE_1__.ApiUtil.getInstance().simplePOSTJSON(request);
+        }
+    }
+    setRequiresToken(httpHeaderName = SecurityManager.HTTP_HEADER_FOR_TOKEN, tokenRequestURL = SecurityManager.DEFAULT_URL_FOR_TOKEN_REQUEST) {
+        this.requiresToken = true;
+        this.headerName = httpHeaderName;
+        // @ts-ignore
+        this.tokenURL = tokenRequestURL;
+        this.refreshToken();
     }
     onDocumentLoaded(logoutElementId) {
         this.logoutEl = document.getElementById(logoutElementId);
@@ -53892,6 +54025,8 @@ class SecurityManager {
         return JSON.parse(this.decryptString(value));
     }
 }
+SecurityManager.HTTP_HEADER_FOR_TOKEN = 'authorization';
+SecurityManager.DEFAULT_URL_FOR_TOKEN_REQUEST = '/gettoken';
 //# sourceMappingURL=SecurityManager.js.map
 
 /***/ }),

@@ -81,6 +81,7 @@ const API_Config = {
   users: '/api/users',
   clinicConfig: '/api/clinic-config',
   patients: '/api/patients',
+  patientSearch: '/api/patient-search',
   patientDemographics: '/api/demographics'
 };
 const NAVIGATION = {
@@ -257,29 +258,60 @@ class Controller {
       create: true,
       update: true,
       destroy: false
-    }]);
-    const qlSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.GraphQLApiStateManager.getInstance();
-    qlSM.initialise([{
+    }, {
       stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.patientSearch,
       serverURL: '',
-      apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
-      apis: {
-        findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' + '    owner,\n' + '    line1,\n' + '    line2,\n' + '    suburb\n' + '    postcode,\n' + '    state,\n' + '    country,\n' + '    home,\n' + '    work,\n' + '    mobile,\n' + '    nokname,\n' + '    nokphone},\n' + 'lastSeen,\n' + 'lastSeenBy,\n' + 'dob,\n' + 'dod,\n' + 'gender,\n' + 'ethnicity,\n' + 'countryofbirth}}',
-        create: '',
-        destroy: '',
-        update: '',
-        find: ''
-      },
-      data: {
-        findAll: 'getPatientSearchDetails',
-        create: '',
-        destroy: '',
-        update: '',
-        find: ''
-      },
+      api: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.patientSearch,
       isActive: true,
-      idField: '_id'
-    }, {
+      idField: '_id',
+      find: false,
+      findAll: true,
+      create: false,
+      update: false,
+      destroy: false
+    }]);
+    const qlSM = ui_framework_jps__WEBPACK_IMPORTED_MODULE_3__.GraphQLApiStateManager.getInstance();
+    qlSM.initialise([// {
+    //     stateName: STATE_NAMES.patientSearch,
+    //     serverURL: '',
+    //     apiURL: API_Config.graphQL,
+    //     apis: {
+    //         findAll: 'query {getPatientSearchDetails {_id,isDemoOnly,identifiers { legacyId},flags {isInactive,hasWarnings},name {firstname,surname}, warnings {_id, warnings}, contact {    _id,\n' +
+    //             '    owner,\n' +
+    //             '    line1,\n' +
+    //             '    line2,\n' +
+    //             '    suburb\n' +
+    //             '    postcode,\n' +
+    //             '    state,\n' +
+    //             '    country,\n' +
+    //             '    home,\n' +
+    //             '    work,\n' +
+    //             '    mobile,\n' +
+    //             '    nokname,\n' +
+    //             '    nokphone},\n' +
+    //             'lastSeen,\n' +
+    //             'lastSeenBy,\n' +
+    //             'dob,\n' +
+    //             'dod,\n' +
+    //             'gender,\n' +
+    //             'ethnicity,\n' +
+    //             'countryofbirth}}',
+    //         create: '',
+    //         destroy: '',
+    //         update: '',
+    //         find: '',
+    //     },
+    //     data: {
+    //         findAll: 'getPatientSearchDetails',
+    //         create: '',
+    //         destroy: '',
+    //         update: '',
+    //         find: ''
+    //     },
+    //     isActive: true,
+    //     idField: '_id'
+    // },
+    {
       stateName: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.STATE_NAMES.appointments,
       serverURL: '',
       apiURL: _AppTypes__WEBPACK_IMPORTED_MODULE_2__.API_Config.graphQL,
@@ -6105,6 +6137,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
     this.handleShowUsers = this.handleShowUsers.bind(this);
     this.handleShowToday = this.handleShowToday.bind(this);
     _Controller__WEBPACK_IMPORTED_MODULE_1__["default"].getInstance().connectToApplication(this, window.localStorage);
+    ui_framework_jps__WEBPACK_IMPORTED_MODULE_5__.SecurityManager.getInstance().setRequiresToken();
   }
 
   render() {
@@ -6318,7 +6351,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_3__.Component {
   }
 
 }
-localStorage.debug = 'patient-demographic-view app api-ts-results patient-controller todays-patients-view'; //localStorage.debug = 'socket-listener';
+localStorage.debug = 'app api-ts-results patient-controller security-manager download-manager'; //localStorage.debug = 'socket-listener';
 
 localStorage.plugin = 'chat';
 (debug__WEBPACK_IMPORTED_MODULE_0___default().log) = console.info.bind(console);

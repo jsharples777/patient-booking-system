@@ -55,6 +55,7 @@ export const API_Config = {
     users: '/api/users',
     clinicConfig: '/api/clinic-config',
     patients: '/api/patients',
+    patientSearch: '/api/patient-search',
     patientDemographics: '/api/demographics'
 };
 

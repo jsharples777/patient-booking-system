@@ -10,6 +10,7 @@ import AppointmentTemplatesQLDelegate from "./AppointmentTemplatesQLDelegate";
 import UsersQLDelegate from "./UsersQLDelegate";
 import PostCodesQLDelegate from "./PostCodesQLDelegate";
 import AppointmentTypesMongooseQLDelegate from "./AppointmentTypesMongooseQLDelegate";
+import jwt from "jsonwebtoken";
 
 const dsLogger = debug('data-source');
 
@@ -62,7 +63,22 @@ export default class DataSource {
         this.apolloServer = new ApolloServer({
             playground: isDevelopment,
             typeDefs: typeDefBuffer.toString(),
-            resolvers: resolvers
+            resolvers: resolvers,
+            context: ({ req }) => {
+                const token = req.headers['authorization'];
+                dsLogger(`authenticate token in QL server ${token}`);
+
+                if (!token) throw new Error('Authentication failed for API use');
+
+                let user:any|null = null;
+
+                jwt.verify(token, process.env.TOKEN_SECRET as string, (err: any, userFromToken: any) => {
+                    if (err) throw new Error('Authentication failed for API use - invalid token');
+                    user = userFromToken;
+                });
+                // Add the user to the context
+                return { user };
+            }
         });
         this.apolloServer.applyMiddleware({app: serverApp, path: "/graphql"});
 

@@ -10,7 +10,7 @@ export default class PatientsQLDelegate {
     private constructor() {
     }
 
-    public static getPatientSearchDetails() {
+    public static getPatientSearchDetails():Promise<Document[]> {
         logger('Getting patients for search purposes');
         const enableDemo = ((process.env.ENABLE_DEMO === 'Y') || true);
         if (enableDemo) logger(`DEMO MODE ACTIVATED`);

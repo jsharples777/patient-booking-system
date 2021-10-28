@@ -19,14 +19,14 @@ router.get('/', ensureAuthenticated, (req, res, next) => {
     res.render('index', {user: req.user});
 });
 
-router.get('/gettoken', ensureAuthenticated, (req, res, next) => {
+router.post('/gettoken', ensureAuthenticated, (req, res, next) => {
     // @ts-ignore
     routeDebug(`Getting token for user`);
     routeDebug(req.user);
     routeDebug(process.env.TOKEN_SECRET);
 
     // @ts-ignore
-    const token = generateAccessToken(req.user.username);
+    const token = generateAccessToken(req.user);
     res.json(token);
 });
 

@@ -3,13 +3,14 @@ import {MongoDataSource} from "../../db/MongoDataSource";
 import {Document} from "mongodb";
 import debug from "debug";
 import PatientsQLDelegate from "../../graphql/PatientsQLDelegate";
+import {authenticateToken} from "../jwt";
 
 const router = express.Router();
 
 const logger = debug('route-patients');
 
 
-router.get("/", function (req, res) {
+router.get("/", authenticateToken,function (req, res) {
     logger("Starting route GET /patients");
     try {
         MongoDataSource.getInstance().getPatientSearchDetails().then((jsonData) => {
@@ -24,7 +25,7 @@ router.get("/", function (req, res) {
     }
 });
 
-router.get("/:id", function (req, res) {
+router.get("/:id", authenticateToken,function (req, res) {
     logger(`Starting route GET /patient by id ${req.params.id}`);
     const collection = process.env.DB_COLLECTION_PATIENTS || 'pms-patients';
 
@@ -52,7 +53,7 @@ router.get("/:id", function (req, res) {
         });
 });
 
-router.put('/', (req, res) => {
+router.put('/', authenticateToken,(req, res) => {
     logger(`Starting route PUT /patient by id ${req.body._id}`);
     logger(req.body.contact);
 
