@@ -151,7 +151,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     }
 
     getCurrentUser() {
-        return Controller.getInstance().getLoggedInUserId();
+        return SecurityManager.getInstance().getLoggedInUserId();
     }
 
     hideAllSideBars() {
@@ -165,7 +165,7 @@ export default class App extends React.Component implements UnreadMessageCountLi
     handleShowChat(roomName: string | null) {
         logger('Handling Show Chat');
         // prevent anything from happening if we are not logged in
-        if (!Controller.getInstance().isLoggedIn()) {
+        if (!SecurityManager.getInstance().isLoggedIn()) {
             // @ts-ignore
             window.location.href = API_Config.login;
             return;

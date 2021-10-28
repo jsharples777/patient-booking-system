@@ -81,7 +81,7 @@ export default class SocketListenerDelegate implements SocketListener {
     }
 
     getCurrentUser(): string {
-        return Controller.getInstance().getLoggedInUserId();
+        return SecurityManager.getInstance().getLoggedInUserId();
     }
 
 }

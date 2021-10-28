@@ -7,7 +7,7 @@ import {
     CollectionViewListener,
     copyObject,
     isSameMongo,
-    MemoryBufferStateManager, RESTApiStateManager,
+    MemoryBufferStateManager, RESTApiStateManager, SecurityManager,
     StateChangeListener,
     StateManager,
     View
@@ -109,7 +109,7 @@ export class PatientController implements StateChangeListener, CollectionViewLis
         delete patient.decorator;
         delete patient.oldContact;
         patient.modified = parseInt(moment().format('YYYYMMDDHHmmss'));
-        patient.modifiedBy = Controller.getInstance().getLoggedInUsername();
+        patient.modifiedBy = SecurityManager.getInstance().getLoggedInUsername();
 
         const copyOfPatient = copyObject(patient);
 

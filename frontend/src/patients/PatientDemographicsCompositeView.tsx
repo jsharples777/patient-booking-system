@@ -13,7 +13,7 @@ import {
     isSameMongo, ItemEvent, ItemViewListener,
     jsxCreateElement,
     jsxCreateFragment,
-    ObjectDefinitionRegistry,
+    ObjectDefinitionRegistry, SecurityManager,
     StateChangeListener,
     ViewFieldPermissionChecker
 } from "ui-framework-jps";
@@ -562,7 +562,7 @@ export class PatientDemographicsCompositeView extends AbstractView implements Da
         this.viewHasChanged = true;
         this.currentPatient.decorator = Decorator.Modified;
         this.currentPatient.modified = parseInt(moment().format('YYYYMMDDHHmmss'));
-        this.currentPatient.modifiedBy = Controller.getInstance().getLoggedInUsername();
+        this.currentPatient.modifiedBy = SecurityManager.getInstance().getLoggedInUsername();
         PatientController.getInstance().getStateManager().updateItemInState(STATE_NAMES.openPatients,this.getCurrentPatient(),false);
     }
 

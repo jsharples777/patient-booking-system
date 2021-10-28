@@ -20,7 +20,7 @@ import {
     MemoryBufferStateManager,
     NotificationController,
     ObjectDefinitionRegistry,
-    RESTApiStateManager,
+    RESTApiStateManager, SecurityManager,
     SocketManager,
     StateChangeListener,
     StateManager
@@ -440,9 +440,7 @@ export default class Controller implements StateChangeListener, DataObjectListen
         const asyncQL = new AsyncStateManagerWrapper(aggregateSM, qlSM, isSameMongo);
 
         aggregateSM.addStateManager(memorySM, [], false);
-        //aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.appointments,STATE_NAMES.patientSearch,STATE_NAMES.recentPatientSearches,STATE_NAMES.appointmentTypes, STATE_NAMES.providers,STATE_NAMES.appointmentTemplates,STATE_NAMES.patients], false);
         aggregateSM.addStateManager(asyncREST, [STATE_NAMES.recentUserSearches, STATE_NAMES.postCodes, STATE_NAMES.users, STATE_NAMES.appointments, STATE_NAMES.patientSearch, STATE_NAMES.recentPatientSearches, STATE_NAMES.appointmentTypes, STATE_NAMES.providers, STATE_NAMES.appointmentTemplates], false);
-        //aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.users,STATE_NAMES.clinicConfig], false);
         aggregateSM.addStateManager(asyncQL, [STATE_NAMES.recentUserSearches, STATE_NAMES.clinicConfig, STATE_NAMES.patients], false);
         this.stateManager = aggregateSM;
 
@@ -468,15 +466,17 @@ export default class Controller implements StateChangeListener, DataObjectListen
         const socketListerDelegate = new SocketListenerDelegate();
         SocketManager.getInstance().setListener(socketListerDelegate);
 
+        const username = SecurityManager.getInstance().getLoggedInUsername();
+
         // now that we have all the user we can setup the chat system but only if we are logged in
-        cLogger(`Setting up chat system for user ${this.getLoggedInUserId()}: ${this.getLoggedInUsername()}`);
-        if (this.getLoggedInUserId().trim().length > 0) {
+        cLogger(`Setting up chat system for user ${username}`);
+        if (username.trim().length > 0) {
             // setup the chat system
             const chatManager = ChatManager.getInstance(); // this connects the manager to the socket system
 
             // setup the chat notification system
             NotificationController.getInstance();
-            chatManager.setCurrentUser(this.getLoggedInUsername());
+            chatManager.setCurrentUser(username);
 
             // let the application view know about message counts
             chatManager.setUnreadCountListener(this.applicationView);
@@ -507,45 +507,6 @@ export default class Controller implements StateChangeListener, DataObjectListen
         return 'Controller';
     }
 
-    public isLoggedIn(): boolean {
-        let isLoggedIn = false;
-        try {
-            // @ts-ignore
-            if (loggedInUser) {
-                isLoggedIn = true;
-            }
-        } catch (error) {
-        }
-        return isLoggedIn;
-    }
-
-    public getLoggedInUserId(): string {
-        let result = '';
-        try {
-            // @ts-ignore
-            if (loggedInUser) {
-                // @ts-ignore
-                result = loggedInUser._id;
-            }
-        } catch (error) {
-        }
-        cLoggerDetail(`Logged in user id is ${result}`);
-        return result;
-    }
-
-    public getLoggedInUsername(): string {
-        let result = '';
-        try {
-            // @ts-ignore
-            if (loggedInUser) {
-                // @ts-ignore
-                result = loggedInUser.username;
-            }
-        } catch (error) {
-        }
-        cLoggerDetail(`Logged in user is ${result}`);
-        return result;
-    }
 
     public getProviderNo(): string {
         let result = '';
@@ -577,10 +538,6 @@ export default class Controller implements StateChangeListener, DataObjectListen
 
     public handleMessage(message: string): void {
         cLogger(message);
-    }
-
-    public getCurrentUser(): string {
-        return this.getLoggedInUserId();
     }
 
     stateChangedItemAdded(managerName: string, name: string, itemAdded: any): void {

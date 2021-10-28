@@ -1,6 +1,6 @@
 import Controller from "../Controller";
 import {STATE_NAMES} from "../AppTypes";
-import {StateChangeListener} from "ui-framework-jps";
+import {SecurityManager, StateChangeListener} from "ui-framework-jps";
 import debug from 'debug';
 import moment from "moment";
 import {computeTimeStringFromStartTimeAndDurationInSeconds} from "../DurationFunctions";
@@ -245,7 +245,7 @@ export class AppointmentControllerHelper implements StateChangeListener {
             _patient: event.patientId,
             isDNA: event.isDNA,
             isCancelled: event.isCancelled,
-            createdBy: Controller.getInstance().getLoggedInUsername(),
+            createdBy: SecurityManager.getInstance().getLoggedInUsername(),
             created: event.created,
             modified: event.modified,
             arrivalTime: event.arrivalTime,

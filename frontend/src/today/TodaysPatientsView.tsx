@@ -1,7 +1,7 @@
 import debug from "debug";
 import Controller from "../Controller";
 import {Decorator, STATE_NAMES} from "../AppTypes";
-import {isSameMongo, StateChangeListener} from "ui-framework-jps";
+import {isSameMongo, SecurityManager, StateChangeListener} from "ui-framework-jps";
 import moment from "moment";
 import {PatientController} from "../patients/PatientController";
 import React, {ReactNode} from "react";
@@ -91,7 +91,7 @@ export class TodaysPatientsView extends React.Component implements StateChangeLi
     public onDocumentLoaded(applicationView: any): void {
         logger(`on document loaded`);
         this.applicationView = applicationView;
-        this.currentProviderNo = Controller.getInstance().getLoggedInUsername();
+        this.currentProviderNo = SecurityManager.getInstance().getLoggedInUsername();
         this.containerEl = document.getElementById('todays-patients');
     }
 

@@ -6,6 +6,7 @@ import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper
 import moment from "moment";
 import Controller from "../Controller";
 import {PatientController} from "../patients/PatientController";
+import {SecurityManager} from "ui-framework-jps";
 
 const logger = debug('today-view');
 
@@ -32,7 +33,7 @@ export class TodayView {
     public onDocumentLoaded() {
         if (!Controller.getInstance().isProvider()) return;
 
-        this.currentProviderNo = Controller.getInstance().getLoggedInUsername();
+        this.currentProviderNo = SecurityManager.getInstance().getLoggedInUsername();
 
         const options = AppointmentControllerHelper.getInstance().getClinicConfig();
         logger('Using clinic config options');
@@ -71,7 +72,7 @@ export class TodayView {
 
     public applyClinicConfig(clinicConfig: any) {
         if (this.calendar) {
-            this.currentProviderNo = Controller.getInstance().getLoggedInUsername();
+            this.currentProviderNo = SecurityManager.getInstance().getLoggedInUsername();
             logger('State changed, using clinic config options');
             const day = parseInt(moment().format('d'));
             clinicConfig.view.startDay = day;

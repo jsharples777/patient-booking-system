@@ -2,7 +2,7 @@ import debug from "debug";
 import moment from "moment";
 import {STATE_NAMES} from "../AppTypes";
 import Controller from "../Controller";
-import {StateChangeListener} from "ui-framework-jps";
+import {SecurityManager, StateChangeListener} from "ui-framework-jps";
 import {ScheduleListener} from "../helper/ScheduleListener";
 import {AppointmentControllerHelper} from "../helper/AppointmentControllerHelper";
 import {TodayView} from "./TodayView";
@@ -73,7 +73,7 @@ export class TodayController implements StateChangeListener, ScheduleListener {
 
             case (STATE_NAMES.appointments): {
                 const today = parseInt(moment().format('YYYYMMDD'));
-                const currentProvider = Controller.getInstance().getLoggedInUsername();
+                const currentProvider = SecurityManager.getInstance().getLoggedInUsername();
                 logger(`Provider no is ${currentProvider}`);
 
                 const appointments = Controller.getInstance().getStateManager().getStateByName(STATE_NAMES.appointments);
@@ -107,7 +107,7 @@ export class TodayController implements StateChangeListener, ScheduleListener {
 
     stateChangedItemAdded(managerName: string, name: string, appointment: any): void {
         if (!Controller.getInstance().isProvider()) return;
-        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getLoggedInUsername())) {
+        if ((name === STATE_NAMES.appointments) && (appointment.provider === SecurityManager.getInstance().getLoggedInUsername())) {
             logger('New Appointment inserted by another user');
             logger(appointment);
             const today = parseInt(moment().format('YYYYMMDD'));
@@ -127,7 +127,7 @@ export class TodayController implements StateChangeListener, ScheduleListener {
 
     stateChangedItemRemoved(managerName: string, name: string, appointment: any): void {
         if (!Controller.getInstance().isProvider()) return;
-        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getLoggedInUsername())) {
+        if ((name === STATE_NAMES.appointments) && (appointment.provider === SecurityManager.getInstance().getLoggedInUsername())) {
             logger('Appointment deleted by another user');
             logger(appointment);
             const today = parseInt(moment().format('YYYYMMDD'));
@@ -141,7 +141,7 @@ export class TodayController implements StateChangeListener, ScheduleListener {
 
     stateChangedItemUpdated(managerName: string, name: string, itemUpdated: any, appointment: any): void {
         if (!Controller.getInstance().isProvider()) return;
-        if ((name === STATE_NAMES.appointments) && (appointment.provider === Controller.getInstance().getLoggedInUsername())) {
+        if ((name === STATE_NAMES.appointments) && (appointment.provider === SecurityManager.getInstance().getLoggedInUsername())) {
             logger('Appointment updated by another user');
             logger(appointment);
 
