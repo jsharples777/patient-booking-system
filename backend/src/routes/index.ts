@@ -6,6 +6,7 @@ import {MongoDataSource} from "../db/MongoDataSource";
 import PatientsQLDelegate from "../graphql/PatientsQLDelegate";
 import {v4} from "uuid";
 import {Document} from "mongodb";
+import {generateAccessToken} from "./jwt";
 
 const router = express.Router();
 
@@ -16,6 +17,17 @@ const routeDebug = debug('route');
 router.get('/', ensureAuthenticated, (req, res, next) => {
     routeDebug(req.user);
     res.render('index', {user: req.user});
+});
+
+router.get('/gettoken', ensureAuthenticated, (req, res, next) => {
+    // @ts-ignore
+    routeDebug(`Getting token for user`);
+    routeDebug(req.user);
+    routeDebug(process.env.TOKEN_SECRET);
+
+    // @ts-ignore
+    const token = generateAccessToken(req.user.username);
+    res.json(token);
 });
 
 router.get('/register', (req, res) => {
@@ -64,7 +76,7 @@ router.get('/test', (req, res) => {
     res.send('Hello World');
 });
 
-router.get('/postprocess', (req, res) => {
+router.get('/postprocess', ensureAuthenticated, (req, res) => {
     console.log(`url: ${req.url}`);
     PatientsQLDelegate.postProcessAll().then(() => {
         res.send('Completed');
@@ -72,7 +84,7 @@ router.get('/postprocess', (req, res) => {
     });
 });
 
-router.get('/postprocesspostcodes', (req, res) => {
+router.get('/postprocesspostcodes', ensureAuthenticated, (req, res) => {
     console.log(`url: ${req.url}`);
     const collection = process.env.DB_COLLECTION_POSTCODES || 'pms-post-codes';
 

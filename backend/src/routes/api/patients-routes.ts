@@ -3,7 +3,6 @@ import {MongoDataSource} from "../../db/MongoDataSource";
 import {Document} from "mongodb";
 import debug from "debug";
 import PatientsQLDelegate from "../../graphql/PatientsQLDelegate";
-import {SocketManager} from "server-socket-framework-jps";
 
 const router = express.Router();
 
